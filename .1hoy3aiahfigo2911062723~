@@ -1,0 +1,85 @@
+const {
+    SlashCommandBuilder,
+    PermissionFlagsBits,
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+} = require("discord.js");
+
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName("unban")
+        .setDescription("Unban a member.")
+        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
+        .setDMPermission(false)
+        .addUserOption((options) =>
+            options
+            .setName("target")
+            .setDescription("Select the target member.")
+            .setRequired(true)
+        )
+        .addStringOption((options) =>
+            options
+            .setName("reason")
+            .setDescription("Provide a reason for this unban.")
+            .setMaxLength(512)
+            .setRequired(true)
+        ),
+    /**
+     *
+     * @param {ChatInputCommandInteraction} interactions
+     */
+    async execute(interaction, client) {
+        const { options, guild, member } = interaction;
+
+        const target = options.getMember("target");
+        const reason = options.getString("reason");
+
+        await interaction.guild.bans.fetch()
+            .then(async bans => {
+
+                if (bans.size == 0) return await interaction.reply({ content: "There is no one banne from this server", ephermeral: true })
+                let BannedID = bans.find(ban => ban.user.id == target);
+                if (!BannedID) return await interaction.reply({ content: "The id stated is not banned from this server", ephermeral: true })
+
+                interaction.guild.bans.remove(target, reason).catch((err) => {
+                    interaction.reply({
+                        content: "",
+                        ephermeral: true
+                    });
+                    return console.log("Error occured in Unban.js", err);
+                });
+
+            })
+
+
+        target.ban().catch((err) => {
+            interaction.reply({
+                content: "",
+                ephermeral: true
+            });
+            return console.log("Error occured in Unban.js", err);
+        });
+
+        const successEmbed = new EmbedBuilder()
+            .setAuthor({
+                name: `Unban Time`,
+                iconURL: guild.iconURL(),
+            })
+            .setColor(client.color)
+            .setThumbnail(
+                "https://media.discordapp.net/attachments/1059607121194393671/1059923413650640987/295678623038211.png?width=285&height=296"
+            )
+            .setDescription(
+                [
+                    `Unbanned User: ${target}`,
+                    `Generous Staff Member: ${member}`,
+                    `\nReason: ${reason}`,
+                ].join("\n")
+            )
+            .setFooter({
+                iconURL: guild.iconURL(),
+                text: `Server Bot | ${interaction.user.username}`,
+            });
+        return interaction.reply({ embeds: [successEmbed] });
+    },
+};

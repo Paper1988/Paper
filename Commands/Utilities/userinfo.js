@@ -1,0 +1,36 @@
+const { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } = require("discord.js");
+
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName("userinfo")
+        .setDescription("顯示指定目標的用戶訊息")
+        .addUserOption((option) => option.setName("target").setDescription("選擇一個目標").setRequired(false)),
+    usage: "/userinfo {user}",
+    /**
+     * @param {ChatInputCommandInteraction} interaction 
+     */
+    async execute(interaction) {
+        const target = interaction.options.getMember("target") || interaction.member;
+        await target.user.fetch();
+
+        const getPresence = (status) => {
+            const statusType = {
+                idle: "1FJj7pX.png",
+                dnd: "fbLqSYv.png",
+                online: "JhW7v9d.png",
+                invisible: "dibKqth.png"
+            };
+
+            return `https://i.imgur.com/${statusType[status] || statusType["invisible"]}`;
+        };
+
+        const Response = new EmbedBuilder()
+            .setColor(target.user.accentColor || "Random")
+            .setAuthor({ name: target.user.tag, iconURL: getPresence(target.presence.status) })
+            .setThumbnail(target.user.avatarURL({ dynamic: true }))
+            .setImage(target.user.bannerURL({ dynamic: true, size: 512 }) || "")
+            .addFields({ name: "ID: ", value: target.user.id }, { name: "加入時間: ", value: `<t:${parseInt(target.joinedTimestamp / 1000)}:R>`, inline: true }, { name: "帳號創建時間: ", value: `<t:${parseInt(target.user.createdTimestamp / 1000)}:R>`, inline: true }, { name: "身分組: ", value: target.roles.cache.map(r => r).sort((a, b) => b.position - a.position).join(" ").replace("@everyone", "") || "無" }, { name: "暱稱: ", value: target.nickname || "無", inline: true }, { name: "強調色: ", value: target.user.accentColor ? `#${target.user.accentColor.toString(16)}` : "None", inline: true }, { name: "橫幅: ", value: target.user.bannerURL() ? "** **" : "無" });
+
+        interaction.reply({ embeds: [Response], ephemeral: true });
+    }
+}
