@@ -1,0 +1,32 @@
+const { EmbedBuilder, CommandInteraction, SlashCommandBuilder } = require("discord.js");
+const DB = require("../../Structures/Schemas/LockDown");
+const ms = require("ms");
+
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName("unlock")
+        .setDescription("解除鎖定這個頻道")
+        .setDefaultMemberPermissions("MANAGE_CHANNELS")
+        .addStringOption((option) => option.setName("time").setDescription("此鎖定的到期日期")),
+    usage: "/unlock",
+    /**
+     *
+     * @param {CommandInteraction} interaction
+     */
+    async execute(interaction) {
+        const { guild, channel } = interaction;
+
+        const Embed = new EmbedBuilder();
+
+        if (channel.permissionsFor(guild.id).has("SEND_MESSAGES"))
+            return interaction.reply({ embeds: [Embed.setColor("RED").setDescription("⛔ | 這個頻道沒有被鎖定")], ephemeral: true });
+
+        channel.permissionOverwrites.edit(guild.id, {
+            SEND_MESSAGES: null
+        });
+
+        await DB.deleteOne({ ChannelID: channel.id });
+
+        interaction.reply({ embeds: [Embed.setColor("GREEN").setDescription("🔓 | 鎖定已被解除")] })
+    }
+}
