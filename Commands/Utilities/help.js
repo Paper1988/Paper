@@ -27,17 +27,16 @@ module.exports = {
         	readdirSync("./Commands").forEach((folder) => {
 						if (folder === "Developer") return;
             readdirSync(`./Commands/${folder}`).forEach((secFolderOrFile) => {
-								readdirSync(`./Commands/${folder}/${secFolderOrFile}`).forEach((file) => {
+							readdirSync(`./Commands/${folder}/${secFolderOrFile}`).forEach((file) => {
 									const cmd = require(`../../Commands/${folder}/${secFolderOrFile}/${file}`);
 									if (cmd.context || !cmd.name) return;
 									Commands.push(cmd);
-								});
 							});
 							const command = require(`../../Commands/${folder}/${secFolderOrFile}`);
               if (command.context || !command.name) return;
               Commands.push(command);
 						});
-        });
+        	});
         const Embeds = [];
         let page = 0;
         const CommandsLength = Commands.length;
