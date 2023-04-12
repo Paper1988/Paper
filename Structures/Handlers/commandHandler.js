@@ -1,34 +1,33 @@
+const { loadFiles } = require("../Functions/fileLoader");
+
 async function loadCommands(client) {
-	const ascii = require("ascii-table");
-	const { loadFiles } = require("../Functions/fileLoader.js");
-	const table = new ascii().setHeading("Commands", "Status");
+  console.time("Commands Loaded");
+	const commands = new Array();
 
-	await client.commands.clear();
-	await client.subCommands.clear();
+  await client.commands.clear();
 
-	let commandsArray = [];
+  let commandsArray = [];
 
-	const Files = await loadFiles("Commands");
-	Files.forEach((file) => {
-		const command = require(file);
+  const files = await loadFiles("Commands");
 
-		if(command.subCommand) {
-			return client.subCommands.set(command.subCommand, command);
-		};
-		if (command.data) {
-			client.commands.set(command.data.name, command);
-			commandsArray.push(command.data.toJSON());
-			table.addRow(command.data.name, "🟩");
-    	} else {
-			client.commands.set(command.name, command);
-			commandsArray.push(command);
-			table.addRow(command.name, "🟩");
-		}
-	});
+  for (const file of files) {
+    try {
+      const command = require(file);
+      client.commands.set(command.data.name, command);
 
-	client.application.commands.set(commandsArray);
+      commandsArray.push(command.data.toJSON());
 
-	return console.log(table.toString(), "\n✅ >>> Commands已載入\n");
+      commands.push({ Command: command.name, Status: "✅"});
+    } catch (error) {
+      commands.push({ Command: file.split("/").pop().slice(0, -3), Status: "🛑"});
+    }
+
+    client.application.commands.set(commandsArray);
+  }
+
+	console.table(commands, ["Command", "Status"]);
+	console.info("\n\x1b[36m%s\x1b[0m", "Loaded Commands.");
+	console.timeEnd("Commands Loaded");
 }
 
 module.exports = { loadCommands };

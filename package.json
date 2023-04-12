@@ -24,7 +24,7 @@
     "distube": "^4.0.4",
     "dotenv": "^16.0.2",
     "genius-lyrics": "^4.4.0",
-    "glob": "^8.0.3",
+    "glob": "^9.3.4",
     "mal-scraper": "^2.11.4",
     "moment": "^2.29.4",
     "moment-duration-format": "^2.3.2",
