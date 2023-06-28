@@ -20,7 +20,7 @@ module.exports = {
         ephemeral: true,
       });
 
-    const subCommand = interaction.options.getSubcommand(false);
+    const subCommand = interaction.options.getSubcommand();
     if (subCommand) {
       const subCommandFile = client.subCommands.get(
         `${interaction.commandName}.${subCommand}`

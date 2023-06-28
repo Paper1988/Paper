@@ -5,6 +5,7 @@ async function loadCommands(client) {
 	const commands = new Array();
 
   await client.commands.clear();
+	await client.subCommands.clear();
 
   let commandsArray = [];
 
@@ -13,6 +14,10 @@ async function loadCommands(client) {
   for (const file of files) {
     try {
       const command = require(file);
+			
+			if(command.subCommand)
+				return client.subCommands.set(command.subCommand, command);
+			
       client.commands.set(command.data.name, command);
 
       commandsArray.push(command.data.toJSON());
