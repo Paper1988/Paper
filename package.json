@@ -19,6 +19,7 @@
     "chartjs-node-canvas": "^4.1.6",
     "chartjs-plugin-gradient": "^0.6.1",
     "cron": "^2.1.0",
+    "discord-arts": "^0.4.0",
     "discord-giveaways": "^6.0.1",
     "discord.js": "^14.7.1",
     "distube": "^4.0.4",
