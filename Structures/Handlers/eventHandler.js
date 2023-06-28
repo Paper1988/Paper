@@ -16,15 +16,15 @@ async function loadEvents(client) {
 			target[event.once ? "once" : "on"](event.name, execute);
 			client.events.set(event.name, execute);
 			
-			event.push({ Event: event.name, Status: "🔰" });
+			events.push({ Event: event.name, Status: "🔰" });
 		} catch (err) {
-			err.push({ Event: file.split("/").pop().slice(0, -3), Status: "🛑" });
+			events.push({ Event: file.split("/").pop().slice(0, -3), Status: "🛑" });
 		}
 	}
 
 	console.table(events, ["Event", "Status"]);
-	console.info("n\x1b[36m%s\x1b[0m", "Loaded Events");
-	console.time("Event Loaded");
+	console.info("\n\x1b[36m%s\x1b[0m", "Loaded Events");
+	console.timeEnd("Event Loaded");
 }
 
 module.exports = { loadEvents };

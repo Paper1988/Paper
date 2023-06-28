@@ -1,4 +1,4 @@
-const { Message, MessageEmbed } = require("discord.js");
+const { Message, EmbedBuilder } = require("discord.js");
 const DB = require("../../Structures/Schemas/AFKSystem");
 
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
 				await DB.deleteOne({GuildID: message.guild.id, UserID: message.author.id});
 
         if (message.mentions.members.size) {
-            const Embed = new MessageEmbed()
+            const Embed = new EmbedBuilder()
                 .setColor("RED");
             message.mentions.members.forEach((m) => {
                 DB.findOne({ GuildID: message.guild.id, UserID: m.id }, async(err, data) => {
