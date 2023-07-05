@@ -1,5 +1,5 @@
 const { EmbedBuilder, ChatInputCommandInteraction, SlashCommandBuilder } = require("discord.js");
-const DB = require("../../../Structures/Schemas/AFKSystem");
+const DB = require("../../../../Structures/Schemas/AFKSystem");
 
 module.exports = {
     data: new SlashCommandBuilder()

@@ -1,12 +1,11 @@
 const { ChatInputCommandInteraction, Client, EmbedBuilder, MessageAttachment, SlashCommandBuilder } = require("discord.js")
 const { connection } = require("mongoose");
-const { execute } = require("../../Events/Client/ready");
+const { execute } = require("../../../Events/Client/ready");
 
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
-const DB = require('../../Structures/Schemas/ClientDB');
+const DB = require('../../../Structures/Schemas/ClientDB');
 const moment = require("moment");
 
-require("../../Events/Client/ready");
 require("moment-duration-format");
 
 // Optional, disabled by Default
