@@ -1,5 +1,9 @@
 const { loadFiles } = require("../Functions/fileLoader");
+const { Client } = require("discord.js");
 
+/** 
+ * @param {Client} client
+ */
 async function loadCommands(client) {
   console.time("Commands Loaded");
 	const commands = new Array();
@@ -9,27 +13,23 @@ async function loadCommands(client) {
 
   let commandsArray = [];
 
-  const files = await loadFiles("Commands");
+  const Files = await loadFiles("Commands");
 
-  for (const file of files) {
-    try {
-      const command = require(file);
+  Files.forEach((file) => {
+		const command = require(file);
 			
-			if(command.subCommand)
-				return client.subCommands.set(command.subCommand, command);
+		if(command.subCommand)
+			return client.subCommands.set(command.subCommand, command);
 			
-      client.commands.set(command.data.name, command);
+    client.commands.set(command.data.name, command);
 
-      commandsArray.push(command.data.toJSON());
+    commandsArray.push(command.data.toJSON());
 
-      commands.push({ Command: command.data.name, Status: "✅"});
-    } catch (error) {
-      commands.push({ Command: file.split("/").pop().slice(0, -3), Status: "🛑"});
-    }
-
-    client.application.commands.set(commandsArray);
-  }
-
+    commands.push({ Command: command.data.name, Status: "✅"});    
+	});
+	
+	client.application.commands.set(commandsArray);
+	
 	console.table(commands, ["Command", "Status"]);
 	console.info("\n\x1b[36m%s\x1b[0m", "Loaded Commands.");
 	console.timeEnd("Commands Loaded");

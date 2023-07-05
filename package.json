@@ -24,6 +24,7 @@
     "discord.js": "^14.7.1",
     "distube": "^4.0.4",
     "dotenv": "^16.0.2",
+    "file": "^0.2.2",
     "genius-lyrics": "^4.4.0",
     "glob": "^9.3.4",
     "mal-scraper": "^2.11.4",
