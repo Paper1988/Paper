@@ -58,17 +58,12 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setColor("Blue")
-            .setDescription("Paper是一個多功能機器人，有許多指令，像是：音樂、抽獎、管理以及更多有趣的指令等你來發現！")
+            .setDescription("Paper是一個多功能機器人，有許多指令，像是：音樂、抽獎、管理以及更多等等有趣的指令等你來發現！")
             .setTimestamp()
         
         const publicem = new EmbedBuilder()
             .setColor("Green")
             .setDescription("`/help`: 顯示這個列表\n`/botinfo`: 顯示有關Paper的資訊\n`/ping`: Pong!\n`/invite`: 顯示Paper的邀請指令\n`/status`: 檢查機器人的狀態\n`/serverinfo`: 顯示伺服器的資訊\n`/userinfo`: 取得一位用戶的資訊")
-            .setTimestamp()
-        
-        const funem = new EmbedBuilder()
-            .setColor("Yellow")
-            .setDescription("`/tweet`: fake-tweets a post\n`/meme`: Generates a random meme\n`/pixelate`: Pixelate a usre's avatar\n`/slap`: Slaps a user")
             .setTimestamp()
         
         const modem = new EmbedBuilder()
@@ -79,7 +74,7 @@ module.exports = {
         const musicem = new EmbedBuilder()
             .setColor("Purple")
             .setDescription(
-							"\`/play\`: 提供連結或關鍵字來播放音樂或影片\n\`/seek\`: Forwards a music\n\`/settings\`: \`\`\n\`/volume\`: Change the volume"
+							"\`/play\`: 提供連結或關鍵字來播放音樂或影片\n\`/seek\`: 調整音樂當前秒數\n\`/settings\`: \`\`\n\`/volume\`: 調整音量"
 						)
             .setTimestamp()
 
@@ -94,7 +89,7 @@ module.exports = {
                     return await i.reply({ content: `只有 ${interaction.user.tag} 才能使用這個選單!`, ephemeral: true})
                 }
                 if (value === "menu1") {
-                    await i.update({embeds: [publicem], components: [helpmenu, funbutton, inviteme]})
+                    await i.update({embeds: [publicem], components: [helpmenu, inviteme]})
                 }
 
                 if (value === "menu2") {

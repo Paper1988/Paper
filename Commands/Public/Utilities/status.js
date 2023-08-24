@@ -28,8 +28,8 @@ module.exports = {
     usage: "/status",
     /**
      * 
-     * @param {ChatInputCommandInteraction} interaction 
-     * @param {Client} client 
+     * @param {ChatInputCommandInteraction} interaction
+     * @param {Client} client
      */
     async execute(interaction, client) {
         // Database 
@@ -129,7 +129,7 @@ module.exports = {
             width: width,
             height: height,
             plugins: {
-                modern: [require('chartjs-plugin-gradient')],
+                modern: [import("chartjs-plugin-gradient")],
             },
             chartCallback: chartCallback
         })
@@ -201,7 +201,6 @@ module.exports = {
         const image = await canvas.renderToBuffer(chartConfig);
         const attachment = new MessageAttachment(image, 'chart.png');
 
-
         if (!docs || docs.Memory.length < 12) {
             return interaction.reply({
                 embeds: [
@@ -242,7 +241,7 @@ module.exports = {
                 `,
                 inline: false,
             })
-            .setImage('attachment://chart.png')
+            .setImage('attachment://chart.png');
 
         interaction.reply({
             embeds: [response],

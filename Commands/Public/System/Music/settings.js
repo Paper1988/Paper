@@ -61,7 +61,7 @@ module.exports = {
                 case "queue":
                     return interaction.reply({
                                 embeds: [new EmbedBuilder()
-                                        .setColor("PURPLE")
+                                        .setColor("Purple")
                                         .setDescription(`${queue.songs.slice(0, 10).map((song, id) => `\n**${id + 1}**. ${song.name} - \`${song.formattedDuration}\``)}`)]});
     }
     }
