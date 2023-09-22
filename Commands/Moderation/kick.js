@@ -83,11 +83,11 @@ module.exports = {
             interaction.reply({
                 embeds: [
                     errorsEmbed.setDescription(
-                        "無法踢出成員由於一個不常見的錯誤"
+                        "⚠ 發生一個不常見的錯誤，無法踢出成員"
                     ),
                 ],
             });
-            return console.log("錯誤發生 - 在Kick.js", err);
+            return console.log("⚠ 錯誤發生 - 在Kick.js", err);
         });
 
         const newInfractionsObject = {

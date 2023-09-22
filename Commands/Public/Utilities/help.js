@@ -28,6 +28,12 @@ module.exports = {
                         description: "顯示所有音樂指令",
                         value: "menu3"
                     },
+
+										{
+                        label: "🎁抽獎",
+                        description: "顯示所有抽獎指令",
+                        value: "menu4"
+                    },
                 ),
         );
 
@@ -55,7 +61,6 @@ module.exports = {
             .setURL("https://discord.com/api/oauth2/authorize?client_id=869166906765103135&permissions=1644971945463&scope=bot%20applications.commands")
         )
 
-
         const embed = new EmbedBuilder()
             .setColor("Blue")
             .setDescription("Paper是一個多功能機器人，有許多指令，像是：音樂、抽獎、管理以及更多等等有趣的指令等你來發現！")
@@ -68,13 +73,20 @@ module.exports = {
         
         const modem = new EmbedBuilder()
             .setColor("Red")
-            .setDescription("\`/ban\`: Bans a user\n\`/unban\`: Unbans a user\n\`/kick\`: Kicks a user\n\`/mute\`: Mutes a user\n`/unmute`: Unmutes a user\n`/purge`: Purges specific numbers of messages\n`/setup-logs`: Setups log channel in your server\n`/warnings add`: Add warnings to a user\n`/warnings check`: Checks numbers of warnings a user have\n`/warnings remove`: Clears a specific number of warns from a user\n`/warnings clear`: Clear all warns from a user")
+            .setDescription("\`/ban\`: 停權一名成員\n\`/unban\`: 對一名成員解除停權\n\`/kick\`: 踢除一名成員\n\`/mute\`: 禁言一名成員\n`/unmute`: 對一名成員解除禁言\n`/purge`: 刪除頻道內訊息\n")
             .setTimestamp()
         
         const musicem = new EmbedBuilder()
             .setColor("Purple")
             .setDescription(
-							"\`/play\`: 提供連結或關鍵字來播放音樂或影片\n\`/seek\`: 調整音樂當前秒數\n\`/settings\`: \`\`\n\`/volume\`: 調整音量"
+							"\`/play\`: 提供連結或關鍵字來播放音樂或影片\n\`/seek\`: 調整音樂當前秒數\n\`/settings\`: 設定功能\`/filter\`: 使用過濾器\n\`/volume\`: 調整音量"
+						)
+            .setTimestamp()
+
+				const giveem = new EmbedBuilder()
+            .setColor("Grey")
+            .setDescription(
+							"\`/start\`: 設定一次抽獎活動\n\`/action\`: 調整抽獎活動的參數\n"
 						)
             .setTimestamp()
 
@@ -98,6 +110,10 @@ module.exports = {
 
                 if (value === "menu3") {
                     await i.update({embeds: [musicem], components: [helpmenu, inviteme]})
+                }
+
+								if (value === "menu4") {
+                    await i.update({embeds: [giveem], components: [helpmenu, inviteme]})
                 }
             }
 

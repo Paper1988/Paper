@@ -20,13 +20,13 @@ module.exports = {
 	.addStringOption(option =>
 		option
 			.setName('color')
-			.setDescription('自定義您的嵌入顏色')
+			.setDescription('自定義您的嵌入顏色!')
 			.setRequired(false)
 	)
 	.addStringOption(option =>
 		option
 			.setName('footer')
-			.setDescription('為您的公告添加頁腳')
+			.setDescription('為您的公告添加頁腳!')
 			.setRequired(false)
 	)
 	.addBooleanOption(option =>
@@ -38,7 +38,7 @@ module.exports = {
 	.addStringOption(option =>
 		option
 			.setName('ping')
-			.setDescription('對您的公告消息的附加 ping')
+			.setDescription('對您的公告消息的附加標註')
 			.setRequired(false)
 	    .addChoices(
 				{	name: "@everyone", value: "@everyone" },
