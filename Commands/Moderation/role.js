@@ -25,7 +25,7 @@ module.exports = {
             return interaction.reply({ embeds: [embed], ephemeral: true })
         }
 
-        embed.setDescription(target.roles.cache.has(role.id) ? `從 ${target} 移除 **${role}**` : `添加身分組: **${role}** 到 ${target}.`);
+        embed.setDescription(target.roles.cache.has(role.id) ? `從 ${target} 移除 **${role}**` : `添加身分組: **${role}** 到 ${target}`);
         target.roles.cache.has(role.id) ? target.roles.remove(role) : target.roles.add(role);
         const message = await interaction.reply({ embeds: [embed], fetchReply: true });
         setTimeout(() => message.delete().catch(() => {}), 5000);
