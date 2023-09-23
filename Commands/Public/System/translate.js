@@ -1,5 +1,5 @@
 const translate = require(`@iamtraction/google-translate`);
-const { EmbedBuilder, Client, ChatInputCommandInteraction, SlashCommandBuilder } = require('discord.js');
+const { EmbedBuilder, Client, CommandInteraction, SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -9,7 +9,7 @@ module.exports = {
         .addStringOption((option) => option.setName("the_message").setDescription("要翻譯的訊息").setRequired(true)),
     /**
      * @param {Client} client
-     * @param {ChatInputCommandInteraction} interaction
+     * @param {CommandInteraction} interaction
      */
     async execute(interaction, client) {
         const la = interaction.options.getString(`lang_name`);
@@ -21,9 +21,11 @@ module.exports = {
                     .setTitle(`翻譯系統`)
                     .setColor(`Blue`)
                     .setTimestamp()
-                    .addField(`翻譯前 : `, `${msg}`)
-                    .addField(`翻譯後 : `, `${res.text}`)
-                    .addField(`語言 : `, `${la} `)
+                    .addFields(
+											{name:`翻譯前: `, text:`${msg}`},
+											{name:`翻譯後: `, text:`${res.text}`},
+											{name:`語言: `, text:`${la}`}
+										)
                 interaction.reply({ embeds: [ee] });
             })
             .catch((err) => {
