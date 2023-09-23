@@ -27,7 +27,7 @@ module.exports = {
 			case "end":
 				{
 					client.giveawaysManager.end(messageId).then(() => {
-						successEmbed.setDescription("抽獎活動結束了!");
+						successEmbed.setDescription("成功結束抽獎活動!");
 						interaction.reply({ embeds: [successEmbed], ephemeral: true });
 					}).catch((err) => {
 						errEmbed.setDescription(`發生錯誤: \n\`${err}\``)
@@ -38,7 +38,7 @@ module.exports = {
 			case "pause":
 				{
 					client.giveawaysManager.pause(messageId).then(() => {
-						successEmbed.setDescription("抽獎活動已經暫停了!");
+						successEmbed.setDescription("成功暫停抽獎活動!");
 						interaction.reply({ embeds: [successEmbed], ephemeral: true });
 					}).catch((err) => {
 						errEmbed.setDescription(`發生錯誤: \n\`${err}\``)
@@ -49,7 +49,7 @@ module.exports = {
 			case "unpause":
 				{
 					client.giveawaysManager.unpause(messageId).then(() => {
-						successEmbed.setDescription("抽獎活動進行中!");
+						successEmbed.setDescription("成功繼續進行抽獎活動!");
 						interaction.reply({ embeds: [successEmbed], ephemeral: true });
 					}).catch((err) => {
 						errEmbed.setDescription(`發生錯誤: \n\`${err}\``)
@@ -60,7 +60,7 @@ module.exports = {
 			case "reroll":
 				{
 					client.giveawaysManager.reroll(messageId).then(() => {
-						successEmbed.setDescription("抽獎活動已經重抽了!");
+						successEmbed.setDescription("成功重新抽選抽獎活動的贏家!");
 						interaction.reply({ embeds: [successEmbed], ephemeral: true });
 					}).catch((err) => {
 						errEmbed.setDescription(`發生錯誤: \n\`${err}\``)
@@ -71,7 +71,7 @@ module.exports = {
 			case "delete":
 				{
 					client.giveawaysManager.delete(messageId).then(() => {
-						successEmbed.setDescription("抽獎活動被刪除了!");
+						successEmbed.setDescription("成功刪除抽獎活動!");
 						interaction.reply({ embeds: [successEmbed], ephemeral: true });
 					}).catch((err) => {
 						errEmbed.setDescription(`發生錯誤: \n\`${err}\``)
