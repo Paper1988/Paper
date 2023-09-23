@@ -21,7 +21,7 @@ module.exports = {
 			.getInfoFromName(search)
 			.then((data) => {
 				const embed = new EmbedBuilder()
-					.setAuthor({ name: `我的動漫列表搜索結果 ${search}` })
+					.setAuthor({ name: `動漫搜尋結果: ${search}` })
 					.setImage(data.picture)
 					.setColor('#5865F2')
 					.addFields(
@@ -30,11 +30,11 @@ module.exports = {
 						{ name: '類型', value: `${data.type || '無!'}` },
 						{ name: '集數', value: `${data.episodes || '無!'}` },
 						{ name: '分數', value: `${data.score || '無!'}` },
-						{ name: '評分', value: `${data.rating || '無!'}` },
+						{ name: '分級', value: `${data.rating || '無!'}` },
 						{ name: '上映', value: `${data.aired || '無!'}` },
 					)
 					.setFooter({
-						text: `由 ${interaction.user.username} 請求`,
+						text: `由 ${interaction.user.username} 查詢`,
 						iconURL: interaction.user.displayAvatarURL({
 							dynamic: true,
 							format: 'png',

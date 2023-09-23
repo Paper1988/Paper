@@ -51,7 +51,7 @@ module.exports = {
 
 			if(member.user.bot) return interaction.editReply({
 				embeds: [
-					new EmberBuilder().setDescription("> 目前尚未支援機器人使用此功能 beep-boop !")
+					new EmberBuilder().setDescription("> 目前尚未支援機器人使用此功能!")
 				],
 				ephemeral: true,
 			});

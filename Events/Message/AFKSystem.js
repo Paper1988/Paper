@@ -13,7 +13,7 @@ module.exports = {
 
         if (message.mentions.members.size) {
             const Embed = new EmbedBuilder()
-                .setColor("RED");
+                .setColor("Red");
             message.mentions.members.forEach((m) => {
                 DB.findOne({ GuildID: message.guild.id, UserID: m.id }, async(err, data) => {
                     if (err) throw err;

@@ -63,28 +63,32 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setColor("Blue")
-            .setDescription("Paper是一個多功能機器人，有許多指令，像是：音樂、抽獎、管理以及更多等等有趣的指令等你來發現！")
+            .setDescription("Paper是一個多功能機器人，有許多指令，像是：音樂、抽獎、管理以及更多有趣的指令等你來發現！")
             .setTimestamp()
         
         const publicem = new EmbedBuilder()
+						.setTitle("🔧功能")
             .setColor("Green")
             .setDescription("`/help`: 顯示這個列表\n`/botinfo`: 顯示有關Paper的資訊\n`/ping`: Pong!\n`/invite`: 顯示Paper的邀請指令\n`/status`: 檢查機器人的狀態\n`/serverinfo`: 顯示伺服器的資訊\n`/userinfo`: 取得一位用戶的資訊")
             .setTimestamp()
         
         const modem = new EmbedBuilder()
+						.setTitle("🔒管理")
             .setColor("Red")
             .setDescription("\`/ban\`: 停權一名成員\n\`/unban\`: 對一名成員解除停權\n\`/kick\`: 踢除一名成員\n\`/mute\`: 禁言一名成員\n`/unmute`: 對一名成員解除禁言\n`/purge`: 刪除頻道內訊息\n")
             .setTimestamp()
         
         const musicem = new EmbedBuilder()
+						.setTitle("🎶音樂")
             .setColor("Purple")
             .setDescription(
-							"\`/play\`: 提供連結或關鍵字來播放音樂或影片\n\`/seek\`: 調整音樂當前秒數\n\`/settings\`: 設定功能\`/filter\`: 使用過濾器\n\`/volume\`: 調整音量"
+							"\`/play\`: 提供連結或關鍵字來播放音樂或影片\n\`/seek\`: 調整音樂當前秒數\n\`/settings\`: 設定功能\n\`/filter\`: 使用過濾器\n\`/volume\`: 調整音量"
 						)
             .setTimestamp()
 
 				const giveem = new EmbedBuilder()
-            .setColor("Grey")
+						.setTitle("🎁抽獎")
+            .setColor("Gold")
             .setDescription(
 							"\`/start\`: 設定一次抽獎活動\n\`/action\`: 調整抽獎活動的參數\n"
 						)
