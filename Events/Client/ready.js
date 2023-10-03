@@ -14,9 +14,9 @@ module.exports = {
      * @param {Client} client
      */
     async execute(client) {
-        //client.user.setActivity(`在 ${client.guilds.cache.size} 個伺服器裡`);
-				client.user.setActivity(`Updating 更新中....`);
-				client.user.setStatus(`dnd`);
+        client.user.setActivity(`在 ${client.guilds.cache.size} 個伺服器裡`);
+				//client.user.setActivity(`Updating 更新中....`);
+				client.user.setStatus(`online`);
 				console.log(`${client.user.username} 準備好ㄌ!`);
 			
 				loadCommands(client);

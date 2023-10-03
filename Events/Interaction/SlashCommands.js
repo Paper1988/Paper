@@ -16,7 +16,7 @@ module.exports = {
       });
     if (command.developer && interaction.user.id !== "538639229220028416")
       return interaction.reply({
-        content: `這項指令僅限於開發人員!`,
+        content: `> 這項指令僅限於開發人員!`,
         ephemeral: true,
       });
 
@@ -32,5 +32,9 @@ module.exports = {
         });
       subCommandFile.execute(interaction, client);
     } else command.execute(interaction, client);
+
+		if (interaction.type == InteractionType.ApplicationCommandAutocomplete) {
+      command.autocomplete(interaction, client);
+    }
   },
 };
