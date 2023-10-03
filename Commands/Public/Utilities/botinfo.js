@@ -1,4 +1,4 @@
-const { EmbedBuilder, ChatInputCommandInteraction, Client, version, SlashCommandBuilder, ChannelType } = require("discord.js");
+const { EmbedBuilder, ChatInputCommandInteraction, Client, version, SlashCommandBuilder } = require("discord.js");
 const { connection } = require("mongoose");
 const os = require("os");
 
