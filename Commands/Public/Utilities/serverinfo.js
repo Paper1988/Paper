@@ -23,7 +23,7 @@ module.exports = {
 					創建時間: <t:${parseInt(createdTimestamp / 1000)}:R>
 					擁有者: <@${ownerId}>
 
-					伺服器敘述: ${description}
+					伺服器敘述: ${description || "無"}
 					`
 			}, {
 				name: "👥 | 用戶統計",

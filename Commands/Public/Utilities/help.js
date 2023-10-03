@@ -69,13 +69,13 @@ module.exports = {
 		const publicem = new EmbedBuilder()
 			.setTitle("🔧功能")
 			.setColor("Green")
-			.setDescription("`/help`: 顯示這個列表\n`/botinfo`: 顯示有關Paper的資訊\n`/ping`: Pong!\n`/invite`: 顯示Paper的邀請指令\n`/status`: 檢查機器人的狀態\n`/serverinfo`: 顯示伺服器的資訊\n`/userinfo`: 取得一位用戶的資訊")
+			.setDescription("`/help`: 顯示這個列表\n`/botinfo`: 顯示有關Paper的資訊\n`/ping`: Pong!\n`/invite`: 顯示Paper的邀請指令\n`/status`: 檢查機器人的狀態\n`/serverinfo`: 顯示伺服器的資訊\n`/userinfo`: 取得一位用戶的資訊\n\`/report\`: 回報給我們訊息(bug、建議等)")
 			.setTimestamp()
 
 		const modem = new EmbedBuilder()
 			.setTitle("🔒管理")
 			.setColor("Red")
-			.setDescription("\`/ban\`: 停權一名成員\n\`/unban\`: 對一名成員解除停權\n\`/kick\`: 踢除一名成員\n\`/mute\`: 禁言一名成員\n`/unmute`: 對一名成員解除禁言\n`/purge`: 刪除頻道內訊息\n")
+			.setDescription("\`/ban\`: 停權一名成員\n\`/unban\`: 對一名成員解除停權\n\`/kick\`: 踢除一名成員\n\`/mute\`: 禁言一名成員\n\`/unmute\`: 對一名成員解除禁言\n\`/purge\`: 刪除頻道內訊息")
 			.setTimestamp()
 
 		const musicem = new EmbedBuilder()
