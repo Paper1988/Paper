@@ -39,7 +39,7 @@ module.exports = {
 				{ name: "💾 中央處理器(CPU) 使用率", value: `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}%`, inline: true },
 				{ name: "⏰ 上線時間", value: `<t:${parseInt(client.readyTimestamp / 1000)}:R>`, inline: true },
 				{ name: "👩🏻‍🔧 Node.js", value: process.version, inline: true }, { name: "🛠 Discord.js", value: version, inline: true },
-				{ name: "🔧 版本", value: "v1.0", inline: true },
+				{ name: "🔧 版本", value: "v1.1.0", inline: true },
 				{ name: "🏓 延遲", value: `${client.ws.ping}ms`, inline: true },
 				{ name: "🤹🏻‍♀️ 指令數量", value: `${client.commands.size}`, inline: true },
 				{ name: "🌍 伺服器數量", value: `${client.guilds.cache.size}`, inline: true },

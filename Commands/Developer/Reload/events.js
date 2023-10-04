@@ -4,8 +4,8 @@ const { loadEvents } = require("../../../Structures/Handlers/eventHandler");
 module.exports = {
 	subCommand: "reload.events",
 	/**
-	 * @param {Client} client
 	 * @param {ChatInputCommandInteraction} interaction
+	 * @param {Client} client
 	 */
 	execute(interaction, client) {
 		for( const [key, value] of client.events )
