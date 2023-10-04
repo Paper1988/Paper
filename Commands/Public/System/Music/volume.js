@@ -4,11 +4,11 @@ const ms = require('ms');
 module.exports = {
 	subCommand: "music.volume",
 	/**
-	 * @param {Client} client
 	 * @param {ChatInputCommandInteraction} interaction
+	 * @param {Client} client
 	 */
-	execute(client, interaction) {
-		const { options, member, guild, channel } = interaction;
+	execute(interaction, client) {
+		const { options, member } = interaction;
 		const VoiceChannel = member.voice.channel;
 
 		if (!VoiceChannel)

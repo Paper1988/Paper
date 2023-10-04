@@ -2,12 +2,12 @@ const { ChatInputCommandInteraction, Client } = require("discord.js");
 const ms = require('ms');
 
 module.exports = {
-	subCommand: "music.filter",
+	subCommand: "music.filters",
 	/**
-	 * @param {Client} client
 	 * @param {ChatInputCommandInteraction} interaction
+	 * @param {Client} client
 	 */
-	async execute(client, interaction) {
+	async execute(interaction, client) {
 		const { options, member } = interaction;
 		const VoiceChannel = member.voice.channel;
 

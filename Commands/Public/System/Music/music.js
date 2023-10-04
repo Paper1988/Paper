@@ -23,7 +23,7 @@ module.exports = {
 					options
 						.setName("percent")
 						.setDescription("請提供一個音量(1 = 1%)")
-						.setRequired(true)
+						.setRequired(false)
 				)
 		).addSubcommand((sub) =>
 			sub
@@ -45,7 +45,24 @@ module.exports = {
 						.setName("set")
 						.setDescription("請選擇一個過濾器")
 						.setRequired(true)
-						.addChoices({ name: "🔌 關閉所有過濾器", value: "false" }, { name: "📣 切換 8d 過濾器", value: "8d" }, { name: "📣 切換 低音增強 過濾器", value: "bassboost" }, { name: "📣 切換 迴聲 過濾器", value: "echo" }, { name: "📣 切換 nightcore 過濾器", value: "nightcore" }, { name: "📣 切換 surround 過濾器", value: "surround" }, { name: "📣 切換 karaoke 過濾器", value: "karaoke" }, { name: "📣 切換 vaporwave 過濾器", value: "vaporwave" }, { name: "📣 切換 flanger 過濾器", value: "flanger" }, { name: "📣 切換 gate 過濾器", value: "gate" }, { name: "📣 切換 haas 過濾器", value: "haas" }, { name: "📣 切換 reverse 過濾器", value: "reverse" }, { name: "📣 切換 mcompand 過濾器", value: "mcompand" }, { name: "📣 切換 phaser 過濾器", value: "phaser" }, { name: "📣 切換 tremolo 過濾器", value: "tremolo" }, { name: "📣 切換 earwax 過濾器", value: "earwax" })
+						.addChoices(
+							{ name: "🔌 關閉所有過濾器", value: "false" },
+							{ name: "📣 切換 8d 過濾器", value: "8d" },
+							{ name: "📣 切換 低音增強 過濾器", value: "bassboost" },
+							{ name: "📣 切換 迴聲 過濾器", value: "echo" },
+							{ name: "📣 切換 nightcore 過濾器", value: "nightcore" },
+							{ name: "📣 切換 surround 過濾器", value: "surround" },
+							{ name: "📣 切換 karaoke 過濾器", value: "karaoke" },
+							{ name: "📣 切換 vaporwave 過濾器", value: "vaporwave" },
+							{ name: "📣 切換 flanger 過濾器", value: "flanger" },
+							{ name: "📣 切換 gate 過濾器", value: "gate" },
+							{ name: "📣 切換 haas 過濾器", value: "haas" },
+							{ name: "📣 切換 reverse 過濾器", value: "reverse" },
+							{ name: "📣 切換 mcompand 過濾器", value: "mcompand" },
+							{ name: "📣 切換 phaser 過濾器", value: "phaser" },
+							{ name: "📣 切換 tremolo 過濾器", value: "tremolo" },
+							{ name: "📣 切換 earwax 過濾器", value: "earwax" }
+						)
 				)
 		)
 		.addSubcommand((sub) =>
