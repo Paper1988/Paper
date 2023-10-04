@@ -27,14 +27,10 @@ module.exports = {
       );
       if (!subCommandFile)
         return interaction.reply({
-          content: "> 這項子指令過期了!",
+          content: "> 這項指令過期了!",
           ephemeral: true,
         });
       subCommandFile.execute(interaction, client);
     } else command.execute(interaction, client);
-
-		if (interaction.type == InteractionType.ApplicationCommandAutocomplete) {
-      command.autocomplete(interaction, client);
-    }
   },
 };

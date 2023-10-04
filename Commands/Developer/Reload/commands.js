@@ -4,8 +4,8 @@ const { loadCommands } = require("../../../Structures/Handlers/commandHandler.js
 module.exports = {
 	subCommand: "reload.commands",
 	/**
-	 * @param {Client} client
 	 * @param {ChatInputCommandInteraction} interaction
+	 * @param {Client} client
 	 */
 	execute(interaction, client) {
 		loadCommands(client);
