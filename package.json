@@ -30,6 +30,7 @@
     "file": "^0.2.2",
     "genius-lyrics": "^4.4.0",
     "glob": "^9.3.4",
+    "libsodium-wrappers": "^0.7.13",
     "mal-scraper": "^2.11.4",
     "moment": "^2.29.4",
     "moment-duration-format": "^2.3.2",
@@ -38,6 +39,8 @@
     "ms-prettify": "^1.4.0",
     "node-fetch": "^3.2.6",
     "os-utils": "^0.0.14",
-    "random-gif-api": "^1.0.5"
+    "random-gif-api": "^1.0.5",
+    "yt-search": "^2.10.4",
+    "ytdl-core": "^4.11.5"
   }
 }
