@@ -111,7 +111,7 @@ module.exports = {
 					return await i.reply({ content: `只有 ${interaction.user.tag} 才能使用這個選單!`, ephemeral: true })
 				}
 				if (value === "menu1") {
-					await i.update({ embeds: [publicem], components: [helpmenu, inviteme] })
+					await i.update({ embeds: [publicem], components: [helpmenu, inviteme, generalcommands] })
 				}
 
 				if (value === "menu2") {
