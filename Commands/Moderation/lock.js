@@ -9,7 +9,7 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
         .addStringOption((option) => option.setName("time").setDescription("此鎖定的到期日期").setRequired(true))
         .addStringOption((option) => option.setName("reason").setDescription("請提供鎖定這個頻道的理由").setRequired(false)),
-    usage: "/lock (time, reason)",
+    usage: "/lockdown (time, reason)",
     /**
      *
      * @param {ChatInputCommandInteraction} interaction
@@ -22,13 +22,13 @@ module.exports = {
         const Embed = new EmbedBuilder();
 
         if (!channel.permissionsFor(guild.id).has("SEND_MESSAGES"))
-            return interaction.reply({ embeds: [Embed.setColor("RED").setDescription("⛔ | 這個頻道已經被鎖定了")], ephemeral: true });
+            return interaction.reply({ embeds: [Embed.setColor("Red").setDescription("⛔ | 這個頻道已經被鎖定了")], ephemeral: true });
 
         channel.permissionOverwrites.edit(guild.id, {
             SEND_MESSAGES: false
         });
 
-        interaction.reply({ embeds: [Embed.setColor("RED").setDescription(`🔒 | 這個頻道現在因為 **${Reason}** 而被鎖定`)] })
+        interaction.reply({ embeds: [Embed.setColor("Red").setDescription(`🔒 | 這個頻道現在因為 **${Reason}** 而被鎖定`)] })
         const Time = options.getString("time");
         if (Time) {
             const ExpireDate = Date.now() + ms(Time);
@@ -38,7 +38,7 @@ module.exports = {
                 channel.permissionOverwrites.edit(guild.id, {
                     SEND_MESSAGES: null
                 });
-                interaction.editReply({ embeds: [Embed.setDescription("🔓 | 鎖定已被解除").setColor("GREEN")] }).catch(() => {});
+                interaction.editReply({ embeds: [Embed.setDescription("🔓 | 鎖定已被解除").setColor("Green")] }).catch(() => {});
 
                 await DB.deleteOne({ ChannelID: channel.id });
             }, ms(Time));

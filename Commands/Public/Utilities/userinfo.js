@@ -4,12 +4,12 @@ const { profileImage } = require("discord-arts");
 
 function addSuffix(number) {
 	if(number % 100 >= 11 && number % 100 <= 13) 
-		return "第" + number + "個";
+		return "第" + number + "位";
 
 	switch(number % 10) {
-		case 1 : return number + "st";
-		case 2 : return number + "nd";
-		case 3 : return number + "rd";
+		case 1 : return "第" + number + "位";
+		case 2 : return "第" + number + "位";
+		case 3 : return "第" + number + "位";
 	}
 	return number + "th";
 }
@@ -51,7 +51,7 @@ module.exports = {
 
 			if(member.user.bot) return interaction.editReply({
 				embeds: [
-					new EmberBuilder().setDescription("> 目前尚未支援機器人使用此功能!")
+					new EmbedBuilder().setDescription("> 目前尚未支援機器人使用此功能!")
 				],
 				ephemeral: true,
 			});
@@ -62,7 +62,7 @@ module.exports = {
 
 				const imageAttachment = new AttachmentBuilder(profileBuffer, { name: "profile.png" });
 
-				const joinPosition = Array.from(fetchedMember
+				const joinPosition = Array.from(fetchedMembers
 					.sort((a, b) => a.joinedTimestamp - b.joinedTimestamp)
 					.keys()).indexOf(member.id) + 1;
 				
@@ -83,10 +83,20 @@ module.exports = {
 				.setDescription(`在 <t:${joinTime}:D> ， ${member.user.username} 以 ${addSuffix(joinPosition)} 成員的身分，加入了這個伺服器`)
 				.setImage("attachment://profile.png")
 				.addFields([
-					{ name: "徽章", value: `${addBadges(userBadges).join("")}`, inline: true }
-				])
+					{ name: "徽章", value: `${addBadges(userBadges).join("")}`, inline: true },
+					{ name: "加成", value: `${Booster}`, inline: true },
+					{ name: "最高權限的身分組", value: `${topRoles.join("").replace(`<@${interaction.guildId}>`)}`, inline: false },
+					{ name: "帳號創建時間", value: `<t:${createdTime}:R>`, inline: true },
+					{ name: "帳號加入時間", value: `<t:${joinTime}:R>`, inline: true },
+					{ name: "帳號ID", value: `${member.id}`, inline: false },
+					{ name: "頭像", value: `[連結](${member.displayAvatarURL()})`, inline: true },
+					{ name: "橫幅", value: `[連結](${(await member.user.fetch()).bannerURL() || "無"})`, inline: true },
+				]);
+
+				interaction.editReply({ embeds: [Embed], ephemeral: true, files: [imageAttachment] });
 			} catch(err) {
-				
+				interaction.editReply({ content: "> 發生錯誤，請協助回報錯誤!" });
+				throw err;
 			}
     }
 }

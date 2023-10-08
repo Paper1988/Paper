@@ -34,16 +34,14 @@ module.exports = {
 							description: "顯示所有抽獎指令",
 							value: "menu4"
 						},
+
+						{
+							label: "🎭 娛樂",
+							description: "顯示所有娛樂指令",
+							value: "menu5"
+						},
 					),
 			);
-
-		const funbutton = new ActionRowBuilder()
-			.addComponents(
-				new ButtonBuilder()
-					.setCustomId("funbutton")
-					.setLabel("娛樂指令")
-					.setStyle(ButtonStyle.Secondary)
-			)
 
 		const generalcommands = new ActionRowBuilder()
 			.addComponents(
@@ -67,30 +65,38 @@ module.exports = {
 			.setTimestamp()
 
 		const publicem = new EmbedBuilder()
-			.setTitle("🔧功能")
+			.setTitle("🔧一般 General")
 			.setColor("Green")
 			.setDescription("`/help`: 顯示這個列表\n`/botinfo`: 顯示有關Paper的資訊\n`/ping`: Pong!\n`/invite`: 顯示Paper的邀請指令\n`/status`: 檢查機器人的狀態\n`/serverinfo`: 顯示伺服器的資訊\n`/userinfo`: 取得一位用戶的資訊\n\`/report\`: 回報給我們訊息(bug、建議等)")
 			.setTimestamp()
 
 		const modem = new EmbedBuilder()
-			.setTitle("🔒管理")
+			.setTitle("🔒管理 Moderation")
 			.setColor("Red")
 			.setDescription("\`/ban\`: 停權一名成員\n\`/unban\`: 對一名成員解除停權\n\`/kick\`: 踢除一名成員\n\`/mute\`: 禁言一名成員\n\`/unmute\`: 對一名成員解除禁言\n\`/purge\`: 刪除頻道內訊息")
 			.setTimestamp()
 
 		const musicem = new EmbedBuilder()
-			.setTitle("🎶音樂")
+			.setTitle("🎶音樂 Music")
 			.setColor("Purple")
 			.setDescription(
-				"\`/play\`: 提供連結或關鍵字來播放音樂或影片\n\`/seek\`: 調整音樂當前秒數\n\`/settings\`: 設定功能\n\`/filter\`: 使用過濾器\n\`/volume\`: 調整音量"
+				"\`/play\`: 提供連結或關鍵字來播放音樂或影片\n\`/seek\`: 調整音樂當前秒數\n\`/settings\`: 設定功能\n\`/volume\`: 調整音量"
 			)
 			.setTimestamp()
 
 		const giveem = new EmbedBuilder()
-			.setTitle("🎁抽獎")
+			.setTitle("🎁抽獎 Giveaway")
 			.setColor("Gold")
 			.setDescription(
 				"\`/start\`: 設定一次抽獎活動\n\`/action\`: 調整抽獎活動的參數\n"
+			)
+			.setTimestamp()
+
+		const funem = new EmbedBuilder()
+			.setTitle("🎭娛樂 Fun")
+			.setColor("Orange")
+			.setDescription(
+				"\`/anime\`: 搜尋動漫訊息\n\`/bite\`: 咬某人一口(gif)\n\`/dance\`: 挑一支舞(gif)\n\`/hug\`: 擁抱某人(gif)\n\`/kill\`: 殺掉某人(gif)\n\`/kiss\`: 親某人一口(gif)\n\`/pat\`: 摸某人一下(gif)\n\`/punch\`: 揍某人一拳(gif)"
 			)
 			.setTimestamp()
 
@@ -109,30 +115,27 @@ module.exports = {
 				}
 
 				if (value === "menu2") {
-					await i.update({ embeds: [modem], components: [helpmenu, inviteme] })
+					await i.update({ embeds: [modem], components: [helpmenu, inviteme, generalcommands] })
 				}
 
 				if (value === "menu3") {
-					await i.update({ embeds: [musicem], components: [helpmenu, inviteme] })
+					await i.update({ embeds: [musicem], components: [helpmenu, inviteme, generalcommands] })
 				}
 
 				if (value === "menu4") {
-					await i.update({ embeds: [giveem], components: [helpmenu, inviteme] })
+					await i.update({ embeds: [giveem], components: [helpmenu, inviteme, generalcommands] })
 				}
-			}
 
-			if (i.customId === "funbutton") {
-				if (i.user.id !== interaction.user.id) {
-					return await i.reply({ content: `只有 ${interaction.user.tag} 可以使用這些按鈕!`, ephemeral: true })
+				if (value === "menu5") {
+					await i.update({ embeds: [funem], components: [helpmenu, inviteme, generalcommands] })
 				}
-				await i.update({ embeds: [funem], components: [helpmenu, generalcommands, inviteme] })
 			}
 
 			if (i.customId === "back") {
 				if (i.user.id !== interaction.user.id) {
 					return await i.reply({ content: `只有 ${interaction.user.tag} 可以使用這些按鈕!`, ephemeral: true })
 				}
-				await i.update({ embeds: [publicem], components: [helpmenu, funbutton, inviteme] })
+				await i.update({ embeds: [embed], components: [helpmenu, inviteme] })
 			}
 
 		})

@@ -4,7 +4,7 @@ const mal = require('mal-scraper');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('anime')
-		.setDescription('💮 搜尋動漫訊息')
+		.setDescription('💮 搜尋動漫資訊')
 		.addStringOption(option =>
 			option
 				.setName('query')
