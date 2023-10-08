@@ -5,7 +5,7 @@ const ms = require("ms");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("timeout")
-		.setDescription("Timeout 一個成員")
+		.setDescription("禁言一個成員")
 		.setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
 		.setDMPermission(false)
 		.addUserOption(options => options
@@ -67,7 +67,7 @@ module.exports = {
 
 		if (timeError)
 			return interaction.reply({
-				embeds: [errorsEmbed.setDescription("無法封鎖該名成員，因為一個不常見的錯誤，不能取負值")],
+				embeds: [errorsEmbed.setDescription("無法禁言該名成員，因為一個不常見的錯誤，時間不能取負值")],
 				ephemeral: true
 			});
 
@@ -84,7 +84,7 @@ module.exports = {
 		else userData.Infractions.push(newInfractionsObject) && await userData.save();
 
 		const successEmebd = new EmbedBuilder()
-			.setAuthor({ name: "執行禁言", iconURL: guild.iconURL() })
+			.setAuthor({ name: "Timeout", iconURL: guild.iconURL() })
 			.setColor(client.color)
 			.setDescription([
 				`被禁言用戶: ${target}`,

@@ -1,6 +1,4 @@
 const { PermissionFlagsBits, SlashCommandBuilder, Client, EmbedBuilder } = require("discord.js");
-const DB = require("../../../Structures/Schemas/AntiScamDB");
-const config = require("../../../Structures/config.json");
 
 module.exports = {
     data: new SlashCommandBuilder()

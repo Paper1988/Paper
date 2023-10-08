@@ -131,3 +131,4 @@ dist
 
 # config
 .Structures/config.json
+.config.json

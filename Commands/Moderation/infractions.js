@@ -27,7 +27,7 @@ module.exports = {
 
         const Infractions2 = new EmbedBuilder()
             .setAuthor({
-                name: `Infractions`,
+                name: `違規`,
                 iconURL: guild.iconURL(),
             })
             .setColor("Gold")
@@ -46,7 +46,7 @@ module.exports = {
         if (userData) {
             const Infractions1 = new EmbedBuilder()
                 .setAuthor({
-                    name: `Infractions`,
+                    name: `違規`,
                     iconURL: guild.iconURL(),
                 })
                 .setColor("Gold")
