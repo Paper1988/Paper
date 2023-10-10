@@ -21,6 +21,6 @@ module.exports = {
         voiceChannel.members.forEach(m => {
             m.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`)
         })
-        interaction.reply({ content: `成功將所有成員移動到 ${newChannel}`, ephemeral: true })
+        interaction.reply({ content: `> 成功將所有成員移動到 ${newChannel}`, ephemeral: true })
     }
 }

@@ -5,14 +5,14 @@ const ms = require("ms");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("lockdown")
-        .setDescription("鎖定住這個頻道")
+        .setDescription("鎖定這個頻道")
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
-        .addStringOption((option) => option.setName("time").setDescription("此鎖定的到期日期").setRequired(true))
-        .addStringOption((option) => option.setName("reason").setDescription("請提供鎖定這個頻道的理由").setRequired(false)),
+        .addStringOption((option) => option.setName("time").setDescription("鎖定此頻道的結束時間 (1d, 1h, 1m, 1s)").setRequired(true))
+        .addStringOption((option) => option.setName("reason").setDescription("請提供鎖定這個頻道的原因").setRequired(false)),
     usage: "/lockdown (time, reason)",
     /**
-     *
      * @param {ChatInputCommandInteraction} interaction
+     *
      */
     async execute(interaction) {
         const { guild, channel, options } = interaction;
@@ -21,11 +21,12 @@ module.exports = {
 
         const Embed = new EmbedBuilder();
 
-        if (!channel.permissionsFor(guild.id).has("SEND_MESSAGES"))
+        if (!channel.permissionsFor(guild.id).has(PermissionFlagsBits.SendMessages))
             return interaction.reply({ embeds: [Embed.setColor("Red").setDescription("⛔ | 這個頻道已經被鎖定了")], ephemeral: true });
 
-        channel.permissionOverwrites.edit(guild.id, {
-            SEND_MESSAGES: false
+        channel.permissionOverwrites.set(guild.id, {
+            id: interaction.guild.id,
+    				deny: [PermissionFlagsBits.SendMessages],
         });
 
         interaction.reply({ embeds: [Embed.setColor("Red").setDescription(`🔒 | 這個頻道現在因為 **${Reason}** 而被鎖定`)] })
@@ -35,8 +36,9 @@ module.exports = {
             DB.create({ GuildID: guild.id, ChannelID: channel.id, Time: ExpireDate });
 
             setTimeout(async() => {
-                channel.permissionOverwrites.edit(guild.id, {
-                    SEND_MESSAGES: null
+                channel.permissionOverwrites.set(guild.id, {
+                    id: interaction.guild.id,
+    								deny: [PermissionFlagsBits.SendMessages],
                 });
                 interaction.editReply({ embeds: [Embed.setDescription("🔓 | 鎖定已被解除").setColor("Green")] }).catch(() => {});
 

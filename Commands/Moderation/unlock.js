@@ -6,8 +6,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("unlock")
         .setDescription("解除鎖定這個頻道")
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
-        .addStringOption((option) => option.setName("time").setDescription("此鎖定的到期日期")),
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels),
     usage: "/unlock",
     /**
      *
@@ -18,11 +17,12 @@ module.exports = {
 
         const Embed = new EmbedBuilder();
 
-        if (channel.permissionsFor(guild.id).has("SEND_MESSAGES"))
+        if (channel.permissionsFor(guild.id).has(PermissionFlagsBits.SendMessages))
             return interaction.reply({ embeds: [Embed.setColor("Red").setDescription("⛔ | 這個頻道沒有被鎖定")], ephemeral: true });
 
         channel.permissionOverwrites.edit(guild.id, {
-            SEND_MESSAGES: null
+            id: interaction.guild.id,
+    				allow: [PermissionFlagsBits.SendMessages],
         });
 
         await DB.deleteOne({ ChannelID: channel.id });
