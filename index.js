@@ -10,6 +10,7 @@ const client = new Client({
 
 const { loadEvents } = require("./Structures/Handlers/eventHandler.js");
 
+
 client.config = require("./Structures/config.json");
 client.commands = new Collection();
 client.buttons = new Collection();
@@ -33,7 +34,6 @@ client.distube = new DisTube(client, {
 		new SpotifyPlugin()
 	],
 });
-
 /**************************************************/
 module.exports = client;
 

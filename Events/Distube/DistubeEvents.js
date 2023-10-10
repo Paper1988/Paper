@@ -2,7 +2,7 @@ const client = require("../../index.js");
 const { EmbedBuilder } = require("discord.js");
 
 const status = queue =>
-	`音量: \`${queue.volume}%\` | 重複播放: \`${queue.repeatMode ? (queue.repeatMode === 2 ? '整個清單' : '單曲') : '關'
+	`音量: \`${queue.volume}%\` | 過濾器: \`${queue.filters.names.join(', ') || '關'}\` | 重複播放: \`${queue.repeatMode ? (queue.repeatMode === 2 ? '整個清單' : '單曲') : '關'
 	}\` | 自動播放: \`${queue.autoplay ? '開' : '關'}\``
 
 client.distube
@@ -61,7 +61,7 @@ client.distube
 	.on('finish', queue => queue.textChannel.send({
 		embeds: [new EmbedBuilder()
 			.setColor("Red")
-			.setDescription(`> 清單播放完畢！離開頻道中...`)
+			.setDescription(`> 清單播放完畢！`)
 		]
 		})
 	)

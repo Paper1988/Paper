@@ -17,6 +17,6 @@ module.exports = {
 			return interaction.reply({ content: `> 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`, ephemeral: true });
 
 		client.distube.play(VoiceChannel, options.getString("query"), { textChannel: channel, member: member });
-		return interaction.reply({ content: "> 🎼 請求已接受" });
+		return interaction.reply({ content: "> 🎼 請求已接受 - 預設音量為\`50%\`" });
 	}
 }
