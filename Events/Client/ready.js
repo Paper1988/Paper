@@ -26,7 +26,6 @@ module.exports = {
 
 		channel.send({ embeds: [Embed] });
 
-		if (!Database) return;
 		connect(client.config.Database, {
 		}).then(() => console.log(`✅ >>> 成功連結到 MongoDB!`));
 	}
