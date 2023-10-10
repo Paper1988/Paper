@@ -23,6 +23,7 @@ module.exports = {
 			.setDescription("請提供一個理由")
 			.setMaxLength(512)
 		),
+	usage: "/timeout (target, duration, reason)",
 	/**
 	 * 
 	 * @param {ChatInputCommandInteraction} interaction 

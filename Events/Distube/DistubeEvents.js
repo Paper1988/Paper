@@ -44,7 +44,7 @@ client.distube
 	.on("empty", queue => queue.textChannel.send({
 		embeds: [new EmbedBuilder()
 			.setColor("Red")
-			.setDescription('> 語音頻道是空的！離開頻道中...')
+			.setDescription('> ⚠ | 語音頻道是空的！離開頻道中...')
 		]
 		})
 	)
@@ -61,7 +61,7 @@ client.distube
 	.on('finish', queue => queue.textChannel.send({
 		embeds: [new EmbedBuilder()
 			.setColor("Red")
-			.setDescription(`> 清單播放完畢！`)
+			.setDescription(`> 🔚 | 清單播放完畢！`)
 		]
 		})
 	)

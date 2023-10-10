@@ -19,7 +19,7 @@ module.exports = {
 		const giveaway = client.giveawaysManager.giveaways.find((g) => g.guildId === interaction.guildId && g.messageId === messageId);
 
 		if (!giveaway) {
-			errEmbed.setDescription(`無法在伺服器裡找到訊息ID: ${messageId} `)
+			errEmbed.setDescription(`> ⚠ | 無法找到訊息ID: ${messageId} `)
 			interaction.reply({ embeds: [errEmbed], ephemeral: true });
 		}
 

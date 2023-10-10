@@ -3,7 +3,6 @@ const giveawayModel = require("../Structures/Schemas/GiveawayDB");
 
 module.exports = (client) => {
     const GiveawayManagerWithOwnDatabase = class extends GiveawaysManager {
-
         async getAllGiveaways() {
             return await giveawayModel.find().lean().exec();
         }
