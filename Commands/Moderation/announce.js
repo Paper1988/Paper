@@ -46,7 +46,6 @@ module.exports = {
 		)
   ),
   /**
-    *
     * @param {ChatInputCommandInteraction} interaction
     */
   execute(interaction) {

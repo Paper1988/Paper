@@ -28,7 +28,7 @@ module.exports = {
         ),
     /**
      *
-     * @param {ChatInputCommandInteraction} interactions
+     * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction, client) {
         const { options, guild, member } = interaction;
@@ -43,13 +43,13 @@ module.exports = {
                 name: `Ban`,
                 iconURL: guild.iconURL(),
             })
-            .setColor(client.color)
+            .setColor("Green")
             .setThumbnail(
                 "https://media.discordapp.net/attachments/1059607121194393671/1059923413650640987/295678623038211.png?width=285&height=296"
             )
             .setDescription(
                 [
-                    `你已被 **封鎖** - 在 ${interaction.guild.name}`,
+                    `你已從 ${interaction.guild.name} 被 **封鎖**`,
                     `持行者: ${member}`,
                     `總違規點數已被清除`,
                     `\n原因: ${reason}`,
@@ -112,7 +112,7 @@ module.exports = {
                 name: `Ban`,
                 iconURL: guild.iconURL(),
             })
-            .setColor(client.color)
+            .setColor("Green")
             .setThumbnail(
                 "https://media.discordapp.net/attachments/1059607121194393671/1059923413650640987/295678623038211.png?width=285&height=296"
             )

@@ -1,4 +1,4 @@
-const { Client, EmbedBuilder } = require("discord.js");
+const { Client, EmbedBuilder, ActivityType } = require("discord.js");
 const { connect } = require("mongoose");
 
 const { loadCommands } = require("../../Structures/Handlers/commandHandler.js");
@@ -10,7 +10,14 @@ module.exports = {
 	 * @param {Client} client
 	 */
 	async execute(client) {
-		client.user.setActivity(`在 ${client.guilds.cache.size} 個伺服器裡`);
+		client.user.setPersence({
+			status: 'online',
+			activities: [{
+				type: ActivityType.Custom,
+				name: "testing",
+				state: `在 ${client.guilds.cache.size} 個伺服器裡`
+			}]
+		});
 		//client.user.setActivity(`Updating 更新中....`);
 		client.user.setStatus(`online`);
 		console.log(`${client.user.username} 準備好ㄌ!`);

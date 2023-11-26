@@ -25,8 +25,8 @@ module.exports = {
 				.setRequired(true)
 		),
 	/**
+	 * @param {ChatInputCommandInteraction} interaction
 	 *
-	 * @param {ChatInputCommandInteraction} interactions
 	 */
 	async execute(interaction, client) {
 		const { options, guild, member } = interaction;
