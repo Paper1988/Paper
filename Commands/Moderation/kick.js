@@ -27,7 +27,7 @@ module.exports = {
         ),
     /**
      *
-     * @param {ChatInputCommandInteraction} interactions
+     * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction, client) {
         const { options, guild, member } = interaction;
@@ -42,10 +42,10 @@ module.exports = {
                 name: `Kick`,
                 iconURL: guild.iconURL(),
             })
-            .setColor(client.color)
+            .setColor("Green")
             .setDescription(
                 [
-                    `你已經被 **踢出** - 在 ${interaction.guild.name}`,
+                    `你已從 ${interaction.guild.name} 被 **踢出**`,
                     `執行者: ${member}`,
                     `\n原因: ${reason}`,
                 ].join("\n")
@@ -114,7 +114,7 @@ module.exports = {
                 name: `Kick`,
                 iconURL: guild.iconURL(),
             })
-            .setColor(client.color)
+            .setColor("Green")
             .setDescription(
                 [
                     `被踢出成員: ${target}`,

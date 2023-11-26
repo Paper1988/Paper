@@ -73,7 +73,7 @@ module.exports = {
 		const modem = new EmbedBuilder()
 			.setTitle("🔒管理 Moderation")
 			.setColor("Red")
-			.setDescription("\`/ban\`: 停權一名成員\n\`/unban\`: 對一名成員解除停權\n\`/kick\`: 踢除一名成員\n\`/mute\`: 禁言一名成員\n\`/unmute\`: 對一名成員解除禁言\n\`/purge\`: 刪除頻道內訊息\n\`/lockdown\`: 鎖定目前的頻道\n\`/unlock\`: 解除鎖定目前的頻道\n")
+			.setDescription("\`/ban\`: 停權一名成員\n\`/unban\`: 對一名成員解除停權\n\`/kick\`: 踢除一名成員\n\`/mute\`: 禁言一名成員\n\`/unmute\`: 對一名成員解除禁言\n\`/purge\`: 刪除頻道內訊息")
 			.setTimestamp()
 
 		const musicem = new EmbedBuilder()

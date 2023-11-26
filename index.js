@@ -17,7 +17,9 @@ client.voiceGenerator = new Collection();
 client.events = new Collection();
 client.subCommands = new Collection();
 
-["GiveawaySys", "LockDownSys"].forEach((sys) => {
+require("./keepAlive.js");
+
+["GiveawaySys"].forEach((sys) => {
 	require(`./Systems/${sys}`)(client);
 });
 

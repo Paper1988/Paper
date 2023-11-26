@@ -1,16 +1,16 @@
-const { Client, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const { ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("voice-moveall")
-        .setDescription("將用戶從目前語音頻道移動到另一個語音頻道")
+        .setName("voice-move")
+        .setDescription("將所有用戶從目前語音頻道移動到另一個語音頻道")
         .setDefaultMemberPermissions(PermissionFlagsBits.MoveMembers)
         .addChannelOption((option) => option.setName("move-to").setDescription("選擇要將成員移動到的頻道").setRequired(true)),
     /**
      * @param {ChatInputCommandInteraction} interaction
-     * @param {Client} client
+     * 
      */
-    async execute(interaction, client) {
+    async execute(interaction) {
         const { member, options } = interaction;
         const newChannel = options.getChannel("move-to");
         const voiceChannel = member.voice.channel;
