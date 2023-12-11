@@ -1,6 +1,6 @@
 {
-    "Token": "ODY5MTY2OTA2NzY1MTAzMTM1.YP6Qwg.a0Rm7YtLddDGh6yFmLg1Vz-k0TY",
-    "Database": "mongodb+srv://Paper:13345627@dclvl.62oke.mongodb.net/Js?retryWrites=true&w=majority",
-	  "clientId": "869166906765103135",
-		"developerGuild": "1008313564349616169"
+  "Token": "ODY5MTY2OTA2NzY1MTAzMTM1.YP6Qwg.a0Rm7YtLddDGh6yFmLg1Vz-k0TY",
+  "Database": "mongodb+srv://Paper:13345627@dclvl.62oke.mongodb.net/Js?retryWrites=true&w=majority",
+  "clientId": "869166906765103135",
+  "developerGuild": "1008313564349616169"
 }

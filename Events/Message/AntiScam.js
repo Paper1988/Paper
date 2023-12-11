@@ -11,7 +11,7 @@ module.exports = {
   async execute(message) {
     DB.findOne({ Guild: message.guild.id }, async (err, data) => {
       if (!data) return;
-      if(err) throw err;
+      if (err) throw err;
       const array = require(`../../Structures/Validation/Blacklist.json`);
       if (array.some((word) => message.content.toLowerCase().includes(word))) {
         message.delete();
@@ -26,8 +26,10 @@ module.exports = {
           )
           .addField("訊息內容: ", `\`\`\`${message.content}\`\`\``)
           .setTimestamp();
-        
-        await message.guild.channels.cache.get(data.Channel).send({embeds: [Ex]});
+
+        await message.guild.channels.cache
+          .get(data.Channel)
+          .send({ embeds: [Ex] });
       }
     });
   },

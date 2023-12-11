@@ -1,21 +1,28 @@
-const { PermissionFlagsBits, SlashCommandBuilder, Client, EmbedBuilder } = require("discord.js");
+const {
+  PermissionFlagsBits,
+  SlashCommandBuilder,
+  Client,
+  EmbedBuilder,
+} = require("discord.js");
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName("antiscam")
-        .setDescription("設定反詐騙連結系統")
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-        .addSubcommand((sub) =>
-            sub
-            .setName("setup")
-            .setDescription("防詐騙系統設定")
-            .addChannelOption((options) =>
-                options
-                .setName("logs")
-                .setDescription("記錄詐騙訊息")
-                .setRequired(true)
-            )
+  data: new SlashCommandBuilder()
+    .setName("antiscam")
+    .setDescription("設定反詐騙連結系統")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .addSubcommand((sub) =>
+      sub
+        .setName("setup")
+        .setDescription("防詐騙系統設定")
+        .addChannelOption((options) =>
+          options
+            .setName("logs")
+            .setDescription("記錄詐騙訊息")
+            .setRequired(true)
         )
-        .addSubcommand((options) => options.setName("reset").setDescription("重置您的反詐騙系統")),
-    usage: "/antiscam [setup/reset]",
+    )
+    .addSubcommand((options) =>
+      options.setName("reset").setDescription("重置您的反詐騙系統")
+    ),
+  usage: "/antiscam [setup/reset]",
 };

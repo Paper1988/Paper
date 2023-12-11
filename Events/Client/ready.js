@@ -1,39 +1,34 @@
-const { Client, EmbedBuilder, ActivityType } = require("discord.js");
+const { Client, EmbedBuilder } = require("discord.js");
 const { connect } = require("mongoose");
 
 const { loadCommands } = require("../../Structures/Handlers/commandHandler.js");
 
 module.exports = {
-	name: "ready",
-	once: true,
-	/**
-	 * @param {Client} client
-	 */
-	async execute(client) {
-		client.user.setPersence({
-			status: 'online',
-			activities: [{
-				type: ActivityType.Custom,
-				name: "testing",
-				state: `在 ${client.guilds.cache.size} 個伺服器裡`
-			}]
-		});
-		//client.user.setActivity(`Updating 更新中....`);
-		client.user.setStatus(`online`);
-		console.log(`${client.user.username} 準備好ㄌ!`);
+  name: "ready",
+  once: true,
+  /**
+   * @param {Client} client
+   */
+  async execute(client) {
+    client.user.setActivity(`在 ${client.guilds.cache.size} 個伺服器裡`);
+    //client.user.setActivity(`Updating 更新中....`);
+    client.user.setStatus(`online`);
+    console.log(`${client.user.username} 準備好ㄌ!`);
 
-		loadCommands(client);
+    loadCommands(client);
 
-		const channel = client.channels.cache.get("961615076220092496");
-		const Embed = new EmbedBuilder()
-			.setColor("Green")
-			.setTitle("狀態")
-			.setDescription(`${client.user} 上線了`)
-			.setFooter({ text: client.user.tag }).setTimestamp();
+    const channel = client.channels.cache.get("961615076220092496");
+    const Embed = new EmbedBuilder()
+      .setColor("Green")
+      .setTitle("狀態")
+      .setDescription(`${client.user} 上線了`)
+      .setFooter({ text: client.user.tag })
+      .setTimestamp();
 
-		channel.send({ embeds: [Embed] });
+    channel.send({ embeds: [Embed] });
 
-		connect(client.config.Database, {
-		}).then(() => console.log(`✅ >>> 成功連結到 MongoDB!`));
-	}
-}
+    connect(client.config.Database, {}).then(() =>
+      console.log(`✅ >>> 成功連結到 MongoDB!`)
+    );
+  },
+};
