@@ -1,11 +1,28 @@
-const { Client, Collection, GatewayIntentBits, Partials } = require("discord.js");
-const { Guilds, GuildMembers, GuildMessages, GuildMessageReactions, GuildVoiceStates } = GatewayIntentBits;
+const {
+  Client,
+  Collection,
+  GatewayIntentBits,
+  Partials,
+} = require("discord.js");
+const {
+  Guilds,
+  GuildMembers,
+  GuildMessages,
+  GuildMessageReactions,
+  GuildVoiceStates,
+} = GatewayIntentBits;
 const { User, Message, GuildMember, ThreadMember } = Partials;
 
 const client = new Client({
-	shards: "auto",
-	intents: [Guilds, GuildMembers, GuildMessages, GuildMessageReactions, GuildVoiceStates],
-	partials: [User, Message, GuildMember, ThreadMember]
+  shards: "auto",
+  intents: [
+    Guilds,
+    GuildMembers,
+    GuildMessages,
+    GuildMessageReactions,
+    GuildVoiceStates,
+  ],
+  partials: [User, Message, GuildMember, ThreadMember],
 });
 
 const { loadEvents } = require("./Structures/Handlers/eventHandler.js");
@@ -20,28 +37,24 @@ client.subCommands = new Collection();
 require("./keepAlive.js");
 
 ["GiveawaySys"].forEach((sys) => {
-	require(`./Systems/${sys}`)(client);
+  require(`./Systems/${sys}`)(client);
 });
 
 /**************************************************/
 const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
+const ytdl = require("@distube/ytdl-core");
 
 client.distube = new DisTube(client, {
-	emitNewSongOnly: true,
-	leaveOnFinish: false,
-	emitAddSongWhenCreatingQueue: false,
-	plugins: [
-		new SpotifyPlugin()
-	],
+  emitNewSongOnly: true,
+  leaveOnFinish: false,
+  emitAddSongWhenCreatingQueue: false,
+  plugins: [new SpotifyPlugin()],
 });
 /**************************************************/
 module.exports = client;
 
-const {
-	setMaxListeners,
-	EventEmitter
-} = require("events");
+const { setMaxListeners, EventEmitter } = require("events");
 
 EventEmitter.defaultMaxListeners = 0;
 

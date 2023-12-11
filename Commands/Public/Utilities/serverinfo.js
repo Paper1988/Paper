@@ -1,69 +1,98 @@
-const { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } = require("discord.js");
+const {
+  ChatInputCommandInteraction,
+  EmbedBuilder,
+  SlashCommandBuilder,
+} = require("discord.js");
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName("serverinfo")
-		.setDescription("伺服器資訊"),
-	/**
-	 * @param {ChatInputCommandInteraction} interaction
-	 */
-	execute(interaction) {
-		const { guild } = interaction;
+  data: new SlashCommandBuilder()
+    .setName("serverinfo")
+    .setDescription("伺服器資訊"),
+  /**
+   * @param {ChatInputCommandInteraction} interaction
+   */
+  execute(interaction) {
+    const { guild } = interaction;
 
-		const { createdTimestamp, ownerId, description, members, memberCount, emojis, stickers, channels } = guild;
+    const {
+      createdTimestamp,
+      ownerId,
+      description,
+      members,
+      memberCount,
+      emojis,
+      stickers,
+      channels,
+    } = guild;
 
-		const Embed = new EmbedBuilder()
-			.setColor("Purple")
-			.setAuthor({ name: guild.name, iconURL: guild.iconURL({ dynamic: true }) })
-			.setThumbnail(guild.iconURL({ dynamic: true }))
-			.addFields({
-				name: "一般",
-				value: `
+    const Embed = new EmbedBuilder()
+      .setColor("Purple")
+      .setAuthor({
+        name: guild.name,
+        iconURL: guild.iconURL({ dynamic: true }),
+      })
+      .setThumbnail(guild.iconURL({ dynamic: true }))
+      .addFields(
+        {
+          name: "一般",
+          value: `
 					伺服器名稱: **${guild.name}**
 					創建時間: <t:${parseInt(createdTimestamp / 1000)}:R>
 					擁有者: <@${ownerId}>
 
 					伺服器敘述: ${description || "無"}
-					`
-			}, {
-				name: "👥 | 用戶統計",
-				value: `
+					`,
+        },
+        {
+          name: "👥 | 用戶統計",
+          value: `
 					- 成員數量: ${members.cache.filter((m) => !m.user.bot).size}
 					- 機器人: ${members.cache.filter((m) => m.user.bot).size}
 
 					共計: ${memberCount}
-					`
-			}, {
-				name: "📓 | 頻道統計",
-				value: `
+					`,
+        },
+        {
+          name: "📓 | 頻道統計",
+          value: `
 					- 文字頻道: ${channels.cache.filter((c) => c.type === "GUILD_TEXT").size}
 					- 語音: ${channels.cache.filter((c) => c.type === "GUILD_VOICE").size}
-					- 討論串: ${channels.cache.filter((c) => c.type === "GUILD_PUBLIC_THREAD" && "GUILD_PRIVATE_THREAD" && "GUILD_NEWS_THREAD").size}
+					- 討論串: ${
+            channels.cache.filter(
+              (c) =>
+                c.type === "GUILD_PUBLIC_THREAD" &&
+                "GUILD_PRIVATE_THREAD" &&
+                "GUILD_NEWS_THREAD"
+            ).size
+          }
 					- 類別: ${channels.cache.filter((c) => c.type === "GUILD_CATEGORY").size}
 					- 舞台: ${channels.cache.filter((c) => c.type === "GUILD_STAGE_NEWS").size}
 					共計: ${channels.cache.size}
-					`
-			}, {
-				name: "😊 | 表情符號 & 貼圖統計",
-				value: `
+					`,
+        },
+        {
+          name: "😊 | 表情符號 & 貼圖統計",
+          value: `
 					- 動圖: ${emojis.cache.filter((e) => e.animated).size}
 					- 一般: ${emojis.cache.filter((e) => !e.animated).size}
 					- 貼圖: ${stickers.cache.size}
 
 					共計: ${stickers.cache.size + emojis.cache.size}
-					`
-			}, {
-				name: "🌟 | NITRO 統計",
-				value: `
+					`,
+        },
+        {
+          name: "🌟 | NITRO 統計",
+          value: `
 					- 身分組: ${guild.roles.cache.size}
 					- 等級: ${guild.premiumTier}
 					- 加成次數: ${guild.premiumSubscriptionCount}
 					- 加成者: ${members.cache.filter((m) => m.premiumSince).size}
-					`
-			})
-			.setFooter({ text: "最後確認時間" })
-			.setTimestamp();
+					`,
+        }
+      )
+      .setFooter({ text: "最後確認時間" })
+      .setTimestamp();
 
-		interaction.reply({ embeds: [Embed] });
-	}
-}
+    interaction.reply({ embeds: [Embed] });
+  },
+};
