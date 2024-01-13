@@ -2,7 +2,7 @@ const {
   SlashCommandBuilder,
   PermissionFlagsBits,
   ChatInputCommandInteraction,
-  EmbedBuilder,
+  EmbedBuilder
 } = require("discord.js");
 
 module.exports = {
@@ -13,23 +13,13 @@ module.exports = {
     .setDMPermission(false)
     .addUserOption((options) =>
       options.setName("target").setDescription("選擇一個成員").setRequired(true)
-    )
-    .addStringOption((options) =>
-      options
-        .setName("reason")
-        .setDescription("請提供理由")
-        .setMaxLength(512)
-        .setRequired(true)
     ),
   /**
    * @param {ChatInputCommandInteraction} interaction
-   *
    */
-  async execute(interaction, client) {
+  async execute(interaction) {
     const { options, guild, member } = interaction;
-
     const target = options.getMember("target");
-    const reason = options.getString("reason");
 
     await interaction.guild.bans.fetch().then(async (bans) => {
       if (bans.size == 0)
@@ -40,7 +30,7 @@ module.exports = {
       let BannedID = bans.find((ban) => ban.user.id == target);
       if (!BannedID)
         return await interaction.reply({
-          content: "指定的 id 未被此服務器禁止",
+          content: "指定的ID未被此伺服器封鎖",
           ephermeral: true,
         });
 
@@ -63,15 +53,12 @@ module.exports = {
 
     const successEmbed = new EmbedBuilder()
       .setAuthor({
-        name: `Unban Time`,
+        name: `Unban`,
         iconURL: guild.iconURL(),
       })
-      .setColor(client.color)
-      .setThumbnail(
-        "https://media.discordapp.net/attachments/1059607121194393671/1059923413650640987/295678623038211.png?width=285&height=296"
-      )
+      .setColor("Green")
       .setDescription(
-        [`用戶: ${target}`, `執行人員: ${member}`, `\n原因: ${reason}`].join(
+        [`被解除封鎖的成員: ${target}`, `執行者: ${member}`].join(
           "\n"
         )
       )

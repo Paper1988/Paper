@@ -12,7 +12,7 @@ module.exports = {
     .addSubcommand((subcommand) =>
       subcommand
         .setName("all")
-        .setDescription("移除所有訊息")
+        .setDescription("移除指定數量則訊息")
         .addIntegerOption((options) =>
           options
             .setName("count")
@@ -24,7 +24,7 @@ module.exports = {
     .addSubcommand((subcommand) =>
       subcommand
         .setName("user")
-        .setDescription("刪除特定用戶的所有消息")
+        .setDescription("刪除特定用戶的訊息")
         .addIntegerOption((options) =>
           options
             .setName("count")
@@ -39,7 +39,7 @@ module.exports = {
     .addSubcommand((subcommand) =>
       subcommand
         .setName("bot")
-        .setDescription("刪除特定機器人的所有訊息")
+        .setDescription("刪除特定機器人的訊息")
         .addIntegerOption((options) =>
           options
             .setName("count")

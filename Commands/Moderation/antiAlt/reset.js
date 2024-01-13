@@ -17,7 +17,7 @@ module.exports = {
       if (err) throw err;
       if (!data)
         return interaction.reply({
-          content: "沒有要刪除的數據",
+          content: "> 沒有要刪除的數據",
         });
       interaction.reply({ embeds: [LogsReset] });
     });

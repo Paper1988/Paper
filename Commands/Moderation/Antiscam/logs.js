@@ -20,7 +20,7 @@ module.exports = {
         Channel: log.id,
       }).save();
       interaction.reply({
-        content: "AntiScam 系統已設定完畢",
+        content: "> 反釣魚連結系統已設定完畢!",
         ephemeral: true,
       });
     });
