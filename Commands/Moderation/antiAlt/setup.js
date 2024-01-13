@@ -42,7 +42,7 @@ module.exports = {
       });
 
     await interaction.reply({
-      content: "完成",
+      content: "> 完成!",
       ephemeral: true,
     });
   },

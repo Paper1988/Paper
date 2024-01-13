@@ -21,8 +21,7 @@ module.exports = {
     await client.application.fetch();
 
     const getChannelTypeSize = (type) =>
-      client.channels.cache.filter((channel) => type.includes(channel.type))
-        .size;
+      client.channels.cache.filter((channel) => type.includes(channel.type)).size;
 
     const status = ["⛔斷線", "✅連線", "🕐連線中...", "🕐斷線中..."];
 
@@ -121,7 +120,7 @@ module.exports = {
         },
         {
           name: "💭 論壇頻道數量",
-          value: `${getChannelTypeSize(["ChannelType.GuildForum"])}`,
+          value: `${getChannelTypeSize("ChannelType.GuildForum")}`,
           inline: true,
         }
       );
