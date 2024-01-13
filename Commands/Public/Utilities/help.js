@@ -76,7 +76,7 @@ module.exports = {
       .setTitle("🔧一般 General")
       .setColor("Green")
       .setDescription(
-        "`/help`: 顯示這個列表\n`/botinfo`: 顯示有關Paper的資訊\n`/ping`: Pong!\n`/invite`: 顯示Paper的邀請指令\n`/status`: 檢查機器人的狀態\n`/serverinfo`: 顯示伺服器的資訊\n`/userinfo`: 取得一位用戶的資訊\n`/report`: 回報給我們訊息(bug、建議等)"
+        "> </help:1131066238915842059>: 顯示這個列表\n> </botinfo:1131066238915842060>: 顯示有關Paper的資訊\n> </ping:1131066238777426001>: Pong!\n> </invite:1131066238915842058>: 顯示Paper的邀請指令\n> </serverinfo:1131066238777426000>: 顯示伺服器的資訊\n> </userinfo:1131066238777425998>: 取得一位用戶的資訊\n> </report:1158752288928710706>: 回報給我們訊息(bug、建議等)"
       )
       .setTimestamp();
 
@@ -84,7 +84,7 @@ module.exports = {
       .setTitle("🔒管理 Moderation")
       .setColor("Red")
       .setDescription(
-        "`/ban`: 停權一名成員\n`/unban`: 對一名成員解除停權\n`/kick`: 踢除一名成員\n`/mute`: 禁言一名成員\n`/unmute`: 對一名成員解除禁言\n`/purge`: 刪除頻道內訊息"
+        "> `/ban`: 停權一名成員\n> `/unban`: 對一名成員解除停權\n> `/kick`: 踢除一名成員\n> `/mute`: 禁言一名成員\n> `/unmute`: 對一名成員解除禁言\n> `/purge`: 刪除頻道內訊息"
       )
       .setTimestamp();
 
@@ -92,7 +92,7 @@ module.exports = {
       .setTitle("🎶音樂 Music")
       .setColor("Purple")
       .setDescription(
-        "`/play`: 提供連結或關鍵字來播放音樂或影片\n`/seek`: 調整音樂當前秒數\n`/settings`: 設定功能\n`/volume`: 調整音量"
+        "> `/play`: 提供連結或關鍵字來播放音樂或影片\n> `/seek`: 調整音樂當前秒數\n> `/settings`: 設定功能\n> `/volume`: 調整音量"
       )
       .setTimestamp();
 
@@ -100,7 +100,7 @@ module.exports = {
       .setTitle("🎁抽獎 Giveaway")
       .setColor("Gold")
       .setDescription(
-        "`/start`: 設定一次抽獎活動\n`/action`: 調整抽獎活動的參數\n"
+        "> `/start`: 設定一次抽獎活動\n> `/action`: 調整抽獎活動的參數\n"
       )
       .setTimestamp();
 
@@ -108,7 +108,7 @@ module.exports = {
       .setTitle("🎭娛樂 Fun")
       .setColor("Orange")
       .setDescription(
-        "`/anime`: 搜尋動漫訊息\n`/bite`: 咬某人一口(gif)\n`/dance`: 挑一支舞(gif)\n`/hug`: 擁抱某人(gif)\n`/kill`: 殺掉某人(gif)\n`/kiss`: 親某人一口(gif)\n`/pat`: 摸某人一下(gif)\n`/punch`: 揍某人一拳(gif)"
+        "> `/anime`: 搜尋動漫訊息\n> `/bite`: 咬某人一口(gif)\n> `/dance`: 挑一支舞(gif)\n> `/hug`: 擁抱某人(gif)\n> `/kill`: 殺掉某人(gif)\n> `/kiss`: 親某人一口(gif)\n> `/pat`: 摸某人一下(gif)\n> `/punch`: 揍某人一拳(gif)"
       )
       .setTimestamp();
 

@@ -14,16 +14,16 @@ module.exports = {
     .addSubcommand((sub) =>
       sub
         .setName("setup")
-        .setDescription("設置伺服器反alt日誌頻道")
+        .setDescription("設置伺服器反小號日誌頻道")
         .addChannelOption((options) =>
           options
             .setName("channel")
-            .setDescription("選擇將伺服器反alt日誌發送到的頻道")
+            .setDescription("選擇將伺服器反小號日誌發送到的頻道")
             .setRequired(true)
         )
     )
     .addSubcommand((sub) =>
-      sub.setName("reset").setDescription("還原至原始設定")
+      sub.setName("reset").setDescription("還原至初始設定")
     ),
   usage: "/anti-alt (setup, channel)",
 };

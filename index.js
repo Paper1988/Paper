@@ -43,7 +43,6 @@ require("./keepAlive.js");
 /**************************************************/
 const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
-const ytdl = require("@distube/ytdl-core");
 
 client.distube = new DisTube(client, {
   emitNewSongOnly: true,
