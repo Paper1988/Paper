@@ -4,7 +4,6 @@ const {
   ChatInputCommandInteraction,
   EmbedBuilder,
 } = require("discord.js");
-const Database = require("../../Structures/Schemas/Infractions");
 const ms = require("ms");
 
 module.exports = {
@@ -90,17 +89,6 @@ module.exports = {
       Date: Date.now(),
     };
 
-    let userData = await Database.findOne({ Guild: guild.id, User: target.id });
-    if (!userData)
-      userData = await Database.create({
-        Guild: guild.id,
-        User: target.id,
-        Infractions: [newInfractionsObject],
-      });
-    else
-      userData.Infractions.push(newInfractionsObject) &&
-        (await userData.save());
-
     const successEmebd = new EmbedBuilder()
       .setAuthor({ name: "Timeout", iconURL: guild.iconURL() })
       .setColor(client.color)
@@ -111,7 +99,6 @@ module.exports = {
           `時間: **${ms(ms(duration), {
             long: true,
           })}**`,
-          `總違規點數: **${userData.Infractions.length}**`,
           `\n原因: ${reason}`,
         ].join("\n")
       );

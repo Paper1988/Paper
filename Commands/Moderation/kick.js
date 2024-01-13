@@ -4,7 +4,6 @@ const {
   ChatInputCommandInteraction,
   EmbedBuilder,
 } = require("discord.js");
-const Database = require("../../Structures/Schemas/Infractions");
 const ms = require("ms");
 
 module.exports = {
@@ -83,25 +82,6 @@ module.exports = {
       return console.log("⚠ 錯誤發生 - 在Kick.js", err);
     });
 
-    const newInfractionsObject = {
-      Type: "Kick",
-      IssuerID: member.id,
-      IssuerTag: member.user.tag,
-      Reason: reason,
-      Date: Date.now(),
-    };
-
-    let userData = await DataBase.findOne({ Guild: guild.id, User: target.id });
-    if (!userData)
-      userData = await DataBase.create({
-        Guild: guild.id,
-        User: target.id,
-        Infractions: [newInfractionsObject],
-      });
-    else
-      userData.Infractions.push(newInfractionsObject) &&
-        (await userData.save());
-
     const successEmbed = new EmbedBuilder()
       .setAuthor({
         name: `Kick`,
@@ -112,7 +92,6 @@ module.exports = {
         [
           `被踢出成員: ${target}`,
           `執行者: ${member}`,
-          `總違規點數: **${userData.Infractions.length}**`,
           `\n原因: ${reason}`,
         ].join("\n")
       )

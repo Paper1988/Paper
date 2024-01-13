@@ -18,7 +18,7 @@ module.exports = {
         .addChannelOption((options) =>
           options
             .setName("channel")
-            .setDescription("選擇將伺服器反小號日誌發送到的頻道")
+            .setDescription("選擇將發送日誌的頻道")
             .setRequired(true)
         )
     )

@@ -17,7 +17,7 @@ module.exports = {
         return interaction.reply({
           embeds: [
             new EmbedBuilder()
-              .setDescription("AntiScam 系統未設定")
+              .setDescription("反釣魚連結系統尚未被設定!")
               .setColor("Red"),
           ],
           ephemeral: true,
@@ -28,7 +28,7 @@ module.exports = {
         embeds: [
           new EmbedBuilder()
             .setColor("Red")
-            .setDescription("您的 AntiScam 系統已重置"),
+            .setDescription("您的反釣魚連結系統已重置!"),
         ],
         ephemeral: true,
       });
