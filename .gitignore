@@ -130,11 +130,10 @@ dist
 .node_module/
 
 # config
-.Structures/config.json
-.config.json
+Structures/config.json
+config.json
 
 .replit
-
-.upm
-
 replit.nix
+
+upm/
