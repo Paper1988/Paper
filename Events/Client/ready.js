@@ -16,7 +16,7 @@ module.exports = {
 		console.log(`${client.user.username} 已上線!`);
     loadCommands(client);
 		connect(client.config.Database, {}).then(() =>
-			console.log(`✅ >>> 成功連結到 MongoDB!`)
+			console.log(`>>> ✅ 成功連結到 MongoDB!`)
 		);
 		
 		console.log(`${client.user.username} 準備好ㄌ!`);

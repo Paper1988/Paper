@@ -3,7 +3,7 @@ const {
   ChatInputCommandInteraction,
   EmbedBuilder,
   ActionRowBuilder,
-  MessageButton,
+  ButtonBuilder,
   SlashCommandBuilder,
 } = require("discord.js");
 
@@ -19,7 +19,7 @@ module.exports = {
     const Invite = new EmbedBuilder()
       .setTitle("邀請我!")
       .setDescription(
-        "我是一個很酷的 Discord Bot，不是嗎？\n使用下面的按鈕邀請我加入您的伺服器或加入我們的支援伺服器！\n\n保持安全 👋"
+        "我是一個很酷的Discord Bot，不是嗎？\n使用下面的按鈕邀請我加入您的伺服器或加入我們的支援伺服器！"
       )
       .setColor("Blue")
       .setThumbnail(client.user.displayAvatarURL());

@@ -1,7 +1,4 @@
 const {
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-  EmbedBuilder,
   ChatInputCommandInteraction,
 } = require("discord.js");
 const { results } = require("../../../Systems/PurgeFunction");

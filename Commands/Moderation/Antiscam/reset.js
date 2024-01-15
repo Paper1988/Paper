@@ -1,14 +1,13 @@
-const { ChatInputCommandInteraction, Client } = require("discord.js");
+const { ChatInputCommandInteraction, EmbedBuilder } = require("discord.js");
 const DB = require("../../../Structures/Schemas/AntiScamDB");
 const config = require("../../../Structures/config.json");
 
 module.exports = {
   subCommand: "antiscam.reset",
   /**
-   * @param {Client} client
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction, client) {
+  async execute(interaction) {
     const options = interaction.options;
     const { guild } = interaction;
 
@@ -17,7 +16,7 @@ module.exports = {
         return interaction.reply({
           embeds: [
             new EmbedBuilder()
-              .setDescription("反釣魚連結系統尚未被設定!")
+              .setDescription("⚠ | 反釣魚連結系統尚未被設定!")
               .setColor("Red"),
           ],
           ephemeral: true,
@@ -27,8 +26,8 @@ module.exports = {
       interaction.reply({
         embeds: [
           new EmbedBuilder()
-            .setColor("Red")
-            .setDescription("您的反釣魚連結系統已重置!"),
+            .setColor("Green")
+            .setDescription("✅ | 您的反釣魚連結系統已重置!"),
         ],
         ephemeral: true,
       });

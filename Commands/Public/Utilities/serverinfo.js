@@ -46,18 +46,17 @@ module.exports = {
         {
           name: "👥 | 用戶統計",
           value: `
-					- 成員數量: ${members.cache.filter((m) => !m.user.bot).size}
-					- 機器人: ${members.cache.filter((m) => m.user.bot).size}
-
+					> 成員數量: ${members.cache.filter((m) => !m.user.bot).size}
+					> 機器人: ${members.cache.filter((m) => m.user.bot).size}
 					共計: ${memberCount}
 					`,
         },
         {
           name: "📓 | 頻道統計",
           value: `
-					- 文字頻道: ${channels.cache.filter((c) => c.type === "GUILD_TEXT").size}
-					- 語音: ${channels.cache.filter((c) => c.type === "GUILD_VOICE").size}
-					- 討論串: ${
+					> 文字頻道: ${channels.cache.filter((c) => c.type === "GUILD_TEXT").size}
+					> 語音: ${channels.cache.filter((c) => c.type === "GUILD_VOICE").size}
+					> 討論串: ${
             channels.cache.filter(
               (c) =>
                 c.type === "GUILD_PUBLIC_THREAD" &&
@@ -65,32 +64,30 @@ module.exports = {
                 "GUILD_NEWS_THREAD"
             ).size
           }
-					- 類別: ${channels.cache.filter((c) => c.type === "GUILD_CATEGORY").size}
-					- 舞台: ${channels.cache.filter((c) => c.type === "GUILD_STAGE_NEWS").size}
+					> 類別: ${channels.cache.filter((c) => c.type === "GUILD_CATEGORY").size}
+					> 舞台: ${channels.cache.filter((c) => c.type === "GUILD_STAGE_NEWS").size}
 					共計: ${channels.cache.size}
 					`,
         },
         {
           name: "😊 | 表情符號 & 貼圖統計",
           value: `
-					- 動圖: ${emojis.cache.filter((e) => e.animated).size}
-					- 一般: ${emojis.cache.filter((e) => !e.animated).size}
-					- 貼圖: ${stickers.cache.size}
-
+					> 動圖: ${emojis.cache.filter((e) => e.animated).size}
+					> 一般: ${emojis.cache.filter((e) => !e.animated).size}
+					> 貼圖: ${stickers.cache.size}
 					共計: ${stickers.cache.size + emojis.cache.size}
 					`,
         },
         {
           name: "🌟 | NITRO 統計",
           value: `
-					- 身分組: ${guild.roles.cache.size}
-					- 等級: ${guild.premiumTier}
-					- 加成次數: ${guild.premiumSubscriptionCount}
-					- 加成者: ${members.cache.filter((m) => m.premiumSince).size}
+					> 身分組: ${guild.roles.cache.size}
+					> 加成等級: ${guild.premiumTier}
+					> 加成次數: ${guild.premiumSubscriptionCount}
+					> 加成者數量: ${members.cache.filter((m) => m.premiumSince).size}
 					`,
         }
       )
-      .setFooter({ text: "最後確認時間" })
       .setTimestamp();
 
     interaction.reply({ embeds: [Embed] });

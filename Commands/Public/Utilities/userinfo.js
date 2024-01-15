@@ -62,7 +62,7 @@ module.exports = {
     if (member.user.bot)
       return interaction.editReply({
         embeds: [
-          new EmbedBuilder().setDescription("> 目前尚未支援機器人使用此功能!"),
+          new EmbedBuilder().setDescription("> 機器人無法使用此功能!"),
         ],
         ephemeral: true,
       });
@@ -98,14 +98,14 @@ module.exports = {
 
       const Embed = new EmbedBuilder()
         .setAuthor({
-          name: `${member.user.tag} | 一般資訊 `,
+          name: `${member.user.tag} | 成員資訊 `,
           iconURL: member.displayAvatarURL(),
         })
         .setColor(member.displayColor)
         .setDescription(
-          `在 <t:${joinTime}:D> ， ${member.user.username} 以 ${addSuffix(
+          `在 <t:${joinTime}:D>，${member.user.username}成為${addSuffix(
             joinPosition
-          )} 成員的身分，加入了這個伺服器`
+          )}成員加入這個伺服器的人`
         )
         .setImage("attachment://profile.png")
         .addFields([

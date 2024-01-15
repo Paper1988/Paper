@@ -1,7 +1,4 @@
 const {
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-  EmbedBuilder,
   ChatInputCommandInteraction,
 } = require("discord.js");
 const { results } = require("../../../Systems/PurgeFunction");
@@ -9,7 +6,6 @@ const { results } = require("../../../Systems/PurgeFunction");
 module.exports = {
   subCommand: "purge.bot",
   /**
-   *
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
