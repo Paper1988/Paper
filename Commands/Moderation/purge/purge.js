@@ -39,7 +39,7 @@ module.exports = {
     .addSubcommand((subcommand) =>
       subcommand
         .setName("bot")
-        .setDescription("刪除特定機器人的訊息")
+        .setDescription("刪除機器人的訊息")
         .addIntegerOption((options) =>
           options
             .setName("count")
