@@ -114,7 +114,7 @@ module.exports = {
             .setTimestamp();
 
           const Bmessage = await interaction.reply({
-            content: `回報預覽:`,
+            content: `預覽:`,
             embeds: [B_embed],
             components: [cancel_button, send_button],
             ephemeral: true,
@@ -159,7 +159,7 @@ module.exports = {
             .setTimestamp();
 
           const Smessage = await interaction.reply({
-            content: `建議預覽:`,
+            content: `預覽:`,
             embeds: [S_embed],
             components: [cancel_button, send_button],
             ephemeral: true,
@@ -204,7 +204,7 @@ module.exports = {
             .setTimestamp();
 
           const Omessage = await interaction.reply({
-            content: `回報預覽:`,
+            content: `預覽:`,
             embeds: [O_embed],
             components: [cancel_button, send_button],
             ephemeral: true,

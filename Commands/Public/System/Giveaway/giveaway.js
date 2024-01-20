@@ -1,10 +1,9 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
-const ms = require("ms");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");;
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("giveaway")
-    .setDescription("一個完善的抽獎系統")
+    .setDescription("一個基本的抽獎系統")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addSubcommand((sub) =>
       sub
@@ -36,6 +35,12 @@ module.exports = {
             .setDescription("選擇這個抽獎活動舉辦的頻道")
             .setRequired(false)
         )
+				.addRoleOption((options) =>
+					options
+						.setName("role")
+						.setDescription("選擇需要擁有才能參加抽獎的身分組")
+						.setRequired(false)
+				)
     )
     .addSubcommand((sub) =>
       sub
@@ -71,8 +76,8 @@ module.exports = {
         )
         .addStringOption((options) =>
           options
-            .setName("message-id")
-            .setDescription("請提供抽獎活動的訊息id")
+            .setName("query")
+            .setDescription("請提供抽獎活動的訊息ID或獎品名稱")
             .setRequired(true)
         )
     ),
