@@ -133,7 +133,7 @@ dist
 Structures/config.json
 config.json
 
-
+/.config
 
 .replit
 replit.nix
