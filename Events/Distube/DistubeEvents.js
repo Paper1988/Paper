@@ -28,7 +28,7 @@ client.distube
         new EmbedBuilder()
           .setColor("Green")
           .setDescription(
-            `> ✅ | ${song.user} 加入 ${song.name} - \`${song.formattedDuration}\` 到清單中`
+            `✅ | ${song.user} 加入 ${song.name} - \`${song.formattedDuration}\` 到清單中`
           ),
       ],
     })
@@ -39,7 +39,7 @@ client.distube
         new EmbedBuilder()
           .setColor("Green")
           .setDescription(
-            `> ✅ | 加入 \`${playlist.name}\` 播放清單 (${
+            `✅ | 加入 \`${playlist.name}\` 播放清單 (${
               playlist.songs.length
             } 首歌) 到清單中\n${status(queue)}`
           ),
@@ -51,7 +51,7 @@ client.distube
       embeds: [
         new EmbedBuilder()
           .setColor("Red")
-          .setDescription(`> ⛔ | 發生錯誤: ${e.toString().slice(0, 1974)}`),
+          .setDescription(`⛔ | 發生錯誤: ${e.toString().slice(0, 1974)}`),
       ],
     });
     console.error(e);
@@ -61,7 +61,7 @@ client.distube
       embeds: [
         new EmbedBuilder()
           .setColor("Red")
-          .setDescription("> ⚠ | 語音頻道是空的！離開頻道中..."),
+          .setDescription("⚠ | 語音頻道是空的！離開頻道中..."),
       ],
     })
   )
@@ -70,7 +70,7 @@ client.distube
       embeds: [
         new EmbedBuilder()
           .setColor("Red")
-          .setDescription(`> ⛔ | 找不到: \`${query}\`!`),
+          .setDescription(`⛔ | 找不到: \`${query}\`!`),
       ],
     })
   )
@@ -79,7 +79,7 @@ client.distube
       embeds: [
         new EmbedBuilder()
           .setColor("Red")
-          .setDescription(`> 🔚 | 清單播放完畢！`),
+          .setDescription(`🔚 | 清單播放完畢！`),
       ],
     })
   );
