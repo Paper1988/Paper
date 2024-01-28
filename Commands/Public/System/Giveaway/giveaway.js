@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");;
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -22,6 +22,7 @@ module.exports = {
             .setName("winners")
             .setDescription("請提供這個抽獎活動的贏家數量")
             .setRequired(true)
+            .setMinValue(1)
         )
         .addStringOption((options) =>
           options
@@ -35,12 +36,12 @@ module.exports = {
             .setDescription("選擇這個抽獎活動舉辦的頻道")
             .setRequired(false)
         )
-				.addRoleOption((options) =>
-					options
-						.setName("role")
-						.setDescription("選擇需要擁有才能參加抽獎的身分組")
-						.setRequired(false)
-				)
+        .addRoleOption((options) =>
+          options
+            .setName("role")
+            .setDescription("選擇需要擁有才能參加抽獎的身分組")
+            .setRequired(false)
+        )
     )
     .addSubcommand((sub) =>
       sub
