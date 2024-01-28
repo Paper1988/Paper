@@ -128,16 +128,12 @@ dist
 
 # node_module
 .node_module/
-
-# config
-Structures/config.json
-config.json
+node_modules
 
 /.config
+/.git
 
 .replit
 replit.nix
 
-upm/
-
-/.git
+/.upm
