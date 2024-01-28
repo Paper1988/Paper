@@ -133,7 +133,11 @@ dist
 Structures/config.json
 config.json
 
+
+
 .replit
 replit.nix
 
 upm/
+
+/.git
