@@ -18,12 +18,17 @@ module.exports = {
     const choices = interaction.options.getString("options");
     const query = interaction.options.getString("query");
     const giveaway =
-			client.giveawaysManager.giveaways.find(
-      (g) => g.guildId === interaction.guildId && g.query === query) ||
-			client.giveawaysManager.giveaways.find((g) => g.guildId === interaction.guildId && g.prize === query);
+      client.giveawaysManager.giveaways.find(
+        (g) => g.guildId === interaction.guildId && g.prize === query
+      ) ||
+      client.giveawaysManager.giveaways.find(
+        (g) => g.guildId === interaction.guildId && g.messageId === query
+      );
 
     if (!giveaway) {
-      errEmbed.setDescription(`⚠ | 無法找到訊息ID或獎品名稱: ${query}\n  請確認有無輸入錯誤!`);
+      errEmbed.setDescription(
+        `⚠ | 無法找到訊息ID或獎品名稱: ${query}\n  請確認有無輸入錯誤!`
+      );
       interaction.reply({ embeds: [errEmbed], ephemeral: true });
     }
 
@@ -35,7 +40,8 @@ module.exports = {
             .then(() => {
               successEmbed.setDescription("成功結束抽獎活動!");
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
-            }).catch((err) => {
+            })
+            .catch((err) => {
               errEmbed.setDescription(`發生錯誤: \n\`${err}\``);
               interaction.reply({ embeds: [errEmbed], ephemeral: true });
             });
@@ -72,7 +78,13 @@ module.exports = {
       case "reroll":
         {
           client.giveawaysManager
-            .reroll(query)
+            .reroll(query, {
+              messages: {
+                congrat:
+                  ":tada:恭喜新贏家: {winners}! 贏得獎品: **{this.prize}**!",
+                error: "⛔ | 無有效的參與, 於是沒有新贏家!",
+              },
+            })
             .then(() => {
               successEmbed.setDescription("成功重新抽選抽獎活動的贏家!");
               interaction.reply({ embeds: [successEmbed], ephemeral: true });

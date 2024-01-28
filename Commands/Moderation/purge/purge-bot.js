@@ -1,6 +1,4 @@
-const {
-  ChatInputCommandInteraction,
-} = require("discord.js");
+const { ChatInputCommandInteraction } = require("discord.js");
 const { results } = require("../../../Systems/PurgeFunction");
 
 module.exports = {

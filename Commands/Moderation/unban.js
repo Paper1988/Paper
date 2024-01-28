@@ -2,7 +2,7 @@ const {
   SlashCommandBuilder,
   PermissionFlagsBits,
   ChatInputCommandInteraction,
-  EmbedBuilder
+  EmbedBuilder,
 } = require("discord.js");
 
 module.exports = {
@@ -21,21 +21,19 @@ module.exports = {
     const { options, guild, member } = interaction;
     const target = options.getMember("target");
 
-		const successEmbed = new EmbedBuilder()
-		.setAuthor({
-			name: `Unban`,
-			iconURL: guild.iconURL(),
-		})
-		.setColor("Green")
-		.setDescription(
-			[`被解除封鎖的成員: ${target}`, `執行者: ${member}`].join(
-				"\n"
-			)
-		)
-		.setFooter({
-			iconURL: guild.iconURL(),
-			text: `機器人 | ${interaction.user.username}`,
-		});
+    const successEmbed = new EmbedBuilder()
+      .setAuthor({
+        name: `Unban`,
+        iconURL: guild.iconURL(),
+      })
+      .setColor("Green")
+      .setDescription(
+        [`被解除封鎖的成員: ${target}`, `執行者: ${member}`].join("\n")
+      )
+      .setFooter({
+        iconURL: guild.iconURL(),
+        text: `機器人 | ${interaction.user.username}`,
+      });
 
     await interaction.guild.bans.fetch().then(async (bans) => {
       if (bans.size == 0)
@@ -67,6 +65,6 @@ module.exports = {
       return console.log("錯誤發生 - 在Unban.js", err);
     });
 
-		interaction.reply({ embeds: [successEmbed] });
+    interaction.reply({ embeds: [successEmbed] });
   },
 };

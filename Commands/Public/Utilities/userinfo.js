@@ -61,9 +61,7 @@ module.exports = {
 
     if (member.user.bot)
       return interaction.editReply({
-        embeds: [
-          new EmbedBuilder().setDescription("> 機器人無法使用此功能!"),
-        ],
+        embeds: [new EmbedBuilder().setDescription("> 機器人無法使用此功能!")],
         ephemeral: true,
       });
 
