@@ -85,7 +85,7 @@ module.exports = {
               { name: "<:icons_shuffle:988409354208313404>隨機播放", value: "shuffle" },
               { name: "<:icons_update:860123644297871382>切換自動播放", value: "autoplay" },
               { name: "<:icons_plus:988409343743496232>添加相似歌曲", value: "related" },
-              { name: "<:icons_loop:861852632893227029> 切換重複播放", value: "repeat" }
+              { name: "<:icons_loop:861852632893227029>切換重複播放", value: "repeat" }
             
         )
     )
