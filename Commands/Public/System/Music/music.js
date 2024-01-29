@@ -88,6 +88,7 @@ module.exports = {
               { name: "<:icons_loop:861852632893227029> 切換重複播放", value: "repeat" }
             
         )
-    ),
+    )
+  ),
   usage: "/music (play, volume, settings, seek, filters)",
 };
