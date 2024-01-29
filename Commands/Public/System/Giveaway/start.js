@@ -30,7 +30,7 @@ module.exports = {
         exemptMembers: new Function(
           "member",
           "giveaway",
-          `if (role) return !member.roles.cache.some((r) => r.name === '${role}')`
+          `return !member.roles.cache.some((r) => r.name === '${role}')`
         ),
         messages: {
           giveaway: "🎉**抽獎活動開始了**🎉",
