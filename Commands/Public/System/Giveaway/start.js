@@ -19,9 +19,8 @@ module.exports = {
     const role = interaction.options.getRole("role");
     const duration = interaction.options.getString("duration");
     const winnerCount = interaction.options.getInteger("winners");
-    const prize = interaction.options.getString("prizes");
-    const gchannel =
-      interaction.options.getChannel("channel") || interaction.channel;
+    const prize = interaction.options.getString("prize");
+    const gchannel = interaction.options.getChannel("channel") || interaction.channel;
 
     client.giveawaysManager
       .start(gchannel, {

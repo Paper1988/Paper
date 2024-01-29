@@ -17,13 +17,7 @@ module.exports = {
 
     const choices = interaction.options.getString("options");
     const query = interaction.options.getString("query");
-    const giveaway =
-      client.giveawaysManager.giveaways.find(
-        (g) => g.guildId === interaction.guildId && g.prize === query
-      ) ||
-      client.giveawaysManager.giveaways.find(
-        (g) => g.guildId === interaction.guildId && g.messageId === query
-      );
+    const giveaway = client.giveawaysManager.giveaways.find((g) => g.guildId === interaction.guildId && g.messageId === query);
 
     if (!giveaway) {
       errEmbed.setDescription(
