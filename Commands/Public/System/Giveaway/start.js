@@ -36,7 +36,7 @@ module.exports = {
           giveaway: "🎉**抽獎活動開始了**🎉",
           giveawayEnded: "🎊**抽獎活動結束了**🎊",
           inviteToParticipate: "**點擊🎉來參加抽獎!**",
-          winMessage: "恭喜贏家 {winners}!! 贏得獎品: **`{this.prize}`**",
+          winMessage: "> 恭喜贏家 {winners} 贏得獎品: **`{this.prize}`** !",
           noWinner: "抽獎活動已取消，因為: `參與人數不足`",
           dropMessage: "成為第一位參加的人!",
           drawing: "剩餘時間: {timestamp}",
