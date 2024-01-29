@@ -26,9 +26,9 @@ module.exports = {
 
       const logEmbed = new EmbedBuilder()
         .setColor("RED")
-        .setTitle("⚠️ | 發現小號!")
+        .setTitle("<:icons_warning:908958943466893323> | 發現小號!")
         .setDescription(
-          `🔍用戶因成立未滿 7 天而被踢出\n\n**用戶**: ${member.user.tag}\n**ID**: ${member.user.id}`
+          `<:icons_outage:868122243845206087>用戶因成立未滿 7 天而被踢出\n\n**用戶**: ${member.user.tag}\n**ID**: ${member.user.id}`
         )
         .setTimestamp();
 
