@@ -46,7 +46,7 @@ module.exports = {
           embedFooter: "{this.winnerCount}位贏家",
         },
         pauseOptions: {
-          isPaused: true,
+          isPaused: false,
           content: "⚠️ **這個抽獎活動已被暫停!** ⚠️",
           unpauseAfter: null,
           embedColor: "#FFFF00",
