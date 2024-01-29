@@ -9,7 +9,7 @@ module.exports = {
     .addSubcommand((sub) =>
       sub
         .setName("set")
-        .setDescription("<:icons_leave:860487640113217546>進入afk狀態")
+        .setDescription("進入afk狀態")
         .addStringOption((options) =>
           options
             .setName("status")
@@ -18,7 +18,7 @@ module.exports = {
         )
     )
     .addSubcommand((sub) =>
-      sub.setName("return").setDescription("<:icons_join:860487640720343071>退出afk狀態")
+      sub.setName("return").setDescription("退出afk狀態")
     ),
   usage: "/afk (set, return)",
 };
