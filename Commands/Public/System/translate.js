@@ -8,7 +8,7 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("translate")
-    .setDescription("<:icons_translate:867656825527730176>將任何文字翻譯成你想要的任何語言")
+    .setDescription("將任何文字翻譯成你想要的任何語言")
     .addStringOption((option) =>
       option
         .setName("language")

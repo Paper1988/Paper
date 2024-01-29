@@ -9,7 +9,7 @@ const ms = require("ms");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("ban")
-    .setDescription("<:icons_ban:859424400968646676>封鎖一名成員")
+    .setDescription("封鎖一名成員")
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .setDMPermission(false)
     .addUserOption((options) =>

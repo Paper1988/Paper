@@ -6,7 +6,7 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("purge")
-    .setDescription("<:icons_clean:861852633799065660>從用戶或頻道中清除特定數量的訊息")
+    .setDescription("從用戶或頻道中清除特定數量的訊息")
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .addSubcommand((subcommand) =>
       subcommand
