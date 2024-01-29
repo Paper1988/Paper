@@ -9,7 +9,7 @@ const ms = require("ms");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("timeout")
-    .setDescription("<:icons_timeout:930797536900415548>禁言一個成員")
+    .setDescription("禁言一個成員")
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
     .setDMPermission(false)
     .addUserOption((options) =>

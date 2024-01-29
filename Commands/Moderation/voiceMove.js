@@ -7,7 +7,7 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("voice-move")
-    .setDescription("<:icons_stagemoveaudience:988409365428043776>將所有用戶從目前語音頻道移動到另一個語音頻道")
+    .setDescription("將所有用戶從目前語音頻道移動到另一個語音頻道")
     .setDefaultMemberPermissions(PermissionFlagsBits.MoveMembers)
     .addChannelOption((option) =>
       option

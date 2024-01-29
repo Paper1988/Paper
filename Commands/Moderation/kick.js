@@ -8,7 +8,7 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("kick")
-    .setDescription("<:icons_kick:950409450966110269>將成員踢出伺服器")
+    .setDescription("將成員踢出伺服器")
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
     .setDMPermission(false)
     .addUserOption((options) =>

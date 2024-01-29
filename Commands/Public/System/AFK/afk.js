@@ -5,7 +5,7 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("afk")
-    .setDescription("<:icons_kick:859424400557604886>一個afk系統")
+    .setDescription("一個afk系統")
     .addSubcommand((sub) =>
       sub
         .setName("set")
