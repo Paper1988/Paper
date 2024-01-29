@@ -8,7 +8,7 @@ async function results(deletedMessages, interaction) {
 
   const userMessageMap = Object.entries(results);
 
-  const finalResult = `✅ | 成功移除\`${
+  const finalResult = `<:icons_clean:861852633799065660>移除了\`${
     deletedMessages.size
   }\`則訊息!\n\n${userMessageMap
     .map(([user, messages]) => `**${user}** : ${messages}`)

@@ -25,7 +25,7 @@ module.exports = {
               return message.reply({
                 embeds: [
                   Embed.setDescription(
-                    `⚠️ | ${m} 已進入AFK模式\nAfk時間: <t:${data.Time}:R>\n **狀態**: ${data.Status}`
+                    `<:icons_idle:860123644265365514> | ${m} 已進入AFK模式\nAfk時間: <t:${data.Time}:R>\n **狀態**: ${data.Status}`
                   ),
                 ],
               });
