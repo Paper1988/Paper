@@ -22,7 +22,7 @@ module.exports = {
     const channel = client.channels.cache.get("961615076220092496");
     const Embed = new EmbedBuilder()
       .setColor("Green")
-      .setTitle(`<:icons_online:860123643395571713> ${client.user} 上線了!`)
+      .setTitle(`${client.user} 上線了!`)
       .setFooter({ text: client.user.tag })
       .setTimestamp();
 
