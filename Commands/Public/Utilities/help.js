@@ -10,7 +10,7 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("help")
-    .setDescription("<:icons_question:860133545905225768>顯示完整的指令列表"),
+    .setDescription("顯示完整的指令列表"),
   async execute(interaction) {
     const helpmenu = new ActionRowBuilder().addComponents(
       new StringSelectMenuBuilder()

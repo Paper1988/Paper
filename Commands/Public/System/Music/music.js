@@ -3,11 +3,11 @@ const { SlashCommandBuilder } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("music")
-    .setDescription("<:icons_music:860123644201271326>一個完善的音樂系統")
+    .setDescription("一個完善的音樂系統")
     .addSubcommand((sub) =>
       sub
         .setName("play")
-        .setDescription("<:icons_play:861852632800952320> 播放音樂")
+        .setDescription("播放音樂")
         .addStringOption((options) =>
           options
             .setName("query")
@@ -18,7 +18,7 @@ module.exports = {
     .addSubcommand((sub) =>
       sub
         .setName("volume")
-        .setDescription("<:icons_speaker:860133545544908802> 調整音量大小")
+        .setDescription("調整音量大小")
         .addNumberOption((options) =>
           options
             .setName("percent")
@@ -29,7 +29,7 @@ module.exports = {
     .addSubcommand((sub) =>
       sub
         .setName("seek")
-        .setDescription("<:icons_rightarrow:859388126653186058> 跳到指定位置")
+        .setDescription("跳到指定位置")
         .addNumberOption((options) =>
           options
             .setName("time")
@@ -40,7 +40,7 @@ module.exports = {
     .addSubcommand((sub) =>
       sub
         .setName("filters")
-        .setDescription("<:icons_linkupdate:865572289180205057> 切換過濾器")
+        .setDescription("切換過濾器")
         .addStringOption((options) =>
           options
             .setName("set")
