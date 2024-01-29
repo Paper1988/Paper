@@ -1,6 +1,6 @@
 const { ChatInputCommandInteraction } = require("discord.js");
 
-const BlackListGuild = require("../../Sturctures/Schemas/BlackListGuild");
+const BlackListGuild = require("../../Structures/Schemas/BlackListGuild");
 const BlackListUser = require("../../Structures/Schemas/BlackListUser");
 
 module.exports = {
