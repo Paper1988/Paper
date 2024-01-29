@@ -9,7 +9,7 @@ const ms = require("ms");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("ban")
-    .setDescription("封鎖一名成員")
+    .setDescription("<:icons_ban:859424400968646676>封鎖一名成員")
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .setDMPermission(false)
     .addUserOption((options) =>
@@ -36,7 +36,7 @@ module.exports = {
 
     const dmEmbed = new EmbedBuilder()
       .setAuthor({
-        name: `Ban`,
+        name: `<:icons_ban:859424400968646676>`,
         iconURL: guild.iconURL(),
       })
       .setColor("Green")
@@ -54,7 +54,7 @@ module.exports = {
 
     const errorsEmbed = new EmbedBuilder()
       .setAuthor({
-        name: "無法封鎖該名成員，因為",
+        name: "<:icons_warning:908958943466893323> | 無法封鎖該名成員，因為",
       })
       .setColor("Red");
 
@@ -80,7 +80,7 @@ module.exports = {
     target.ban({ reason: reason }).catch((err) => {
       interaction.reply({
         embeds: [
-          errorsEmbed.setDescription("無法封鎖該名成員，因為一個罕見的錯誤"),
+          errorsEmbed.setDescription("<:icons_warning:908958943466893323> | 無法封鎖該名成員，因為一個罕見的錯誤"),
         ],
       });
       return console.log("錯誤發生 - 在 Ban.js", err);
@@ -88,7 +88,7 @@ module.exports = {
 
     const successEmbed = new EmbedBuilder()
       .setAuthor({
-        name: `Ban`,
+        name: `<:icons_ban:859424400968646676>`,
         iconURL: guild.iconURL(),
       })
       .setColor("Green")

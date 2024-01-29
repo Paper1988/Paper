@@ -10,7 +10,7 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("help")
-    .setDescription("顯示完整的指令列表"),
+    .setDescription("<:icons_question:860133545905225768>顯示完整的指令列表"),
   async execute(interaction) {
     const helpmenu = new ActionRowBuilder().addComponents(
       new StringSelectMenuBuilder()
@@ -30,7 +30,7 @@ module.exports = {
           },
 
           {
-            label: "🎶音樂",
+            label: "<:icons_music:860123644201271326>音樂",
             description: "顯示所有音樂指令",
             value: "menu3",
           },
@@ -76,7 +76,7 @@ module.exports = {
       .setTitle("🔧一般 General")
       .setColor("Green")
       .setDescription(
-        "> </help:1131066238915842059>: 顯示這個列表\n> </botinfo:1131066238915842060>: 顯示有關Paper的資訊\n> </ping:1131066238777426001>: Pong!\n> </invite:1131066238915842058>: 顯示Paper的邀請指令\n> </serverinfo:1131066238777426000>: 顯示伺服器的資訊\n> </userinfo:1131066238777425998>: 取得一位用戶的資訊\n> </report:1158752288928710706>: 回報給我們訊息(bug、建議等)"
+        "> </help:1131066238915842059>: 顯示這個列表\n> </botinfo:1131066238915842060>: 顯示有關Paper的資訊\n> </ping:1131066238777426001>: Pong!\n> </invite:1131066238915842058>: 顯示Paper的邀請指令\n> </serverinfo:1131066238777426000>: 顯示伺服器的資訊\n> </userinfo:1131066238777425998>: 取得一位用戶的資訊\n> </report:1158752288928710706>: 回報給我們bug、建議"
       )
       .setTimestamp();
 
@@ -84,7 +84,7 @@ module.exports = {
       .setTitle("🔒管理 Moderation")
       .setColor("Red")
       .setDescription(
-        "> `/ban`: 停權一名成員\n> `/unban`: 對一名成員解除停權\n> `/kick`: 踢除一名成員\n> `/mute`: 禁言一名成員\n> `/unmute`: 對一名成員解除禁言\n> `/purge`: 刪除頻道內訊息"
+        "> `/ban`: 停權一名成員\n> `/unban`: 解除停權一名成員\n> `/kick`: 踢出一名成員\n> `/timeout`: 禁言一名成員\n> `/purge`: 刪除頻道內訊息\n> `/voice-move`: 移動語音頻道內成員至另一語音頻道 "
       )
       .setTimestamp();
 
@@ -100,7 +100,7 @@ module.exports = {
       .setTitle("🎁抽獎 Giveaway")
       .setColor("Gold")
       .setDescription(
-        "> `/start`: 設定一次抽獎活動\n> `/action`: 調整抽獎活動的參數\n"
+        "> `/start`: 設定一次抽獎活動\n> `/actions`: 設定抽獎活動\n"
       )
       .setTimestamp();
 
@@ -108,7 +108,7 @@ module.exports = {
       .setTitle("🎭娛樂 Fun")
       .setColor("Orange")
       .setDescription(
-        "> `/anime`: 搜尋動漫訊息\n> `/bite`: 咬某人一口(gif)\n> `/dance`: 挑一支舞(gif)\n> `/hug`: 擁抱某人(gif)\n> `/kill`: 殺掉某人(gif)\n> `/kiss`: 親某人一口(gif)\n> `/pat`: 摸某人一下(gif)\n> `/punch`: 揍某人一拳(gif)"
+        "> `/anime`: 搜尋動漫資訊\n> `/bite`: 咬某人一口(gif)\n> `/dance`: 挑一支舞(gif)\n> `/hug`: 擁抱某人(gif)\n> `/kill`: 殺掉某人(gif)\n> `/kiss`: 親某人一口(gif)\n> `/pat`: 摸某人一下(gif)\n> `/punch`: 揍某人一拳(gif)"
       )
       .setTimestamp();
 
@@ -124,7 +124,7 @@ module.exports = {
         const value = i.values[0];
         if (i.user.id !== interaction.user.id) {
           return await i.reply({
-            content: `只有 ${interaction.user.tag} 才能使用這個選單!`,
+            content: `:icons_warning:908958943466893323> | 只有 ${interaction.user.tag} 才能使用這個選單!`,
             ephemeral: true,
           });
         }
@@ -167,7 +167,7 @@ module.exports = {
       if (i.customId === "back") {
         if (i.user.id !== interaction.user.id) {
           return await i.reply({
-            content: `只有 ${interaction.user.tag} 可以使用這些按鈕!`,
+            content: `:icons_warning:908958943466893323> | 只有 ${interaction.user.tag} 可以使用這些按鈕!`,
             ephemeral: true,
           });
         }

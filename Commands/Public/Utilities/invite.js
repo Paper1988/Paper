@@ -29,7 +29,7 @@ module.exports = {
         .setURL(
           "https://discord.com/api/oauth2/authorize?client_id=869166906765103135&permissions=1644971945463&scope=bot%20applications.commands"
         )
-        .setLabel("邀請我!")
+        .setLabel("點我邀請")
         .setStyle("LINK"),
 
       new ButtonBuilder()

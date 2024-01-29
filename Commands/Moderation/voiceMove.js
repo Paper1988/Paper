@@ -7,7 +7,7 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("voice-move")
-    .setDescription("將所有用戶從目前語音頻道移動到另一個語音頻道")
+    .setDescription("<:icons_stagemoveaudience:988409365428043776>將所有用戶從目前語音頻道移動到另一個語音頻道")
     .setDefaultMemberPermissions(PermissionFlagsBits.MoveMembers)
     .addChannelOption((option) =>
       option
@@ -29,12 +29,12 @@ module.exports = {
 
     if (!voiceChannel)
       return interaction.reply({
-        content: "您需要在語音頻道中才能移動成員!",
+        content: "<:icons_warning:908958943466893323> | 您需要在語音頻道中才能移動成員!",
         ephemeral: true,
       });
     if (newChannel === voiceChannel)
       return interaction.reply({
-        content: "您不能將成員移動到同一個頻道!",
+        content: "<:icons_warning:908958943466893323> | 您不能將成員移動到同一個頻道!",
         ephemeral: true,
       });
 
@@ -43,7 +43,7 @@ module.exports = {
         m.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`);
       });
       return interaction.reply({
-        content: `> 成功將所有成員移動到 ${newChannel}`,
+        content: `<:icons_stagemoveaudience:988409365428043776>成功將所有成員移動到 ${newChannel}`,
         ephemeral: true,
       });
     } else {
@@ -51,7 +51,7 @@ module.exports = {
         m.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`);
       });
       return interaction.reply({
-        content: `成功將成員 ${target} 移動到 ${newChannel}`,
+        content: `<:icons_stagemoveaudience:988409365428043776>成功將成員 ${target} 移動到 ${newChannel}`,
         ephemeral: true,
       });
     }

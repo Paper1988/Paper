@@ -9,7 +9,7 @@ const ms = require("ms");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("timeout")
-    .setDescription("禁言一個成員")
+    .setDescription("<:icons_timeout:930797536900415548>禁言一個成員")
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
     .setDMPermission(false)
     .addUserOption((options) =>
@@ -42,7 +42,7 @@ module.exports = {
     const errorsArray = [];
 
     const errorsEmbed = new EmbedBuilder()
-      .setAuthor({ name: "無法禁言該成員，因為" })
+      .setAuthor({ name: "<:icons_warning:908958943466893323> | 無法禁言該成員，因為" })
       .setColor("Red");
 
     if (!target)
@@ -75,22 +75,14 @@ module.exports = {
       return interaction.reply({
         embeds: [
           errorsEmbed.setDescription(
-            "無法禁言該名成員，因為一個不常見的錯誤，時間不能取負值"
+            "<:icons_warning:908958943466893323> 無法禁言該名成員，因為一個不常見的錯誤： 時間不能取負值"
           ),
         ],
         ephemeral: true,
       });
 
-    const newInfractionsObject = {
-      Type: "Timeout",
-      IssuerID: member.id,
-      IssuerTag: member.user.tag,
-      Reason: reason,
-      Date: Date.now(),
-    };
-
     const successEmebd = new EmbedBuilder()
-      .setAuthor({ name: "Timeout", iconURL: guild.iconURL() })
+      .setAuthor({ name: "<:icons_timeout:930797536900415548>", iconURL: guild.iconURL() })
       .setColor(client.color)
       .setDescription(
         [

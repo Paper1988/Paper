@@ -61,7 +61,7 @@ module.exports = {
 
     if (member.user.bot)
       return interaction.editReply({
-        embeds: [new EmbedBuilder().setDescription("> 機器人無法使用此功能!")],
+        embeds: [new EmbedBuilder().setDescription("<:icons_warning:908958943466893323> | 機器人無法使用此功能!")],
         ephemeral: true,
       });
 
@@ -92,42 +92,38 @@ module.exports = {
 
       const Booster = member.premiumSince
         ? "<:discordboost7:1094238751229739119>"
-        : "✖";
+        : "<:icons_xmarkwhite:988409378161954866>";
 
       const Embed = new EmbedBuilder()
         .setAuthor({
-          name: `${member.user.tag} | 成員資訊 `,
+          name: `<:icons_richpresence:860133546173923388> | ${member.user.tag}`,
           iconURL: member.displayAvatarURL(),
         })
         .setColor(member.displayColor)
         .setDescription(
-          `在 <t:${joinTime}:D>，${member.user.username}成為${addSuffix(
+          `<:icons_newmembers:964425853410893874>在 <t:${joinTime}:D>，${member.user.username}成為${addSuffix(
             joinPosition
           )}成員加入這個伺服器的人`
         )
         .setImage("attachment://profile.png")
+        .setThumbnail(member.displayAvatarURL({ dynamic: true, size: 512 }))
         .addFields([
           {
-            name: "徽章",
+            name: "<:icons_award:869513411103424563>徽章",
             value: `${addBadges(userBadges).join("")}`,
             inline: true,
           },
-          { name: "加成", value: `${Booster}`, inline: true },
+          { name: "<:icons_colorboostnitro:869528229436858378>加成", value: `${Booster}`, inline: true },
           {
-            name: "最高權限的身分組",
+            name: "<:icons_owner:859429432380227594>最高權限的身分組",
             value: `${topRoles.join("").replace(`<@${interaction.guildId}>`)}`,
             inline: false,
           },
-          { name: "帳號創建時間", value: `<t:${createdTime}:R>`, inline: true },
-          { name: "帳號加入時間", value: `<t:${joinTime}:R>`, inline: true },
-          { name: "帳號ID", value: `${member.id}`, inline: false },
+          { name: "<:icons_reminder:859388128364199946>帳號創建時間", value: `<t:${createdTime}:R>`, inline: true },
+          { name: "<:icons_reminder:859388128364199946>帳號加入時間", value: `<t:${joinTime}:R>`, inline: true },
+          { name: "<:icons_id:860133546102620190>帳號ID", value: `${member.id}`, inline: false },
           {
-            name: "頭像",
-            value: `[連結](${member.displayAvatarURL()})`,
-            inline: true,
-          },
-          {
-            name: "橫幅",
+            name: "<:icons_jpg:908958943726956564>橫幅",
             value: `[連結](${(await member.user.fetch()).bannerURL() || "無"})`,
             inline: true,
           },
@@ -139,7 +135,7 @@ module.exports = {
         files: [imageAttachment],
       });
     } catch (err) {
-      interaction.editReply({ content: "> 發生錯誤，請協助回報錯誤!" });
+      interaction.editReply({ content: "<:icons_warning:908958943466893323> | 發生錯誤，請協助回報!" });
       throw err;
     }
   },

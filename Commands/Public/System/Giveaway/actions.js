@@ -21,7 +21,7 @@ module.exports = {
 
     if (!giveaway) {
       errEmbed.setDescription(
-        `⚠ | 無法找到訊息ID或獎品名稱: ${query}\n  請確認有無輸入錯誤!`
+        `<:icons_warning:908958943466893323> | 無法找到訊息ID或獎品名稱: ${query}\n請確認有無輸入錯誤!`
       );
       interaction.reply({ embeds: [errEmbed], ephemeral: true });
     }
@@ -32,11 +32,11 @@ module.exports = {
           client.giveawaysManager
             .end(query)
             .then(() => {
-              successEmbed.setDescription("成功結束抽獎活動!");
+              successEmbed.setDescription("<:icons_xmarkwhite:988409378161954866> | 成功結束抽獎活動!");
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {
-              errEmbed.setDescription(`發生錯誤: \n\`${err}\``);
+              errEmbed.setDescription(`<:icons_warning:908958943466893323> | 發生錯誤: \n\`${err}\``);
               interaction.reply({ embeds: [errEmbed], ephemeral: true });
             });
         }
@@ -46,11 +46,11 @@ module.exports = {
           client.giveawaysManager
             .pause(query)
             .then(() => {
-              successEmbed.setDescription("成功暫停抽獎活動!");
+              successEmbed.setDescription("<:icons_pause:861852632914198548> | 成功暫停抽獎活動!");
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {
-              errEmbed.setDescription(`發生錯誤: \n\`${err}\``);
+              errEmbed.setDescription(`<:icons_warning:908958943466893323> | 發生錯誤: \n\`${err}\``);
               interaction.reply({ embeds: [errEmbed], ephemeral: true });
             });
         }
@@ -60,11 +60,11 @@ module.exports = {
           client.giveawaysManager
             .unpause(query)
             .then(() => {
-              successEmbed.setDescription("成功繼續進行抽獎活動!");
+              successEmbed.setDescription("<:icons_play:861852632800952320> | 成功繼續進行抽獎活動!");
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {
-              errEmbed.setDescription(`發生錯誤: \n\`${err}\``);
+              errEmbed.setDescription(`<:icons_warning:908958943466893323> | 發生錯誤: \n\`${err}\``);
               interaction.reply({ embeds: [errEmbed], ephemeral: true });
             });
         }
@@ -75,16 +75,16 @@ module.exports = {
             .reroll(query, {
               messages: {
                 congrat:
-                  ":tada:恭喜新贏家: {winners}! 贏得獎品: **{this.prize}**!",
-                error: "⛔ | 無有效的參與, 於是沒有新贏家!",
+                  "<:icons_tada:868022351508414474>恭喜新贏家: {winners}! 贏得獎品: **{this.prize}**!",
+                error: "<:icons_outage:868122243845206087> | 無有效的參與, 於是沒有新贏家!",
               },
             })
             .then(() => {
-              successEmbed.setDescription("成功重新抽選抽獎活動的贏家!");
+              successEmbed.setDescription("<:icons_update:860123644297871382> | 成功重新抽選抽獎活動的贏家!");
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {
-              errEmbed.setDescription(`發生錯誤: \n\`${err}\``);
+              errEmbed.setDescription(`<:icons_warning:908958943466893323> | 發生錯誤: \n\`${err}\``);
               interaction.reply({ embeds: [errEmbed], ephemeral: true });
             });
         }
@@ -94,11 +94,11 @@ module.exports = {
           client.giveawaysManager
             .delete(query)
             .then(() => {
-              successEmbed.setDescription("成功刪除抽獎活動!");
+              successEmbed.setDescription("<:icons_delete:867650498030731315> | 成功刪除抽獎活動!");
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {
-              errEmbed.setDescription(`發生錯誤: \n\`${err}\``);
+              errEmbed.setDescription(`<:icons_warning:908958943466893323> | 發生錯誤: \n\`${err}\``);
               interaction.reply({ embeds: [errEmbed], ephemeral: true });
             });
         }
