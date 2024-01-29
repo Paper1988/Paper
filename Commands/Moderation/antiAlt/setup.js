@@ -29,7 +29,7 @@ module.exports = {
     ).catch((err) => console.log(err));
 
     const LogsSetup = new EmbedBuilder()
-      .setDescription("✅ | 成功設置反alt伺服器日誌")
+      .setDescription("<:icons_Correct:859388130411282442> | 成功設置反小號伺服器日誌")
       .setColor("#43b581");
 
     await guild.channels.cache
@@ -42,7 +42,7 @@ module.exports = {
       });
 
     await interaction.reply({
-      content: "> 完成!",
+      content: "<:icons_Correct:859388130411282442> | 完成!",
       ephemeral: true,
     });
   },

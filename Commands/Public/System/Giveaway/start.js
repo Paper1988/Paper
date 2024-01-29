@@ -33,10 +33,10 @@ module.exports = {
           `return !member.roles.cache.some((r) => r.name === '${role}')`
         ),
         messages: {
-          giveaway: "🎉**抽獎活動開始了**🎉",
+          giveaway: "<:icons_tada:868022351508414474>**抽獎活動開始了**<:icons_tada:868022351508414474>",
           giveawayEnded: "🎊**抽獎活動結束了**🎊",
           inviteToParticipate: "**點擊🎉來參加抽獎!**",
-          winMessage: "> 恭喜贏家 {winners} 贏得獎品: **`{this.prize}`** !",
+          winMessage: "<:icons_tada:868022351508414474>恭喜贏家 {winners} 贏得獎品: **`{this.prize}`** !",
           noWinner: "抽獎活動已取消，因為: `參與人數不足`",
           dropMessage: "成為第一位參加的人!",
           drawing: "剩餘時間: {timestamp}",
@@ -60,11 +60,11 @@ module.exports = {
         },
       })
       .then(async () => {
-        successEmbed.setDescription("抽獎活動成功開始!");
+        successEmbed.setDescription("<:icons_Correct:859388130411282442> | 抽獎活動成功開始!");
         return interaction.reply({ embeds: [successEmbed], ephemeral: true });
       })
       .catch((err) => {
-        errEmbed.setDescription(`發生錯誤: \n\`${err}\``);
+        errEmbed.setDescription(`<:icons_warning:908958943466893323> | 發生錯誤: \n\`${err}\``);
         return interaction.reply({ embeds: [errEmbed], ephemeral: true });
       });
   },

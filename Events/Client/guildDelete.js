@@ -15,7 +15,7 @@ module.exports = {
 
     const Embed = new EmbedBuilder()
       .setColor("Red")
-      .setTitle("💔 | Paper退出了一個伺服器")
+      .setTitle("<:icons_leave:860487640113217546> | Paper退出了一個伺服器")
       .setDescription(`${client.user.tag} 退出了一個伺服器`)
       .setFields(
         { name: "伺服器名稱:", value: `${guild.name}`, inline: true },
@@ -25,8 +25,8 @@ module.exports = {
       )
       .setTimestamp();
 
-    await client.channels
-      .fetch("961615076740194327")
-      .then((channel) => channel.send({ embeds: [Embed] }));
+    const logC = client.channels.cache.get("961615076740194326");
+
+    logC.send({ embeds: [Embed] });
   },
 };

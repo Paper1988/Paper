@@ -3,7 +3,7 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("giveaway")
-    .setDescription("一個基本的抽獎系統")
+    .setDescription("<:icons_gift:860123643710668851>一個基本的抽獎系統")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addSubcommand((sub) =>
       sub
@@ -54,23 +54,23 @@ module.exports = {
             .setRequired(true)
             .addChoices(
               {
-                name: "結束",
+                name: "<:icons_xmarkwhite:988409378161954866>結束",
                 value: "end",
               },
               {
-                name: "暫停",
+                name: "<:icons_pause:861852632914198548>暫停",
                 value: "pause",
               },
               {
-                name: "繼續",
+                name: "<:icons_play:861852632800952320>繼續",
                 value: "unpause",
               },
               {
-                name: "重抽",
+                name: "<:icons_update:860123644297871382>重抽",
                 value: "reroll",
               },
               {
-                name: "刪除",
+                name: "<:icons_delete:867650498030731315>刪除",
                 value: "delete",
               }
             )

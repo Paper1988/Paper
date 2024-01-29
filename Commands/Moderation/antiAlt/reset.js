@@ -11,13 +11,13 @@ module.exports = {
     const { guild } = interaction;
 
     const LogsReset = new EmbedBuilder()
-      .setDescription("✅ | 成功重置日誌頻道")
+      .setDescription("<:icons_Correct:859388130411282442> | 成功重置日誌頻道")
       .setColor("#43b581");
     DB.deleteMany({ GuildID: guild.id }, async (err, data) => {
       if (err) throw err;
       if (!data)
         return interaction.reply({
-          content: "> 沒有要刪除的數據",
+          content: "<:icons_warning:908958943466893323> | 找不到數據可刪除",
         });
       interaction.reply({ embeds: [LogsReset] });
     });

@@ -11,7 +11,7 @@ module.exports = {
 
     const Embed = new EmbedBuilder()
       .setColor("Green")
-      .setTitle("❤ | Paper加入了新的伺服器")
+      .setTitle("<:icons_join:860487640720343071> | Paper加入了新的伺服器")
       .setDescription(`${client.user.tag} 被邀進了新的伺服器`)
       .setFields(
         { name: "伺服器名稱:", value: `${guild.name}`, inline: true },

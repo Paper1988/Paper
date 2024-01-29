@@ -1,70 +1,166 @@
 const {
   SlashCommandBuilder,
-  PermissionFlagsBits,
-  ChatInputCommandInteraction,
   EmbedBuilder,
+  PermissionFlagsBits,
+  ActionRowBuilder,
+  ButtonBuilder,
+  StringSelectMenuBuilder,
+  ChatInputCommandInteraction,
 } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("unban")
     .setDescription("解除封鎖一名成員")
-    .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
-    .setDMPermission(false)
-    .addUserOption((options) =>
-      options.setName("target").setDescription("選擇一個成員").setRequired(true)
-    ),
+    .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
   /**
+   *
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
-    const { options, guild, member } = interaction;
-    const target = options.getMember("target");
+  async execute(client, interaction) {
+    const { guild } = interaction;
+    var members;
 
-    const successEmbed = new EmbedBuilder()
-      .setAuthor({
-        name: `Unban`,
-        iconURL: guild.iconURL(),
-      })
-      .setColor("Green")
-      .setDescription(
-        [`被解除封鎖的成員: ${target}`, `執行者: ${member}`].join("\n")
-      )
+    const fetchBan = await guild.bans.fetch({ limit: 25 });
+
+    const noBanEmbed = new EmbedBuilder()
+      .setColor("Blue")
+      .setDescription(`<:icons_warning:908958943466893323> | 伺服器中沒有正被封鎖的用戶!`)
       .setFooter({
-        iconURL: guild.iconURL(),
-        text: `機器人 | ${interaction.user.username}`,
+        text: client.user.username,
+        iconURL: client.user.displayAvatarURL({ dynamic: true }),
       });
 
-    await interaction.guild.bans.fetch().then(async (bans) => {
-      if (bans.size == 0)
-        return await interaction.reply({
-          content: "> 該名成員沒有被封鎖",
-          ephermeral: true,
-        });
-      let BannedID = bans.find((ban) => ban.user.id == target);
-      if (!BannedID)
-        return await interaction.reply({
-          content: "> 指定的ID未被此伺服器封鎖",
-          ephermeral: true,
-        });
-
-      interaction.guild.bans.remove(target, reason).catch((err) => {
-        interaction.reply({
-          content: "",
-          ephermeral: true,
-        });
-        return console.log("錯誤發生 - 在Unban.js", err);
+    if (fetchBan.size == 0)
+      return interaction.reply({
+        embeds: [noBanEmbed],
+        components: [],
+        ephemeral: true,
       });
+
+    const memberList = [];
+    fetchBan.forEach((member) => {
+      memberList.push({ label: member.user.username, value: member.user.id });
     });
 
-    target.ban().catch((err) => {
-      interaction.reply({
-        content: "",
-        ephermeral: true,
+    const choicesEmbed = new EmbedBuilder()
+      .setColor('Blue')
+      .setDescription("從下面的列表中選取一位用戶")
+      .setFooter({
+        text: client.user.username,
+        iconURL: client.user.displayAvatarURL({ dynamic: true }),
       });
-      return console.log("錯誤發生 - 在Unban.js", err);
-    });
 
-    interaction.reply({ embeds: [successEmbed] });
-  },
+    const selectMenu = new ActionRowBuilder().addComponents(
+      new StringSelectMenuBuilder()
+        .setCustomId("unban:selectMenu")
+        .setPlaceholder("選擇一個用戶")
+        .addOptions(memberList)
+        .setMinValues(1)
+        .setMaxValues(1),
+    );
+
+    interaction
+      .reply({
+        embeds: [choicesEmbed],
+        components: [selectMenu],
+        ephemeral: true,
+      })
+      .then(async (msg) => {
+        const collector = msg.createMessageComponentCollector({
+          idle: 10000,
+        });
+
+        collector.on("collect", async (i) => {
+          if (i.isStringSelectMenu() && i.customId == "unban:selectMenu") {
+            members = await client.users.fetch(i.values[0]);
+
+            const confirmationEmbed = new EmbedBuilder()
+              .setColor("Blue")
+              .setDescription(
+                `<:icons_question:860133545905225768>你確定要解除封鎖 ${members} 嗎?`,
+              )
+              .setFooter({
+                text: client.user.username,
+                iconURL: client.user.displayAvatarURL({ dynamic: true }),
+              });
+
+            const buttons = new ActionRowBuilder().addComponents(
+              new ButtonBuilder()
+                .setCustomId("unban:confirm")
+                .setLabel("<:icons_Correct:859388130411282442>確認")
+                .setStyle("Danger"),
+              new ButtonBuilder()
+                .setCustomId("unban:cancel")
+                .setLabel("<:icons_xmarkwhite:988409378161954866>取消")
+                .setStyle("Secondary"),
+            );
+
+            await i.update({
+              embeds: [confirmationEmbed],
+              components: [buttons],
+            });
+          } else if (i.isButton() && i.customId == "unban:confirm") {
+            const processEmbed = new EmbedBuilder()
+              .setColor("Blue")
+              .setDescription(`<:icons_loading:859424401036148776>正在執行中...`)
+              .setFooter({
+                text: client.user.username,
+                iconURL: client.user.displayAvatarURL({ dynamic: true }),
+              });
+
+            await i.update({
+              embeds: [processEmbed],
+              components: [],
+            });
+
+            await guild.members.unban(members.id);
+
+            const finishedEmbed = new EmbedBuilder()
+              .setColor("Blue")
+              .setDescription(`${members} 已被解除封鎖!`)
+              .setFooter({
+                text: "你可以關閉這個視窗了",
+              });
+
+            msg.edit({
+              embeds: [finishedEmbed],
+              components: [],
+            });
+          } else if (i.isButton() && i.customId == "unban:cancel") {
+            const canceledEmbed = new EmbedBuilder()
+              .setColor("Blue")
+              .setDescription(`<:icons_outage:868122243845206087>動作已取消`)
+              .setFooter({
+                text: "你可以關閉這個視窗了",
+              });
+
+            i.update({
+              embeds: [canceledEmbed],
+              components: [],
+            });
+          }
+        });
+
+        collector.on("end", async () => {
+          const msgC = await interaction.fetchReply();
+          if (!msg) return;
+          if (!msgC.components.length) return;
+
+          const noInteractionEmbed = new EmbedBuilder()
+            .setColor("Orange")
+            .setDescription(
+              `10秒內未收到任何回應，動作已取消!`,
+            )
+            .setFooter({
+              text: "你可以關閉這個視窗了",
+            });
+
+          msg.edit({
+            embeds: [noInteractionEmbed],
+            components: [],
+          });
+        });
+      });
+  }
 };

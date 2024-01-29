@@ -8,7 +8,7 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("translate")
-    .setDescription("將任何文字翻譯成你想要的任何語言")
+    .setDescription("<:icons_translate:867656825527730176>將任何文字翻譯成你想要的任何語言")
     .addStringOption((option) =>
       option
         .setName("language")
@@ -42,14 +42,14 @@ module.exports = {
     const text = interaction.options.getString(`message`);
 
     await interaction.reply({
-      content: "> 正在翻譯你的訊息...",
+      content: "<:icons_search:859424401723883560> | 正在翻譯你的訊息...",
       ephemeral: true,
     });
 
     await translate(text, { to: `${la}` })
       .then((res) => {
         const successEmbed = new EmbedBuilder()
-          .setTitle(`🔍 成功翻譯訊息`)
+          .setTitle(`<:icons_translate:867656825527730176>成功翻譯訊息`)
           .setColor(`Green`)
           .setTimestamp()
           .addFields(
@@ -69,7 +69,7 @@ module.exports = {
       })
       .catch((err) => {
         interaction.editReply({
-          content: `> \`${err.message}\``,
+          content: `<:icons_warning:908958943466893323> | 發生錯誤: \`${err.message}\`\n請協助回報!`,
           ephemeral: true,
         });
       });

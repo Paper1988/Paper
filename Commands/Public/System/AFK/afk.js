@@ -1,18 +1,15 @@
 const {
-  EmbedBuilder,
-  ChatInputCommandInteraction,
   SlashCommandBuilder,
 } = require("discord.js");
-const DB = require("../../../../Structures/Schemas/AFKSystem");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("afk")
-    .setDescription("一個afk系統")
+    .setDescription("<:icons_kick:859424400557604886>一個afk系統")
     .addSubcommand((sub) =>
       sub
         .setName("set")
-        .setDescription("設定你的afk狀態")
+        .setDescription("<:icons_leave:860487640113217546>進入afk狀態")
         .addStringOption((options) =>
           options
             .setName("status")
@@ -21,7 +18,7 @@ module.exports = {
         )
     )
     .addSubcommand((sub) =>
-      sub.setName("return").setDescription("退出afk狀態")
+      sub.setName("return").setDescription("<:icons_join:860487640720343071>退出afk狀態")
     ),
   usage: "/afk (set, return)",
 };

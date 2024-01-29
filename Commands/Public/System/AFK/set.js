@@ -4,10 +4,9 @@ const DB = require("../../../../Structures/Schemas/AFKSystem");
 module.exports = {
   subCommand: "afk.set",
   /**
-   * @param {Client} client
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(client, interaction) {
+  async execute(interaction) {
     const { guild, options, user, createdTimestamp } = interaction;
 
     const Embed = new EmbedBuilder().setAuthor({
@@ -24,7 +23,7 @@ module.exports = {
     );
 
     Embed.setColor("Green").setDescription(
-      `你的afk狀態已被設置為: \`${afkStatus}\``
+      `✅ | 你的afk狀態已被設置為: \`${afkStatus}\``
     );
     return interaction.reply({ embeds: [Embed], ephemeral: true });
   },

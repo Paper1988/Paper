@@ -38,14 +38,14 @@ module.exports = {
       .setTitle("🎭 身分組管理 🎭");
 
     if (!role.editable || role.position === 0) {
-      embed.setDescription(`我無法編輯身分組: **${role}** !`);
+      embed.setDescription(`<:icons_warning:908958943466893323> | 我無法編輯身分組: **${role}** !`);
       return interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
     embed.setDescription(
       target.roles.cache.has(role.id)
-        ? `從 ${target} 移除 **${role}**`
-        : `添加身分組: **${role}** 到 ${target}`
+        ? `<:icons_Correct:859388130411282442> | 成功從 ${target} 移除 **${role}**`
+        : `<:icons_Correct:859388130411282442> | 成功添加身分組: **${role}** 至 ${target} 身上`
     );
     target.roles.cache.has(role.id)
       ? target.roles.remove(role)

@@ -1,10 +1,7 @@
 const {
-  EmbedBuilder,
   ChatInputCommandInteraction,
   Client,
-  PermissionFlagsBits,
 } = require("discord.js");
-const ms = require("ms");
 
 module.exports = {
   subCommand: "music.seek",
@@ -18,21 +15,21 @@ module.exports = {
 
     if (!VoiceChannel)
       return interaction.reply({
-        content: "> 你必須待在一個語音頻道裡面才能使用音樂指令!",
+        content: "<:icons_outage:868122243845206087> | 你必須待在一個語音頻道裡面才能使用音樂指令!",
         ephemeral: true,
       });
     if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
       return interaction.reply({
-        content: `> 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
+        content: `<:icons_outage:868122243845206087> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
         ephemeral: true,
       });
 
     const queue = await client.distube.getQueue(VoiceChannel);
     const Time = options.getNumber("time");
 
-    if (!queue) return interaction.reply({ content: "⛔ 找不到清單" });
+    if (!queue) return interaction.reply({ content: "⛔ | 找不到清單" });
 
     await queue.seek(Time);
-    return interaction.reply({ content: `⏩ **跳到 \`${Time}\`**` });
+    return interaction.reply({ content: `<:icons_rightarrow:859388126653186058>跳到 **\`${Time}\`**` });
   },
 };

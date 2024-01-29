@@ -61,11 +61,11 @@ module.exports = {
     const sch = client.channels.cache.get("975253353913254029");
 
     const send_m = new EmbedBuilder()
-      .setTitle(`✅| 你的回報已成功提交!`)
+      .setTitle(`<:icons_Correct:859388130411282442> | 你的回報已成功提交!`)
       .setColor("Green");
 
     const cancel_m = new EmbedBuilder()
-      .setTitle(`⛔️| 你的回報提交失敗或取消!`)
+      .setTitle(`<:icons_outage:868122243845206087> | 你的回報提交失敗或取消!`)
       .setColor("Red");
 
     /**
@@ -79,13 +79,13 @@ module.exports = {
     const send_button = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("send_button")
-        .setLabel(`✅| 提交回報`)
+        .setLabel(`<:icons_Correct:859388130411282442>提交回報`)
         .setStyle("Success")
     );
     const cancel_button = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("cancel_button")
-        .setLabel(`⛔️| 取消`)
+        .setLabel(`<:icons_xmarkwhite:988409378161954866>取消`)
         .setStyle("Danger")
     );
 
@@ -93,7 +93,7 @@ module.exports = {
       case "bug":
         {
           const B_embed = new EmbedBuilder()
-            .setTitle("🐞| Bug")
+            .setTitle("<:icons_Bugs:859388130803974174> | Bug")
             .setColor("Red")
             .setDescription(
               `提交者: ${interaction.user}  (伺服器: ${guild.name})`
@@ -145,7 +145,7 @@ module.exports = {
       case "suggestion":
         {
           const S_embed = new EmbedBuilder()
-            .setTitle("💡| 建議")
+            .setTitle("<:icons_bulb:882595243579559958> | 建議")
             .setColor("Yellow")
             .setDescription(
               `提交者: ${interaction.user}  (伺服器: ${guild.name})`
@@ -190,7 +190,7 @@ module.exports = {
       case "other":
         {
           const O_embed = new EmbedBuilder()
-            .setTitle("🌀| 其他")
+            .setTitle("<:icons_box:869507189298040833> | 其他")
             .setColor("Purple")
             .setDescription(
               `提交者: ${interaction.user}  (伺服器: ${guild.name})`

@@ -4,12 +4,11 @@ const {
   ChatInputCommandInteraction,
   EmbedBuilder,
 } = require("discord.js");
-const ms = require("ms");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("kick")
-    .setDescription("將成員踢出伺服器")
+    .setDescription("<:icons_kick:950409450966110269>將成員踢出伺服器")
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
     .setDMPermission(false)
     .addUserOption((options) =>
@@ -25,7 +24,7 @@ module.exports = {
    *
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction, client) {
+  async execute(interaction) {
     const { options, guild, member } = interaction;
 
     const target = options.getMember("target");
@@ -35,7 +34,7 @@ module.exports = {
 
     const dmEmbed = new EmbedBuilder()
       .setAuthor({
-        name: `Kick`,
+        name: `<:icons_kick:950409450966110269>`,
         iconURL: guild.iconURL(),
       })
       .setColor("Green")
@@ -53,7 +52,7 @@ module.exports = {
 
     const errorsEmbed = new EmbedBuilder()
       .setAuthor({
-        name: "無法踢出成員，因為",
+        name: "<:icons_warning:908958943466893323> | 無法踢出成員，因為",
       })
       .setColor("Red");
 
@@ -64,7 +63,7 @@ module.exports = {
       });
 
     if (member.roles.highest.postion < target.roles.highest.postion)
-      errorsArray.push("所選成員的權限比你高!");
+      errorsArray.push(" 所選成員的權限比你高!");
 
     if (errorsArray.length)
       return interaction.reply({
@@ -76,15 +75,15 @@ module.exports = {
     target.kick({ reason: reason }).catch((err) => {
       interaction.reply({
         embeds: [
-          errorsEmbed.setDescription("⚠ 發生一個不常見的錯誤，無法踢出成員"),
+          errorsEmbed.setDescription("<:icons_warning:908958943466893323> | 發生一個不常見的錯誤，無法踢出成員"),
         ],
       });
-      return console.log("⚠ 錯誤發生 - 在Kick.js", err);
+      return console.log("錯誤發生 - 在Kick.js", err);
     });
 
     const successEmbed = new EmbedBuilder()
       .setAuthor({
-        name: `Kick`,
+        name: `<:icons_kick:950409450966110269>`,
         iconURL: guild.iconURL(),
       })
       .setColor("Green")
