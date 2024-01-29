@@ -26,7 +26,7 @@ module.exports = {
         )
         .addStringOption((options) =>
           options
-            .setName("prizes")
+            .setName("prize")
             .setDescription("請提供這個抽獎活動的獎品")
             .setRequired(true)
         )
@@ -78,7 +78,7 @@ module.exports = {
         .addStringOption((options) =>
           options
             .setName("query")
-            .setDescription("請提供抽獎活動的訊息ID或獎品名稱")
+            .setDescription("請提供該抽獎活動的訊息ID")
             .setRequired(true)
         )
     ),
