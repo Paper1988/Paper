@@ -1,4 +1,4 @@
-const { ChatInputCommandInteraction } = require("discord.js");
+const { ChatInputCommandInteraction, EmbedBuilder } = require("discord.js");
 
 const BlackListGuild = require("../../Structures/Schemas/BlacklistGuild");
 const BlackListUser = require("../../Structures/Schemas/BlacklistUser");
