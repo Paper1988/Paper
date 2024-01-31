@@ -6,7 +6,7 @@ const status = (queue) =>
     queue.filters.names.join(", ") || "<:icons_xmarkwhite:988409378161954866>"
   }\` | <:icons_loop:861852632893227029>重複播放: \`${
     queue.repeatMode ? (queue.repeatMode === 2 ? "<:icons_repeat:988409346637594744>整個清單" : "<:icons_repeatonce:988409348826992680>單曲") : "<:icons_xmarkwhite:988409378161954866>"
-  }\` | <:icons_update:860123644297871382>自動播放: \`${queue.autoplay ? "<:icons_Correct:859388130411282442>" : "<:icons_xmarkwhite:988409378161954866>"}\``;
+  }\` | <:icons_update:860123644297871382>自動播放: \`${queue.autoplay ? "<:correct_859388130411282442:1201843648229294121>" : "<:icons_xmarkwhite:988409378161954866>"}\``;
 
 client.distube
   .on("playSong", (queue, song) =>
@@ -15,7 +15,7 @@ client.distube
         new EmbedBuilder()
           .setColor("Green")
           .setDescription(
-            `<:icons_play:861852632800952320> | 播放 \`${song.name}\` - \`${
+            `<:play_861852632800952320:1202112864857628692> | 播放 \`${song.name}\` - \`${
               song.formattedDuration
             }\`\n<:icons_friends:861852632767528970>請求者: ${song.user}\n${status(queue)}`
           ),
@@ -70,7 +70,7 @@ client.distube
       embeds: [
         new EmbedBuilder()
           .setColor("Red")
-          .setDescription(`<:icons_warning:908958943466893323> | 找不到: \`${query}\`!`),
+          .setDescription(`<:warning_908958943466893323:1201844340276862976> | 找不到: \`${query}\`!`),
       ],
     })
   )

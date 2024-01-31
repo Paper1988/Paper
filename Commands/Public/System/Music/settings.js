@@ -16,18 +16,18 @@ module.exports = {
 
     if (!VoiceChannel)
       return interaction.reply({
-        content: "<:icons_outage:868122243845206087> | 你必須待在一個語音頻道裡面才能使用音樂指令!",
+        content: "<:outage_868122243845206087:1202112862990897172> | 你必須待在一個語音頻道裡面才能使用音樂指令!",
         ephemeral: true,
       });
     if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
       return interaction.reply({
-        content: `<:icons_outage:868122243845206087> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
+        content: `<:outage_868122243845206087:1202112862990897172> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
         ephemeral: true,
       });
 
     const queue = await client.distube.getQueue(VoiceChannel);
 
-    if (!queue) return interaction.reply({ content: "<:icons_outage:868122243845206087> | 找不到清單" });
+    if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到清單" });
 
     switch (options.getString("options")) {
       case "skip":
@@ -44,7 +44,7 @@ module.exports = {
 
       case "resume":
         await queue.resume(VoiceChannel);
-        return interaction.reply({ content: "<:icons_play:861852632800952320> | 成功繼續播放歌曲" });
+        return interaction.reply({ content: "<:play_861852632800952320:1202112864857628692> | 成功繼續播放歌曲" });
 
       case "shuffle":
         await queue.shuffle(VoiceChannel);
@@ -53,7 +53,7 @@ module.exports = {
       case "autoplay":
         let Mode = await queue.toggleAutoplay(VoiceChannel);
         return interaction.reply({
-          content: `<:icons_update:860123644297871382> | 成功切換自動播放模式成: \`${Mode ? "<:icons_Correct:859388130411282442>" : "<:icons_xmarkwhite:988409378161954866>"}\``,
+          content: `<:icons_update:860123644297871382> | 成功切換自動播放模式成: \`${Mode ? "<:correct_859388130411282442:1201843648229294121>" : "<:icons_xmarkwhite:988409378161954866>"}\``,
         });
 
       case "previous":

@@ -11,6 +11,6 @@ module.exports = {
     for (const [key, value] of client.events)
       client.removeListener(`${key}`, value, true);
     loadEvents(client);
-    interaction.reply({ content: "<:icons_Correct:859388130411282442> | 成功載入Events!", ephemeral: true });
+    interaction.reply({ content: "<:correct_859388130411282442:1201843648229294121> | 成功載入Events!", ephemeral: true });
   },
 };

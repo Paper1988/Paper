@@ -54,7 +54,7 @@ module.exports = {
 
     const errorsEmbed = new EmbedBuilder()
       .setAuthor({
-        name: "<:icons_warning:908958943466893323> | 無法封鎖該名成員，因為",
+        name: "<:warning_908958943466893323:1201844340276862976> | 無法封鎖該名成員，因為",
       })
       .setColor("Red");
 
@@ -80,7 +80,7 @@ module.exports = {
     target.ban({ reason: reason }).catch((err) => {
       interaction.reply({
         embeds: [
-          errorsEmbed.setDescription("<:icons_warning:908958943466893323> | 無法封鎖該名成員，因為一個罕見的錯誤"),
+          errorsEmbed.setDescription("<:warning_908958943466893323:1201844340276862976> | 無法封鎖該名成員，因為一個罕見的錯誤"),
         ],
       });
       return console.log("錯誤發生 - 在 Ban.js", err);

@@ -12,12 +12,12 @@ module.exports = {
 
     if (!VoiceChannel)
       return interaction.reply({
-        content: "<:icons_warning:908958943466893323> | 你必須待在一個語音頻道裡面才能使用音樂指令!",
+        content: "<:warning_908958943466893323:1201844340276862976> | 你必須待在一個語音頻道裡面才能使用音樂指令!",
         ephemeral: true,
       });
     if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
       return interaction.reply({
-        content: `<:icons_warning:908958943466893323> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
+        content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
         ephemeral: true,
       });
 
@@ -25,6 +25,6 @@ module.exports = {
       textChannel: channel,
       member: member,
     });
-    return interaction.reply({ content: "<:icons_queue:861852633240961024> | 請求已接受 - 預設音量為`50%`" });
+    return interaction.reply({ content: "<:queue_861852633240961024:1202112866069520385> | 請求已接受 - 預設音量為`50%`" });
   },
 };

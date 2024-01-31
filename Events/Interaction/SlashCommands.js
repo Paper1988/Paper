@@ -26,12 +26,12 @@ module.exports = {
     const command = client.commands.get(interaction.commandName);
     if (!command)
       return interaction.reply({
-        content: `<:icons_warning:908958943466893323> | 這項指令過期或不存在了!`,
+        content: `<:warning_908958943466893323:1201844340276862976> | 這項指令過期或不存在了!`,
         ephemeral: true,
       });
     if (command.developer && interaction.user.id !== "538639229220028416")
       return interaction.reply({
-        content: `<:icons_warning:908958943466893323> | 這項指令僅限於開發人員使用!`,
+        content: `<:warning_908958943466893323:1201844340276862976> | 這項指令僅限於開發人員使用!`,
         ephemeral: true,
       });
 
@@ -39,7 +39,7 @@ module.exports = {
       return interaction.reply({
         embeds: [
           Embed.setTitle(`該伺服器為黑名單伺服器!`).setDescription(
-            `<:icons_outage:868122243845206087> | 您的伺服器已被列入黑名單，自從<t:${parseInt(
+            `<:outage_868122243845206087:1202112862990897172> | 您的伺服器已被列入黑名單，自從<t:${parseInt(
               GuildData.Time / 1000
             )}:R>, 原因為: **${GuildData.Reason}**`
           ),
@@ -50,7 +50,7 @@ module.exports = {
       return interaction.reply({
         embeds: [
           Embed.setTitle(`該用戶為黑名單用戶!`).setDescription(
-            `<:icons_outage:868122243845206087> | 您已被列入黑名單，自從<t:${parseInt(
+            `<:outage_868122243845206087:1202112862990897172> | 您已被列入黑名單，自從<t:${parseInt(
               UserData.Time / 1000
             )}:R>, 原因為: **${UserData.Reason}**`
           ),
@@ -64,7 +64,7 @@ module.exports = {
       );
       if (!subCommandFile)
         return interaction.reply({
-          content: "<:icons_warning:908958943466893323> | 這項指令過期或不存在了!",
+          content: "<:warning_908958943466893323:1201844340276862976> | 這項指令過期或不存在了!",
           ephemeral: true,
         });
       subCommandFile.execute(interaction, client);

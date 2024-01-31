@@ -21,7 +21,7 @@ module.exports = {
 
     if (!giveaway) {
       errEmbed.setDescription(
-        `<:icons_warning:908958943466893323> | 無法找到訊息ID或獎品名稱: ${query}\n請確認有無輸入錯誤!`
+        `<:warning_908958943466893323:1201844340276862976> | 無法找到訊息ID或獎品名稱: ${query}\n請確認有無輸入錯誤!`
       );
       interaction.reply({ embeds: [errEmbed], ephemeral: true });
     }
@@ -36,7 +36,7 @@ module.exports = {
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {
-              errEmbed.setDescription(`<:icons_warning:908958943466893323> | 發生錯誤: \n\`${err}\``);
+              errEmbed.setDescription(`<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \n\`${err}\``);
               interaction.reply({ embeds: [errEmbed], ephemeral: true });
             });
         }
@@ -50,7 +50,7 @@ module.exports = {
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {
-              errEmbed.setDescription(`<:icons_warning:908958943466893323> | 發生錯誤: \n\`${err}\``);
+              errEmbed.setDescription(`<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \n\`${err}\``);
               interaction.reply({ embeds: [errEmbed], ephemeral: true });
             });
         }
@@ -60,11 +60,11 @@ module.exports = {
           client.giveawaysManager
             .unpause(query)
             .then(() => {
-              successEmbed.setDescription("<:icons_play:861852632800952320> | 成功繼續進行抽獎活動!");
+              successEmbed.setDescription("<:play_861852632800952320:1202112864857628692> | 成功繼續進行抽獎活動!");
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {
-              errEmbed.setDescription(`<:icons_warning:908958943466893323> | 發生錯誤: \n\`${err}\``);
+              errEmbed.setDescription(`<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \n\`${err}\``);
               interaction.reply({ embeds: [errEmbed], ephemeral: true });
             });
         }
@@ -76,7 +76,7 @@ module.exports = {
               messages: {
                 congrat:
                   "<:icons_tada:868022351508414474>恭喜新贏家: {winners}! 贏得獎品: **{this.prize}**!",
-                error: "<:icons_outage:868122243845206087> | 無有效的參與, 於是沒有新贏家!",
+                error: "<:outage_868122243845206087:1202112862990897172> | 無有效的參與, 於是沒有新贏家!",
               },
             })
             .then(() => {
@@ -84,7 +84,7 @@ module.exports = {
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {
-              errEmbed.setDescription(`<:icons_warning:908958943466893323> | 發生錯誤: \n\`${err}\``);
+              errEmbed.setDescription(`<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \n\`${err}\``);
               interaction.reply({ embeds: [errEmbed], ephemeral: true });
             });
         }
@@ -98,7 +98,7 @@ module.exports = {
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {
-              errEmbed.setDescription(`<:icons_warning:908958943466893323> | 發生錯誤: \n\`${err}\``);
+              errEmbed.setDescription(`<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \n\`${err}\``);
               interaction.reply({ embeds: [errEmbed], ephemeral: true });
             });
         }

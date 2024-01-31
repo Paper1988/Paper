@@ -25,7 +25,7 @@ module.exports = {
 
     const noBanEmbed = new EmbedBuilder()
       .setColor("Blue")
-      .setDescription(`<:icons_warning:908958943466893323> | 伺服器中沒有正被封鎖的用戶!`)
+      .setDescription(`<:warning_908958943466893323:1201844340276862976> | 伺服器中沒有正被封鎖的用戶!`)
       .setFooter({
         text: client.user.username,
         iconURL: client.user.displayAvatarURL({ dynamic: true }),
@@ -88,7 +88,7 @@ module.exports = {
             const buttons = new ActionRowBuilder().addComponents(
               new ButtonBuilder()
                 .setCustomId("unban:confirm")
-                .setLabel("<:icons_Correct:859388130411282442>確認")
+                .setLabel("<:correct_859388130411282442:1201843648229294121>確認")
                 .setStyle("Danger"),
               new ButtonBuilder()
                 .setCustomId("unban:cancel")
@@ -130,7 +130,7 @@ module.exports = {
           } else if (i.isButton() && i.customId == "unban:cancel") {
             const canceledEmbed = new EmbedBuilder()
               .setColor("Blue")
-              .setDescription(`<:icons_outage:868122243845206087>動作已取消`)
+              .setDescription(`<:outage_868122243845206087:1202112862990897172>動作已取消`)
               .setFooter({
                 text: "你可以關閉這個視窗了",
               });

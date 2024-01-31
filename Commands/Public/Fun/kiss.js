@@ -32,7 +32,7 @@ module.exports = {
     if (Target.id === Executer.id) {
       Response = new EmbedBuilder()
         .setColor("#000000")
-        .setDescription("<:icons_outage:868122243845206087> | 你不能親吻你自己！");
+        .setDescription("<:outage_868122243845206087:1202112862990897172> | 你不能親吻你自己！");
       return interaction.reply({ embeds: [Response] });
     } else {
       interaction.reply({ embeds: [kissEmbed] });

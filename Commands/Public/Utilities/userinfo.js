@@ -61,7 +61,7 @@ module.exports = {
 
     if (member.user.bot)
       return interaction.editReply({
-        embeds: [new EmbedBuilder().setDescription("<:icons_warning:908958943466893323> | 機器人無法使用此功能!")],
+        embeds: [new EmbedBuilder().setDescription("<:warning_908958943466893323:1201844340276862976> | 機器人無法使用此功能!")],
         ephemeral: true,
       });
 
@@ -135,7 +135,7 @@ module.exports = {
         files: [imageAttachment],
       });
     } catch (err) {
-      interaction.editReply({ content: "<:icons_warning:908958943466893323> | 發生錯誤，請協助回報!" });
+      interaction.editReply({ content: "<:warning_908958943466893323:1201844340276862976> | 發生錯誤，請協助回報!" });
       throw err;
     }
   },
