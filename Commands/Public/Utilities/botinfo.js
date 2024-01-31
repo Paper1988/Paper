@@ -10,6 +10,8 @@ const {
 
 const { connection } = require("mongoose");
 const os = require("os");
+const moment = require("moment");
+const cpuStat = require("cpu-stats");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -26,6 +28,7 @@ module.exports = {
     });
 
     const status = ["<:highping_880113405007114271:1201843664524165120>離線", "<:lowping_880113406915538995:1201843703208222772>連線", "<:midping_880113405720145990:1201843713006120970>連線中...", "<:midping_880113405720145990:1201843713006120970>離線中..."];
+    const memoryUsage = formatBytes(process.memoryUsage().heapUsed);
 
     await client.user.fetch();
     await client.application.fetch();
@@ -39,7 +42,7 @@ module.exports = {
         .setThumbnail(client.user.displayAvatarURL({ size: 1024 }))
         .addFields(
           {
-            name: "<:generalinfo_866599434098835486:1201843655393157152> 一般",
+            name: "<:generalinfo_866599434098835486:1201843655393157152> | 一般",
             value: [
               `<:person_859388129932214292:1201843745549455420> **用戶端** \`${client.user.tag}\``,
               `<:id_860133546102620190:1201883864486916166> **ID** \`${client.user.id}\``,
@@ -65,7 +68,7 @@ module.exports = {
             ].join("\n"),
           },
           {
-            name: "<:monitor_866583417138839563:1202221790383050845>系統",
+            name: "<:monitor_866583417138839563:1202221790383050845> | 系統",
             value: [
               `<:settings_859388128040976384:1202222047833636865> **作業系統** \`${os
                 .type()
@@ -89,7 +92,7 @@ module.exports = {
           },
           {
             // Using the caches for some of these isn't always reliable, but it would be a waste of resources to loop through all servers every single time someone used this command.
-            name: "<:list_860123643710537789:1201843692546039829>各項統計",
+            name: "<:list_860123643710537789:1201843692546039829> | 各項統計",
             value: [
               `<:globe_859424401971609600:1201843661785284659> **伺服器** \`${client.guilds.cache.size}\``,
               `<:people_964425853930995783:1201843743762681906> **使用者** \`${client.users.cache.size}\``,
