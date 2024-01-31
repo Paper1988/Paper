@@ -13,18 +13,18 @@ module.exports = {
 
     if (!VoiceChannel)
       return interaction.reply({
-        content: "<:icons_warning:908958943466893323> | 你必須待在一個語音頻道裡面才能使用音樂指令!",
+        content: "<:warning_908958943466893323:1201844340276862976> | 你必須待在一個語音頻道裡面才能使用音樂指令!",
         ephemeral: true,
       });
     if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
       return interaction.reply({
-        content: `<:icons_warning:908958943466893323> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
+        content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
         ephemeral: true,
       });
 
     const queue = await client.distube.getQueue(VoiceChannel);
 
-    if (!queue) return interaction.reply({ content: "<:icons_warning:908958943466893323> 找不到清單" });
+    if (!queue) return interaction.reply({ content: "<:warning_908958943466893323:1201844340276862976> 找不到清單" });
 
     switch (options.getString("set")) {
       case "false":

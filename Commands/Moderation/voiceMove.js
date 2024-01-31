@@ -29,12 +29,12 @@ module.exports = {
 
     if (!voiceChannel)
       return interaction.reply({
-        content: "<:icons_warning:908958943466893323> | 您需要在語音頻道中才能移動成員!",
+        content: "<:warning_908958943466893323:1201844340276862976> | 您需要在語音頻道中才能移動成員!",
         ephemeral: true,
       });
     if (newChannel === voiceChannel)
       return interaction.reply({
-        content: "<:icons_warning:908958943466893323> | 您不能將成員移動到同一個頻道!",
+        content: "<:warning_908958943466893323:1201844340276862976> | 您不能將成員移動到同一個頻道!",
         ephemeral: true,
       });
 

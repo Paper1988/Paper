@@ -42,14 +42,14 @@ module.exports = {
     const text = interaction.options.getString(`message`);
 
     await interaction.reply({
-      content: "<:icons_search:859424401723883560> | 正在翻譯你的訊息...",
+      content: "<:search_859424401723883560:1201844291098382457> | 正在翻譯你的訊息...",
       ephemeral: true,
     });
 
     await translate(text, { to: `${la}` })
       .then((res) => {
         const successEmbed = new EmbedBuilder()
-          .setTitle(`<:icons_translate:867656825527730176>成功翻譯訊息`)
+          .setTitle(`<:translate_867656825527730176:1201844331837657128>成功翻譯訊息`)
           .setColor(`Green`)
           .setTimestamp()
           .addFields(
@@ -69,7 +69,7 @@ module.exports = {
       })
       .catch((err) => {
         interaction.editReply({
-          content: `<:icons_warning:908958943466893323> | 發生錯誤: \`${err.message}\`\n請協助回報!`,
+          content: `<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \`${err.message}\`\n請協助回報!`,
           ephemeral: true,
         });
       });

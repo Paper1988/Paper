@@ -42,7 +42,7 @@ module.exports = {
     const errorsArray = [];
 
     const errorsEmbed = new EmbedBuilder()
-      .setAuthor({ name: "<:icons_warning:908958943466893323> | 無法禁言該成員，因為" })
+      .setAuthor({ name: "<:warning_908958943466893323:1201844340276862976> | 無法禁言該成員，因為" })
       .setColor("Red");
 
     if (!target)
@@ -75,7 +75,7 @@ module.exports = {
       return interaction.reply({
         embeds: [
           errorsEmbed.setDescription(
-            "<:icons_warning:908958943466893323> 無法禁言該名成員，因為一個不常見的錯誤： 時間不能取負值"
+            "<:warning_908958943466893323:1201844340276862976> 無法禁言該名成員，因為一個不常見的錯誤： 時間不能取負值"
           ),
         ],
         ephemeral: true,

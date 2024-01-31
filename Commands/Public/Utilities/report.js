@@ -61,11 +61,11 @@ module.exports = {
     const sch = client.channels.cache.get("975253353913254029");
 
     const send_m = new EmbedBuilder()
-      .setTitle(`<:icons_Correct:859388130411282442> | 你的回報已成功提交!`)
+      .setTitle(`<:correct_859388130411282442:1201843648229294121> | 你的回報已成功提交!`)
       .setColor("Green");
 
     const cancel_m = new EmbedBuilder()
-      .setTitle(`<:icons_outage:868122243845206087> | 你的回報提交失敗或取消!`)
+      .setTitle(`<:outage_868122243845206087:1202112862990897172> | 你的回報提交失敗或取消!`)
       .setColor("Red");
 
     /**
@@ -79,7 +79,7 @@ module.exports = {
     const send_button = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("send_button")
-        .setLabel(`<:icons_Correct:859388130411282442>提交回報`)
+        .setLabel(`<:correct_859388130411282442:1201843648229294121>提交回報`)
         .setStyle("Success")
     );
     const cancel_button = new ActionRowBuilder().addComponents(

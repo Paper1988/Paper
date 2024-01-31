@@ -15,7 +15,7 @@ module.exports = {
 		const reason = options.getString("reason") || "無提供";
 		if (isNaN(ID))
 			return interaction.editReply({
-				content: `<:icons_outage:868122243845206087> | ID應該要是一串數字`,
+				content: `<:outage_868122243845206087:1202112862990897172> | ID應該要是一串數字`,
 			});
 		const Guild = await client.guilds.fetch(ID);
 		let Data = await BlackListGuild.findOne({ Guild: Guild.id }).catch(
@@ -29,12 +29,12 @@ module.exports = {
 			});
 			await Data.save();
 			interaction.editReply({
-				content: `<:icons_Correct:859388130411282442> | 成功添加 **${Guild.name} || ${Guild.id}** 至伺服器黑名單 , 原因: ${reason}`,
+				content: `<:correct_859388130411282442:1201843648229294121> | 成功添加 **${Guild.name} || ${Guild.id}** 至伺服器黑名單 , 原因: ${reason}`,
 			});
 		} else {
 			await Data.delete();
 			interaction.editReply({
-				content: `<:icons_Correct:859388130411282442> | 成功從伺服器黑名單中移除 **${Guild.name} || ${Guild.id}**`,
+				content: `<:correct_859388130411282442:1201843648229294121> | 成功從伺服器黑名單中移除 **${Guild.name} || ${Guild.id}**`,
 			});
 		}
 	},

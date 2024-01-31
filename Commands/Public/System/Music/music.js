@@ -79,7 +79,7 @@ module.exports = {
               { name: "<:icons_queue:861852633240961024>顯示播放清單", value: "queue" },
               { name: "<:icons_reply:859388126153932802>播放上一首曲目", value: "previous" },
               { name: "<:icons_pause:861852632914198548>暫停播放歌曲", value: "pause" },
-              { name: "<:icons_play:861852632800952320>繼續播放歌曲", value: "resume" },
+              { name: "<:play_861852632800952320:1202112864857628692>繼續播放歌曲", value: "resume" },
               { name: "<:icons_frontforward:988409335791124551>跳過歌曲", value: "skip" },
               { name: "<:icons_musicstop:861852633979420712>停止音樂", value: "stop" },
               { name: "<:icons_shuffle:988409354208313404>隨機播放", value: "shuffle" },
