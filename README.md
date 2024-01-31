@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta ></meta>
-		<style>
-			.a {
-				color: red;
-			}
-		</style>
+		<meta></meta>
 	</head>
 	<body>
 		<h1 class="a">Paper</h1>
