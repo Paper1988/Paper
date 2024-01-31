@@ -55,6 +55,7 @@ module.exports = {
         {
           name: "<:channel_859424401950113822:1201843641124147280> | 頻道統計",
           value: `
+          <:links_875395222962585660:1201843688410726400>類別: \`${channels.cache.filter((c) => c.type === 4).toJSON().length}\`
 					<:channel_859424401950113822:1201843641124147280>文字: \`${channels.cache.filter((c) => c.type === 0).toJSON().length}\`
 					<:speaker_860133545544908802:1201844300099354644>語音: \`${channels.cache.filter((c) => c.type === 2).toJSON().length}\`
 					<:thread_866694823972438056:1201844322476228638>討論串: \`${
@@ -66,7 +67,6 @@ module.exports = {
             ).toJSON().length
           }\`
           <:forum_964425853138264094:1202224009803202660>論壇: \`${channels.cache.filter((c) => c.type === 15).toJSON().length}\`
-					<:links_875395222962585660:1201843688410726400>類別: \`${channels.cache.filter((c) => c.type === 4).toJSON().length}\`
 					<:stage_859424401304846366:1201844310707011614>舞台: \`${channels.cache.filter((c) => c.type === 13).size}\`
 					共計: \`${channels.cache.size}\`
 					`,

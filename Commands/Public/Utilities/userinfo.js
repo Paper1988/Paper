@@ -96,12 +96,12 @@ module.exports = {
 
       const Embed = new EmbedBuilder()
         .setAuthor({
-          name: `<:icons_richpresence:860133546173923388> | ${member.user.tag}`,
+          name: `<:richpresence_860133546173923388:1201844284639416320> | ${member.user.tag}`,
           iconURL: member.displayAvatarURL(),
         })
         .setColor(member.displayColor)
         .setDescription(
-          `<:icons_newmembers:964425853410893874>在 <t:${joinTime}:D>，${member.user.username}成為${addSuffix(
+          `<:newmember_964425853410893874:1201843720799133718>在 <t:${joinTime}:D>，${member.user.username}成為${addSuffix(
             joinPosition
           )}成員加入這個伺服器的人`
         )
@@ -109,21 +109,21 @@ module.exports = {
         .setThumbnail(member.displayAvatarURL({ dynamic: true, size: 512 }))
         .addFields([
           {
-            name: "<:icons_award:869513411103424563>徽章",
+            name: "<:award_869513411103424563:1201843623604527184>徽章",
             value: `${addBadges(userBadges).join("")}`,
             inline: true,
           },
-          { name: "<:icons_colorboostnitro:869528229436858378>加成", value: `${Booster}`, inline: true },
+          { name: "<:nitroboost_869528229436858378:1201843725446430791>加成", value: `${Booster}`, inline: true },
           {
             name: "<:owner_859429432380227594:1201843734917152858>最高權限的身分組",
             value: `${topRoles.join("").replace(`<@${interaction.guildId}>`)}`,
             inline: false,
           },
-          { name: "<:icons_reminder:859388128364199946>帳號創建時間", value: `<t:${createdTime}:R>`, inline: true },
-          { name: "<:icons_reminder:859388128364199946>帳號加入時間", value: `<t:${joinTime}:R>`, inline: true },
+          { name: "<:clock_964491800465276940:1201843646203433030>帳號創建時間", value: `<t:${createdTime}:R>`, inline: true },
+          { name: "<:clock_964491800465276940:1201843646203433030>帳號加入時間", value: `<t:${joinTime}:R>`, inline: true },
           { name: "<:id_860133546102620190:1201883864486916166>帳號ID", value: `${member.id}`, inline: false },
           {
-            name: "<:icons_jpg:908958943726956564>橫幅",
+            name: "<:jpg_908958943726956564:1201843675530018856>橫幅",
             value: `[連結](${(await member.user.fetch()).bannerURL() || "無"})`,
             inline: true,
           },

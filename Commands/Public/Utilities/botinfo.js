@@ -55,9 +55,9 @@ module.exports = {
                   ? `<@${client.application.owner.id}> (${client.application.owner.tag})`
                   : "<:xmark_988409378161954866:1201844342029815848>"
               }`,
-              `<:verifiedserver_86192075475596083:1201844337542180874> **驗證** \`${
+              `<:verifiedserver_86192075475596083:1201844337542180874> **驗證** ${
                 client.user.flags & UserFlags.VerifiedBot ? "<:icons_verified:859424400939286549>" : "<:xmark_988409378161954866:1201844342029815848>"
-              }\``,
+              }`,
               `<:label_875395222673186817:1201883989212921886> **標籤** \`${
                 client.application.tags.length
                   ? formatter.format(
