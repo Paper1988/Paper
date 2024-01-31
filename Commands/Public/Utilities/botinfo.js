@@ -39,10 +39,6 @@ module.exports = {
         .setThumbnail(client.user.displayAvatarURL({ size: 1024 }))
         .addFields(
           {
-            name: "<:quote_860123643887091723:1201844277865357312>機器人描述",
-            value: `\n${client.application.description || "<:xmark_988409378161954866:1201844342029815848>"}`,
-          },
-          {
             name: "<:generalinfo_866599434098835486:1201843655393157152> 一般",
             value: [
               `<:person_859388129932214292:1201843745549455420> **用戶端** \`${client.user.tag}\``,
