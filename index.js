@@ -9,7 +9,6 @@ const client = new Client({
 });
 
 const { loadEvents } = require("./Structures/Handlers/eventHandler.js");
-require("./keepAlive.js");
 
 client.config = require("./Structures/config.json");
 client.commands = new Collection();
