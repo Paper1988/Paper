@@ -1,5 +1,5 @@
 const { Client, EmbedBuilder, ActivityType } = require("discord.js");
-const { connect } = require("mongoose");
+const mongoose = require("mongoose");
 
 const { loadCommands } = require("../../Structures/Handlers/commandHandler.js");
 
@@ -28,7 +28,8 @@ module.exports = {
 
     channel.send({ embeds: [Embed] });
 
-    connect(client.config.Database, {}).then(() =>
+    mongoose.set('strictQuery', false);
+    mongoose.connect(client.config.Database, {}).then(() =>
       console.log(`>>> ✅ 成功連結到 MongoDB!`)
     );
   },
