@@ -18,7 +18,7 @@ client.voiceGenerator = new Collection();
 client.events = new Collection();
 client.subCommands = new Collection();
 
-["GiveawaySys"].forEach((sys) => {
+["GiveawaySys", "antiCrash"].forEach((sys) => {
   require(`./Systems/${sys}`)(client);
 });
 /**************************************************/

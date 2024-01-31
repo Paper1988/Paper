@@ -47,22 +47,22 @@ module.exports = {
             .setDescription("請選擇一個過濾器")
             .setRequired(true)
             .addChoices(
-              { name: "<:icons_linkrevoke:865572289022394368>關閉所有過濾器", value: "false" },
-              { name: "<:icons_linkadd:865572290065072128>切換 8d 過濾器", value: "8d" },
-              { name: "<:icons_linkadd:865572290065072128>切換 低音增強 過濾器", value: "bassboost" },
-              { name: "<:icons_linkadd:865572290065072128>切換 回音 過濾器", value: "echo" },
-              { name: "<:icons_linkadd:865572290065072128>切換 nightcore 過濾器", value: "nightcore" },
-              { name: "<:icons_linkadd:865572290065072128>切換 環繞音 過濾器", value: "surround" },
-              { name: "<:icons_linkadd:865572290065072128>切換 karaoke 過濾器", value: "karaoke" },
-              { name: "<:icons_linkadd:865572290065072128>切換 vaporwave 過濾器", value: "vaporwave" },
-              { name: "<:icons_linkadd:865572290065072128>切換 flanger 過濾器", value: "flanger" },
-              { name: "<:icons_linkadd:865572290065072128>切換 gate 過濾器", value: "gate" },
-              { name: "<:icons_linkadd:865572290065072128>切換 haas 過濾器", value: "haas" },
-              { name: "<:icons_linkadd:865572290065072128>切換 倒放 過濾器", value: "reverse" },
-              { name: "<:icons_linkadd:865572290065072128>切換 mcompand 過濾器", value: "mcompand" },
-              { name: "<:icons_linkadd:865572290065072128>切換 phaser 過濾器", value: "phaser" },
-              { name: "<:icons_linkadd:865572290065072128>切換 tremolo 過濾器", value: "tremolo" },
-              { name: "<:icons_linkadd:865572290065072128>切換 earwax 過濾器", value: "earwax" }
+              { name: "<:linkremove_865572289022394368:1201843685084647435>關閉所有過濾器", value: "false" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 8d 過濾器", value: "8d" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 低音增強 過濾器", value: "bassboost" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 回音 過濾器", value: "echo" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 nightcore 過濾器", value: "nightcore" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 環繞音 過濾器", value: "surround" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 karaoke 過濾器", value: "karaoke" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 vaporwave 過濾器", value: "vaporwave" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 flanger 過濾器", value: "flanger" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 gate 過濾器", value: "gate" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 haas 過濾器", value: "haas" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 倒放 過濾器", value: "reverse" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 mcompand 過濾器", value: "mcompand" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 phaser 過濾器", value: "phaser" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 tremolo 過濾器", value: "tremolo" },
+              { name: "<:linkadd_865572290065072128:1201884016404598814>切換 earwax 過濾器", value: "earwax" }
             )
         )
     )
@@ -76,16 +76,16 @@ module.exports = {
             .setDescription("請選擇一個選項")
             .setRequired(true)
             .addChoices(
-              { name: "<:icons_queue:861852633240961024>顯示播放清單", value: "queue" },
-              { name: "<:icons_reply:859388126153932802>播放上一首曲目", value: "previous" },
-              { name: "<:icons_pause:861852632914198548>暫停播放歌曲", value: "pause" },
+              { name: "<:queue_861852633240961024:1202112866069520385>顯示播放清單", value: "queue" },
+              { name: "<:backforward_988409328698523708:1201843626435686440>播放上一首曲目", value: "previous" },
+              { name: "<:pause_861852632914198548:1201843739728035961>暫停播放歌曲", value: "pause" },
               { name: "<:play_861852632800952320:1202112864857628692>繼續播放歌曲", value: "resume" },
-              { name: "<:icons_frontforward:988409335791124551>跳過歌曲", value: "skip" },
-              { name: "<:icons_musicstop:861852633979420712>停止音樂", value: "stop" },
-              { name: "<:icons_shuffle:988409354208313404>隨機播放", value: "shuffle" },
-              { name: "<:icons_update:860123644297871382>切換自動播放", value: "autoplay" },
-              { name: "<:icons_plus:988409343743496232>添加相似歌曲", value: "related" },
-              { name: "<:icons_loop:861852632893227029>切換重複播放", value: "repeat" }
+              { name: "<:frontforward_988409335791124551:1202215991694856262> 跳過歌曲", value: "skip" },
+              { name: "<:stop_988409337837924422:1201844316675510364>停止音樂", value: "stop" },
+              { name: "<:shuffle_988409354208313404:1201844292751212574>隨機播放", value: "shuffle" },
+              { name: "<:update_860123644297871382:1201844333968625695>切換自動播放", value: "autoplay" },
+              { name: "<:plus_988409343743496232:1202215484318302208>添加相似歌曲", value: "related" },
+              { name: "<:loop_861852632893227029:1201843696031764490>切換重複播放", value: "repeat" }
             
         )
     )

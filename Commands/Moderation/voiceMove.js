@@ -43,7 +43,7 @@ module.exports = {
         m.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`);
       });
       return interaction.reply({
-        content: `<:icons_stagemoveaudience:988409365428043776>成功將所有成員移動到 ${newChannel}`,
+        content: `<:moveaudiaunce_988409365428043776:1202219232104808489>成功將所有成員移動到 ${newChannel}`,
         ephemeral: true,
       });
     } else {
@@ -51,7 +51,7 @@ module.exports = {
         m.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`);
       });
       return interaction.reply({
-        content: `<:icons_stagemoveaudience:988409365428043776>成功將成員 ${target} 移動到 ${newChannel}`,
+        content: `<:moveaudiaunce_988409365428043776:1202219232104808489>成功將成員 ${target} 移動到 ${newChannel}`,
         ephemeral: true,
       });
     }

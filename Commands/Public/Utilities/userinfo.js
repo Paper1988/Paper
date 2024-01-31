@@ -92,7 +92,7 @@ module.exports = {
 
       const Booster = member.premiumSince
         ? "<:discordboost7:1094238751229739119>"
-        : "<:icons_xmarkwhite:988409378161954866>";
+        : "<:xmark_988409378161954866:1201844342029815848>";
 
       const Embed = new EmbedBuilder()
         .setAuthor({
@@ -115,13 +115,13 @@ module.exports = {
           },
           { name: "<:icons_colorboostnitro:869528229436858378>加成", value: `${Booster}`, inline: true },
           {
-            name: "<:icons_owner:859429432380227594>最高權限的身分組",
+            name: "<:owner_859429432380227594:1201843734917152858>最高權限的身分組",
             value: `${topRoles.join("").replace(`<@${interaction.guildId}>`)}`,
             inline: false,
           },
           { name: "<:icons_reminder:859388128364199946>帳號創建時間", value: `<t:${createdTime}:R>`, inline: true },
           { name: "<:icons_reminder:859388128364199946>帳號加入時間", value: `<t:${joinTime}:R>`, inline: true },
-          { name: "<:icons_id:860133546102620190>帳號ID", value: `${member.id}`, inline: false },
+          { name: "<:id_860133546102620190:1201883864486916166>帳號ID", value: `${member.id}`, inline: false },
           {
             name: "<:icons_jpg:908958943726956564>橫幅",
             value: `[連結](${(await member.user.fetch()).bannerURL() || "無"})`,

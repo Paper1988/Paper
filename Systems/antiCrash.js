@@ -2,12 +2,16 @@
 // https://github.com/bastian-js/
 // https://github.com/bastian-js/discord-anticrash-v13v14
 
-const { EmbedBuilder, WebhookClient } = require("discord.js");
+const { Client, EmbedBuilder, WebhookClient } = require("discord.js");
 const { inspect } = require("util");
 const webhook = new WebhookClient({
 	url: "https://discord.com/api/webhooks/967768559688249344/dp6yrq5Jw4boYyZiS6NBhS3hGKIP_lTL7uP6DDYNr-XrJL6T5Gy0_smg5lcoZsvAu5EB",
 });
 
+/**
+ * 
+ * @param {Client} client 
+ */
 module.exports = (client) => {
 	const embed = new EmbedBuilder().setColor("Red");
 

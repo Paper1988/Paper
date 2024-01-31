@@ -30,7 +30,7 @@ module.exports = {
           },
 
           {
-            label: "<:icons_music:860123644201271326>音樂",
+            label: "🎶音樂",
             description: "顯示所有音樂指令",
             value: "menu3",
           },
@@ -124,7 +124,7 @@ module.exports = {
         const value = i.values[0];
         if (i.user.id !== interaction.user.id) {
           return await i.reply({
-            content: `:icons_warning:908958943466893323> | 只有 ${interaction.user.tag} 才能使用這個選單!`,
+            content: `<:warning_908958943466893323:1201844340276862976> | 只有 ${interaction.user.tag} 才能使用這個選單!`,
             ephemeral: true,
           });
         }
@@ -167,7 +167,7 @@ module.exports = {
       if (i.customId === "back") {
         if (i.user.id !== interaction.user.id) {
           return await i.reply({
-            content: `:icons_warning:908958943466893323> | 只有 ${interaction.user.tag} 可以使用這些按鈕!`,
+            content: `<:warning_908958943466893323:1201844340276862976> | 只有 ${interaction.user.tag} 可以使用這些按鈕!`,
             ephemeral: true,
           });
         }

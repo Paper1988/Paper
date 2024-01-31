@@ -78,7 +78,7 @@ module.exports = {
             const confirmationEmbed = new EmbedBuilder()
               .setColor("Blue")
               .setDescription(
-                `<:icons_question:860133545905225768>你確定要解除封鎖 ${members} 嗎?`,
+                `<:question_860133545905225768:1202218555844853760>你確定要解除封鎖 ${members} 嗎?`,
               )
               .setFooter({
                 text: client.user.username,
@@ -92,7 +92,7 @@ module.exports = {
                 .setStyle("Danger"),
               new ButtonBuilder()
                 .setCustomId("unban:cancel")
-                .setLabel("<:icons_xmarkwhite:988409378161954866>取消")
+                .setLabel("<:xmark_988409378161954866:1201844342029815848>取消")
                 .setStyle("Secondary"),
             );
 
@@ -103,7 +103,7 @@ module.exports = {
           } else if (i.isButton() && i.customId == "unban:confirm") {
             const processEmbed = new EmbedBuilder()
               .setColor("Blue")
-              .setDescription(`<:icons_loading:859424401036148776>正在執行中...`)
+              .setDescription(`<:loading_859424401036148776:1201884046993661972>正在執行中...`)
               .setFooter({
                 text: client.user.username,
                 iconURL: client.user.displayAvatarURL({ dynamic: true }),

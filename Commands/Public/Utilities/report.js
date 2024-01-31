@@ -18,15 +18,15 @@ module.exports = {
         .setRequired(true)
         .addChoices(
           {
-            name: "🐞| Bug",
+            name: "🐞 | Bug",
             value: "bug",
           },
           {
-            name: "💡| 建議",
+            name: "💡 | 建議",
             value: "suggestion",
           },
           {
-            name: "🌀| 其他",
+            name: "🌀 | 其他",
             value: "other",
           }
         )
@@ -85,7 +85,7 @@ module.exports = {
     const cancel_button = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("cancel_button")
-        .setLabel(`<:icons_xmarkwhite:988409378161954866>取消`)
+        .setLabel(`<:xmark_988409378161954866:1201844342029815848>取消`)
         .setStyle("Danger")
     );
 
@@ -93,7 +93,7 @@ module.exports = {
       case "bug":
         {
           const B_embed = new EmbedBuilder()
-            .setTitle("<:icons_Bugs:859388130803974174> | Bug")
+            .setTitle("🐞 | Bug")
             .setColor("Red")
             .setDescription(
               `提交者: ${interaction.user}  (伺服器: ${guild.name})`
@@ -145,7 +145,7 @@ module.exports = {
       case "suggestion":
         {
           const S_embed = new EmbedBuilder()
-            .setTitle("<:icons_bulb:882595243579559958> | 建議")
+            .setTitle("💡 | 建議")
             .setColor("Yellow")
             .setDescription(
               `提交者: ${interaction.user}  (伺服器: ${guild.name})`
@@ -190,7 +190,7 @@ module.exports = {
       case "other":
         {
           const O_embed = new EmbedBuilder()
-            .setTitle("<:icons_box:869507189298040833> | 其他")
+            .setTitle("🌀 | 其他")
             .setColor("Purple")
             .setDescription(
               `提交者: ${interaction.user}  (伺服器: ${guild.name})`
