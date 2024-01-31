@@ -18,7 +18,6 @@ function addSuffix(number) {
     case 3:
       return "第" + number + "位";
   }
-  return number + "th";
 }
 
 function addBadges(badgeNames) {
@@ -54,7 +53,7 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    await interaction.deferReply();
+    await interaction.reply({ content: "<:loading_859424401036148776:1201884046993661972>載入中......", ephemeral: true });
 
     const member =
       interaction.options.getMember("member") || interaction.member;
@@ -129,7 +128,7 @@ module.exports = {
           },
         ]);
 
-      interaction.editReply({
+      return interaction.editReply({
         embeds: [Embed],
         ephemeral: true,
         files: [imageAttachment],
