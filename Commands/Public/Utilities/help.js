@@ -67,6 +67,7 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor("Blue")
+      .setTitle("")
       .setDescription(
         "Paper是一個多功能機器人，有許多指令，像是：音樂、抽獎、管理以及更多有趣的指令等你來發現！"
       )
