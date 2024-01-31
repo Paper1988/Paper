@@ -85,7 +85,7 @@ module.exports = {
                 1024 /
                 1024
               ).toFixed(2)}%\``,
-              `<:library_867022827035164692:1202222757203419146> **資料庫** \`${status[connection.readyState]}\``,
+              `<:library_867022827035164692:1202222757203419146> **資料庫連線** ${status[connection.readyState]}`,
               `<:nodejs_891686636625223680:1201843728424378439> **Node.js** \`${process.version}\``,
               `<:djs_891686633991192607:1202223114134769715> **Discord.js** \`${version}\``,
             ].join("\n"),
