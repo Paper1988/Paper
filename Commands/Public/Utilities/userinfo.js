@@ -96,7 +96,7 @@ module.exports = {
 
       const Embed = new EmbedBuilder()
         .setAuthor({
-          name: `<:richpresence_860133546173923388:1201844284639416320> | ${member.user.tag}`,
+          name: `${member.user.tag}`,
           iconURL: member.displayAvatarURL(),
         })
         .setColor(member.displayColor)
