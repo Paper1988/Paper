@@ -34,7 +34,7 @@ module.exports = {
 
     const dmEmbed = new EmbedBuilder()
       .setAuthor({
-        name: `<:icons_kick:950409450966110269>`,
+        name: `<:kick_950409450966110269:1201843678222483519>`,
         iconURL: guild.iconURL(),
       })
       .setColor("Green")
@@ -83,7 +83,7 @@ module.exports = {
 
     const successEmbed = new EmbedBuilder()
       .setAuthor({
-        name: `<:icons_kick:950409450966110269>`,
+        name: `<:kick_950409450966110269:1201843678222483519>`,
         iconURL: guild.iconURL(),
       })
       .setColor("Green")

@@ -39,66 +39,66 @@ module.exports = {
         .setThumbnail(client.user.displayAvatarURL({ size: 1024 }))
         .addFields(
           {
-            name: "<:icons_quotes:860123643887091723>機器人描述",
-            value: `\n${client.application.description || "<:icons_xmarkwhite:988409378161954866>"}`,
+            name: "<:quote_860123643887091723:1201844277865357312>機器人描述",
+            value: `\n${client.application.description || "<:xmark_988409378161954866:1201844342029815848>"}`,
           },
           {
-            name: "<:icons_generalinfo:866599434098835486> 一般",
+            name: "<:generalinfo_866599434098835486:1201843655393157152> 一般",
             value: [
-              `<:icons_Person:859388129932214292> **用戶端** \`${client.user.tag}\``,
-              `<:icons_id:860133546102620190> **ID** \`${client.user.id}\``,
-              `<:icons_clock:964491800465276940> **創建時間** <t:${parseInt(
+              `<:person_859388129932214292:1201843745549455420> **用戶端** \`${client.user.tag}\``,
+              `<:id_860133546102620190:1201883864486916166> **ID** \`${client.user.id}\``,
+              `<:clock_964491800465276940:1201843646203433030> **創建時間** <t:${parseInt(
                 client.user.createdTimestamp / 1000
               )}:R>`,
-              `<:icons_owner:859429432380227594> **擁有者** ${
+              `<:owner_859429432380227594:1201843734917152858> **擁有者** ${
                 client.application.owner
                   ? `<@${client.application.owner.id}> (${client.application.owner.tag})`
-                  : "<:icons_xmarkwhite:988409378161954866>"
+                  : "<:xmark_988409378161954866:1201844342029815848>"
               }`,
-              `<:icons_serververified:861920754755960832> **驗證** \`${
-                client.user.flags & UserFlags.VerifiedBot ? "<:icons_verified:859424400939286549>" : "<:icons_xmarkwhite:988409378161954866>"
+              `<:verifiedserver_86192075475596083:1201844337542180874> **驗證** \`${
+                client.user.flags & UserFlags.VerifiedBot ? "<:icons_verified:859424400939286549>" : "<:xmark_988409378161954866:1201844342029815848>"
               }\``,
-              `<:icons_store:875395222673186817> **標籤** \`${
+              `<:label_875395222673186817:1201883989212921886> **標籤** \`${
                 client.application.tags.length
                   ? formatter.format(
                       client.application.tags.map((tag) => `*${tag}*`)
                     )
-                  : "<:icons_xmarkwhite:988409378161954866>"
+                  : "<:xmark_988409378161954866:1201844342029815848>"
               }\``,
-              `<:icons_supportscommandsbadge:1000051291839545454> **指令數** \`${client.commands.size}\``,
+              `<:slashcommandsupport_100005129183:1201844295422709790> **指令數** \`${client.commands.size}\``,
             ].join("\n"),
           },
           {
-            name: "<:icons_monitor:866583417138839563>系統",
+            name: "<:monitor_866583417138839563:1202221790383050845>系統",
             value: [
-              `<:icons_settings:859388128040976384> **作業系統** \`${os
+              `<:settings_859388128040976384:1202222047833636865> **作業系統** \`${os
                 .type()
                 .replace("Windows_NT", "Windows")
                 .replace("Darwin", "macOS")}\``,
-              `<:icons_reminder:859388128364199946> **上線時間** <t:${parseInt(
+              `<:reminder_859388128364199946:1201844282307395614> **上線時間** <t:${parseInt(
                 client.readyTimestamp / 1000
               )}:R>`,
-              `<:icons_connect:875395223512047626> **Ping** \`${client.ws.ping}ms\``,
-              `<:icons_dollar:988409333782020216> **CPU型號** \`${os.cpus()[0].model}\``,
-              `<:icons_bulb:882595243579559958> **CPU使用率** \`${(
+              `<:internet_875395223512047626:1201843670970798080> **Ping** \`${client.ws.ping}ms\``,
+              `<:dollar_988409333782020216:1201843651009843250> **CPU型號** \`${os.cpus()[0].model}\``,
+              `<:buld_882595243579559958:1201843638427209738> **CPU使用率** \`${(
                 process.memoryUsage().heapUsed /
                 1024 /
                 1024
               ).toFixed(2)}%\``,
-              `<:icons_library:867022827035164692> **資料庫** \`${status[connection.readyState]}\``,
-              `<:icons_nodejs:891686636625223680> **Node.js** \`${process.version}\``,
-              `<:icons_discordjs:891686633991192607> **Discord.js** \`${version}\``,
+              `<:library_867022827035164692:1202222757203419146> **資料庫** \`${status[connection.readyState]}\``,
+              `<:nodejs_891686636625223680:1201843728424378439> **Node.js** \`${process.version}\``,
+              `<:djs_891686633991192607:1202223114134769715> **Discord.js** \`${version}\``,
             ].join("\n"),
             inline: true,
           },
           {
             // Using the caches for some of these isn't always reliable, but it would be a waste of resources to loop through all servers every single time someone used this command.
-            name: "<:icons_list:860123643710537789>各項統計",
+            name: "<:list_860123643710537789:1201843692546039829>各項統計",
             value: [
-              `<:icons_globe:859424401971609600> **伺服器** \`${client.guilds.cache.size}\``,
-              `<:icons_people:964425853930995783> **使用者** \`${client.users.cache.size}\``,
-              `<:icons_addreactions:866920224581746698> **表情符號** \`${client.emojis.cache.size}\``,
-              `<:icons_channel:859424401950113822> **文字頻道** \`${getChannelTypeSize([
+              `<:globe_859424401971609600:1201843661785284659> **伺服器** \`${client.guilds.cache.size}\``,
+              `<:people_964425853930995783:1201843743762681906> **使用者** \`${client.users.cache.size}\``,
+              `<:addreaction_866920224581746698:1201843621398323250> **表情符號** \`${client.emojis.cache.size}\``,
+              `<:channel_859424401950113822:1201843641124147280> **文字頻道** \`${getChannelTypeSize([
                 ChannelType.GuildText,
                 ChannelType.GuildForum,
               ])}\``,
@@ -106,7 +106,7 @@ module.exports = {
                 ChannelType.GuildVoice,
                 ChannelType.GuildStageVoice,
               ])}\``,
-              `<:icons_forum:964425853138264094> **討論串** \`${getChannelTypeSize([
+              `<:forum_964425853138264094:1202224009803202660> **討論串** \`${getChannelTypeSize([
                 11,
                 12,
                 10,

@@ -82,7 +82,7 @@ module.exports = {
       });
 
     const successEmebd = new EmbedBuilder()
-      .setAuthor({ name: "<:icons_timeout:930797536900415548>", iconURL: guild.iconURL() })
+      .setAuthor({ name: "<:timeout_930797536900415548:1201844326322151454>", iconURL: guild.iconURL() })
       .setColor(client.color)
       .setDescription(
         [

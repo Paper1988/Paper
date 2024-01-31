@@ -32,7 +32,7 @@ module.exports = {
           client.giveawaysManager
             .end(query)
             .then(() => {
-              successEmbed.setDescription("<:icons_xmarkwhite:988409378161954866> | 成功結束抽獎活動!");
+              successEmbed.setDescription("<:xmark_988409378161954866:1201844342029815848> | 成功結束抽獎活動!");
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {
@@ -46,7 +46,7 @@ module.exports = {
           client.giveawaysManager
             .pause(query)
             .then(() => {
-              successEmbed.setDescription("<:icons_pause:861852632914198548> | 成功暫停抽獎活動!");
+              successEmbed.setDescription("<:pause_861852632914198548:1201843739728035961> | 成功暫停抽獎活動!");
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {
@@ -75,12 +75,12 @@ module.exports = {
             .reroll(query, {
               messages: {
                 congrat:
-                  "<:icons_tada:868022351508414474>恭喜新贏家: {winners}! 贏得獎品: **{this.prize}**!",
+                  "<:tada_868022351508414474:1201844318940442624>恭喜新贏家: {winners}! 贏得獎品: **{this.prize}**!",
                 error: "<:outage_868122243845206087:1202112862990897172> | 無有效的參與, 於是沒有新贏家!",
               },
             })
             .then(() => {
-              successEmbed.setDescription("<:icons_update:860123644297871382> | 成功重新抽選抽獎活動的贏家!");
+              successEmbed.setDescription("<:loop_861852632893227029:1201843696031764490> | 成功重新抽選抽獎活動的贏家!");
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {
@@ -94,7 +94,7 @@ module.exports = {
           client.giveawaysManager
             .delete(query)
             .then(() => {
-              successEmbed.setDescription("<:icons_delete:867650498030731315> | 成功刪除抽獎活動!");
+              successEmbed.setDescription("<:delete_867650498030731315:1202218553109913700> | 成功刪除抽獎活動!");
               interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {

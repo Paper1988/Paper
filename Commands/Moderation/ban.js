@@ -36,7 +36,7 @@ module.exports = {
 
     const dmEmbed = new EmbedBuilder()
       .setAuthor({
-        name: `<:icons_ban:859424400968646676>`,
+        name: `<:ban_859424400968646676:1201843628108943390>`,
         iconURL: guild.iconURL(),
       })
       .setColor("Green")
@@ -88,7 +88,7 @@ module.exports = {
 
     const successEmbed = new EmbedBuilder()
       .setAuthor({
-        name: `<:icons_ban:859424400968646676>`,
+        name: `<:ban_859424400968646676:1201843628108943390>`,
         iconURL: guild.iconURL(),
       })
       .setColor("Green")

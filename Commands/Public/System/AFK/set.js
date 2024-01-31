@@ -23,7 +23,7 @@ module.exports = {
     );
 
     Embed.setColor("Green").setDescription(
-      `✅ | 你的afk狀態已被設置為: \`${afkStatus}\``
+      `<:correct_859388130411282442:1201843648229294121> | 你的afk狀態已被設置為: \`${afkStatus}\``
     );
     return interaction.reply({ embeds: [Embed], ephemeral: true });
   },
