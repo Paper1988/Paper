@@ -24,18 +24,18 @@ function addSuffix(number) {
 function addBadges(badgeNames) {
   if (!badgeNames.length) return ["X"];
   const badgeMap = {
-    ActiveDeveloper: "<:activedeveloper:1094238741528322068>",
-    BugHunterLevel1: "<:discordbughunter1:1094238759618351184>",
-    BugHunterLevel2: "<:discordbughunter2:1094238764420833290>",
-    PremiumEarlySupporter: "<:discordearlysupporter:1094238768564797550>",
-    Partner: "<:discordpartner:1094238782879961088>",
-    Staff: "<:discordstaff:1094238787057504256>",
-    HypeSquadOnlineHouse1: "<:hypesquadbravery:1094238795769065583>", // bravery
-    HypeSquadOnlineHouse2: "<:hypesquadbrilliance:1094238801792073758>", // brilliance
-    HypeSquadOnlineHouse3: "<:hypesquadbalance:1094238792535261225>", // balance
-    Hypesquad: "<:hypesquadevents:1094238809635434626>",
-    CertifiedModerator: "<:discordmod:1094238772423565384>",
-    VerifiedDeveloper: "<:discordbotdev:1094238757277925488>",
+    ActiveDeveloper: "<:activedeveloper:1201841218586152990>",
+    BugHunterLevel1: "<:discordbughunter1:1201841226681438238>",
+    BugHunterLevel2: "<:discordbughunter2:1201841229281898536>",
+    PremiumEarlySupporter: "<:discordearlysupporter:1201841232125362196>",
+    Partner: "<:discordpartner:1201841240371367936>",
+    Staff: "<:discordstaff:1201841242431033394>",
+    HypeSquadOnlineHouse1: "<:hypesquadbravery:1201841247875235920>", // bravery
+    HypeSquadOnlineHouse2: "<:hypesquadbrilliance:1201841250987409408>", // brilliance
+    HypeSquadOnlineHouse3: "<:hypesquadbalance:1201841246390468629>", // balance
+    Hypesquad: "<:hypesquadevents:1201841254380601364>",
+    CertifiedModerator: "<:discordmod:1201841233711079424>",
+    VerifiedDeveloper: "<:discordbotdev:1201841223250223105>",
   };
 
   return badgeNames.map((badgeName) => badgeMap[badgeName] || "❔");
@@ -91,7 +91,7 @@ module.exports = {
       const createdTime = parseInt(member.user.createdTimestamp / 1000);
 
       const Booster = member.premiumSince
-        ? "<:discordboost7:1094238751229739119>"
+        ? "<:discordboost7:1201841221899915325>"
         : "<:xmark_988409378161954866:1201844342029815848>";
 
       const Embed = new EmbedBuilder()
