@@ -25,7 +25,7 @@ module.exports = {
       type: "conjunction",
     });
 
-    const status = ["<:icons_badping:880113405007114271>離線", "<:icons_goodping:880113406915538995>連線", "<:icons_idelping:880113405720145990>連線中...", "<:icons_idelping:880113405720145990>離線中..."];
+    const status = ["<:highping_880113405007114271:1201843664524165120>離線", "<:lowping_880113406915538995:1201843703208222772>連線", "<:midping_880113405720145990:1201843713006120970>連線中...", "<:midping_880113405720145990:1201843713006120970>離線中..."];
 
     await client.user.fetch();
     await client.application.fetch();
