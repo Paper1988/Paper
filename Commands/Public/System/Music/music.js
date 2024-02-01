@@ -76,16 +76,16 @@ module.exports = {
             .setDescription("請選擇一個選項")
             .setRequired(true)
             .addChoices(
-              { name: "<:queue_861852633240961024:1202112866069520385>顯示播放清單", value: "queue" },
-              { name: "<:backforward_988409328698523708:1201843626435686440>播放上一首曲目", value: "previous" },
-              { name: "<:pause_861852632914198548:1201843739728035961>暫停播放歌曲", value: "pause" },
-              { name: "<:play_861852632800952320:1202112864857628692>繼續播放歌曲", value: "resume" },
-              { name: "<:frontforward_988409335791124551:1202215991694856262> 跳過歌曲", value: "skip" },
-              { name: "<:stop_988409337837924422:1201844316675510364>停止音樂", value: "stop" },
-              { name: "<:shuffle_988409354208313404:1201844292751212574>隨機播放", value: "shuffle" },
-              { name: "<:update_860123644297871382:1201844333968625695>切換自動播放", value: "autoplay" },
-              { name: "<:plus_988409343743496232:1202215484318302208>添加相似歌曲", value: "related" },
-              { name: "<:loop_861852632893227029:1201843696031764490>切換重複播放", value: "repeat" }
+              { name: "顯示播放清單", value: "queue" },
+              { name: "播放上一首曲目", value: "previous" },
+              { name: "暫停播放歌曲", value: "pause" },
+              { name: "繼續播放歌曲", value: "resume" },
+              { name: "跳過歌曲", value: "skip" },
+              { name: "停止音樂", value: "stop" },
+              { name: "隨機播放", value: "shuffle" },
+              { name: "切換自動播放", value: "autoplay" },
+              { name: "添加相似歌曲", value: "related" },
+              { name: "切換重複播放", value: "repeat" }
             
         )
     )
