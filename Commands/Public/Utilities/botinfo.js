@@ -10,8 +10,6 @@ const {
 
 const { connection } = require("mongoose");
 const os = require("os");
-const moment = require("moment");
-const cpuStat = require("cpu-stats");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -28,8 +26,7 @@ module.exports = {
     });
 
     const status = ["<:highping_880113405007114271:1201843664524165120>離線", "<:lowping_880113406915538995:1201843703208222772>連線", "<:midping_880113405720145990:1201843713006120970>連線中...", "<:midping_880113405720145990:1201843713006120970>離線中..."];
-    const memoryUsage = formatBytes(process.memoryUsage().heapUsed);
-
+    
     await client.user.fetch();
     await client.application.fetch();
 
@@ -79,7 +76,7 @@ module.exports = {
               )}:R>`,
               `<:internet_875395223512047626:1201843670970798080> **Ping** \`${client.ws.ping}ms\``,
               `<:dollar_988409333782020216:1201843651009843250> **CPU型號** \`${os.cpus()[0].model}\``,
-              `<:buld_882595243579559958:1201843638427209738> **CPU使用率** \`${(
+              `<:buld_882595243579559958:1201843638427209738> **RAM使用率** \`${(
                 process.memoryUsage().heapUsed /
                 1024 /
                 1024
