@@ -82,7 +82,7 @@ module.exports = {
             new EmbedBuilder()
               .setColor("Purple")
               .setDescription(
-                `<:queue_861852633240961024:1202112866069520385>${queue.songs
+                `<:queue_861852633240961024:1202112866069520385> | 播放清單\n${queue.songs
                   .slice(0, 10)
                   .map((song, id) => `\n**${id + 1}**. ${song.name} - \`${song.formattedDuration}\``)}`),
           ],
