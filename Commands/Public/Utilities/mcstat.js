@@ -36,25 +36,25 @@ module.exports = {
             } else {
                 await interaction.reply({ embeds: [embed], ephemeral: true });
             }
+        }
 
-            var getData = await fetch(`https://mcapi.us/server/stats?ip=${ip}`);
-            var response = await getData.json();
+        var getData = await fetch(`https://mcapi.us/server/stats?ip=${ip}`);
+        var response = await getData.json();
 
-            if (response.status == 'error') {
-                await sendMessage(`<:warning_908958943466893323:1201844340276862976> | \`${ip}\` 不是\`離線狀態\`就是\`不存在\``);
-            }
+        if (response.status == 'error') {
+            await sendMessage(`<:warning_908958943466893323:1201844340276862976> | \`${ip}\` 不是\`離線狀態\`就是\`不存在\``);
+        }
 
-            if (response.status == 'success') {
-                await sendMessage(`<:globe_859424401971609600:1201843661785284659> | **Minecraft 伺服器**:\n\n在線: ${response.online}\n在線人數: ${response.server.name}\nIP: ${ip.toLowerCase()}\n最大玩家上限: ${response.players.max}\n在線玩家: ${response.players.now}`);
-                const collector = msg.createMessageComponentCollector();
-                collector.on("collect", async i => {
-                    if (i.customId === 'refresh') {
-                        var updatedData = await fetch(`https://mcapi.us/server/stats?ip=${ip}`);
-                        var response = await updatedData.json();
-                        await sendMessage(`<:globe_859424401971609600:1201843661785284659> | **Minecraft 伺服器**:\n\n在線: ${response.online}\n在線人數: ${response.server.name}\nIP: ${ip.toLowerCase()}\n最大玩家上限: ${response.players.max}\n在線玩家: ${response.players.now}`);
-                    }
-                });
-            }
+        if (response.status == 'success') {
+            await sendMessage(`<:globe_859424401971609600:1201843661785284659> | **Minecraft 伺服器**:\n\n在線: ${response.online}\n在線人數: ${response.server.name}\nIP: ${ip.toLowerCase()}\n最大玩家上限: ${response.players.max}\n在線玩家: ${response.players.now}`);
+            const collector = msg.createMessageComponentCollector();
+            collector.on("collect", async i => {
+                if (i.customId === 'refresh') {
+                    var updatedData = await fetch(`https://mcapi.us/server/stats?ip=${ip}`);
+                    var response = await updatedData.json();
+                    await sendMessage(`<:globe_859424401971609600:1201843661785284659> | **Minecraft 伺服器**:\n\n在線: ${response.online}\n在線人數: ${response.server.name}\nIP: ${ip.toLowerCase()}\n最大玩家上限: ${response.players.max}\n在線玩家: ${response.players.now}`);
+                }
+            });
         }
     }
 }
