@@ -28,7 +28,7 @@ client.distube
         new EmbedBuilder()
           .setColor("Green")
           .setDescription(
-            `<:plus_988409343743496232:1202215484318302208> | <:friend_861852632767528970:1201843652704616448>${song.user} 加入 ${song.name} - \`${song.formattedDuration}\` 到清單中`
+            `<:plus_988409343743496232:1202215484318302208> | <:friend_861852632767528970:1201843652704616448>${song.user} 加入 \`${song.name}\` - \`${song.formattedDuration}\` 到清單中`
           ),
       ],
     })
