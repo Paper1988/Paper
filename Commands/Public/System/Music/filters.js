@@ -25,10 +25,6 @@ module.exports = {
 
     if (!queue) return interaction.reply({ content: "<:warning_908958943466893323:1201844340276862976> | 播放清單是空的!" });
 
-    if (queue.filters.has(filter)) 
-      queue.filters.remove(filter);
-    else queue.filters.add(filter);
-
     switch (options.getString("set")) {
       case "false":
         await queue.filters.clear();
