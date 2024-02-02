@@ -98,7 +98,7 @@ module.exports = {
                 ChannelType.GuildText,
                 ChannelType.GuildForum,
               ])}\``,
-              `<:icons_speaker:860133545544908802> **語音頻道** \`${getChannelTypeSize([
+              `<:speaker_860133545544908802:1201844300099354644> **語音頻道** \`${getChannelTypeSize([
                 ChannelType.GuildVoice,
                 ChannelType.GuildStageVoice,
               ])}\``,
