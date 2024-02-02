@@ -12,8 +12,8 @@ module.exports = {
         const embed = new EmbedBuilder()
         .setTitle("版權提供者")
         .addFields({
-            name: "<:iconsgit_1032468076110811236:1202552616316567593>Icons圖標",
-            value: "https://discord.gg/9AtkECMX2P"
+            name: "Icons圖標",
+            value: "<:iconsgit_1032468076110811236:1202552616316567593> https://discord.gg/9AtkECMX2P"
         })
         interaction.reply({ embeds: [embed], ephemeral: true });
     }
