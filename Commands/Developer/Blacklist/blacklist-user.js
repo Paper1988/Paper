@@ -29,12 +29,12 @@ module.exports = {
 			});
 			await Data.save();
 			interaction.editReply({
-				content: `<:correct_859388130411282442:1201843648229294121>成功添加 **${User} | ${User.id} | ${User.username}** 至用戶黑名單 , 原因: ${reason}`,
+				content: `<:correct_859388130411282442:1201843648229294121> | 成功添加 **${User} | ${User.id} | ${User.username}** 至用戶黑名單 , 原因: ${reason}`,
 			});
 		} else {
 			await Data.delete();
 			interaction.editReply({
-				content: `<:correct_859388130411282442:1201843648229294121>成功從用戶黑名單中移除 **${User} | ${User.id} | ${User.username}**`,
+				content: `<:correct_859388130411282442:1201843648229294121> | 成功從用戶黑名單中移除 **${User} | ${User.id} | ${User.username}**`,
 			});
 		}
 	},
