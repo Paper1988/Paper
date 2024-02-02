@@ -5,7 +5,7 @@ module.exports = {
   data: new SlashCommandBuilder()
   .setName("rock-paper-scissors")
   .setDescription("和另一名成員遊玩剪刀石頭布!")
-  .setUserOption((options) => {
+  .addUserOption((options) => {
     options.setName("opponent").setDescription("選擇你的對手").setRequired(true);
   }),
   /**
