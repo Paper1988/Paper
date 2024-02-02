@@ -24,6 +24,7 @@ module.exports = {
     .setTimestamp();
 
     const command = client.commands.get(interaction.commandName);
+    
     if (!command)
       return interaction.reply({
         content: `<:warning_908958943466893323:1201844340276862976> | 這項指令過期或不存在了!`,
