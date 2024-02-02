@@ -53,7 +53,7 @@ module.exports = {
                 if (i.customId == 'refresh') {
                     var updatedData = await fetch(`https://mcapi.us/server/status?ip=${ip}`);
                     var response = await updatedData.json();
-                    await sendMessage(`<:globe_859424401971609600:1201843661785284659> | **Minecraft 伺服器**:\n\n在線: ${response.online}\n名稱: ${response.server.name}\nIP: ${ip.toLowerCase()}\n最大玩家上限: ${response.players.max}\n在線玩家: ${response.players.now}`, true, 1);
+                    await sendMessage(`<:globe_859424401971609600:1201843661785284659> | **Minecraft 伺服器**:\n\n在線: ${response.online}\n名稱: ${response.server.name}\nIP: ${ip.toLowerCase()}\n最大玩家上限: ${response.players.max}\n在線玩家: ${response.players.now}`, true, interaction);
                 };
             });
         }
