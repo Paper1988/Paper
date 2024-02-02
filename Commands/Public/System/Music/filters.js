@@ -32,63 +32,63 @@ module.exports = {
         return interaction.reply({ content: `<:linkremove_865572289022394368:1201843685084647435> 成功關閉所有過濾器` });
 
       case "8d":
-        await queue.setFilter(`3d`);
+        await queue.addFilter(`3d`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 8D 過濾器` });
 
       case "karaoke":
-        await queue.setFilter(`karaoke`);
+        await queue.addFilter(`karaoke`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 卡拉OK 過濾器` });
 
       case "vaporwave":
-        await queue.setFilter(`vaporwave`);
+        await queue.addFilter(`vaporwave`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 vaporwave 過濾器` });
 
       case "flanger":
-        await queue.setFilter(`flanger`);
+        await queue.addFilter(`flanger`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 flanger 過濾器` });
 
       case "gate":
-        await queue.setFilter(`gate`);
+        await queue.addFilter(`gate`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 gate 過濾器` });
 
       case "haas":
-        await queue.setFilter(`haas`);
+        await queue.addFilter(`haas`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 haas 過濾器` });
 
       case "reverse":
-        await queue.setFilter(`reverse`);
+        await queue.addFilter(`reverse`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 倒放 過濾器` });
 
       case "mcompand":
-        await queue.setFilter(`mcompand`);
+        await queue.addFilter(`mcompand`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 mcompand 過濾器` });
 
       case "phaser":
-        await queue.setFilter(`phaser`);
+        await queue.addFilter(`phaser`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 phaser 過濾器` });
 
       case "tremolo":
-        await queue.setFilter(`tremolo`);
+        await queue.addFilter(`tremolo`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 tremolo 過濾器` });
 
       case "earwax":
-        await queue.setFilter(`earwax`);
+        await queue.addFilter(`earwax`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 erawax 過濾器` });
 
       case "bassboost":
-        await queue.setFilter(`bassboost`);
+        await queue.addFilter(`bassboost`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 低音增強 過濾器` });
 
       case "echo":
-        await queue.setFilter(`echo`);
+        await queue.addFilter(`echo`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 回音 過濾器` });
 
       case "nightcore":
-        await queue.setFilter(`nightcore`);
+        await queue.addFilter(`nightcore`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 nightcore 過濾器` });
 
       case "surround":
-        await queue.setFilter(`surround`);
+        await queue.addFilter(`surround`);
         return interaction.reply({ content: `<:linkadd_865572290065072128:1201884016404598814> 成功增加 環繞聲 過濾器` });
     }
   },
