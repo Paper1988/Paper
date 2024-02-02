@@ -25,7 +25,7 @@ module.exports = {
                     new ButtonBuilder()
                     .setCustomId("refresh")
                     .setLabel("🔄 刷新數據")
-                    .setStyle(ButtonStyle.Danger)
+                    .setStyle(ButtonStyle.Primary)
                 );
 
                 if (updated) {
