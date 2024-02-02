@@ -63,7 +63,7 @@ module.exports = {
       case "related":
         await queue.addRelatedSong(VoiceChannel);
         return interaction.reply({
-          content: "<:plus_988409343743496232:1202215484318302208>成功添加相似歌曲到播放清單中",
+          content: "<:plus_988409343743496232:1202215484318302208> | 成功添加相似歌曲到播放清單中",
         });
 
       case "repeat":

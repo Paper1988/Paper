@@ -24,12 +24,21 @@ client.subCommands = new Collection();
 /**************************************************/
 const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
+const { SoundCloudPlugin } = require('@distube/soundcloud');
+const { YtDlpPlugin } = require('@distube/yt-dlp')
 
 client.distube = new DisTube(client, {
   emitNewSongOnly: true,
   leaveOnFinish: true,
   emitAddSongWhenCreatingQueue: false,
-  plugins: [new SpotifyPlugin()],
+  emitAddListWhenCreatingQueue: false,
+  plugins: [
+    new SpotifyPlugin({
+      emitEventsAfterFetching: true
+    }),
+    new SoundCloudPlugin(),
+    new YtDlpPlugin(),
+  ],
 });
 /**************************************************/
 module.exports = client;

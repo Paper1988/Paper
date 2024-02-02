@@ -30,6 +30,6 @@ module.exports = {
     if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到清單" });
 
     await queue.seek(Time);
-    return interaction.reply({ content: `<:rightarrow_859388126653186058:1202113627122061403>跳到 **\`${Time}\`**` });
+    return interaction.reply({ content: `<:rightarrow_859388126653186058:1202113627122061403> | 跳到 **\`${Time}\`**` });
   },
 };
