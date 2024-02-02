@@ -17,7 +17,7 @@ module.exports = {
         async function sendMessage(message, button, updated) {
             const embed = new EmbedBuilder()
             .setColor("Blurple")
-            .setDescription("message")
+            .setDescription(message)
 
             if(button) {
                 const button = new ActionRowBuilder()
