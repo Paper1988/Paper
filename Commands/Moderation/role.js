@@ -44,7 +44,7 @@ module.exports = {
 
     embed.setDescription(
       target.roles.cache.has(role.id)
-        ? `<:correct_859388130411282442:1201843648229294121> | 成功從 ${target} 移除 **${role}**`
+        ? `<:correct_859388130411282442:1201843648229294121> | 成功從 ${target} 身上移除 **${role}**`
         : `<:correct_859388130411282442:1201843648229294121> | 成功添加身分組: **${role}** 至 ${target} 身上`
     );
     target.roles.cache.has(role.id)
