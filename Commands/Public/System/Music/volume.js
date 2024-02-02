@@ -28,7 +28,7 @@ module.exports = {
     client.distube.setVolume(VoiceChannel, Volume);
     if (Volume < 50 && Volume > 0)
       return interaction.reply({ content: `<:speaker_low_860133546278387763:1201844302725255178> | 成功設置音量為 \`${Volume}%\`` });
-    else if (Volume > 50)
+    else if (Volume >= 50)
       return interaction.reply({ content: `<:speaker_860133545544908802:1201844300099354644> | 成功設置音量為 \`${Volume}%\`` });
   },
 };
