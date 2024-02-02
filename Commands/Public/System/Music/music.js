@@ -33,14 +33,14 @@ module.exports = {
         .addNumberOption((options) =>
           options
             .setName("time")
-            .setDescription("請提供要跳到的時間（以秒為單位）")
+            .setDescription("請提供要跳到的時間位置（以秒為單位）")
             .setRequired(true)
         )
     )
     .addSubcommand((sub) =>
       sub
         .setName("filters")
-        .setDescription("切換過濾器")
+        .setDescription("增添/刪除過濾器")
         .addStringOption((options) =>
           options
             .setName("set")

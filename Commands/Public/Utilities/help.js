@@ -85,7 +85,7 @@ module.exports = {
       .setTitle("🔒管理 Moderation")
       .setColor("Red")
       .setDescription(
-        "> `/ban`: 停權一名成員\n> `/unban`: 解除停權一名成員\n> `/kick`: 踢出一名成員\n> `/timeout`: 禁言一名成員\n> `/purge`: 刪除頻道內訊息\n> `/voice-move`: 移動語音頻道內成員至另一語音頻道 "
+        "> `/ban`: 停權一名成員\n> `/unban`: 解除停權一名成員\n> `/kick`: 踢出一名成員\n> `/timeout`: 禁言一名成員\n> `/purge`: 刪除頻道內訊息\n> `/voice-move`: 移動語音頻道內成員至另一語音頻道\n> \`/role\`: 編輯成員的身分組"
       )
       .setTimestamp();
 
@@ -93,7 +93,7 @@ module.exports = {
       .setTitle("🎶音樂 Music")
       .setColor("Purple")
       .setDescription(
-        "> `/play`: 提供連結或關鍵字來播放音樂或影片\n> `/seek`: 調整音樂當前秒數\n> `/settings`: 設定功能\n> `/volume`: 調整音量"
+        "> `/play`: 提供連結或關鍵字來播放音樂或影片\n> `/seek`: 調整音樂當前秒數\n> `/settings`: 設定功能\n> `/volume`: 調整音量\n> \`/filters\`: 增添/刪除音樂過濾器"
       )
       .setTimestamp();
 
