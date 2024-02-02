@@ -67,9 +67,9 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor("Blue")
-      .setTitle("")
+      .setTitle("指令幫助")
       .setDescription(
-        "Paper是一個多功能機器人，有許多指令，像是：音樂、抽獎、管理以及更多有趣的指令等你來發現！"
+        "Paper📄是一個多功能機器人，有許多指令，像是：音樂、抽獎、管理以及更多有趣的指令等你來發現！"
       )
       .setTimestamp();
 
@@ -77,7 +77,7 @@ module.exports = {
       .setTitle("🔧一般 General")
       .setColor("Green")
       .setDescription(
-        "> </help:1131066238915842059>: 顯示這個列表\n> </botinfo:1131066238915842060>: 顯示有關Paper的資訊\n> </ping:1131066238777426001>: Pong!\n> </invite:1131066238915842058>: 顯示Paper的邀請指令\n> </serverinfo:1131066238777426000>: 顯示伺服器的資訊\n> </userinfo:1131066238777425998>: 取得一位用戶的資訊\n> </report:1158752288928710706>: 回報給我們bug、建議"
+        "> </help:1131066238915842059>: 顯示這個列表\n> </botinfo:1131066238915842060>: 顯示有關Paper的資訊\n> </ping:1131066238777426001>: Pong!\n> </invite:1131066238915842058>: 顯示Paper的邀請指令\n> </serverinfo:1131066238777426000>: 顯示伺服器的資訊\n> </userinfo:1131066238777425998>: 取得一位用戶的資訊\n> </report:1158752288928710706>: 回報給我們bug、建議\n> </credits:1202478482316329031>: 檢視版權資訊\n </mcstats:1202453198078738525>: 顯示一個Minecraft伺服器的資訊"
       )
       .setTimestamp();
 
