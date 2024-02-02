@@ -129,6 +129,7 @@ module.exports = {
         ]);
 
       return interaction.editReply({
+        content: "",
         embeds: [Embed],
         ephemeral: true,
         files: [imageAttachment],
