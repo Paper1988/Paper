@@ -13,7 +13,7 @@ module.exports = {
         .setTitle("版權提供者")
         .addFields({
             name: "Icons圖標",
-            value: "<:iconsgit_1032468076110811236:1202552616316567593> https://discord.gg/9AtkECMX2P"
+            value: "https://discord.gg/9AtkECMX2P"
         })
         interaction.reply({ embeds: [embed], ephemeral: true });
     }
