@@ -25,7 +25,6 @@ client.subCommands = new Collection();
 const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
 const { SoundCloudPlugin } = require('@distube/soundcloud');
-const { YtDlpPlugin } = require('@distube/yt-dlp')
 
 client.distube = new DisTube(client, {
   emitNewSongOnly: true,
@@ -37,7 +36,6 @@ client.distube = new DisTube(client, {
       emitEventsAfterFetching: true
     }),
     new SoundCloudPlugin(),
-    new YtDlpPlugin(),
   ],
 });
 /**************************************************/
