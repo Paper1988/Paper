@@ -12,6 +12,7 @@ module.exports = {
     async execute(interaction) {
         const {options} = interaction;
         const ip = options.getString("server-ip");
+
         var msg;
         async function sendMessage(message, button, updated) {
             const embed = new EmbedBuilder()
@@ -38,7 +39,7 @@ module.exports = {
             }
         }
 
-        var getData = await fetch(`https://mcapi.us/server/stats?ip=${ip}`);
+        var getData = await fetch(`https://mcapi.us/server/status?ip=${ip}`);
         var response = await getData.json();
 
         if (response.status == 'error') {
