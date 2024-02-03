@@ -102,7 +102,7 @@ module.exports = {
         )
     )
   ),
-  usage: "/music (play, volume, settings, seek, filters)",
+  usage: "/music (play, volume, settings, seek, filters, jump)",
   async autocomplete(interaction, client) {
     // 檢查是否為 "play" 子指令的自動完成
     if (interaction.commandName === 'music' && interaction.options.getSubcommand() === 'play') {
