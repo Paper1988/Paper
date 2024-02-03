@@ -18,7 +18,7 @@ module.exports = {
     const { options } = interaction;
     const opponent = options.getUser("opponent");
 
-    if ((interaction.user.id) === opponent.id) return interaction.reply("<:warning_908958943466893323:1201844340276862976> | 你不能跟自己玩剪刀石頭布!");
+    if ((interaction.user.id) === opponent.id) return interaction.reply({ content: "<:warning_908958943466893323:1201844340276862976> | 你不能跟自己玩剪刀石頭布!", ephemeral: true });
 
     const Game = new RockPaperScissors({
         message: interaction,
