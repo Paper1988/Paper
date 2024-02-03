@@ -18,6 +18,8 @@ module.exports = {
     const { options } = interaction;
     const opponent = options.getUser("opponent");
 
+    if ((interaction.user.id) === opponent.id) return;
+
     const Game = new RockPaperScissors({
         message: interaction,
         isSlashGame: true,
