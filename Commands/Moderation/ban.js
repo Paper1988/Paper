@@ -35,11 +35,8 @@ module.exports = {
     const errorsArray = [];
 
     const dmEmbed = new EmbedBuilder()
-      .setAuthor({
-        name: `<:ban_859424400968646676:1201843628108943390>`,
-        iconURL: guild.iconURL(),
-      })
       .setColor("Green")
+      .setTitle("<:ban_859424400968646676:1201843628108943390>")
       .setDescription(
         [
           `你已從 ${interaction.guild.name} 被 **封鎖**`,
@@ -49,13 +46,11 @@ module.exports = {
       )
       .setFooter({
         iconURL: guild.iconURL(),
-        text: `機器人 | ${interaction.user.username}`,
+        text: `${interaction.guild.name}`,
       });
 
     const errorsEmbed = new EmbedBuilder()
-      .setAuthor({
-        name: "<:warning_908958943466893323:1201844340276862976> | 無法封鎖該名成員，因為",
-      })
+      .setTitle("<:warning_908958943466893323:1201844340276862976> | 無法封鎖該名成員，因為")
       .setColor("Red");
 
     if (!target)
@@ -80,7 +75,7 @@ module.exports = {
     target.ban({ reason: reason }).catch((err) => {
       interaction.reply({
         embeds: [
-          errorsEmbed.setDescription("<:warning_908958943466893323:1201844340276862976> | 無法封鎖該名成員，因為一個罕見的錯誤"),
+          errorsEmbed.setDescription("發生一個罕見的錯誤"),
         ],
       });
       return console.log("錯誤發生 - 在 Ban.js", err);

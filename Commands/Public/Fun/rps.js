@@ -49,9 +49,9 @@ module.exports = {
         tieMessage: "平手! 沒有贏家!",
         timeoutMessage: "這場遊戲沒有結束，沒有贏家!",
         playerOnlyMessage: "只有 {player} 還有 {opponent} 可以使用這些按鈕!",
-        requestMessage: '{player} 邀請你參與一場遊戲',
+        requestMessage: '{player} 邀請你與他遊玩\`剪刀石頭布\`',
         rejectMessage: '該用戶拒絕你的邀約',
-        reqTimeoutMessage: '遊戲取消，因為用戶未回應'
+        reqTimeoutMessage: '遊戲取消，因為 {opponent} 未回應'
     });
 
     Game.startGame();

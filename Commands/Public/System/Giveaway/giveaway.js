@@ -17,40 +17,39 @@ module.exports = {
             )
             .setRequired(true)
         )
-        .addIntegerOption((options) =>
-          options
-            .setName("winners")
-            .setDescription("請提供這個抽獎活動的贏家數量")
-            .setRequired(true)
-            .setMinValue(1)
-        )
         .addStringOption((options) =>
           options
             .setName("prize")
-            .setDescription("請提供這個抽獎活動的獎品")
+            .setDescription("請提供獎品")
             .setRequired(true)
+        )
+        .addIntegerOption((options) =>
+          options
+            .setName("winners")
+            .setDescription("請提供贏家數量(預設為1)")
+            .setRequired(false)
         )
         .addChannelOption((options) =>
           options
             .setName("channel")
-            .setDescription("選擇這個抽獎活動舉辦的頻道")
+            .setDescription("選擇舉辦的頻道")
             .setRequired(false)
         )
         .addRoleOption((options) =>
           options
             .setName("role")
-            .setDescription("選擇需要擁有才能參加抽獎的身分組")
+            .setDescription("選擇身分組")
             .setRequired(false)
         )
     )
     .addSubcommand((sub) =>
       sub
         .setName("actions")
-        .setDescription("控制抽獎活動的選項")
+        .setDescription("控制選項")
         .addStringOption((options) =>
           options
             .setName("options")
-            .setDescription("請選擇一項控制選項")
+            .setDescription("請選擇控制選項")
             .setRequired(true)
             .addChoices(
               {
@@ -78,8 +77,36 @@ module.exports = {
         .addStringOption((options) =>
           options
             .setName("query")
-            .setDescription("請提供該抽獎活動的訊息ID")
+            .setDescription("請提供訊息ID")
             .setRequired(true)
+        )
+    )
+    .addSubcommand((sub) =>
+      sub.setName("edit")
+        .setDescription("修改設定")
+        .addStringOption((options) =>
+          options
+          .setName("query")
+          .setDescription("請提供訊息ID")
+          .setRequired(true)
+        )
+        .addStringOption((options) =>
+          options
+            .setName("new-duration")
+            .setDescription("新的結束時間(相同格式)")
+            .setRequired(false)
+        )
+        .addIntegerOption((options) =>
+          options
+            .setName("new-winners")
+            .setDescription("新的贏家數量")
+            .setRequired(false)
+        )
+        .addStringOption((options) =>
+          options
+            .setName("new-prizes")
+            .serDescription("新的獎品")
+            .setRequired(false)
         )
     ),
   usage: "/giveaway (start, actions)",

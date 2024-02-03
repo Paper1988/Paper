@@ -18,7 +18,7 @@ module.exports = {
 
     const role = interaction.options.getRole("role");
     const duration = interaction.options.getString("duration");
-    const winnerCount = interaction.options.getInteger("winners");
+    const winnerCount = interaction.options.getInteger("winners") || 1;
     const prize = interaction.options.getString("prize");
     const gchannel = interaction.options.getChannel("channel") || interaction.channel;
 
@@ -27,16 +27,12 @@ module.exports = {
         duration: ms(duration),
         winnerCount,
         prize,
-        exemptMembers: new Function(
-          "member",
-          "giveaway",
-          `return !member.roles.cache.some((r) => r.name === '${role}')`
-        ),
+        exemptMembers: (member, giveaway) => !member.roles.cache.some((r) => r.name === role.name),
         messages: {
           giveaway: "<:tada_868022351508414474:1201844318940442624>**抽獎活動開始了**<:tada_868022351508414474:1201844318940442624>",
           giveawayEnded: "🎊**抽獎活動結束了**🎊",
           inviteToParticipate: "**點擊🎉來參加抽獎!**",
-          winMessage: "<:tada_868022351508414474:1201844318940442624>恭喜贏家 {winners} 贏得獎品: **`{this.prize}`** !",
+          winMessage: "<:tada_868022351508414474:1201844318940442624>恭喜贏家 {winners} 贏得獎品: **`{this.prize}`** !\n{this.messageURL}",
           noWinner: "抽獎活動已取消，因為: `參與人數不足`",
           dropMessage: "成為第一位參加的人!",
           drawing: "剩餘時間: {timestamp}",
@@ -47,14 +43,14 @@ module.exports = {
         },
         pauseOptions: {
           isPaused: false,
-          content: "⚠️ **這個抽獎活動已被暫停!** ⚠️",
+          content: "<:warning_908958943466893323:1201844340276862976> **這個抽獎活動已被暫停!** <:warning_908958943466893323:1201844340276862976>",
           unpauseAfter: null,
           embedColor: "#FFFF00",
           infiniteDurationText: "`無限長`",
         },
         lastChance: {
           enabled: true,
-          content: "⚠️ **最後加入的機會!** ⚠️",
+          content: "<:warning_908958943466893323:1201844340276862976> **最後加入的機會!** <:warning_908958943466893323:1201844340276862976>",
           threshold: 10_000,
           embedColor: "#FF0000",
         },

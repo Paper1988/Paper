@@ -15,10 +15,13 @@ client.distube
         new EmbedBuilder()
           .setColor("Green")
           .setDescription(
-            `<:play_861852632800952320:1202112864857628692> | 播放 \`${song.name}\` - \`${
+            `<:play_861852632800952320:1202112864857628692> | 播放 [${song.name}](${song.url}) - \`${
               song.formattedDuration
-            }\`\n<:friend_861852632767528970:1201843652704616448>請求者: ${song.user}\n${status(queue)}`
-          ),
+            }\`\n${status(queue)}`
+          )
+          .setAuthor({ name: song.user.name, iconURL: song.user.displayAvatarURL() })
+          .setThumbnail(song.thumbnail)
+          .setTimestamp(),
       ],
     })
   )
@@ -28,8 +31,11 @@ client.distube
         new EmbedBuilder()
           .setColor("Green")
           .setDescription(
-            `<:plus_988409343743496232:1202215484318302208> | <:friend_861852632767528970:1201843652704616448>${song.user} 加入 \`${song.name}\` - \`${song.formattedDuration}\` 到清單中`
-          ),
+            `<:plus_988409343743496232:1202215484318302208> | 加入 [${song.name}](${song.url}) - \`${song.formattedDuration}\` 到清單中`
+          )
+          .setAuthor({ name: song.user.name, iconURL: song.user.displayAvatarURL() })
+          .setThumbnail(song.thumbnail)
+          .setTimestamp(),
       ],
     })
   )
@@ -39,10 +45,13 @@ client.distube
         new EmbedBuilder()
           .setColor("Green")
           .setDescription(
-            `<:plus_988409343743496232:1202215484318302208> | <:friend_861852632767528970:1201843652704616448>${song.user} 加入 \`${playlist.name}\` 播放清單 (\`${
+            `<:plus_988409343743496232:1202215484318302208> | 加入 [${playlist.name}](${playlist.url}) 播放清單 (\`${
               playlist.songs.length
             }\`首歌) 到清單中\n${status(queue)}`
-          ),
+          )
+          .setAuthor({ name: playlist.user.name, iconURL: playlist.user.displayAvatarURL() })
+          .setThumbnail(playlist.thumbnail)
+          .setTimestamp(),
       ],
     })
   )
@@ -54,14 +63,13 @@ client.distube
           .setDescription(`<:outage_868122243845206087:1202112862990897172> | 發生錯誤: ${e.toString().slice(0, 1974)}`),
       ],
     });
-    console.error(e);
   })
   .on("empty", (queue) =>
     queue.textChannel.send({
       embeds: [
         new EmbedBuilder()
           .setColor("Red")
-          .setDescription("<:nomember_859424400557604886:1201843730626400256>語音頻道是空的！<:leave_860487640113217546:1202217506991771658>離開頻道中..."),
+          .setDescription("<:nomember_859424400557604886:1201843730626400256> | 語音頻道是空的！<:leave_860487640113217546:1202217506991771658>離開頻道中..."),
       ],
     })
   )
@@ -70,7 +78,8 @@ client.distube
       embeds: [
         new EmbedBuilder()
           .setColor("Red")
-          .setDescription(`<:warning_908958943466893323:1201844340276862976> | 找不到: \`${query}\`!`),
+          .setDescription(`<:warning_908958943466893323:1201844340276862976> | 搜尋不到你要的結果: \`${query}\`!`)
+          .setTimestamp(),
       ],
     })
   )
@@ -79,7 +88,38 @@ client.distube
       embeds: [
         new EmbedBuilder()
           .setColor("Red")
-          .setDescription(`<:musicstop_861852633979420712:1201843718215438386>清單播放完畢！`),
+          .setDescription(`<:musicstop_861852633979420712:1201843718215438386> | 清單播放完畢！`)
+          .setTimestamp(),
+      ],
+    })
+  )
+  .on("searchCancel", (message) => 
+    message.channel.send({
+      embeds: [
+        new EmbedBuilder()
+          .setColor("Red")
+          .setDescription(`<:outage_868122243845206087:1202112862990897172> | 搜尋取消!`)
+          .setTimestamp(),
+      ],
+    })
+  )
+  .on("searchDone", (message, answer, query) =>
+    message.channel.send({
+      embeds: [
+        new EmbedBuilder()
+        .setColor("Green")
+        .setDescription(`<:search_859424401723883560:1201844291098382457> | 搜尋結果: ${query}`)
+        .setTimestamp(),
+      ],
+    })
+  )
+  .on("searchInvalidAnswer", (message, answer, query) =>
+    message.channel.send({
+      embeds: [
+        new EmbedBuilder()
+        .setColor("Red")
+        .setDescription(`<:warning_908958943466893323:1201844340276862976> | 無效輸入: \`${answer}\`!`)
+        .setTimestamp(),
       ],
     })
   );
