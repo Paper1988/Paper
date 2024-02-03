@@ -87,7 +87,7 @@ module.exports = {
                   .map((song, id) => `\n**${id + 1}**. \`${song.name}\` - \`${song.formattedDuration}\``)}`)
               .setThumbnail(queue.songs[0].thumbnail)
               .setTimestamp()
-              .setFooter({ text: client.user.name, iconURL: client.user.displayAvatarURL() }),
+              .setFooter({ text: `${client.user.name}`, iconURL: client.user.displayAvatarURL() }),
           ],
         });
     }
