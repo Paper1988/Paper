@@ -10,9 +10,11 @@ module.exports = {
    * @param {Client} client
    */
   async execute(client) {
+    let memberCount = await client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
+
     const activities = [
       `${client.guilds.cache.size} 個伺服器`,
-      `${client.users.cache.size} 位用戶`
+      `${memberCount} 位用戶`,
     ];
 
     setInterval(() => {
