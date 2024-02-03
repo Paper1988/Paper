@@ -105,7 +105,7 @@ module.exports = {
         .addStringOption((options) =>
           options
             .setName("new-prizes")
-            .serDescription("新的獎品")
+            .setDescription("新的獎品")
             .setRequired(false)
         )
     ),
