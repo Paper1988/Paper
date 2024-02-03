@@ -10,8 +10,16 @@ module.exports = {
    * @param {Client} client
    */
   async execute(client) {
-    client.user.setActivity(`${client.guilds.cache.size} 個伺服器`, {
-      type: ActivityType.Watching,
+    const activities = [
+      `${client.guilds.cache.size} 個伺服器`
+      `${client.users.cache.size} 位用戶`
+    ];
+
+    setInterval(() => {
+      const status = activities[Math.floor(Math.random() * activities.length)];
+      client.user.setActivity(status, {
+        type: ActivityType.Watching,
+      });
     });
     // client.user.setActivity(`Updating 更新中....`);
     client.user.setStatus(`online`);
