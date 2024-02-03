@@ -29,10 +29,10 @@ module.exports = {
       .setColor("Purple")
       .setAuthor({
         name: guild.name,
-        iconURL: guild.iconURL({ dynamic: true }),
+        iconURL: guild.iconURL(),
       })
-      .setImage(guild.bannerURL({ dynamic: true, size: 1024 }))
-      .setThumbnail(guild.iconURL({ dynamic: true }))
+      .setImage(guild.bannerURL({ size: 1024 }))
+      .setThumbnail(guild.iconURL())
       .addFields(
         {
           name: "<:generalinfo_866599434098835486:1201843655393157152> | 一般資訊",

@@ -30,6 +30,7 @@ module.exports = {
         content: `<:warning_908958943466893323:1201844340276862976> | 這項指令過期或不存在了!`,
         ephemeral: true,
       });
+
     if (command.developer && interaction.user.id !== "538639229220028416")
       return interaction.reply({
         content: `<:warning_908958943466893323:1201844340276862976> | 這項指令僅限於開發人員使用!`,

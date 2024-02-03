@@ -17,11 +17,15 @@ module.exports = {
 
     const choices = interaction.options.getString("options");
     const query = interaction.options.getString("query");
-    const giveaway = client.giveawaysManager.giveaways.find((g) => g.guildId === interaction.guildId && g.messageId === query);
+    const giveaway =
+      // Search with giveaway prize
+      client.giveawaysManager.giveaways.find((g) => g.guildId === interaction.guildId && g.prize === query) ||
+      // Search with messageId
+      client.giveawaysManager.giveaways.find((g) => g.guildId === interaction.guildId && g.messageId === query);
 
     if (!giveaway) {
       errEmbed.setDescription(
-        `<:warning_908958943466893323:1201844340276862976> | 無法找到訊息ID或獎品名稱: ${query}\n請確認有無輸入錯誤!`
+        `<:warning_908958943466893323:1201844340276862976> | 無法找到訊息ID: ${query}\n請確認有無輸入錯誤!`
       );
       interaction.reply({ embeds: [errEmbed], ephemeral: true });
     }

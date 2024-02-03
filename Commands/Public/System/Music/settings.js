@@ -58,7 +58,7 @@ module.exports = {
 
       case "previous":
         await queue.previous(VoiceChannel);
-        return interaction.reply({ content: "<:backforward_988409328698523708:1201843626435686440> | 成功播放上一首曲目" });
+        return interaction.reply({ content: "<:backforward_988409328698523708:1201843626435686440> | 成功播放上一首歌曲" });
 
       case "related":
         await queue.addRelatedSong(VoiceChannel);
@@ -84,7 +84,10 @@ module.exports = {
               .setDescription(
                 `<:queue_861852633240961024:1202112866069520385> | 播放清單\n${queue.songs
                   .slice(0, 10)
-                  .map((song, id) => `\n**${id + 1}**. \`${song.name}\` - \`${song.formattedDuration}\``)}`),
+                  .map((song, id) => `\n**${id + 1}**. \`${song.name}\` - \`${song.formattedDuration}\``)}`)
+              .setThumbnail(queue.songs[0].thumbnail)
+              .setTimestamp()
+              .setFooter({ text: client.user.name, iconURL: client.user.displayAvatarURL() }),
           ],
         });
     }

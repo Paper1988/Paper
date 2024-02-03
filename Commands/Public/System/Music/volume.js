@@ -9,6 +9,7 @@ module.exports = {
   execute(interaction, client) {
     const { options, member } = interaction;
     const VoiceChannel = member.voice.channel;
+    const Volume = options.getNumber("percent");
 
     if (!VoiceChannel)
       return interaction.reply({
@@ -21,7 +22,6 @@ module.exports = {
         ephemeral: true,
       });
 
-    const Volume = options.getNumber("percent");
     if (Volume > 100 || Volume < 1)
       return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 你必須指定1到100之間的數字!" });
 

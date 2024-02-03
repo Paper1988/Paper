@@ -11,7 +11,7 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("unban")
-    .setDescription("解除封鎖一名成員")
+    .setDescription("解除封鎖伺服器中被封鎖的成員")
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
   /**
    *

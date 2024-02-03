@@ -66,7 +66,9 @@ module.exports = {
 
     try {
       const fetchedMembers = await interaction.guild.members.fetch();
-      const profileBuffer = await profileImage(member.id);
+      const profileBuffer = await profileImage(member.id, {
+        presenceStatus: member.user.presence.status,
+      });
 
       const imageAttachment = new AttachmentBuilder(profileBuffer, {
         name: "profile.png",
@@ -102,7 +104,7 @@ module.exports = {
         .setDescription(
           `<:newmember_964425853410893874:1201843720799133718>在 <t:${joinTime}:D>，${member.user.username}成為${addSuffix(
             joinPosition
-          )}成員加入這個伺服器的人`
+          )}加入這個伺服器的人`
         )
         .setImage("attachment://profile.png")
         .setThumbnail(member.displayAvatarURL({ dynamic: true, size: 512 }))

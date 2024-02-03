@@ -2,5 +2,7 @@
   "Token": "***REMOVED***",
   "Database": "***REMOVED***/Js?retryWrites=true&w=majority",
   "clientId": "***REMOVED***",
-  "developerGuild": "1008313564349616169"
+  "developerGuild": "1008313564349616169",
+  "SpotifyClientId": "***REMOVED***",
+  "SpotifyClientSecret": "**REMOVED***"
 }

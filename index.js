@@ -25,15 +25,22 @@ client.subCommands = new Collection();
 const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
 const { SoundCloudPlugin } = require('@distube/soundcloud');
+const { SpotifyClientId, SpotifyClientSecret } = require("./Structures/config.json");
 
 client.distube = new DisTube(client, {
+  searchSongs: 10,
   emitNewSongOnly: true,
   leaveOnFinish: true,
   emitAddSongWhenCreatingQueue: false,
   emitAddListWhenCreatingQueue: false,
   plugins: [
     new SpotifyPlugin({
-      emitEventsAfterFetching: true
+      emitEventsAfterFetching: true,
+      api: {
+        clientId: SpotifyClientId,
+        clientSecret: SpotifyClientSecret,
+        topTracksCountry: "TW",
+      },
     }),
     new SoundCloudPlugin(),
   ],

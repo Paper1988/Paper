@@ -25,7 +25,7 @@ module.exports = {
       )
       .setTimestamp();
 
-    const logC = client.channels.cache.get("961615076740194326");
+    const logC = client.channels.cache.get("961615076740194327");
 
     logC.send({ embeds: [Embed] });
   },
