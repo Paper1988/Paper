@@ -6,7 +6,7 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    * @param {Client} client
    */
-  execute(interaction, client) {
+  async execute(interaction, client) {
     const { options, channel, member } = interaction;
     const VoiceChannel = member.voice.channel;
 
