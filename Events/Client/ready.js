@@ -11,22 +11,18 @@ module.exports = {
    */
   async execute(client) {
     const activities = [
-      `${client.guilds.cache.size} 個伺服器`
+      `${client.guilds.cache.size} 個伺服器`,
       `${client.users.cache.size} 位用戶`
     ];
 
     setInterval(() => {
       const status = activities[Math.floor(Math.random() * activities.length)];
-      client.user.setActivity(status, {
-        type: ActivityType.Watching,
-      });
-    });
-    // client.user.setActivity(`Updating 更新中....`);
-    client.user.setStatus(`online`);
+      client.user.setPresence({ activities: [{ name: status, type: ActivityType.Watching }]});
+    }, 5000);
+
     console.log(`${client.user.username} 已上線!`);
     loadCommands(client);
 
-    console.log(`${client.user.username} 準備好ㄌ!`);
     const channel = client.channels.cache.get("961615076220092496");
     const Embed = new EmbedBuilder()
       .setColor("Green")
@@ -40,5 +36,7 @@ module.exports = {
     mongoose.connect(client.config.Database, {}).then(() =>
       console.log(`>>> ✅ 成功連結到 MongoDB!`)
     );
+
+    console.log(`${client.user.username} 準備好ㄌ!`);
   },
 };
