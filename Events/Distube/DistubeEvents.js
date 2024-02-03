@@ -19,7 +19,7 @@ client.distube
               song.formattedDuration
             }\`\n${status(queue)}`
           )
-          .setAuthor(song.user.tag, song.user.displayAvatarURL())
+          .setAuthor({ name: song.user, iconURL: song.user.displayAvatarURL()})
           .setThumbnail(song.thumbnail)
           .setTimestamp(),
       ],
@@ -33,7 +33,7 @@ client.distube
           .setDescription(
             `<:plus_988409343743496232:1202215484318302208> | 加入 [${song.name}](${song.url}) - \`${song.formattedDuration}\` 到清單中`
           )
-          .setAuthor(song.user.tag, song.user.displayAvatarURL())
+          .setAuthor({ name: song.user, iconURL: song.user.displayAvatarURL()})
           .setThumbnail(song.thumbnail)
           .setTimestamp(),
       ],
@@ -49,7 +49,7 @@ client.distube
               playlist.songs.length
             }\`首歌) 到清單中\n${status(queue)}`
           )
-          .setAuthor(song.user.tag, song.user.displayAvatarURL())
+          .setAuthor({ name: song.user, iconURL: song.user.displayAvatarURL()})
           .setThumbnail(playlist.thumbnail)
           .setTimestamp(),
       ],
