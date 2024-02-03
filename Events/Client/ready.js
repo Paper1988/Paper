@@ -15,6 +15,7 @@ module.exports = {
     const activities = [
       `${client.guilds.cache.size} 個伺服器`,
       `${memberCount} 位用戶`,
+      `/help`
     ];
 
     setInterval(() => {
