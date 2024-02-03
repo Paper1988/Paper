@@ -9,6 +9,6 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction 
      */
     execute(interaction) {
-        interaction.reply(interaction.getString("text"));
+        interaction.reply(interaction.options.getString("text"));
     }
 }
