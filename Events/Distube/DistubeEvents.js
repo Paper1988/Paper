@@ -33,7 +33,7 @@ client.distube
           .setDescription(
             `<:plus_988409343743496232:1202215484318302208> | 加入 [${song.name}](${song.url}) - \`${song.formattedDuration}\` 到清單中`
           )
-          .setAuthor({ name: `${song.user.displayName}`, iconURL: `${song.user}`.displayAvatarURL()})
+          .setAuthor({ name: `${song.user.displayName}`, iconURL: song.user.displayAvatarURL()})
           .setThumbnail(song.thumbnail)
           .setTimestamp(),
       ],
