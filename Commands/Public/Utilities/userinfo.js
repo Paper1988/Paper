@@ -66,11 +66,9 @@ module.exports = {
 
     try {
       const fetchedMembers = await interaction.guild.members.fetch();
-      const fetchedMember = await interaction.guild.members.fetch(member.id);
-      const presenceStatus = fetchedMember ? fetchedMember.presence.status : null;
 
       const profileBuffer = await profileImage(member.id, {
-        presenceStatus
+        presenceStatus: member.presence.status,
       });
 
       const imageAttachment = new AttachmentBuilder(profileBuffer, {
