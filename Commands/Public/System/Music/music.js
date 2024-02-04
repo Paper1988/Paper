@@ -119,7 +119,7 @@ module.exports = {
         await client.distube.search(value).then((results) => {
             choices = results.map((song, id) => ({ name: `${song.name}`, value: `${song.name}` }));
         }).catch(error => {
-            console.error("搜索歌曲時發生錯誤:", error);
+            console.error("搜尋歌曲時發生錯誤:", error);
             // 處理錯誤，例如通過回應一些預設選項或顯示錯誤信息
             interaction.respond([]); // 這裡選擇不回應任何選項
         });
