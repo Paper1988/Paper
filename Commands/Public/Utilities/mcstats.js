@@ -10,7 +10,7 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction 
      */
     async execute(interaction) {
-        const {options} = interaction;
+        const { options}  = interaction;
         const ip = options.getString("server-ip");
 
         var msg;
