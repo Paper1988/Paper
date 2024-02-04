@@ -117,7 +117,7 @@ module.exports = {
         let choices = [];
         // 假設有一個搜索功能可以返回歌曲列表
         await client.distube.search(value).then((results) => {
-            choices = results.map((song, id) => ({ name: `${song.name}`, value: song.url }));
+            choices = results.map((song, id) => ({ name: `${song.name}`, value: `${song.name}` }));
         }).catch(error => {
             console.error("搜索歌曲時發生錯誤:", error);
             // 處理錯誤，例如通過回應一些預設選項或顯示錯誤信息
