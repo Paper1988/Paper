@@ -19,7 +19,7 @@ client.distube
               song.formattedDuration
             }\`\n${status(queue)}`
           )
-          .setAuthor({ name: `${song.user.username}`, iconURL: song.user.displayAvatarURL()})
+          .setAuthor({ name: `${song.user.displayName}`, iconURL: song.user.displayAvatarURL()})
           .setThumbnail(song.thumbnail)
           .setTimestamp(),
       ],
