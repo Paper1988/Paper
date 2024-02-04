@@ -21,10 +21,16 @@ module.exports = {
         ephemeral: true,
       });
 
-    client.distube.play(VoiceChannel, options.getString("query"), {
-      textChannel: channel,
-      member: member,
-    });
+    const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/;
+
+    if (!youtubeRegex.test(options.getString("query"))) {
+      client.distube.play(VoiceChannel, options.getString("query"), {
+        textChannel: channel,
+        member: member,
+      });
+    } else {
+      return interaction.reply({ embeds: [new EmbedBuilder().setColor("Red").setTitle("拒絕請求").setDescription("<:warning_908958943466893323:1201844340276862976> | Discord禁止機器人播放來自Youtube的連結!")]});
+    }
     return interaction.reply({ content: "<:queue_861852633240961024:1202112866069520385> | 請求已接受 - 預設音量為`50%`" });
   },
 };
