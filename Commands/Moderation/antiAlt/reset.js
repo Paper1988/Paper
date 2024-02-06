@@ -1,4 +1,4 @@
-const { ChatInputCommandInteraction } = require("discord.js");
+const { ChatInputCommandInteraction, EmbedBuilder } = require("discord.js");
 const DB = require("../../../Structures/Schemas/AntiAlt");
 
 module.exports = {

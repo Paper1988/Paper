@@ -7,16 +7,16 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("voice-move")
-    .setDescription("將所有用戶從目前語音頻道移動到另一個語音頻道")
+    .setDescription("將用戶從目前語音頻道移動到另一個語音頻道")
     .setDefaultMemberPermissions(PermissionFlagsBits.MoveMembers)
     .addChannelOption((option) =>
       option
         .setName("move-to")
-        .setDescription("選擇要將成員移動到的頻道")
+        .setDescription("請選擇頻道")
         .setRequired(true)
     )
     .addUserOption((option) =>
-      option.setName("target").setDescription("選擇一個用戶").setRequired(false)
+      option.setName("target").setDescription("選擇用戶").setRequired(false)
     ),
   /**
    * @param {ChatInputCommandInteraction} interaction
@@ -38,22 +38,28 @@ module.exports = {
         ephemeral: true,
       });
 
-    if (!target) {
-      voiceChannel.members.forEach((m) => {
-        m.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`);
-      });
-      return interaction.reply({
-        content: `<:moveaudiaunce_988409365428043776:1202219232104808489>成功將所有成員移動到 ${newChannel}`,
-        ephemeral: true,
-      });
-    } else {
-      voiceChannel.members.fetch(target.id).then((m) => {
-        m.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`);
-      });
-      return interaction.reply({
-        content: `<:moveaudiaunce_988409365428043776:1202219232104808489>成功將成員 ${target} 移動到 ${newChannel}`,
-        ephemeral: true,
-      });
-    }
+      if (!target) {
+        voiceChannel.members.forEach((m) => {
+          m.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`);
+        }).catch((err) => interaction.reply({ content: "<:warning_908958943466893323:1201844340276862976> | 發生錯誤，請協助回報!", ephemeral: true }));
+        return interaction.reply({
+          content: `<:moveaudiaunce_988409365428043776:1202219232104808489> | 成功將所有成員移動到 ${newChannel}`,
+          ephemeral: true,
+        });
+      } else {
+        const members = voiceChannel.members.map(m => m.id);
+        if (members.includes(target.id)) {
+          target.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`);
+          return interaction.reply({
+            content: `<:moveaudiaunce_988409365428043776:1202219232104808489> | 成功將成員 ${target} 移動到 ${newChannel}`,
+            ephemeral: true,
+          });
+        } else {
+          return interaction.reply({
+            content: "<:warning_908958943466893323:1201844340276862976> | 該成員不在語音頻道中!",
+            ephemeral: true,
+          });
+        }
+      }
   },
 };
