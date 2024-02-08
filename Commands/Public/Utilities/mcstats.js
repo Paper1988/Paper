@@ -4,7 +4,8 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("mcstats")
     .setDescription("顯示一個Minecraft伺服器的資訊")
-    .addStringOption((option) => option.setName("server-ip").setDescription("伺服器的IP").setRequired(true)),
+    .addStringOption((option) => option.setName("server-ip").setDescription("伺服器的IP").setRequired(true))
+    .setDMPermission(false),
     /**
      * 
      * @param {ChatInputCommandInteraction} interaction 

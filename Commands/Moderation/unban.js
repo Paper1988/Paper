@@ -12,7 +12,8 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("unban")
     .setDescription("解除封鎖伺服器中被封鎖的成員")
-    .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
+    .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
+    .setDMPermission(false),
   /**
    *
    * @param {ChatInputCommandInteraction} interaction
@@ -28,13 +29,12 @@ module.exports = {
       .setDescription(`<:warning_908958943466893323:1201844340276862976> | 伺服器中沒有正被封鎖的用戶!`)
       .setFooter({
         text: client.user.username,
-        iconURL: client.user.displayAvatarURL({ dynamic: true }),
+        iconURL: client.user.displayAvatarURL(),
       });
 
     if (fetchBan.size == 0)
       return interaction.reply({
         embeds: [noBanEmbed],
-        components: [],
         ephemeral: true,
       });
 
@@ -78,14 +78,15 @@ module.exports = {
             const confirmationEmbed = new EmbedBuilder()
               .setColor("Blue")
               .setDescription(
-                `<:question_860133545905225768:1202218555844853760>你確定要解除封鎖 ${members} 嗎?`,
+                `<:question_860133545905225768:1202218555844853760> | 你確定要解除封鎖 ${members} 嗎?`,
               )
               .setFooter({
                 text: client.user.username,
-                iconURL: client.user.displayAvatarURL({ dynamic: true }),
+                iconURL: client.user.displayAvatarURL(),
               });
 
-            const buttons = new ActionRowBuilder().addComponents(
+            const buttons = new ActionRowBuilder()
+            .addComponents(
               new ButtonBuilder()
                 .setCustomId("unban:confirm")
                 .setLabel("<:correct_859388130411282442:1201843648229294121>確認")
@@ -103,10 +104,10 @@ module.exports = {
           } else if (i.isButton() && i.customId == "unban:confirm") {
             const processEmbed = new EmbedBuilder()
               .setColor("Blue")
-              .setDescription(`<:loading_859424401036148776:1201884046993661972>正在執行中...`)
+              .setDescription(`<:loading_859424401036148776:1201884046993661972> | 正在執行中...`)
               .setFooter({
                 text: client.user.username,
-                iconURL: client.user.displayAvatarURL({ dynamic: true }),
+                iconURL: client.user.displayAvatarURL(),
               });
 
             await i.update({
@@ -130,7 +131,7 @@ module.exports = {
           } else if (i.isButton() && i.customId == "unban:cancel") {
             const canceledEmbed = new EmbedBuilder()
               .setColor("Blue")
-              .setDescription(`<:outage_868122243845206087:1202112862990897172>動作已取消`)
+              .setDescription(`<:outage_868122243845206087:1202112862990897172> | 動作已取消`)
               .setFooter({
                 text: "你可以關閉這個視窗了",
               });

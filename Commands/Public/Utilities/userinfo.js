@@ -21,7 +21,7 @@ function addSuffix(number) {
 }
 
 function addBadges(badgeNames) {
-  if (!badgeNames.length) return ["X"];
+  if (!badgeNames.length) return ["<:xmark_988409378161954866:1201844342029815848>"];
   const badgeMap = {
     ActiveDeveloper: "<:activedeveloper:1201841218586152990>",
     BugHunterLevel1: "<:discordbughunter1:1201841226681438238>",
@@ -121,7 +121,7 @@ module.exports = {
           },
           { name: "<:clock_964491800465276940:1201843646203433030>帳號創建時間", value: `<t:${createdTime}:R>`, inline: true },
           { name: "<:clock_964491800465276940:1201843646203433030>帳號加入時間", value: `<t:${joinTime}:R>`, inline: true },
-          { name: "<:id_860133546102620190:1201883864486916166>帳號ID", value: `${member.id}`, inline: false },
+          { name: "<:id_860133546102620190:1201883864486916166>帳號ID", value: `\`${member.id}\``, inline: false },
           {
             name: "<:jpg_908958943726956564:1201843675530018856>橫幅",
             value: `[連結](${(await member.user.fetch()).bannerURL() || "無"})`,

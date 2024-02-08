@@ -8,8 +8,8 @@ const DB = require("../../../Structures/Schemas/AntiAlt");
 module.exports = {
   subCommand: "anti-alt.setup",
   /**
-   * @param {Client} client
    * @param {ChatInputCommandInteraction} interaction
+   * @param {Client} client
    */
   async execute(interaction, client) {
     const options = interaction.options;
@@ -19,17 +19,15 @@ module.exports = {
 
     await DB.findOneAndUpdate(
       { GuildID: guild.id },
-      {
-        LogsChannel: LogsChannel.id,
-      },
+      {LogsChannel: LogsChannel.id},
       {
         new: true,
-        upsert: true,
+        upsert: true
       }
     ).catch((err) => console.log(err));
 
     const LogsSetup = new EmbedBuilder()
-      .setDescription("<:correct_859388130411282442:1201843648229294121> | 成功設置反小號伺服器日誌")
+      .setDescription("<:correct_859388130411282442:1201843648229294121> | 成功設定日誌")
       .setColor("#43b581");
 
     await guild.channels.cache
@@ -37,7 +35,7 @@ module.exports = {
       .send({ embeds: [LogsSetup] })
       .then((m) => {
         setTimeout(() => {
-          m.delete().catch(() => {});
+          m.delete();
         }, 1 * 7500);
       });
 

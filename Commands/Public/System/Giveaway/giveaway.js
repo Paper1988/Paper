@@ -5,6 +5,7 @@ module.exports = {
     .setName("giveaway")
     .setDescription("一個基本的抽獎系統")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDMPermission(false)
     .addSubcommand((sub) =>
       sub
         .setName("start")

@@ -11,6 +11,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("report")
     .setDescription("回報給我們訊息")
+    .setDMPermission(false)
     .addStringOption((options) =>
       options
         .setName("type")
@@ -79,13 +80,15 @@ module.exports = {
     const send_button = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("send_button")
-        .setLabel(`<:correct_859388130411282442:1201843648229294121>提交回報`)
+        .setLabel(`提交回報`)
+        .setEmoji("<:correct_859388130411282442:1201843648229294121>")
         .setStyle("Success")
     );
     const cancel_button = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("cancel_button")
-        .setLabel(`<:xmark_988409378161954866:1201844342029815848>取消`)
+        .setLabel(`取消`)
+        .setEmoji("<:xmark_988409378161954866:1201844342029815848>")
         .setStyle("Danger")
     );
 

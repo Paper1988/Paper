@@ -12,8 +12,8 @@ module.exports = {
     .setName("invite")
     .setDescription("邀請我加入你的伺服器!"),
   /**
-   * @param {Client} client
    * @param {ChatInputCommandInteraction} interaction
+   * @param {Client} client
    */
   async execute(interaction, client) {
     const Invite = new EmbedBuilder()

@@ -6,6 +6,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("afk")
     .setDescription("一個afk系統")
+    .setDMPermission(false)
     .addSubcommand((sub) =>
       sub
         .setName("set")
