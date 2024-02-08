@@ -23,7 +23,7 @@ module.exports = {
         ephemeral: true,
       });
 
-    client.distube.jump(VoiceChannel, position).catch(err => interaction.reply({ content: "無效的數字", ephemeral: true }));
-    return interaction.reply({ content: `<:frontforward_988409335791124551:1202215991694856262> | 成功跳至清單位置 \`${id}\` - ${song}` });
+    client.distube.jump(VoiceChannel, position).catch(err => interaction.reply({ content: "<:warning_908958943466893323:1201844340276862976> | 無效的數字", ephemeral: true }));
+    return interaction.reply({ content: `<:frontforward_988409335791124551:1202215991694856262> | 成功跳至清單位置 \`${position}\` - ${song}` });
   },
 };
