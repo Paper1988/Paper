@@ -1,5 +1,6 @@
 const client = require("../../index.js");
 const { EmbedBuilder } = require("discord.js");
+const { updateProgressBar } = require("../../Systems/progressBar.js");
 
 const status = (queue) =>
   `<:speaker_860133545544908802:1201844300099354644>音量: \`${queue.volume}%\` | <:spark_860123643722727444:1201844297041973320>過濾器: ${
@@ -9,32 +10,33 @@ const status = (queue) =>
   } | <:update_860123644297871382:1201844333968625695>自動播放: ${queue.autoplay ? "<:correct_859388130411282442:1201843648229294121>" : "<:xmark_988409378161954866:1201844342029815848>"}`;
 
 client.distube
-  .on("playSong", (queue, song) =>
+  .on("playSong", (queue, song) => {
     queue.textChannel.send({
       embeds: [
         new EmbedBuilder()
           .setColor("Green")
           .setDescription(
-            `<:play_861852632800952320:1202112864857628692> | 播放 [${song.name}](${song.url}) - \`${
+            `<:play_861852632800952320:1202112864857628692> | 播放 [${song.name}](${song.url}) - \` ${
               song.formattedDuration
-            }\`\n${status(queue)}`
+            } \`\n${status(queue)}`
           )
           .setAuthor({ name: `${song.user.displayName}`, iconURL: song.user.displayAvatarURL()})
-          .setThumbnail(song.thumbnail)
+          .setImage(song.thumbnail)
           .setTimestamp(),
       ],
     })
-  )
+    updateProgressBar(client.distube, queue.textChannel, playlist)
+  })
   .on("addSong", (queue, song) =>
     queue.textChannel.send({
       embeds: [
         new EmbedBuilder()
           .setColor("Green")
           .setDescription(
-            `<:plus_988409343743496232:1202215484318302208> | 加入 [${song.name}](${song.url}) - \`${song.formattedDuration}\` 到清單中`
+            `<:plus_988409343743496232:1202215484318302208> | 加入 [${song.name}](${song.url}) - \` ${song.formattedDuration} \` 到清單中`
           )
           .setAuthor({ name: `${song.user.displayName}`, iconURL: song.user.displayAvatarURL()})
-          .setThumbnail(song.thumbnail)
+          .setImage(song.thumbnail)
           .setTimestamp(),
       ],
     })
@@ -45,12 +47,12 @@ client.distube
         new EmbedBuilder()
           .setColor("Green")
           .setDescription(
-            `<:plus_988409343743496232:1202215484318302208> | 加入 [${playlist.name}](${playlist.url}) 播放清單 (\`${
+            `<:plus_988409343743496232:1202215484318302208> | 加入 [${playlist.name}](${playlist.url}) 播放清單 (\` ${
               playlist.songs.length
-            }\`首歌) 到清單中\n${status(queue)}`
+            } \`首歌) 到清單中\n${status(queue)}`
           )
           .setAuthor({ name: `${song.user.displayName}`, iconURL: song.user.displayAvatarURL()})
-          .setThumbnail(playlist.thumbnail)
+          .setImage(playlist.thumbnail)
           .setTimestamp(),
       ],
     })

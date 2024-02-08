@@ -9,7 +9,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("announce")
     .setDescription("通過機器人公告某事!")
-    .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMessages)
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .setDMPermission(false)
     .addStringOption((option) =>
       option
@@ -19,14 +19,14 @@ module.exports = {
     )
     .addStringOption((option) =>
       option
-        .setName("message")
-        .setDescription("顯示您要宣布的消息!")
+        .setName("description")
+        .setDescription("輸入您要宣布的訊息(輸入\\n來換行)")
         .setRequired(true)
     )
     .addStringOption((option) =>
       option
         .setName("color")
-        .setDescription("自定義您的嵌入顏色!")
+        .setDescription("自定義您的嵌入顏色! (請使用六進位制色碼，例如: #00ff00)")
         .setRequired(false)
     )
     .addStringOption((option) =>
@@ -54,14 +54,17 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  execute(interaction) {
+  async execute(interaction) {
     const { options, user } = interaction;
     const title = options.getString("title");
-    const message = options.getString("message");
+    const message = options.getString("description");
     const color = options.getString("color");
     const footer = options.getString("footer");
     const timestamp = options.getBoolean("timestamp");
     const ping = options.getString("ping");
+
+    const splitedMsg = await message.replace(/\\n/g, '\n');
+
     const embed = new EmbedBuilder()
       .setAuthor({
         name: `${user.tag}`,
@@ -70,7 +73,7 @@ module.exports = {
       .setTitle(`${title}`)
       .setDescription(`${message}`);
 
-    if (color) embed.setColor(color.toUpperCase());
+    if (color) embed.setColor(color[0].toUpperCase());
     if (footer) embed.setFooter({ text: footer });
     if (timestamp) embed.setTimestamp();
 
