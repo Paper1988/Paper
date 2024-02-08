@@ -2,6 +2,7 @@ const { Client, EmbedBuilder, ActivityType } = require("discord.js");
 const mongoose = require("mongoose");
 
 const { loadCommands } = require("../../Structures/Handlers/commandHandler.js");
+const { loadButtons } = require('../../Structures/buttonHandler.js');
 
 module.exports = {
   name: "ready",

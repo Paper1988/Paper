@@ -60,6 +60,7 @@ module.exports = {
 
     if (member.user.bot)
       return interaction.editReply({
+        content: "",
         embeds: [new EmbedBuilder().setDescription("<:warning_908958943466893323:1201844340276862976> | 機器人無法使用此功能!")],
         ephemeral: true,
       });
