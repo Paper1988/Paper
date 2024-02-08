@@ -14,7 +14,8 @@ const os = require("os");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("botinfo")
-    .setDescription("顯示Paper的資訊及資料庫狀態"),
+    .setDescription("顯示Paper的資訊及資料庫狀態")
+    .setDMPermission(false),
   /**
    * @param {ChatInputCommandInteraction} interaction
    * @param {Client} client

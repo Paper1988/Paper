@@ -10,6 +10,7 @@ module.exports = {
     .setName("announce")
     .setDescription("通過機器人公告某事!")
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMessages)
+    .setDMPermission(false)
     .addStringOption((option) =>
       option
         .setName("title")

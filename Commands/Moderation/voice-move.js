@@ -9,6 +9,7 @@ module.exports = {
     .setName("voice-move")
     .setDescription("將用戶從目前語音頻道移動到另一個語音頻道")
     .setDefaultMemberPermissions(PermissionFlagsBits.MoveMembers)
+    .setDMPermission(false)
     .addChannelOption((option) =>
       option
         .setName("move-to")
@@ -41,7 +42,7 @@ module.exports = {
       if (!target) {
         voiceChannel.members.forEach((m) => {
           m.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`);
-        }).catch((err) => interaction.reply({ content: "<:warning_908958943466893323:1201844340276862976> | 發生錯誤，請協助回報!", ephemeral: true }));
+        })
         return interaction.reply({
           content: `<:moveaudiaunce_988409365428043776:1202219232104808489> | 成功將所有成員移動到 ${newChannel}`,
           ephemeral: true,

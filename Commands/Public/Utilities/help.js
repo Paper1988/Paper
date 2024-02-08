@@ -5,12 +5,18 @@ const {
   StringSelectMenuBuilder,
   ButtonBuilder,
   ButtonStyle,
+  ChatInputCommandInteraction,
 } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("help")
-    .setDescription("顯示完整的指令列表"),
+    .setDescription("顯示完整的指令列表")
+    .setDMPermission(false),
+    /**
+     * 
+     * @param {ChatInputCommandInteraction} interaction 
+     */
   async execute(interaction) {
     const helpmenu = new ActionRowBuilder().addComponents(
       new StringSelectMenuBuilder()

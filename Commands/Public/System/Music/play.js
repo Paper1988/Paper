@@ -20,6 +20,12 @@ module.exports = {
         content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
         ephemeral: true,
       });
+    if (!VoiceChannel.permissionsFor(client.user).has("CONNECT")) {
+      return interaction.reply({
+        embeds: [new EmbedBuilder().setName("拒絕請求").setDescription("我沒有權限進入你的頻道!").setColor("Red")],
+        ephemeral: true
+      });
+    }
 
     const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/;
 

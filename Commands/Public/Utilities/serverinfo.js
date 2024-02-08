@@ -7,7 +7,8 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("serverinfo")
-    .setDescription("伺服器資訊"),
+    .setDescription("伺服器資訊")
+    .setDMPermission(false),
   /**
    * @param {ChatInputCommandInteraction} interaction
    */

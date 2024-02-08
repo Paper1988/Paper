@@ -10,6 +10,7 @@ module.exports = {
     .setName("role-editor")
     .setDescription("管理用戶的身分組")
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
+    .setDMPermission(false)
     .addRoleOption((option) =>
       option
         .setName("role")

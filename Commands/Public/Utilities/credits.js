@@ -3,7 +3,8 @@ const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } = requi
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("credits")
-    .setDescription("檢視版權資訊"),
+    .setDescription("檢視版權資訊")
+    .setDMPermission(false),
     /**
      * 
      * @param {ChatInputCommandInteraction} interaction 
