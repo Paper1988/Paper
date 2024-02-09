@@ -2,7 +2,6 @@ const { Client, EmbedBuilder, ActivityType } = require("discord.js");
 const mongoose = require("mongoose");
 
 const { loadCommands } = require("../../Structures/Handlers/commandHandler.js");
-const { loadButtons } = require('../../Structures/buttonHandler.js');
 
 module.exports = {
   name: "ready",
@@ -32,7 +31,7 @@ module.exports = {
       const status = activities[Math.floor(Math.random() * activities.length)];
       client.user.setPresence({ activities: [{ name: status, type: ActivityType.Watching }]});
     }, 5000);
-    
+
     const channel = client.channels.cache.get("961615076220092496");
     const Embed = new EmbedBuilder()
     .setColor("Green")
