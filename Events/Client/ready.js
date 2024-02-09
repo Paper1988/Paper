@@ -17,7 +17,6 @@ module.exports = {
       `${memberCount} 位用戶`,
       `/help`
     ];
-
     
     console.log(`${client.user.username} 已上線!`);
     loadCommands(client);

@@ -10,7 +10,7 @@ const status = (queue) =>
   } | <:update_860123644297871382:1201844333968625695>自動播放: ${queue.autoplay ? "<:correct_859388130411282442:1201843648229294121>" : "<:xmark_988409378161954866:1201844342029815848>"}`;
 
 client.distube
-  .on("playSong", (queue, song) => {
+  .on("playSong", (queue, song) => 
     queue.textChannel.send({
       embeds: [
         new EmbedBuilder()
@@ -21,11 +21,11 @@ client.distube
             } \`\n${status(queue)}`
           )
           .setAuthor({ name: `${song.user.displayName}`, iconURL: song.user.displayAvatarURL()})
-          .setImage(song.thumbnail)
+          .setImage(`${song.thumbnail}`)
           .setTimestamp(),
       ],
     })
-  })
+  )
   .on("addSong", (queue, song) =>
     queue.textChannel.send({
       embeds: [
