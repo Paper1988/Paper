@@ -1,6 +1,5 @@
 const client = require("../../index.js");
 const { EmbedBuilder } = require("discord.js");
-const { updateProgressBar } = require("../../Systems/progressBar.js");
 
 const status = (queue) =>
   `<:speaker_860133545544908802:1201844300099354644>音量: \`${queue.volume}%\` | <:spark_860123643722727444:1201844297041973320>過濾器: ${
