@@ -69,11 +69,11 @@ module.exports = {
       case "repeat":
         let Mode2 = await client.distube.setRepeatMode(queue);
         return interaction.reply({
-          content: `<:loop_861852632893227029:1201843696031764490> | 成功切換重複播放模式為: \`${(Mode2 = Mode2
+          content: `<:loop_861852632893227029:1201843696031764490> | 成功切換重複播放模式為: ${(Mode2 = Mode2
             ? Mode2 == 2
               ? "<:loop_988409346637594744:1201843698976178246>整個清單"
               : "<:looponce_988409348826992680:1201884069399363634>單曲"
-            : "<:xmark_988409378161954866:1201844342029815848>")}\``,
+            : "<:xmark_988409378161954866:1201844342029815848>")}`,
         });
 
       case "queue":
