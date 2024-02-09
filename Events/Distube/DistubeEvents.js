@@ -25,7 +25,6 @@ client.distube
           .setTimestamp(),
       ],
     })
-    updateProgressBar(client.distube, queue.textChannel, playlist)
   })
   .on("addSong", (queue, song) =>
     queue.textChannel.send({
