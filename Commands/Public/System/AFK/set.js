@@ -11,7 +11,7 @@ module.exports = {
 
     const Embed = new EmbedBuilder().setAuthor({
       name: user.tag,
-      iconURL: user.displayAvatarURL({ dynamic: true }),
+      iconURL: user.displayAvatarURL()
     });
 
     const afkStatus = options.getString("status");
