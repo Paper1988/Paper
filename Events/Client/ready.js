@@ -26,6 +26,11 @@ module.exports = {
 
     console.log(`${client.user.username} 已上線!`);
     loadCommands(client);
+    mongoose.set('strictQuery', false);
+    mongoose.connect(client.config.Database, {}).then(() =>
+      console.log(`>>> ✅ 成功連結到 MongoDB!`)
+    );
+    console.log(`${client.user.username} 準備好ㄌ!`);
 
     const channel = client.channels.cache.get("961615076220092496");
     const Embed = new EmbedBuilder()
@@ -36,11 +41,5 @@ module.exports = {
 
     channel.send({ embeds: [Embed] });
 
-    mongoose.set('strictQuery', false);
-    mongoose.connect(client.config.Database, {}).then(() =>
-      console.log(`>>> ✅ 成功連結到 MongoDB!`)
-    );
-
-    console.log(`${client.user.username} 準備好ㄌ!`);
   },
 };
