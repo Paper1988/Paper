@@ -9,10 +9,10 @@ module.exports = {
   async execute(interaction) {
     const { guild, user } = interaction;
 
-    const Embed = new EmbedBuilder().setAuthor(
-      user.tag,
-      user.displayAvatarURL({ dynamic: true })
-    );
+    const Embed = new EmbedBuilder().setAuthor({
+      name: user.tag,
+      iconURL: user.displayAvatarURL()
+    });
 
     await DB.deleteOne({ GuildID: guild.id, UserID: user.id });
 
