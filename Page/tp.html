@@ -67,3 +67,54 @@
                 <li>地址：台灣新北市板橋區中山路一段 1 號</li>
             </ul>
         </section>
+    </main>
+</body>
+<script>
+    // 首頁動畫
+    $(window).scroll(function() {
+        var scrollTop = $(window).scrollTop();
+        var privacyTitle = $("#privacy h1");
+        var termsTitle = $("#terms h1");
+    
+        if (scrollTop >= $(document).height() - $(window).height()) {
+            privacyTitle.addClass("animated fadeIn");
+            termsTitle.addClass("animated fadeIn");
+        } else {
+            privacyTitle.removeClass("animated fadeIn");
+            termsTitle.removeClass("animated fadeIn");
+        }
+    });
+    
+    // 隱私條款動畫
+    $("#privacy").scroll(function() {
+        var scrollTop = $(this).scrollTop();
+        var privacySections = $("#privacy h3");
+    
+        privacySections.each(function() {
+            var sectionTop = $(this).offset().top;
+    
+            if (scrollTop >= sectionTop - $(window).height() + 100) {
+                $(this).addClass("animated fadeIn");
+            } else {
+                $(this).removeClass("animated fadeIn");
+            }
+        });
+    });
+    
+    // 使用者條款動畫
+    $("#terms").scroll(function() {
+        var scrollTop = $(this).scrollTop();
+        var termsSections = $("#terms h3");
+    
+        termsSections.each(function() {
+            var sectionTop = $(this).offset().top;
+    
+            if (scrollTop >= sectionTop - $(window).height() + 100) {
+                $(this).addClass("animated fadeIn");
+            } else {
+                $(this).removeClass("animated fadeIn");
+            }
+        });
+    });
+    </script>
+</html>
