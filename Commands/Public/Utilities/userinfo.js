@@ -107,7 +107,7 @@ module.exports = {
           )}加入這個伺服器的人`
         )
         .setImage("attachment://profile.png")
-        .setThumbnail(member.displayAvatarURL({ dynamic: true, size: 512 }))
+        .setThumbnail(member.displayAvatarURL({ size: 512 }))
         .addFields([
           {
             name: "<:award_869513411103424563:1201843623604527184>徽章",

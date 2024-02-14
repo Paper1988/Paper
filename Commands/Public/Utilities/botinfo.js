@@ -35,7 +35,7 @@ module.exports = {
       client.channels.cache.filter((channel) => type.includes(channel.type)).size;
 
     const embed = new EmbedBuilder()
-        .setColor(interaction.guild.members.me.roles.highest.hexColor)
+        .setColor("#36393F")
         .setTitle(`${client.user.username} 的機器人資訊`)
         .setThumbnail(client.user.displayAvatarURL({ size: 1024 }))
         .addFields(
