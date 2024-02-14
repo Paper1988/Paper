@@ -12,7 +12,7 @@ http.createServer(function (req, res) {
 }).listen(8080);
 
 function serveFile(res, filePath) {
-  const fs = require("fs")
+  const fs = require("fs");
   const fileContents = fs.readFileSync(filePath).toString();
 
   res.writeHead(200, {'Content-Type': 'text/html'});
