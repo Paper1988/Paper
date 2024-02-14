@@ -5,8 +5,8 @@ const fs = require("fs");
 http.createServer((req, res) => {
   const path = req.url;
 
-  if (path === "/tp.html")
-    serveFile(res, "tp.html");
+  if (path === "/tp")
+    serveFile(res, "./Page/tp.html");
   else {
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end('Not Found');
