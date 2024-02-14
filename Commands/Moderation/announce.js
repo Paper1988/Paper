@@ -71,7 +71,7 @@ module.exports = {
         iconURL: `${user.displayAvatarURL({ dynamic: true })}`,
       })
       .setTitle(`${title}`)
-      .setDescription(`${message}`);
+      .setDescription(`${splitedMsg}`);
 
     if (color) embed.setColor(color[0].toUpperCase());
     if (footer) embed.setFooter({ text: footer });

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, ActionRowBuilder, ButtonBuilder, Client } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, ActionRowBuilder, ButtonBuilder, Client, ButtonStyle } = require("discord.js");
 
 module.exports = {
     developer: true,
@@ -40,7 +40,7 @@ module.exports = {
             content += `名稱:${guild.name} - ID:(${guild.id})\n`;
         });
 
-        content += `如果伺服器超過200個的話，你將只會看到200個左右伺服器`;
+        content += `如果伺服器超過200個的話，你只會看到200個左右伺服器`;
 
         var listBin = await fetch("https://sourceb.in/api/bins", {
             method: "POST", 
