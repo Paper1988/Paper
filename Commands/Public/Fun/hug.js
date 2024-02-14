@@ -30,7 +30,7 @@ module.exports = {
       .setTimestamp();
 
     if (Target.id === Executer.id) {
-      Response = new MessageEmbed()
+      Response = new EmbedBuilder()
         .setColor("#000000")
         .setDescription("<:outage_868122243845206087:1202112862990897172> | 你不能擁抱自己！");
       return interaction.reply({ embeds: [Response] });

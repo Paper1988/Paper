@@ -30,7 +30,7 @@ const { SpotifyClientId, SpotifyClientSecret } = require("./Structures/config.js
 client.distube = new DisTube(client, {
   searchSongs: 10,
   emitNewSongOnly: true,
-  leaveOnFinish: true,
+  leaveOnFinish: false,
   emitAddSongWhenCreatingQueue: false,
   emitAddListWhenCreatingQueue: false,
   plugins: [
