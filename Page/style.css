@@ -1,0 +1,73 @@
+/* 全局樣式 */
+body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* 標題 */
+h1, h2 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+h2 {
+    font-size: 20px;
+}
+
+/* 段落 */
+p {
+    margin-bottom: 10px;
+}
+
+/* 列印 */
+@media print {
+    body {
+        font-size: 12px;
+    }
+}
+
+/* 隱私條款 */
+#privacy {
+    margin-bottom: 20px;
+}
+
+#privacy h3 {
+    margin-top: 20px;
+}
+
+#privacy ul {
+    list-style: disc;
+    padding-left: 20px;
+}
+
+/* 使用者條款 */
+#terms {
+    margin-bottom: 20px;
+}
+
+#terms h3 {
+    margin-top: 20px;
+}
+
+#terms ul {
+    list-style: disc;
+    padding-left: 20px;
+}
+
+/* 連結 */
+a {
+    color: #0073b7;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
