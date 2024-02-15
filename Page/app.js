@@ -85,7 +85,7 @@ app.get('/logout', (req, res) => {
 });
 
 app.get("/tp", (req, res) => {
-  res.sendFile("/tp.html");
+  res.sendFile("./view/tp.html");
 })
 
 app.use((req, res, next) => {
