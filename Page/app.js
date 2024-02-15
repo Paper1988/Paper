@@ -88,10 +88,13 @@ app.get("/tp", (req, res) => {
   res.sendFile("/tp.html");
 })
 
-app.use(function (req, res, next) {
-  var err = new Error("Not Found");
-  err.status = 404;
-  next(err);
+app.use((req, res, next) => {
+  res.status(404).render('404'); // 創建一個名為404的ejs模板文件
+});
+
+app.use((err, req, res, next) => {
+  winston.error(err.stack);
+  res.status(500).send('Something went wrong!');
 });
 
 app.listen(port, () => {
