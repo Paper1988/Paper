@@ -1,0 +1,107 @@
+const path = require("path");
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const passport = require('passport');
+const { Strategy } = require('passport-discord');
+const helmet = require('helmet');
+
+const config = require('../Structures/config.json');
+
+const express = require("express");
+const app = express();
+app.use(helmet());
+let port = 8080;
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(session({
+  secret: 'paper-bot-secret',
+  resave: false,
+  saveUninitialized: false,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new Strategy({
+  clientID: config.clientId,
+  clientSecret: config.clientSecret,
+  callbackURL: config.callbackURL,
+  scope: ['identify', 'guilds'],
+}, (accessToken, refreshToken, profile, done) => {
+  return done(null, profile);
+}));
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((obj, done) => {
+  done(null, obj);
+});
+
+app.get('/dashboard', ensureAuthenticated, (req, res) => {
+  res.render('dashboard', { user: req.user });
+});
+
+app.post('/dashboard', ensureAuthenticated, (req, res) => {
+  const { guildId } = req.body;
+  // Save guild settings to MongoDB
+  GuildSettings.findOneAndUpdate({ guildId }, { upsert: true }, (err, doc) => {
+    if (err) {
+      winston.error(err);
+      return res.status(500).send('Internal Server Error');
+    }
+    res.redirect('/dashboard');
+  });
+});
+
+app.get('/api/guild/:guildId', ensureAuthenticated, (req, res) => {
+  const { guildId } = req.params;
+  GuildSettings.findOne({ guildId }, (err, settings) => {
+    if (err) {
+      winston.error(err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    if (!settings) {
+      return res.status(404).json({ error: 'Guild settings not found' });
+    }
+    res.json(settings);
+  });
+});
+
+app.get('/login', passport.authenticate('discord'));
+
+app.get('/auth/discord/callback',
+  passport.authenticate('discord', { failureRedirect: '/' }),
+  (req, res) => {
+    res.redirect('/dashboard');
+  });
+
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
+
+app.get("/tp", (req, res) => {
+  res.sendFile("/tp.html");
+})
+
+app.use(function (req, res, next) {
+  var err = new Error("Not Found");
+  err.status = 404;
+  next(err);
+});
+
+app.listen(port, () => {
+  console.log(`>>> Server is listening on port ${port}`)
+});
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/');
+}
