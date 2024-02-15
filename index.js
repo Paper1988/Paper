@@ -3,9 +3,9 @@ const { Guilds, GuildMembers, GuildMessages, GuildMessageReactions, GuildVoiceSt
 const { User, Message, GuildMember, ThreadMember } = Partials;
 
 const client = new Client({
-  shards: "auto",
-  intents: [Guilds, GuildMembers, GuildMessages, GuildMessageReactions, GuildVoiceStates],
-  partials: [User, Message, GuildMember, ThreadMember]
+    shards: "auto",
+    intents: [Guilds, GuildMembers, GuildMessages, GuildMessageReactions, GuildVoiceStates],
+    partials: [User, Message, GuildMember, ThreadMember]
 });
 
 const { loadEvents } = require("./Structures/Handlers/eventHandler.js");
@@ -19,7 +19,7 @@ client.events = new Collection();
 client.subCommands = new Collection();
 
 ["GiveawaySys", "antiCrash"].forEach((sys) => {
-  require(`./Systems/${sys}`)(client);
+    require(`./Systems/${sys}`)(client);
 });
 /**************************************************/
 const { DisTube } = require("distube");
@@ -28,22 +28,22 @@ const { SoundCloudPlugin } = require('@distube/soundcloud');
 const { SpotifyClientId, SpotifyClientSecret } = require("./Structures/config.json");
 
 client.distube = new DisTube(client, {
-  searchSongs: 10,
-  emitNewSongOnly: true,
-  leaveOnFinish: false,
-  emitAddSongWhenCreatingQueue: false,
-  emitAddListWhenCreatingQueue: false,
-  plugins: [
-    new SpotifyPlugin({
-      emitEventsAfterFetching: true,
-      api: {
-        clientId: SpotifyClientId,
-        clientSecret: SpotifyClientSecret,
-        topTracksCountry: "TW",
-      },
-    }),
-    new SoundCloudPlugin(),
-  ],
+    searchSongs: 10,
+    emitNewSongOnly: true,
+    leaveOnFinish: false,
+    emitAddSongWhenCreatingQueue: false,
+    emitAddListWhenCreatingQueue: false,
+    plugins: [
+        new SpotifyPlugin({
+            emitEventsAfterFetching: true,
+            api: {
+                clientId: SpotifyClientId,
+                clientSecret: SpotifyClientSecret,
+                topTracksCountry: "TW",
+            },
+        }),
+        new SoundCloudPlugin(),
+    ],
 });
 /**************************************************/
 module.exports = client;

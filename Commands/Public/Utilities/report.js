@@ -69,14 +69,6 @@ module.exports = {
       .setTitle(`<:outage_868122243845206087:1202112862990897172> | 你的回報提交失敗或取消!`)
       .setColor("Red");
 
-    /**
-		const more_info = new EmbedBuilder() //You can use this if you want to get more info of the user that sent the report
-			.setTitle(`更多資訊`)
-			.setColor("Random")
-			.addFields({name:`回報者ID:`,value:`\`\`\`${interaction.user.id}\`\`\``, inline: false})
-			.addFields({name:`伺服器ID:`,value:`\`\`\`${guild.id}\`\`\``, inline: false}) 
-		*/
-
     const send_button = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("send_button")

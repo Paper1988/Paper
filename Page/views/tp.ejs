@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>隱私條款和使用者條款</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
+
 <body>
     <header>
         <h1>隱私條款和使用者條款</h1>
@@ -73,7 +75,7 @@
         var scrollTop = $(window).scrollTop();
         var privacyTitle = $("#privacy h1");
         var termsTitle = $("#terms h1");
-    
+
         if (scrollTop >= $(document).height() - $(window).height()) {
             privacyTitle.addClass("animated fadeIn");
             termsTitle.addClass("animated fadeIn");
@@ -82,15 +84,15 @@
             termsTitle.removeClass("animated fadeIn");
         }
     });
-    
+
     // 隱私條款動畫
     $("#privacy").scroll(function() {
         var scrollTop = $(this).scrollTop();
         var privacySections = $("#privacy h3");
-    
+
         privacySections.each(function() {
             var sectionTop = $(this).offset().top;
-    
+
             if (scrollTop >= sectionTop - $(window).height() + 100) {
                 $(this).addClass("animated fadeIn");
             } else {
@@ -98,15 +100,15 @@
             }
         });
     });
-    
+
     // 使用者條款動畫
     $("#terms").scroll(function() {
         var scrollTop = $(this).scrollTop();
         var termsSections = $("#terms h3");
-    
+
         termsSections.each(function() {
             var sectionTop = $(this).offset().top;
-    
+
             if (scrollTop >= sectionTop - $(window).height() + 100) {
                 $(this).addClass("animated fadeIn");
             } else {
@@ -114,5 +116,6 @@
             }
         });
     });
-    </script>
+</script>
+
 </html>
