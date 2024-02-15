@@ -93,7 +93,7 @@ module.exports = {
             name: "<:list_860123643710537789:1201843692546039829> | 各項統計",
             value: [
               `<:globe_859424401971609600:1201843661785284659> **伺服器** \`${client.guilds.cache.size}\``,
-              `<:people_964425853930995783:1201843743762681906> **使用者** \`${client.users.cache.size}\``,
+              `<:people_964425853930995783:1201843743762681906> **使用者** \`${await client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)}\``,
               `<:addreaction_866920224581746698:1201843621398323250> **表情符號** \`${client.emojis.cache.size}\``,
               `<:channel_859424401950113822:1201843641124147280> **文字頻道** \`${getChannelTypeSize([
                 ChannelType.GuildText,
