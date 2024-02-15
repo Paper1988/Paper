@@ -1,7 +1,11 @@
 {
   "Token": "***REMOVED***",
   "Database": "***REMOVED***/Js?retryWrites=true&w=majority",
+  
   "clientId": "***REMOVED***",
+  "clientSecret": "***REMOVED***",
+  "callbackURL": "https://paper-2hjj.onrender.com/auth/discord/callback",
+
   "developerGuild": "1008313564349616169",
   "SpotifyClientId": "***REMOVED***",
   "SpotifyClientSecret": "**REMOVED***"
