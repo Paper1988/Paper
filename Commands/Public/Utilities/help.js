@@ -181,11 +181,5 @@ module.exports = {
         await i.update({ embeds: [embed], components: [helpmenu, inviteme] });
       }
     });
-
-    collector.on("end", async (i) => {
-      if (i.customId === "back") {
-        await i.setDisable(true);
-      }
-    })
   },
 };
