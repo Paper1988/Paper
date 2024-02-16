@@ -69,13 +69,13 @@ module.exports = {
     )
     .addSubcommand((sub) =>
       sub
-       .setName("jump")
-       .setDescription("跳到清單中的歌曲位置")
-       .addNumberOption((options) =>
+        .setName("jump")
+        .setDescription("跳到清單中的歌曲位置")
+        .addNumberOption((options) =>
           options
-           .setName("position")
-           .setDescription("請提供清單位置")
-           .setRequired(true)
+            .setName("position")
+            .setDescription("請提供清單位置")
+            .setRequired(true)
         )
     )
     .addSubcommand((sub) =>
@@ -90,8 +90,7 @@ module.exports = {
             .addChoices(
               { name: "顯示播放清單", value: "queue" },
               { name: "播放上一首歌曲", value: "previous" },
-              { name: "暫停播放歌曲", value: "pause" },
-              { name: "繼續播放歌曲", value: "resume" },
+              { name: "暫停/恢復播放歌曲", value: "togglePause" },
               { name: "跳過歌曲", value: "skip" },
               { name: "停止音樂", value: "stop" },
               { name: "隨機播放", value: "shuffle" },
