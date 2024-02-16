@@ -1,5 +1,5 @@
 const client = require("../../index.js");
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
 const status = (queue) =>
   `<:speaker_860133545544908802:1201844300099354644>音量: \`${queue.volume}%\` | <:spark_860123643722727444:1201844297041973320>過濾器: ${
@@ -22,7 +22,19 @@ client.distube
           .setAuthor({ name: `${song.user.displayName}`, iconURL: song.user.displayAvatarURL()})
           .setImage(song.thumbnail)
           .setTimestamp(),
-      ],
+      ],/**
+      components: [
+        new ActionRowBuilder()
+          .addComponents([
+            new ButtonBuilder()
+              .setCustomId(`previous`) // Note the buttons ID is on the left of the _ and the id is on the right. Also note your CANNOT have another _ in the customid eg `my_coolbutton_${target.id}` 
+              .setEmoji("<:backforward_988409328698523708:1201843626435686440>")
+              .setStyle(ButtonStyle.Primary),
+            new ButtonBuilder()
+              .setCustomId(`togglePause`)
+              .setEmoji("")
+          ])
+      ] */
     })
   })
   .on("addSong", (queue, song) =>
