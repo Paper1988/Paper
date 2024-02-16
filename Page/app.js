@@ -61,7 +61,7 @@ app.get('/dashboard', ensureAuthenticated, (req, res) => {
     res.render('dashboard', { user: req.user }, { title: res.__('Dashboard') });
 });
 
-/**
+
 app.post('/dashboard', ensureAuthenticated, (req, res) => {
     const { guildId } = req.body;
     // Save guild settings to MongoDB
@@ -87,7 +87,7 @@ app.get('/api/guild/:guildId', ensureAuthenticated, (req, res) => {
         res.json(settings);
     });
 });
-*/
+
 
 app.get('/login', passport.authenticate('discord'));
 
