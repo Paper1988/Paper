@@ -5,6 +5,8 @@ const passport = require('passport');
 const { Strategy } = require('passport-discord');
 const helmet = require('helmet');
 
+const GuildSettings = require("./Schemas/GuildSettings");
+
 const config = require('../Structures/config.json');
 const winston = require('winston');
 const express = require("express");
