@@ -6,6 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>隱私條款和使用者條款</title>
     <link rel="stylesheet" type="text/css" href="../public/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* 這裡可以添加一些額外的 CSS 樣式 */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+        main {
+            padding: 20px;
+        }
+        section {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        h3 {
+            color: #555;
+        }
+        p {
+            line-height: 1.6;
+            color: #666;
+        }
+    </style>
 </head>
 
 <body>
@@ -69,54 +105,55 @@
             </ul>
         </section>
     </main>
+
+    <script>
+        // 首頁動畫
+        $(window).scroll(function() {
+            var scrollTop = $(window).scrollTop();
+            var privacyTitle = $("#privacy h1");
+            var termsTitle = $("#terms h1");
+    
+            if (scrollTop >= $(document).height() - $(window).height()) {
+                privacyTitle.addClass("animated fadeIn");
+                termsTitle.addClass("animated fadeIn");
+            } else {
+                privacyTitle.removeClass("animated fadeIn");
+                termsTitle.removeClass("animated fadeIn");
+            }
+        });
+    
+        // 隱私條款動畫
+        $("#privacy").scroll(function() {
+            var scrollTop = $(this).scrollTop();
+            var privacySections = $("#privacy h3");
+    
+            privacySections.each(function() {
+                var sectionTop = $(this).offset().top;
+    
+                if (scrollTop >= sectionTop - $(window).height() + 100) {
+                    $(this).addClass("animated fadeIn");
+                } else {
+                    $(this).removeClass("animated fadeIn");
+                }
+            });
+        });
+    
+        // 使用者條款動畫
+        $("#terms").scroll(function() {
+            var scrollTop = $(this).scrollTop();
+            var termsSections = $("#terms h3");
+    
+            termsSections.each(function() {
+                var sectionTop = $(this).offset().top;
+    
+                if (scrollTop >= sectionTop - $(window).height() + 100) {
+                    $(this).addClass("animated fadeIn");
+                } else {
+                    $(this).removeClass("animated fadeIn");
+                }
+            });
+        });
+    </script>
 </body>
-<script>
-    // 首頁動畫
-    $(window).scroll(function() {
-        var scrollTop = $(window).scrollTop();
-        var privacyTitle = $("#privacy h1");
-        var termsTitle = $("#terms h1");
-
-        if (scrollTop >= $(document).height() - $(window).height()) {
-            privacyTitle.addClass("animated fadeIn");
-            termsTitle.addClass("animated fadeIn");
-        } else {
-            privacyTitle.removeClass("animated fadeIn");
-            termsTitle.removeClass("animated fadeIn");
-        }
-    });
-
-    // 隱私條款動畫
-    $("#privacy").scroll(function() {
-        var scrollTop = $(this).scrollTop();
-        var privacySections = $("#privacy h3");
-
-        privacySections.each(function() {
-            var sectionTop = $(this).offset().top;
-
-            if (scrollTop >= sectionTop - $(window).height() + 100) {
-                $(this).addClass("animated fadeIn");
-            } else {
-                $(this).removeClass("animated fadeIn");
-            }
-        });
-    });
-
-    // 使用者條款動畫
-    $("#terms").scroll(function() {
-        var scrollTop = $(this).scrollTop();
-        var termsSections = $("#terms h3");
-
-        termsSections.each(function() {
-            var sectionTop = $(this).offset().top;
-
-            if (scrollTop >= sectionTop - $(window).height() + 100) {
-                $(this).addClass("animated fadeIn");
-            } else {
-                $(this).removeClass("animated fadeIn");
-            }
-        });
-    });
-</script>
 
 </html>

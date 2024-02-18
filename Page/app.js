@@ -1,20 +1,23 @@
+const express = require("express");
+const app = express();
+
+const RedisStore = require('connect-redis')(session);
 const path = require("path");
 const bodyParser = require('body-parser');
 const session = require('express-session');
+
 const passport = require('passport');
 const { Strategy } = require('passport-discord');
-const helmet = require('helmet');
-
-const GuildSettings = require("./Schemas/GuildSettings");
-
-const config = require('../Structures/config.json');
 const winston = require('winston');
-const express = require("express");
-const app = express();
-const i18n = require('i18n');
-app.use(helmet());
 let port = 8080;
 
+const config = require('../Structures/config.json');
+const GuildSettings = require("./Schemas/GuildSettings");
+
+const helmet = require('helmet');
+app.use(helmet());
+
+const i18n = require('i18n');
 // i18n 設定
 i18n.configure({
     locales: ['en', 'zh'], // 添加中文 'zh'
@@ -29,6 +32,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(session({
+    store: new RedisStore({
+        // 在這裡配置Redis連接信息
+        host: 'localhost',
+        port: 6379,
+        ttl: 3600 // session的過期時間，以秒為單位
+    }),
     secret: 'paper-bot-secret',
     resave: false,
     saveUninitialized: false,
@@ -55,14 +64,13 @@ passport.deserializeUser((obj, done) => {
     done(null, obj);
 });
 
-app.get("/", (req, res) => {
-    res.redirect('/dashboard');
+app.get("/", ensureAuthenticated, (req, res) => {
+    res.render('dashboard', { user: req.user }, { title: res.__('Dashboard') });
 })
 
 app.get('/dashboard', ensureAuthenticated, (req, res) => {
     res.render('dashboard', { user: req.user }, { title: res.__('Dashboard') });
 });
-
 
 app.post('/dashboard', ensureAuthenticated, (req, res) => {
     const { guildId } = req.body;
