@@ -44,7 +44,7 @@ passport.use(new Strategy({
     clientID: config.clientId,
     clientSecret: config.clientSecret,
     callbackURL: config.callbackURL,
-    scope: ['identify', 'guilds'],
+    scope: ['identify', 'guilds', 'bot'],
 }, (accessToken, refreshToken, profile, done) => {
     return done(null, profile);
 }));
