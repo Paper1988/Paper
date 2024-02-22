@@ -30,7 +30,7 @@ module.exports = {
     .addSubcommand((sub) =>
       sub
         .setName("seek")
-        .setDescription("跳到指定位置")
+        .setDescription("跳到歌曲中的時間位置")
         .addNumberOption((options) =>
           options
             .setName("time")
@@ -70,11 +70,11 @@ module.exports = {
     .addSubcommand((sub) =>
       sub
         .setName("jump")
-        .setDescription("跳到清單中的歌曲位置")
+        .setDescription("跳到清單中的歌曲位置(下一首為1，上一首為-1，以此類推)")
         .addNumberOption((options) =>
           options
             .setName("position")
-            .setDescription("請提供清單位置")
+            .setDescription("請提供歌曲位置")
             .setRequired(true)
         )
     )
@@ -118,7 +118,6 @@ module.exports = {
         await client.distube.search(value).then((results) => {
             choices = results.map((song, id) => ({ name: `${song.name}`, value: `${song.name}` }));
         }).catch(error => {
-            console.error("搜尋歌曲時發生錯誤:", error);
             // 處理錯誤，例如通過回應一些預設選項或顯示錯誤信息
             interaction.respond([]); // 這裡選擇不回應任何選項
         });

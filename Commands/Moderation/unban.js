@@ -6,6 +6,7 @@ const {
   ButtonBuilder,
   StringSelectMenuBuilder,
   ChatInputCommandInteraction,
+  Client,
 } = require("discord.js");
 
 module.exports = {
@@ -15,7 +16,7 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .setDMPermission(false),
   /**
-   *
+   * @param {Client} client
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(client, interaction) {
@@ -51,17 +52,16 @@ module.exports = {
         iconURL: client.user.displayAvatarURL({ dynamic: true }),
       });
 
-    const selectMenu = new ActionRowBuilder().addComponents(
+    const selectMenu = new ActionRowBuilder().addComponents([
       new StringSelectMenuBuilder()
         .setCustomId("unban:selectMenu")
         .setPlaceholder("選擇一個用戶")
         .addOptions(memberList)
         .setMinValues(1)
         .setMaxValues(1),
-    );
+    ]);
 
-    interaction
-      .reply({
+    interaction.reply({
         embeds: [choicesEmbed],
         components: [selectMenu],
         ephemeral: true,

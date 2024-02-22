@@ -1,18 +1,20 @@
-function loadButtons (client) {
-  const fs = require('fs')
+const { loadFiles } = require("../Functions/fileLoader");
 
-  const buttonsFolder = fs.readdirSync('./Buttons')
+async function loadButtons (client) {
+  console.time("Buttons Loaded");
+  const buttons = new Array();
+  const Files = await loadFiles("Buttons");
 
-  for (const folder of buttonsFolder) {
-    const buttonFiles = fs.readdirSync(`./Buttons/${folder}`).filter((file) => file.endsWith('.js'))
+  Files.forEach(async (file) => {
+    const buttonFile = require(file);
+    if (!buttonFile.id) return;
+    client.buttons.set(buttonFile.id, buttonFile);
+    buttons.push({ Buttons: buttonFile.id, Status: "✅" });
+  });
 
-    for (const file of buttonFiles) {
-      const buttonFile = require(`../Buttons/${folder}/${file}`)
-      if (!buttonFile.id) return
-
-      client.buttons.set(buttonFile.id, buttonFile)
-    }
-  }
-  console.log('>>> ✅ Buttons Loaded')
+  console.table(buttons, ["Buttons", "Status"]);
+  console.info("\n\x1b[36m%s\x1b[0m", "Loaded Buttons.");
+  console.timeEnd("Buttons Loaded");
 }
-module.exports = { loadButtons }
+
+module.exports = { loadButtons };

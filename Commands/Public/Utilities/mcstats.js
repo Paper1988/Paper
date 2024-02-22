@@ -24,7 +24,7 @@ module.exports = {
                 const button = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
-                    .setCustomId("refresh")
+                    .setCustomId("mcstats_refresh")
                     .setLabel("🔄 刷新數據")
                     .setStyle(ButtonStyle.Primary)
                 );

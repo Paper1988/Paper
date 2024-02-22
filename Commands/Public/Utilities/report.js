@@ -71,14 +71,14 @@ module.exports = {
 
     const send_button = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
-        .setCustomId("send_button")
+        .setCustomId("report_send_button")
         .setLabel(`提交回報`)
         .setEmoji("<:correct_859388130411282442:1201843648229294121>")
         .setStyle("Success")
     );
     const cancel_button = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
-        .setCustomId("cancel_button")
+        .setCustomId("report_cancel_button")
         .setLabel(`取消`)
         .setEmoji("<:xmark_988409378161954866:1201844342029815848>")
         .setStyle("Danger")

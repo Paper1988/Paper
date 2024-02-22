@@ -39,14 +39,14 @@ module.exports = {
       .setTitle("<:ban_859424400968646676:1201843628108943390>")
       .setDescription(
         [
-          `你已從 ${interaction.guild.name} 被 **封鎖**`,
-          `執行者: ${member}`,
+          `你已被伺服器 ${guild.name} **封鎖**`,
+          `操作者: ${member}`,
           `\n原因: ${reason}`,
         ].join("\n")
       )
       .setFooter({
         iconURL: guild.iconURL(),
-        text: `${interaction.guild.name}`,
+        text: `${guild.name}`,
       });
 
     const errorsEmbed = new EmbedBuilder()
@@ -56,19 +56,19 @@ module.exports = {
     if (!target)
       return interaction.reply({
         embeds: [errorsEmbed.setDescription("成員很可能已經離開伺服器了")],
-        ephermeral: true,
+        ephemeral: true,
       });
 
     if (!target.manageable || !target.moderatable)
       errorsArray.push("所選的目標成員無法由機器人管理(我的權限不夠大!)");
 
-    if (member.roles.highest.postion < target.roles.highest.postion)
+    if (member.roles.highest.position < target.roles.highest.position)
       errorsArray.push("所選的目標成員權限比你高!");
 
     if (errorsArray.length)
       return interaction.reply({
         embeds: [errorsEmbed.setDescription(errorsArray.join("\n"))],
-        ephermeral: true,
+        ephemeral: true,
       });
 
     target.send({ embeds: [dmEmbed] });
@@ -83,21 +83,17 @@ module.exports = {
 
     const successEmbed = new EmbedBuilder()
       .setAuthor({
-        name: `<:ban_859424400968646676:1201843628108943390>`,
+        name: `${guild.name}`,
         iconURL: guild.iconURL(),
       })
       .setColor("Green")
       .setDescription(
         [
           `被封鎖的成員: ${target}`,
-          `執行者: ${member}`,
+          `操作者: ${member}`,
           `\n原因: ${reason}`,
         ].join("\n")
       )
-      .setFooter({
-        iconURL: guild.iconURL(),
-        text: `機器人 | ${interaction.user.username}`,
-      });
     return interaction.reply({ embeds: [successEmbed] });
   },
 };
