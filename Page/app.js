@@ -1,8 +1,7 @@
 const express = require("express");
-const session = require('express-session');
 const app = express();
+const session = require('express-session');
 
-const RedisStore = require('connect-redis')(session);
 const path = require("path");
 const bodyParser = require('body-parser');
 
@@ -32,12 +31,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(session({
-    store: new RedisStore({
-        // 在這裡配置Redis連接信息
-        host: 'localhost',
-        port: 6379,
-        ttl: 3600 // session的過期時間，以秒為單位
-    }),
     secret: 'paper-bot-secret',
     resave: false,
     saveUninitialized: false,
