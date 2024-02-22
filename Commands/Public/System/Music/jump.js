@@ -26,6 +26,6 @@ module.exports = {
       const queue = await client.distube.getQueue(VoiceChannel);
 
     client.distube.jump(VoiceChannel, position).catch(err => interaction.reply({ content: "<:warning_908958943466893323:1201844340276862976> | 你提供的是無效的數字(可能是該位置沒有歌曲)!", ephemeral: true }));
-    return interaction.reply({ content: `<:frontforward_988409335791124551:1202215991694856262> | 成功跳至清單位置 \`${position}\` - ${queue}` });
+    return interaction.reply({ content: `<:frontforward_988409335791124551:1202215991694856262> | 成功跳至清單位置 \`${position}\` - ${queue.songs[position]}` });
   },
 };
