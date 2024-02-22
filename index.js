@@ -48,7 +48,6 @@ client.distube = new DisTube(client, {
 /**************************************************/
 module.exports = client;
 
-client.sexMaxListeners(0);
 Events.defaultMaxListeners = 0;
 
 loadEvents(client);
