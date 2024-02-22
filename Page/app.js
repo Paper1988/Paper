@@ -57,7 +57,7 @@ passport.deserializeUser((obj, done) => {
     done(null, obj);
 });
 
-app.get("/", ensureAuthenticated, (req, res) => {
+app.get("/", (req, res) => {
     res.render('dashboard', { user: req.user }, { title: res.__('Dashboard') });
 })
 
