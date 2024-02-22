@@ -81,15 +81,15 @@ client.distube
     queue.volume = Data.volume;
     queue.repeatMode = Data.repeatMode;
   })
-  .on("finishSong", async (queue, song) => {
+  .on("finishSong", (queue, song) => {
     const message = require("./DistubeEvents");
     if (queue.repeatMode === 0 && message.id) {
-      await queue.textChannel.messages.delete(message.id);
+      queue.textChannel.messages.delete(message.id);
     }
   })
-  .on("disconnect", async (queue) => {
+  .on("disconnect", (queue) => {
     const message = require("./DistubeEvents");
     if (message.id) {
-      await queue.textChannel.messages.delete(message.id);
+      queue.textChannel.messages.delete(message.id);
     }
   });
