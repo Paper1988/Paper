@@ -57,7 +57,7 @@ module.exports = {
 
     const generalcommands = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
-        .setCustomId("back")
+        .setCustomId("help_back")
         .setLabel("返回")
         .setStyle(ButtonStyle.Primary)
     );
@@ -171,7 +171,7 @@ module.exports = {
         }
       }
 
-      if (i.customId === "back") {
+      if (i.customId === "help_back") {
         if (i.user.id !== interaction.user.id) {
           return await i.reply({
             content: `<:warning_908958943466893323:1201844340276862976> | 只有 ${interaction.user.tag} 可以使用這些按鈕!`,

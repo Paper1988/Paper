@@ -35,7 +35,7 @@ module.exports = {
       client.channels.cache.filter((channel) => type.includes(channel.type)).size;
 
     const embed = new EmbedBuilder()
-        .setColor("#36393F")
+        .setColor(interaction.guild.members.me.roles.highest.hexColor)
         .setTitle(`${client.user.username} 的機器人資訊`)
         .setThumbnail(client.user.displayAvatarURL({ size: 1024 }))
         .addFields(
@@ -47,11 +47,7 @@ module.exports = {
               `<:clock_964491800465276940:1201843646203433030> **創建時間** <t:${parseInt(
                 client.user.createdTimestamp / 1000
               )}:R>`,
-              `<:owner_859429432380227594:1201843734917152858> **擁有者** ${
-                client.application.owner
-                  ? `<@${client.application.owner.id}> (${client.application.owner.tag})`
-                  : "<:xmark_988409378161954866:1201844342029815848>"
-              }`,
+              `<:owner_859429432380227594:1201843734917152858> **擁有者** ${`<@${client.application.owner.ownerId}> (${client.application.owner.owner.user.tag})`}`,
               `<:verifiedserver_86192075475596083:1201844337542180874> **驗證** ${
                 client.user.flags & UserFlags.VerifiedBot ? "<:icons_verified:859424400939286549>" : "<:xmark_988409378161954866:1201844342029815848>"
               }`,

@@ -19,7 +19,7 @@ module.exports = {
 
     await DB.findOneAndUpdate(
       { GuildID: guild.id },
-      {LogsChannel: LogsChannel.id},
+      { LogsChannel: LogsChannel.id },
       {
         new: true,
         upsert: true

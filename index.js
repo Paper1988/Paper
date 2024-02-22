@@ -48,9 +48,8 @@ client.distube = new DisTube(client, {
 /**************************************************/
 module.exports = client;
 
-const { EventEmitter, setMaxListeners } = require("events");
-EventEmitter.defaultMaxListeners = 0;
-setMaxListeners(0, new EventTarget(), new EventEmitter());
+client.sexMaxListeners(0);
+Events.defaultMaxListeners = 0;
 
 loadEvents(client);
 

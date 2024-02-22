@@ -31,12 +31,12 @@ module.exports = {
                 newPrize: newPrizes,
             })
             .then(() => {
-                successEmbed.setDescription("<:correct_859388130411282442:1201843648229294121> | 成功繼續進行抽獎活動!");
+                successEmbed.setDescription("<:correct_859388130411282442:1201843648229294121> | 成功編輯該抽獎活動!");
                 interaction.reply({ embeds: [successEmbed], ephemeral: true });
             })
             .catch((err) => {
                 errEmbed.setDescription(`<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \n\`${err}\``);
-              interaction.reply({ embeds: [errEmbed], ephemeral: true });
+                interaction.reply({ embeds: [errEmbed], ephemeral: true });
             });
     }
 }
