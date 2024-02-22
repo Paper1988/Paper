@@ -2,6 +2,7 @@ const { Client, EmbedBuilder, ActivityType } = require("discord.js");
 const mongoose = require("mongoose");
 
 const { loadCommands } = require("../../Structures/Handlers/commandHandler.js");
+const { loadButtons } = require("../../Structures/Handlers/buttonHandler.js");
 
 module.exports = {
   name: "ready",
@@ -20,6 +21,7 @@ module.exports = {
     
     console.log(`${client.user.username} 已上線!`);
     loadCommands(client);
+    loadButtons(client);
     mongoose.set('strictQuery', false);
     mongoose.connect(client.config.Database, {}).then(() =>
     console.log(`>>> ✅ 成功連結到 MongoDB!`)
