@@ -1,10 +1,10 @@
 const express = require("express");
+const session = require('express-session');
 const app = express();
 
 const RedisStore = require('connect-redis')(session);
 const path = require("path");
 const bodyParser = require('body-parser');
-const session = require('express-session');
 
 const passport = require('passport');
 const { Strategy } = require('passport-discord');
@@ -22,7 +22,7 @@ const i18n = require('i18n');
 i18n.configure({
     locales: ['en', 'zh'], // 添加中文 'zh'
     directory: path.join(__dirname, 'locales'),
-    defaultLocale: 'en',
+    defaultLocale: 'zh',
     objectNotation: true,
 });
 
