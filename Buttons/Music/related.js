@@ -20,7 +20,7 @@ module.exports = {
         const queue = client.distube.getQueue(VoiceChannel);
         if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!" });
         await queue.addRelatedSong(VoiceChannel);
-        message.edit({ embeds: [Embed(queue, song)] });
+        message.edit({ embeds: [Embed(queue, queue.songs[0])] });
         return interaction.reply({
             content: "<:plus_988409343743496232:1202215484318302208> | 成功添加相似歌曲到播放清單中",
             ephemeral: true,
