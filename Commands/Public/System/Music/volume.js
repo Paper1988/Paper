@@ -26,7 +26,9 @@ module.exports = {
     if (Volume > 100 || Volume < 1)
       return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 你必須指定1到100之間的數字!" });
 
-    client.distube.setVolume(VoiceChannel, Volume);
+    if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲!", ephemeral: true });
+
+    await client.distube.setVolume(VoiceChannel, Volume);
 
     await DB.findOneAndUpdate(
       { GuildID: guild.id },
@@ -35,8 +37,8 @@ module.exports = {
     );
 
     if (Volume < 50 && Volume > 0)
-      return interaction.reply({ content: `<:speaker_low_860133546278387763:1201844302725255178> | 成功設置音量: \`${Volume}%\`` });
+      return await interaction.reply({ content: `<:speaker_low_860133546278387763:1201844302725255178> | 成功設置音量: \`${Volume}%\`` });
     else if (Volume >= 50)
-      return interaction.reply({ content: `<:speaker_860133545544908802:1201844300099354644> | 成功設置音量: \`${Volume}%\`` });
+      return await interaction.reply({ content: `<:speaker_860133545544908802:1201844300099354644> | 成功設置音量: \`${Volume}%\`` });
   },
 };

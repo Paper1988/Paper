@@ -1,6 +1,7 @@
 const {
   ChatInputCommandInteraction,
   SlashCommandBuilder,
+  Client
 } = require("discord.js");
 
 module.exports = {
@@ -8,8 +9,9 @@ module.exports = {
   usage: "/ping",
   /**
    * @param {ChatInputCommandInteraction} interaction
+   * @param {Client} client
    */
-  execute(interaction) {
-    interaction.reply({ content: "Pong!", ephemeral: true });
+  async execute(interaction, client) {
+    await interaction.reply({ content: `Pong!\n${client.ws.ping}`, ephemeral: true });
   },
 };

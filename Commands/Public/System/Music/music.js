@@ -105,7 +105,7 @@ module.exports = {
   async autocomplete(interaction, client) {
     // 檢查是否為 "play" 子指令的自動完成
     if (interaction.commandName === 'music' && interaction.options.getSubcommand() === 'play') {
-        const value = interaction.options.getFocused().toString().trim();
+        const value = await interaction.options.getFocused().toString().trim();
 
         // 確保搜索字符串不是空的
         if (!value) {

@@ -16,6 +16,6 @@ module.exports = {
             name: "Icons圖標",
             value: "https://discord.gg/9AtkECMX2P"
         })
-        interaction.reply({ embeds: [embed], ephemeral: true });
+        await interaction.reply({ embeds: [embed], ephemeral: true });
     }
 }
