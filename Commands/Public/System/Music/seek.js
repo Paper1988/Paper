@@ -27,9 +27,9 @@ module.exports = {
     const queue = await client.distube.getQueue(VoiceChannel);
     const Time = options.getNumber("time");
 
-    if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到清單" });
+    if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲!", ephemeral: true });
 
     await queue.seek(Time);
-    return interaction.reply({ content: `<:rightarrow_859388126653186058:1202113627122061403> | 跳到 **\`${Time}\`**` });
+    return await interaction.reply({ content: `<:rightarrow_859388126653186058:1202113627122061403> | 跳到 **\`${Time}\`**` });
   },
 };

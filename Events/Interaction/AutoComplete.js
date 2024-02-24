@@ -12,7 +12,7 @@ module.exports = {
     // 假設您的指令名稱和子指令名稱是以 '.' 分隔
     const [commandName, subCommandName] = interaction.commandName.split('.');
 
-    const command = interaction.client.commands.get(commandName);
+    const command = await interaction.client.commands.get(commandName);
 
     if (!command) {
       console.error(`No command matching ${commandName} was found.`);

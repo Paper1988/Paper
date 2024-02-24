@@ -24,7 +24,7 @@ module.exports = {
     const queue = await client.distube.getQueue(VoiceChannel);
     const msg = `<:warning_908958943466893323:1201844340276862976>**注意**: 可能需要等待**3**至**5**秒後才會載入過濾器!`;
 
-    if (!queue) return interaction.reply({ content: "<:warning_908958943466893323:1201844340276862976> | 播放清單是空的!" });
+    if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲!", ephemeral: true });
 
     switch (options.getString("set")) {
       case "false":

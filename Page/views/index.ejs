@@ -1,0 +1,98 @@
+<script setup>
+    const client = require('../../index.js');
+</script>
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paper-Bot | Home</title>
+    <style>
+        .container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .header {
+            background-color: #36393f;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .status {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .box {
+            width: 33%;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .title {
+            font-weight: bold;
+        }
+
+        .value {
+            font-size: 18px;
+        }
+
+        .buttons {
+            text-align: center;
+        }
+
+        a {
+            margin: 0 10px;
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #36393f;
+        }
+
+        a:hover {
+            background-color: #36393f;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Paper Bot</h1>
+        </div>
+        <div class="content">
+            <div class="status">
+                <div class="box">
+                    <div class="title">狀態</div>
+                    <div class="value">{{ client.status }}</div>
+                </div>
+                <div class="box">
+                    <div class="title">伺服器數量</div>
+                    <div class="value">{{ client.guilds.cache.size }}</div>
+                </div>
+                <div class="box">
+                    <div class="title">使用者數量</div>
+                    <div class="value">{{ client.users.cache.size }}</div>
+                </div>
+            </div>
+            <div class="buttons">
+                <a href="/api/guild/:guildId">伺服器</a>
+                <a href="/login">日誌</a>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <a href="/tp">隱私權政策&使用者條款</a>
+    </footer>
+</body>
+</html>
