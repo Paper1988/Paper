@@ -19,7 +19,7 @@ module.exports = {
             ephemeral: true,
         });
 
-        if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!" });
+        if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!", ephemeral: true });
 
         const modal = new ModalBuilder()
 			.setCustomId('addSong')

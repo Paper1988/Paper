@@ -10,7 +10,10 @@ module.exports = {
   async execute(interaction, client) {
     const { options, member, guild } = interaction;
     const VoiceChannel = member.voice.channel;
+    const { message } = require("../../../../Events/Distube/DistubeEvents");
+    const Embed = require("../../../../Systems/MusicEmbed");
     const Volume = options.getNumber("percent");
+    const queue = await client.distube.getQueue(VoiceChannel);
 
     if (!VoiceChannel)
       return interaction.reply({
@@ -25,16 +28,17 @@ module.exports = {
 
     if (Volume > 100 || Volume < 1)
       return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 你必須指定1到100之間的數字!" });
-
+    
     if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲!", ephemeral: true });
 
-    await client.distube.setVolume(VoiceChannel, Volume);
+    client.distube.setVolume(VoiceChannel, Volume);
 
     await DB.findOneAndUpdate(
       { GuildID: guild.id },
       { volume: Volume },
       { new: true, upsert: true },
     );
+    message.edit({ embeds: [Embed(queue, queue.songs[0])]});
 
     if (Volume < 50 && Volume > 0)
       return await interaction.reply({ content: `<:speaker_low_860133546278387763:1201844302725255178> | 成功設置音量: \`${Volume}%\`` });

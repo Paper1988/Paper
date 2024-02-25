@@ -15,7 +15,7 @@ module.exports = {
             ephemeral: true,
         });
         const queue = await client.distube.getQueue(VoiceChannel);
-        if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!" });
+        if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!", ephemeral: true });
 
         await queue.clientMember.voice.disconnect();
         return interaction.reply({

@@ -17,6 +17,7 @@ module.exports = {
     
     const Embed = require("../../../../Systems/MusicEmbed");
     const message = require("../../../../Events/Distube/DistubeEvents");
+    const { message } = require("../../Events/Distube/DistubeEvents");
     
     if (!VoiceChannel)
       return interaction.reply({
@@ -35,6 +36,7 @@ module.exports = {
 
     switch (options.getString("options")) {
       case "skip":
+        if (!queue.songs[1]) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 這是最後一首歌了!", ephemeral: true });
         await queue.skip(VoiceChannel);
         return interaction.reply({ content: "<:frontforward_988409335791124551:1202215991694856262> | 成功跳過歌曲", ephemeral: true });
 

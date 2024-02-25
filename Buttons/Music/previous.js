@@ -16,7 +16,7 @@ module.exports = {
         });
 
         const queue = client.distube.getQueue(VoiceChannel);
-        if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!" });
+        if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!", ephemeral: true });
         await queue.previous(VoiceChannel);
         return interaction.reply({ content: "<:frontforward_988409335791124551:1202215991694856262> | 成功返回上一首歌曲", ephemeral: true, });
     }

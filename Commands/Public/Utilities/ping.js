@@ -12,6 +12,6 @@ module.exports = {
    * @param {Client} client
    */
   async execute(interaction, client) {
-    await interaction.reply({ content: `Pong!\n${client.ws.ping}`, ephemeral: true });
+    await interaction.reply({ content: `🏓Pong! \`${client.ws.ping}ms\``, ephemeral: true });
   },
 };

@@ -10,7 +10,10 @@ client.distube
       embeds: [MusicEmbed(queue, song)],
       components: MusicButtons,
     });
-    module.exports = message;
+    const update = setInterval(() => {
+      message.edit({ embeds: [MusicEmbed(queue, song)] });
+    }, 5000);
+    module.exports = { message, update };
   })
   .on("addSong", (queue, song) => {
     let embed = MusicEmbed(queue, song);
@@ -81,15 +84,18 @@ client.distube
     queue.volume = Data.volume;
     queue.repeatMode = Data.repeatMode;
   })
-  .on("finishSong", (queue, song) => {
-    const message = require("./DistubeEvents");
-    if (queue.repeatMode === 0 && message.id) {
-      queue.textChannel.messages.delete(message.id);
+  .on("finishSong", async (queue, song) => {
+    const { message, update } = require("./DistubeEvents");
+    if (queue.repeatMode === 0 && message) {
+      await queue.textChannel.messages.delete(message.id);
     }
+    if (queue.repeatMode === 0 && !queue.songs[1]) clearInterval(update);
+    await message.edit({ embeds: [MusicEmbed(queue, song)] });
   })
-  .on("disconnect", (queue) => {
-    const message = require("./DistubeEvents");
-    if (message.id) {
-      queue.textChannel.messages.delete(message.id);
+  .on("disconnect", async (queue) => {
+    const { message, update } = require("./DistubeEvents");
+    if (message) {
+      await queue.textChannel.messages.delete(message.id);
     }
+    clearInterval(update);
   });
