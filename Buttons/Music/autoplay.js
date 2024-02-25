@@ -7,7 +7,7 @@ module.exports = {
         const { member, guild } = interaction;
         const VoiceChannel = member.voice.channel;
         const queue = client.distube.getQueue(VoiceChannel);
-        const message = require("../../Events/Distube/DistubeEvents");
+        const { message } = require("../../Events/Distube/DistubeEvents");
 
         if (!VoiceChannel)
         return interaction.reply({
@@ -20,7 +20,7 @@ module.exports = {
             ephemeral: true,
         });
 
-        if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!" });
+        if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!", ephemeral: true });
 
         let Mode = await queue.toggleAutoplay(VoiceChannel);
         message.edit({ embeds: [Embed(queue, queue.songs[0])] });

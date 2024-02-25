@@ -16,7 +16,7 @@ module.exports = {
         });
         
         const queue = client.distube.getQueue(VoiceChannel);
-        if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!" });
+        if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!", ephemeral: true });
         await queue.stop(VoiceChannel);
         return interaction.reply({ content: "<:stop_988409337837924422:1201844316675510364> | 成功停止音樂並退出語音頻道" });
     }

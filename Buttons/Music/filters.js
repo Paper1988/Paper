@@ -101,7 +101,5 @@ module.exports = {
             components: [selectMenu, button],
             ephemeral: true,
         });
-
-        module.exports = [selectMenu, button];
     }
 }

@@ -3,7 +3,7 @@ module.exports = {
     async execute(interaction, client) { // To access an id / value from a button you MUST INCLUDE `client` AND `args` and in the same order as shown
         const { member } = interaction;
         const VoiceChannel = member.voice.channel;
-        const message = require("../../Events/Distube/DistubeEvents");
+        const { message } = require("../../Events/Distube/DistubeEvents");
         const Embed = require("../../Systems/MusicEmbed");
 
         if (!VoiceChannel)
@@ -18,7 +18,7 @@ module.exports = {
         });
 
         const queue = client.distube.getQueue(VoiceChannel);
-        if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!" });
+        if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!", ephemeral: true });
         await queue.addRelatedSong(VoiceChannel);
         message.edit({ embeds: [Embed(queue, queue.songs[0])] });
         return interaction.reply({
