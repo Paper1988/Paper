@@ -36,12 +36,6 @@ module.exports = {
             .setDescription("選擇舉辦的頻道")
             .setRequired(false)
         )
-        .addRoleOption((options) =>
-          options
-            .setName("role")
-            .setDescription("選擇身分組")
-            .setRequired(false)
-        )
     )
     .addSubcommand((sub) =>
       sub
