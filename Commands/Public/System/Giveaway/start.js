@@ -16,7 +16,6 @@ module.exports = {
 
     const successEmbed = new EmbedBuilder().setColor("Green");
 
-    const role = interaction.options.getRole("role");
     const duration = interaction.options.getString("duration");
     const winnerCount = interaction.options.getInteger("winners") || 1;
     const prize = interaction.options.getString("prize");
