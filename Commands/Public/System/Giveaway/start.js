@@ -27,7 +27,6 @@ module.exports = {
         duration: ms(duration),
         winnerCount,
         prize,
-        exemptMembers: (member, giveaway) => !member.roles.cache.some((r) => r.name === role.name),
         messages: {
           giveaway: "<:tada_868022351508414474:1201844318940442624>**抽獎活動開始了**<:tada_868022351508414474:1201844318940442624>",
           giveawayEnded: "🎊**抽獎活動結束了**🎊",
