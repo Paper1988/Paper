@@ -86,16 +86,9 @@ client.distube
   })
   .on("finishSong", async (queue, song) => {
     const { message, update } = require("./DistubeEvents");
-    if (queue.repeatMode === 0 && message) {
+    if (queue.repeatMode === 0) {
       await queue.textChannel.messages.delete(message.id);
     }
     if (queue.repeatMode === 0 && !queue.songs[1]) clearInterval(update);
     await message.edit({ embeds: [MusicEmbed(queue, song)] });
-  })
-  .on("disconnect", async (queue) => {
-    const { message, update } = require("./DistubeEvents");
-    if (message) {
-      await queue.textChannel.messages.delete(message.id);
-    }
-    clearInterval(update);
   });
