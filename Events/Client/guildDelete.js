@@ -4,6 +4,8 @@ const {
   EmbedBuilder,
 } = require("discord.js");
 
+const MusicDB = require("../../Structures/Schemas/MusicDB.js");
+
 module.exports = {
   name: "guildDelete",
   /**
@@ -12,6 +14,10 @@ module.exports = {
    */
   async execute(interaction, client) {
     const guild = interaction;
+
+    const DB = await MusicDB.findOne({ GuildId: guild.id });
+
+    if (DB) DB.deleteOne();
 
     const Embed = new EmbedBuilder()
       .setColor("Red")
