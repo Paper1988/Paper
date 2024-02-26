@@ -11,7 +11,8 @@ client.distube
       components: MusicButtons,
     });
     const update = setInterval(() => {
-      message.edit({ embeds: [MusicEmbed(queue, song)] });
+      if (message) message.edit({ embeds: [MusicEmbed(queue, song)] });
+      else return;
     }, 5000);
     module.exports = { message, update };
   })
