@@ -29,7 +29,7 @@ client.distube
     });
   })
   .on("addList", (queue, playlist) => {
-    let embed = MusicEmbed(queue, song);
+    let embed = MusicEmbed(queue, playlist);
     embed.data.fields = null;
     queue.textChannel.send({
       embeds: [
@@ -85,11 +85,20 @@ client.distube
     queue.volume = Data.volume;
     queue.repeatMode = Data.repeatMode;
   })
-  .on("finishSong", async (queue, song) => {
-    const { message, update } = require("./DistubeEvents");
-    await message.edit({ embeds: [MusicEmbed(queue, song)] });
-    if (queue.repeatMode === 0 && !queue.songs[1]) {
+  .on("finishSong", (queue, song) => {
+    const { message, update } = require('./DistubeEvents');
+    if (message) {
+      return message.edit({ embeds: [MusicEmbed(queue, song)] });
+    }
+    if (queue.repeatMode === 0 && !queue.songs[1] && message) {
       clearInterval(update);
-      await queue.textChannel.messages.delete(message.id);
+      return message.delete();
+    }
+  })
+  .on("disconnect", (queue) => {
+    const { message, update } = require('./DistubeEvents');
+    if (message) {
+      clearInterval(update);
+      return message.delete();
     }
   });

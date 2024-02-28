@@ -1,4 +1,4 @@
-const { ChatInputCommandInteraction, EmbedBuilder } = require("discord.js");
+const { ChatInputCommandInteraction, EmbedBuilder, Client } = require("discord.js");
 
 const BlackListGuild = require("../../Structures/Schemas/BlacklistGuild");
 const BlackListUser = require("../../Structures/Schemas/BlacklistUser");
@@ -7,6 +7,7 @@ module.exports = {
   name: "interactionCreate",
   /**
    * @param {ChatInputCommandInteraction} interaction
+   * @param {Client} client
    */
   async execute(interaction, client) {
     if (!interaction.isChatInputCommand()) return;
@@ -20,7 +21,7 @@ module.exports = {
 
     const Embed = new EmbedBuilder()
     .setColor("Red")
-    .setThumbnail(interaction.guild.iconURL({ dynamic: true }))
+    .setThumbnail(interaction.guild.iconURL())
     .setTimestamp();
 
     const command = client.commands.get(interaction.commandName);

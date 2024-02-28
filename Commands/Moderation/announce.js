@@ -73,16 +73,16 @@ module.exports = {
       .setTitle(`${title}`)
       .setDescription(`${splitedMsg}`);
 
-    if (color) embed.setColor(color[0].toUpperCase());
+    if (color) embed.setColor(color.toUpperCase()).catch(err => interaction.reply({ content: "顏色色碼輸入錯誤，請參考: \n> https://discordjs.dev/docs/packages/discord.js/14.14.1/ColorResolvable:TypeAlias \n> https://discordjs.dev/docs/packages/discord.js/14.14.1/Colors:Variable", ephemeral: true }));
     if (footer) embed.setFooter({ text: footer });
     if (timestamp) embed.setTimestamp();
 
     if (!ping) {
-      interaction.reply({
+      await interaction.reply({
         embeds: [embed],
       });
     } else {
-      interaction.reply({
+      await interaction.reply({
         content: `${ping === "@everyone" ? "@everyone" : "@here"}`,
         embeds: [embed],
         allowedMentions: {
