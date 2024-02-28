@@ -55,15 +55,15 @@ module.exports = {
 
     if (!target)
       return interaction.reply({
-        embeds: [errorsEmbed.setDescription("成員很可能已經離開伺服器了")],
+        embeds: [errorsEmbed.setDescription("所選成員很可能已經離開伺服器了")],
         ephemeral: true,
       });
 
-    if (!target.manageable || !target.moderatable)
-      errorsArray.push("所選的目標成員無法由機器人管理(我的權限不夠大!)");
+    if (!target.banable)
+      errorsArray.push("我的權限不夠大!");
 
     if (member.roles.highest.position < target.roles.highest.position)
-      errorsArray.push("所選的目標成員權限比你高!");
+      errorsArray.push("所選成員的權限比你高!");
 
     if (errorsArray.length)
       return interaction.reply({

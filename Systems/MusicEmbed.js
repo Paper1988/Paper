@@ -23,7 +23,7 @@ module.exports = (queue, song) => new EmbedBuilder()
         }`, inline: true },
         { name: "<:update_860123644297871382:1201844333968625695>自動播放", value: `${queue.autoplay ? "<:correct_859388130411282442:1201843648229294121>" : "<:xmark_988409378161954866:1201844342029815848>"}`, inline: true },
         { name: "<:people_964425853930995783:1201843743762681906>歌曲作者", value: `\`${song.uploader.name}\``, inline: true },
-        { name: "<:clock_964491800465276940:1201843646203433030>進度", value: `\` ${queue.formattedCurrentTime} \` - \` ${song.formattedDuration} \``, inline: true },
+        { name: "<:clock_964491800465276940:1201843646203433030>進度(我必須要有編輯訊息的權限!)", value: `\` ${queue.formattedCurrentTime} \` - \` ${song.formattedDuration} \``, inline: true },
     )
     .setImage(song.thumbnail)
     .setTimestamp()

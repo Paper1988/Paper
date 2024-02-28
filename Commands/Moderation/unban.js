@@ -5,8 +5,6 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   StringSelectMenuBuilder,
-  ChatInputCommandInteraction,
-  Client,
 } = require("discord.js");
 
 module.exports = {
@@ -15,25 +13,21 @@ module.exports = {
     .setDescription("解除封鎖伺服器中被封鎖的成員")
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .setDMPermission(false),
-  /**
-   * @param {Client} client
-   * @param {ChatInputCommandInteraction} interaction
-   */
-  async execute(client, interaction) {
+  async execute(interaction, client) {
     const { guild } = interaction;
     var members;
 
-    const fetchBan = await guild.bans.fetch({ limit: 25 });
+    const fetchBan = await guild.bans.fetch({ limit: 25 })
 
     const noBanEmbed = new EmbedBuilder()
-      .setColor("Blue")
+      .setColor("Red")
       .setDescription(`<:warning_908958943466893323:1201844340276862976> | 伺服器中沒有正被封鎖的用戶!`)
       .setFooter({
         text: client.user.username,
         iconURL: client.user.displayAvatarURL(),
       });
 
-    if (fetchBan.size == 0)
+    if (fetchBan.size === 0)
       return interaction.reply({
         embeds: [noBanEmbed],
         ephemeral: true,
@@ -61,12 +55,11 @@ module.exports = {
         .setMaxValues(1),
     ]);
 
-    interaction.reply({
+    await interaction.reply({
         embeds: [choicesEmbed],
         components: [selectMenu],
         ephemeral: true,
-      })
-      .then(async (msg) => {
+    }).then(async (msg) => {
         const collector = msg.createMessageComponentCollector({
           idle: 10000,
         });
@@ -89,11 +82,13 @@ module.exports = {
             .addComponents(
               new ButtonBuilder()
                 .setCustomId("unban:confirm")
-                .setLabel("<:correct_859388130411282442:1201843648229294121>確認")
+                .setLabel("確認")
+                .setEmoji("<:correct_859388130411282442:1201843648229294121>")
                 .setStyle("Danger"),
               new ButtonBuilder()
                 .setCustomId("unban:cancel")
-                .setLabel("<:xmark_988409378161954866:1201844342029815848>取消")
+                .setLabel("取消")
+                .setEmoji("<:xmark_988409378161954866:1201844342029815848>")
                 .setStyle("Secondary"),
             );
 
@@ -104,7 +99,7 @@ module.exports = {
           } else if (i.isButton() && i.customId == "unban:confirm") {
             const processEmbed = new EmbedBuilder()
               .setColor("Blue")
-              .setDescription(`<:loading_859424401036148776:1201884046993661972> | 正在執行中...`)
+              .setDescription(`<a:discord1792loading:1212016238839070791> | 正在執行中...`)
               .setFooter({
                 text: client.user.username,
                 iconURL: client.user.displayAvatarURL(),
@@ -162,6 +157,6 @@ module.exports = {
             components: [],
           });
         });
-      });
+    });
   }
 };

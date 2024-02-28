@@ -53,7 +53,7 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    await interaction.reply({ content: "<:loading_859424401036148776:1201884046993661972>載入中......", ephemeral: true });
+    await interaction.reply({ content: "<a:discord1792loading:1212016238839070791>載入中......", ephemeral: true });
 
     const member =
       interaction.options.getMember("member") || interaction.member;

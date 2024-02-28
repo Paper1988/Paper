@@ -16,7 +16,7 @@ module.exports = {
     const VoiceChannel = member.voice.channel;
     
     const Embed = require("../../../../Systems/MusicEmbed");
-    const { message } = require("../../Events/Distube/DistubeEvents");
+    const { message } = require("../../../../Events/Distube/DistubeEvents");
     
     if (!VoiceChannel)
       return interaction.reply({
