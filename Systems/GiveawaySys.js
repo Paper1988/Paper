@@ -32,6 +32,7 @@ module.exports = (client) => {
       embedColorEnd: "#ff0000",
       reaction: "🎉",
     },
+    endedGiveawaysLifetime: 30 * 24 * 60 * 60 * 1000
   });
 
   client.giveawaysManager = manager;
