@@ -1,7 +1,9 @@
+const { ModalSubmitInteraction } = require("discord.js");
+
 module.exports = {
     name: "interactionCreate",
     /**
-     * @param {ChatInputCommandInteraction} interaction
+     * @param {ModalSubmitInteraction} interaction
      */
     async execute(interaction, client) {
         if (!interaction.isModalSubmit()) return;
