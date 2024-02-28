@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 
 const { loadCommands } = require("../../Structures/Handlers/commandHandler.js");
 const { loadButtons } = require("../../Structures/Handlers/buttonHandler.js");
+const { loadModals } = require("../../Structures/Handlers/modalHandler.js");
+const { loadMenus } = require("../../Structures/Handlers/menuHandler.js");
 
 module.exports = {
   name: "ready",
@@ -22,6 +24,8 @@ module.exports = {
     console.log(`${client.user.username} 已上線!`);
     loadCommands(client);
     loadButtons(client);
+    loadModals(client);
+    loadMenus(client);
     mongoose.set('strictQuery', false);
     mongoose.connect(client.config.Database, {}).then(() =>
     console.log(`>>> ✅ 成功連結到 MongoDB!`)
