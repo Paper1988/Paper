@@ -44,6 +44,7 @@ module.exports = {
           `\n原因: ${reason}`,
         ].join("\n")
       )
+      .setImage(`${member.displayAvatarURL()}`)
       .setFooter({
         iconURL: guild.iconURL(),
         text: `${guild.name}`,
