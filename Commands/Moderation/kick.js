@@ -33,42 +33,37 @@ module.exports = {
     const errorsArray = [];
 
     const dmEmbed = new EmbedBuilder()
-      .setAuthor({
-        name: `<:kick_950409450966110269:1201843678222483519>`,
-        iconURL: guild.iconURL(),
-      })
       .setColor("Green")
       .setDescription(
         [
-          `你已從 ${interaction.guild.name} 被 **踢出**`,
-          `執行者: ${member}`,
+          `你已被伺服器 ${guild.name} **踢出**`,
+          `操作者: ${member}`,
           `\n原因: ${reason}`,
         ].join("\n")
       )
-      .setFooter({
-        iconURL: guild.iconURL(),
-        text: `機器人 | ${interaction.user.username}`,
-      });
 
     const errorsEmbed = new EmbedBuilder()
       .setAuthor({
-        name: "<:warning_908958943466893323:1201844340276862976> | 無法踢出成員，因為",
+        name: "<:warning_908958943466893323:1201844340276862976> | 無法踢出該名成員，因為",
       })
       .setColor("Red");
 
     if (!target)
       return interaction.reply({
         embeds: [errorsEmbed.setDescription("所選成員很可能已經離開伺服器了")],
-        ephermeral: true,
+        ephemeral: true,
       });
 
-    if (member.roles.highest.postion < target.roles.highest.postion)
-      errorsArray.push(" 所選成員的權限比你高!");
+    if (!target.kickable)
+      errorsArray.push("我的權限不夠大!");
+
+    if (member.roles.highest.position < target.roles.highest.position)
+      errorsArray.push("所選成員的權限比你高!");
 
     if (errorsArray.length)
       return interaction.reply({
         embeds: [errorsEmbed.setDescription(errorsArray.join("\n"))],
-        ephermeral: true,
+        ephemeral: true,
       });
 
     target.send({ embeds: [dmEmbed] });
@@ -82,22 +77,14 @@ module.exports = {
     });
 
     const successEmbed = new EmbedBuilder()
-      .setAuthor({
-        name: `<:kick_950409450966110269:1201843678222483519>`,
-        iconURL: guild.iconURL(),
-      })
       .setColor("Green")
       .setDescription(
         [
           `被踢出成員: ${target}`,
-          `執行者: ${member}`,
+          `操作者: ${member}`,
           `\n原因: ${reason}`,
         ].join("\n")
       )
-      .setFooter({
-        iconURL: guild.iconURL(),
-        text: `機器人 | ${interaction.user.username}`,
-      });
 
     return interaction.reply({ embeds: [successEmbed] });
   },

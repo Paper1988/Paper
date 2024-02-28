@@ -103,6 +103,13 @@ module.exports = {
       )
       .setTimestamp();
 
+    const musicInfoEm = new EmbedBuilder()
+      .setColor("Orange")
+      .setDescription(
+        "\`遇到音樂中斷?\` -> 可能是以下原因:\n- 機器人重啟\n- 我們正在進行一些修復或更新\n- 網路不穩\n造成你的不便，敬請見諒!"
+      )
+      .setTimestamp();
+
     const giveem = new EmbedBuilder()
       .setTitle("🎁抽獎 Giveaway")
       .setColor("Gold")
@@ -151,7 +158,7 @@ module.exports = {
 
         if (value === "menu3") {
           await i.update({
-            embeds: [musicem],
+            embeds: [musicInfoEm, musicem],
             components: [helpmenu, inviteme, generalcommands],
           });
         }
