@@ -59,7 +59,7 @@ module.exports = {
         ephemeral: true,
       });
 
-    if (!target.banable)
+    if (!target.bannable)
       errorsArray.push("我的權限不夠大!");
 
     if (member.roles.highest.position < target.roles.highest.position)
