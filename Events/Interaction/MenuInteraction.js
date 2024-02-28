@@ -1,4 +1,4 @@
-const { StringSelectMenuInteraction, Client } = require("discord.js");
+const { StringSelectMenuInteraction, Client, EmbedBuilder } = require("discord.js");
 
 module.exports = {
     name: "interactionCreate",
