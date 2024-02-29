@@ -17,6 +17,8 @@ client.buttons = new Collection();
 client.voiceGenerator = new Collection();
 client.events = new Collection();
 client.subCommands = new Collection();
+client.modals = new Collection();
+client.selectMenus = new Collection();
 
 ["GiveawaySys", "antiCrash"].forEach((sys) => {
     require(`./Systems/${sys}`)(client);
