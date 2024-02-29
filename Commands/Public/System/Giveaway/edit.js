@@ -20,6 +20,13 @@ module.exports = {
             // Search with messageId
             client.giveawaysManager.giveaways.find((g) => g.guildId === interaction.guildId && g.messageId === query);
 
+        if (!giveaway) {
+            errEmbed.setDescription(
+                `<:warning_908958943466893323:1201844340276862976> | 無法找到訊息ID: ${query}\n請確認有無輸入錯誤!`
+            );
+            return interaction.reply({ embeds: [errEmbed], ephemeral: true });
+        }
+
         const newDuration = interaction.options.getString("new-duration") || 0;
         const newWinners = interaction.options.getInteger("new-winners") || giveaway.winnerCount;
         const newPrizes = interaction.options.getString("new-prizes") || giveaway.prize;
