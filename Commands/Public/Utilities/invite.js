@@ -1,43 +1,44 @@
 const {
-  Client,
-  ChatInputCommandInteraction,
-  EmbedBuilder,
-  ActionRowBuilder,
-  ButtonBuilder,
-  SlashCommandBuilder,
-  ButtonStyle,
-} = require("discord.js");
+    Client,
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    SlashCommandBuilder,
+    ButtonStyle
+} = require('discord.js')
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("invite")
-    .setDescription("邀請我加入你的伺服器!"),
-  /**
-   * @param {ChatInputCommandInteraction} interaction
-   * @param {Client} client
-   */
-  async execute(interaction, client) {
-    const Invite = new EmbedBuilder()
-      .setTitle("邀請我!")
-      .setDescription(
-        "我是一個很酷的Discord Bot，不是嗎？\n使用下面的按鈕邀請我加入您的伺服器或加入我們的支援伺服器！"
-      )
-      .setColor("Blue")
-      .setImage(client.user.displayAvatarURL());
+    data: new SlashCommandBuilder().setName('invite').setDescription('邀請我加入你的伺服器!'),
+    /**
+     * @param {ChatInputCommandInteraction} interaction
+     * @param {Client} client
+     */
+    async execute(interaction, client) {
+        const Invite = new EmbedBuilder()
+            .setDescription(
+                '我是一個很酷的Discord Bot，不是嗎？\n使用下面的按鈕邀請我加入您的伺服器或加入我們的支援伺服器！'
+            )
+            .setColor('Blue')
+            .setThumbnail(client.user.displayAvatarURL())
+            .setAuthor({
+                name: interaction.user.displayName,
+                iconURL: interaction.user.displayAvatarURL()
+            })
 
-    let row = new ActionRowBuilder().addComponents([
-      new ButtonBuilder()
-        .setURL(
-          "https://discord.com/api/oauth2/authorize?client_id=869166906765103135&permissions=1644971945463&scope=bot%20applications.commands"
-        )
-        .setLabel("點我邀請")
-        .setStyle(ButtonStyle.Link),
+        const row = new ActionRowBuilder().addComponents([
+            new ButtonBuilder()
+                .setURL(
+                    'https://discord.com/api/oauth2/authorize?client_id=869166906765103135&permissions=1644971945463&scope=bot%20applications.commands'
+                )
+                .setLabel('點我邀請')
+                .setStyle(ButtonStyle.Link),
 
-      new ButtonBuilder()
-        .setURL("https://discord.gg/6qCTEer4pT")
-        .setLabel("支援伺服器")
-        .setStyle(ButtonStyle.Link),
-    ]);
-    await interaction.reply({ embeds: [Invite], components: [row] });
-  },
-};
+            new ButtonBuilder()
+                .setURL('https://discord.gg/6qCTEer4pT')
+                .setLabel('支援伺服器')
+                .setStyle(ButtonStyle.Link)
+        ])
+        await interaction.reply({ embeds: [Invite], components: [row] })
+    }
+}

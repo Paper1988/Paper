@@ -1,77 +1,77 @@
-const translate = require(`@iamtraction/google-translate`);
-const {
-  EmbedBuilder,
-  CommandInteraction,
-  SlashCommandBuilder,
-} = require("discord.js");
+const translate = require(`@iamtraction/google-translate`)
+const { EmbedBuilder, ChatInputCommandInteraction, SlashCommandBuilder } = require('discord.js')
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("translate")
-    .setDescription("將任何文字翻譯成你想要的任何語言")
-    .addStringOption((option) =>
-      option
-        .setName("language")
-        .setDescription("你想要翻成的語言")
-        .addChoices(
-          { name: "Arabic(阿拉伯文)", value: "ar" },
-          { name: "Dutch(荷蘭文)", value: "nl" },
-          { name: "English(英文)", value: "en" },
-          { name: "French(法文)", value: "fr" },
-          { name: "Greek(希臘文)", value: "gl" },
-          { name: "German(德文)", value: "de" },
-          { name: "Italian(義大利文)", value: "it" },
-          { name: "Japanese(日文)", value: "ja" },
-          { name: "Latin(拉丁文)", value: "la" },
-          { name: "Portugese(葡萄牙文)", value: "pt" },
-          { name: "Russian(俄羅斯文)", value: "ru" },
-          { name: "Spanish(西班牙文)", value: "es" },
-          { name: "Chinese Traditional(中文-繁體)", value: "zh-tw" },
-          { name: "Chinese Simplified(中文-簡體)", value: "zh-cn" }
+    data: new SlashCommandBuilder()
+        .setName('translate')
+        .setDescription('將任何文字翻譯成你想要的任何語言')
+        .addStringOption((option) =>
+            option
+                .setName('language')
+                .setDescription('你想要翻成的語言')
+                .addChoices(
+                    { name: 'Arabic(阿拉伯文)', value: 'ar' },
+                    { name: 'Dutch(荷蘭文)', value: 'nl' },
+                    { name: 'English(英文)', value: 'en' },
+                    { name: 'French(法文)', value: 'fr' },
+                    { name: 'Greek(希臘文)', value: 'gl' },
+                    { name: 'German(德文)', value: 'de' },
+                    { name: 'Italian(義大利文)', value: 'it' },
+                    { name: 'Japanese(日文)', value: 'ja' },
+                    { name: 'Latin(拉丁文)', value: 'la' },
+                    { name: 'Portuguese(葡萄牙文)', value: 'pt' },
+                    { name: 'Russian(俄羅斯文)', value: 'ru' },
+                    { name: 'Spanish(西班牙文)', value: 'es' },
+                    { name: 'Chinese-Traditional(中文-繁體)', value: 'zh-tw' },
+                    { name: 'Chinese-Simplified(中文-簡體)', value: 'zh-cn' }
+                )
+                .setRequired(true)
         )
-        .setRequired(true)
-    )
-    .addStringOption((option) =>
-      option.setName("message").setDescription("要翻譯的訊息").setRequired(true)
-    ),
-  /**
-   * @param {CommandInteraction} interaction
-   */
-  async execute(interaction) {
-    const la = interaction.options.getString(`language`);
-    const text = interaction.options.getString(`message`);
+        .addStringOption((option) =>
+            option.setName('message').setDescription('要翻譯的訊息').setRequired(true)
+        ),
+    /**
+     * @param {ChatInputCommandInteraction} interaction
+     */
+    async execute(interaction) {
+        const langName = interaction.options.getString(`language`)
+        const text = interaction.options.getString(`message`)
 
-    await interaction.reply({
-      content: "<:search_859424401723883560:1201844291098382457> | 正在翻譯你的訊息...",
-      ephemeral: true,
-    });
+        await interaction.reply({
+            content: '<a:discord1792loading:1212016238839070791> | 正在翻譯你的訊息...',
+            ephemeral: true
+        })
 
-    await translate(text, { to: `${la}` })
-      .then((res) => {
-        const successEmbed = new EmbedBuilder()
-          .setTitle(`<:translate_867656825527730176:1201844331837657128>成功翻譯訊息`)
-          .setColor(`Green`)
-          .setTimestamp()
-          .addFields(
-            { name: `翻譯前: `, value: `\`\`\`${text}\`\`\``, inline: false },
-            {
-              name: `翻譯後: `,
-              value: `\`\`\`${res.text}\`\`\``,
-              inline: false,
-            },
-            { name: `語言: `, value: `${la}`, inline: false }
-          );
-        interaction.editReply({
-          content: "",
-          embeds: [successEmbed],
-          ephemeral: true,
-        });
-      })
-      .catch((err) => {
-        interaction.editReply({
-          content: `<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \`${err.message}\`\n請協助回報!`,
-          ephemeral: true,
-        });
-      });
-  },
-};
+        await translate(text, { to: `${langName}` })
+            .then((res) => {
+                let trans =
+                    res.from.text.didYouMean || res.from.text.autoCorrected
+                        ? res.from.text.value
+                        : res.text
+
+                const successEmbed = new EmbedBuilder()
+                    .setTitle(`<:translate_867656825527730176:1201844331837657128> | 成功翻譯訊息`)
+                    .setColor(`Green`)
+                    .setTimestamp()
+                    .addFields(
+                        { name: `翻譯前: `, value: `\`\`\`${text}\`\`\``, inline: false },
+                        {
+                            name: `翻譯後: `,
+                            value: `\`\`\`${trans}\`\`\``,
+                            inline: false
+                        },
+                        { name: `語言: `, value: `${langName}`, inline: false }
+                    )
+                interaction.editReply({
+                    content: '',
+                    embeds: [successEmbed]
+                })
+            })
+            .catch((err) => {
+                interaction.editReply({
+                    content: `<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \`${err.message}\`\n請協助回報!`,
+                    ephemeral: true
+                })
+            })
+    }
+}

@@ -1,29 +1,21 @@
-const {
-  PermissionFlagsBits,
-  ChatInputCommandInteraction,
-  SlashCommandBuilder,
-  EmbedBuilder,
-} = require("discord.js");
-const DB = require("../../../Structures/Schemas/AntiAlt");
+const { PermissionFlagsBits, SlashCommandBuilder } = require('discord.js')
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("anti-alt")
-    .setDescription("設置或重置日誌頻道")
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-    .addSubcommand((sub) =>
-      sub
-        .setName("setup")
-        .setDescription("設置伺服器反小號日誌頻道")
-        .addChannelOption((options) =>
-          options
-            .setName("channel")
-            .setDescription("選擇用於紀錄日誌的頻道")
-            .setRequired(true)
+    data: new SlashCommandBuilder()
+        .setName('anti-alt')
+        .setDescription('設定伺服器自動踢出小號(即未滿7日之帳號)系統')
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+        .addSubcommand((sub) =>
+            sub
+                .setName('setup')
+                .setDescription('設定日誌頻道')
+                .addChannelOption((options) =>
+                    options
+                        .setName('channel')
+                        .setDescription('選擇用於紀錄日誌的頻道')
+                        .setRequired(true)
+                )
         )
-    )
-    .addSubcommand((sub) =>
-      sub.setName("reset").setDescription("還原至初始設定")
-    ),
-  usage: "/anti-alt (setup, channel)",
-};
+        .addSubcommand((sub) => sub.setName('reset').setDescription('關閉自動踢出小號系統')),
+    usage: '/anti-alt (setup, channel)'
+}
