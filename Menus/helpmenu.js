@@ -1,4 +1,9 @@
-const { StringSelectMenuInteraction } = require('discord.js')
+const {
+    StringSelectMenuInteraction,
+    ActionRowBuilder,
+    ButtonStyle,
+    EmbedBuilder
+} = require('discord.js')
 
 module.exports = {
     id: 'helpMenu',
