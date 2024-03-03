@@ -72,30 +72,9 @@ module.exports = {
             )
             .setTimestamp()
 
-        const message = await interaction.reply({
+        await interaction.reply({
             embeds: [embed],
             components: [helpMenu, inviteMe]
-        })
-
-        const collector = message.createMessageComponentCollector()
-
-        collector.on(`collect`, async (i) => {
-            if (i.customId === 'menu') {
-                if (i.user.id !== interaction.user.id) {
-                    return await i.reply({
-                        content: `<:warning_908958943466893323:1201844340276862976> | 只有 ${interaction.user.tag} 才能使用這個選單!`,
-                        ephemeral: true
-                    })
-                }
-            }
-            if (i.customId === 'help:back') {
-                if (i.user.id !== interaction.user.id) {
-                    return await i.reply({
-                        content: `<:warning_908958943466893323:1201844340276862976> | 只有 ${interaction.user.tag} 可以使用這些按鈕!`,
-                        ephemeral: true
-                    })
-                }
-            }
         })
     }
 }

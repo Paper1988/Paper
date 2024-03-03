@@ -13,6 +13,42 @@ module.exports = {
      */
     async execute(i) {
         if (!i.customId === 'helpMenu') return
+        const helpMenu = new ActionRowBuilder().addComponents(
+            new StringSelectMenuBuilder()
+                .setCustomId('helpMenu')
+                .setPlaceholder('選擇一個分類')
+                .addOptions(
+                    {
+                        label: '🔧功能',
+                        description: '顯示所有功能指令',
+                        value: 'Utilities'
+                    },
+
+                    {
+                        label: '🔒管理',
+                        description: '顯示所有管理指令(只有管理員和版主等人可以使用)',
+                        value: 'Moderation'
+                    },
+
+                    {
+                        label: '🎶音樂',
+                        description: '顯示所有音樂指令',
+                        value: 'Music'
+                    },
+
+                    {
+                        label: '🎁抽獎',
+                        description: '顯示所有抽獎指令',
+                        value: 'Giveaway'
+                    },
+
+                    {
+                        label: '🎭 娛樂',
+                        description: '顯示所有娛樂指令',
+                        value: 'Fun'
+                    }
+                )
+        )
         const generalCommands = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId('help:back')

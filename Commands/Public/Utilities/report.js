@@ -84,7 +84,7 @@ module.exports = {
             case 'bug':
                 {
                     const B_embed = new EmbedBuilder()
-                        .setTitle('🐞 | Bug')
+                        .setTitle('<:bug_859388130803974174:1201843636313280564> | Bug')
                         .setColor('Red')
                         .setDescription(`提交者: ${interaction.user}  (伺服器: ${guild.name})`)
                         .addFields(
@@ -134,7 +134,7 @@ module.exports = {
             case 'suggestion':
                 {
                     const S_embed = new EmbedBuilder()
-                        .setTitle('💡 | 建議')
+                        .setTitle('<:buld_882595243579559958:1201843638427209738> | 建議')
                         .setColor('Yellow')
                         .setDescription(`提交者: ${interaction.user}  (伺服器: ${guild.name})`)
                         .addFields({
@@ -177,7 +177,7 @@ module.exports = {
             case 'other':
                 {
                     const O_embed = new EmbedBuilder()
-                        .setTitle('🌀 | 其他')
+                        .setTitle('<:globe_859424401971609600:1201843661785284659> | 其他')
                         .setColor('Purple')
                         .setDescription(`提交者: ${interaction.user}  (伺服器: ${guild.name})`)
                         .addFields({
