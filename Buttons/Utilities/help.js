@@ -3,7 +3,8 @@ const {
     ActionRowBuilder,
     ButtonStyle,
     ButtonBuilder,
-    EmbedBuilder
+    EmbedBuilder,
+    StringSelectMenuBuilder
 } = require('discord.js')
 
 module.exports = {
