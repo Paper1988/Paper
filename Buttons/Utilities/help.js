@@ -1,4 +1,10 @@
-const { ButtonInteraction } = require('discord.js')
+const {
+    ButtonInteraction,
+    ActionRowBuilder,
+    ButtonStyle,
+    ButtonBuilder,
+    EmbedBuilder
+} = require('discord.js')
 
 module.exports = {
     id: 'help:back',
