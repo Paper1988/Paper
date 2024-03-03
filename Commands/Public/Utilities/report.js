@@ -83,6 +83,25 @@ module.exports = {
         switch (type) {
             case 'bug':
                 {
+                    const B_embed = new EmbedBuilder()
+                        .setTitle('🐞 | Bug')
+                        .setColor('Red')
+                        .setDescription(`提交者: ${interaction.user}  (伺服器: ${guild.name})`)
+                        .addFields(
+                            {
+                                name: `提供的描述:`,
+                                value: `\`\`\`${description}\`\`\``,
+                                inline: true
+                            },
+                            {
+                                name: `造成bug的指令:`,
+                                value: `\`\`\`${command || `無選擇`}\`\`\``,
+                                inline: false
+                            }
+                        )
+                        .setThumbnail(picture.url)
+                        .setTimestamp()
+
                     const Bmessage = await interaction.reply({
                         content: `預覽:`,
                         embeds: [B_embed],
