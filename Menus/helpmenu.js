@@ -3,7 +3,8 @@ const {
     ActionRowBuilder,
     ButtonStyle,
     EmbedBuilder,
-    ButtonBuilder
+    ButtonBuilder,
+    StringSelectMenuBuilder
 } = require('discord.js')
 
 module.exports = {
@@ -12,7 +13,6 @@ module.exports = {
      * @param {StringSelectMenuInteraction} i
      */
     async execute(i) {
-        if (!i.customId === 'helpMenu') return
         const helpMenu = new ActionRowBuilder().addComponents(
             new StringSelectMenuBuilder()
                 .setCustomId('helpMenu')
