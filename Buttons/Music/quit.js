@@ -1,3 +1,5 @@
+const MusicDB = require('../../Structures/Schemas/MusicDB')
+
 module.exports = {
     id: 'quit',
     async execute(interaction, client) {
