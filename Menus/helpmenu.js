@@ -85,7 +85,7 @@ module.exports = {
             .setTitle('🎶音樂 Music')
             .setColor('Purple')
             .setDescription(
-                '> `/play`: 提供連結或關鍵字來播放音樂或影片\n> `/seek`: 調整音樂當前秒數\n> `/settings`: 設定功能\n> `/volume`: 調整音量\n> `/filters`: 增添/刪除音樂過濾器\n> `/jump`: 跳到清單中的歌曲位置'
+                '> `/music play`: 提供連結或關鍵字來播放音樂或影片\n> `/music seek`: 調整音樂當前秒數\n> `/music settings`: 設定功能\n> `/music volume`: 調整音量\n> `/music filters`: 增添/刪除音樂過濾器\n> `/music jump`: 跳到清單中的歌曲位置'
             )
             .setTimestamp()
 
@@ -99,7 +99,7 @@ module.exports = {
             .setTitle('🎁抽獎 Giveaway')
             .setColor('Gold')
             .setDescription(
-                '> `/start`: 設定一次抽獎活動\n> `/actions`: 設定抽獎活動(結束、暫停、繼續、重抽、刪除)\n> `/edit`: 重新設定參數(時間、獎品等)'
+                '> `/giveaway start`: 設定一次抽獎活動\n> `/giveaway actions`: 設定抽獎活動(結束、暫停、繼續、重抽、刪除)\n> `/giveaway edit`: 重新設定參數(時間、獎品等)'
             )
             .setTimestamp()
 

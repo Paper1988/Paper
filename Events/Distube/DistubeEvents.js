@@ -12,7 +12,6 @@ client.distube
         })
         const update = setInterval(() => {
             if (message) message.edit({ embeds: [MusicEmbed(queue, song)] })
-            else return
         }, 5000)
         module.exports = { message, update }
     })
@@ -90,17 +89,10 @@ client.distube
     .on('finishSong', (queue, song) => {
         const { message, update } = require('./DistubeEvents')
         if (message) {
-            return message.edit({ embeds: [MusicEmbed(queue, song)] })
+            message.edit({ embeds: [MusicEmbed(queue, song)] })
         }
         if (queue.repeatMode === 0 && !queue.songs[1] && message) {
             clearInterval(update)
-            return message.delete()
-        }
-    })
-    .on('disconnect', (queue) => {
-        const { message, update } = require('./DistubeEvents')
-        if (message) {
-            clearInterval(update)
-            return message.delete()
+            message.delete()
         }
     })
