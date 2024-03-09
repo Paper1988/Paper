@@ -1,7 +1,7 @@
 const { loadFiles } = require('../Functions/fileLoader')
 
 async function loadButtons(client) {
-    await client.commands.clear()
+    await client.buttons.clear()
     console.time('Buttons Loaded')
     const buttons = new Array()
     const Files = await loadFiles('Buttons')
