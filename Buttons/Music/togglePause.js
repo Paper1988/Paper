@@ -1,5 +1,6 @@
 const Button = require('../../Systems/MusicButtons')
 const Embed = require('../../Systems/MusicEmbed')
+const MusicDB = require('../../Structures/Schemas/MusicDB')
 const { ButtonStyle } = require('discord.js')
 
 module.exports = {
@@ -8,7 +9,6 @@ module.exports = {
         // To access an id / value from a button you MUST INCLUDE `client` AND `args` and in the same order as shown
         const { member } = interaction
         const VoiceChannel = member.voice.channel
-        const { message } = require('../../Events/Distube/DistubeEvents')
 
         if (!VoiceChannel)
             return interaction.reply({
@@ -29,6 +29,9 @@ module.exports = {
                     '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true
             })
+
+        const Data = await MusicDB.findOne({ GuildID: queue.id })
+        const message = await queue.textChannel.messages.fetch(Data.message)
 
         if (!queue.paused) {
             await queue.pause(VoiceChannel)

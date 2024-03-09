@@ -7,7 +7,8 @@ module.exports = {
         const { member, guild } = interaction
         const VoiceChannel = member.voice.channel
         const queue = client.distube.getQueue(VoiceChannel)
-        const { message } = require('../../Events/Distube/DistubeEvents')
+        const Data = await MusicDB.findOne({ GuildID: queue.id })
+        const message = await queue.textChannel.messages.fetch(Data.message)
 
         if (!VoiceChannel)
             return interaction.reply({

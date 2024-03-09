@@ -4,6 +4,7 @@ module.exports = {
         // To access an id / value from a button you MUST INCLUDE `client` AND `args` and in the same order as shown
         const { member } = interaction
         const VoiceChannel = member.voice.channel
+        const { update } = require('../../Events/Distube/DistubeEvents')
 
         if (!VoiceChannel)
             return interaction.reply({
@@ -25,6 +26,7 @@ module.exports = {
                 ephemeral: true
             })
         await queue.stop(VoiceChannel)
+        clearInterval(update)
         return interaction.reply({
             content: '<:stop_988409337837924422:1201844316675510364> | 成功停止音樂並退出語音頻道'
         })
