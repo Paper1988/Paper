@@ -4,6 +4,7 @@ module.exports = {
         // To access an id / value from a button you MUST INCLUDE `client` AND `args` and in the same order as shown
         const { member } = interaction
         const VoiceChannel = member.voice.channel
+        const { update } = require('../../Events/Distube/DistubeEvents')
 
         if (!VoiceChannel)
             return interaction.reply({
@@ -25,7 +26,10 @@ module.exports = {
             })
 
         await queue.clientMember.voice.disconnect()
-        queue.emit('finishSong', queue, queue.songs[0])
+        const Data = await MusicDB.findOne({ GuildID: queue.id })
+        const message = await queue.textChannel.messages.fetch(Data.message)
+        await message.delete()
+        clearInterval(update)
         return interaction.reply({
             content: '<:leave_860487640113217546:1202217506991771658> | 成功退出語音頻道'
         })
