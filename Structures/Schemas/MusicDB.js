@@ -1,11 +1,12 @@
-const { model, Schema } = require("mongoose");
+const { model, Schema } = require('mongoose')
 
 module.exports = model(
-    "Music",
+    'Music',
     new Schema({
         GuildID: String,
         volume: { type: Number, default: 50 },
-        autoplay: { type: Boolean, default: false},
+        autoplay: { type: Boolean, default: false },
         repeatMode: { type: Number, default: 0 },
+        message: { type: String, default: '' }
     })
-);
+)

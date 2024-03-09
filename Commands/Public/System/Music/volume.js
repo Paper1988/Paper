@@ -1,48 +1,61 @@
-const { ChatInputCommandInteraction, Client } = require("discord.js");
-const DB = require("../../../../Structures/Schemas/MusicDB");
+const { ChatInputCommandInteraction, Client } = require('discord.js')
+const DB = require('../../../../Structures/Schemas/MusicDB')
 
 module.exports = {
-  subCommand: "music.volume",
-  /**
-   * @param {ChatInputCommandInteraction} interaction
-   * @param {Client} client
-   */
-  async execute(interaction, client) {
-    const { options, member, guild } = interaction;
-    const VoiceChannel = member.voice.channel;
-    const { message } = require("../../../../Events/Distube/DistubeEvents");
-    const Embed = require("../../../../Systems/MusicEmbed");
-    const Volume = options.getNumber("percent");
-    const queue = await client.distube.getQueue(VoiceChannel);
+    subCommand: 'music.volume',
+    /**
+     * @param {ChatInputCommandInteraction} interaction
+     * @param {Client} client
+     */
+    async execute(interaction, client) {
+        const { options, member, guild } = interaction
+        const VoiceChannel = member.voice.channel
+        const Embed = require('../../../../Systems/MusicEmbed')
+        const Volume = options.getNumber('percent')
+        const queue = await client.distube.getQueue(VoiceChannel)
+        const Data = await MusicDB.findOne({ GuildID: queue.id })
+        const message = await queue.textChannel.messages.fetch(Data.message)
 
-    if (!VoiceChannel)
-      return interaction.reply({
-        content: "<:warning_908958943466893323:1201844340276862976> | 你必須待在一個語音頻道裡面才能使用音樂指令!",
-        ephemeral: true,
-      });
-    if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
-      return interaction.reply({
-        content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
-        ephemeral: true,
-      });
+        if (!VoiceChannel)
+            return interaction.reply({
+                content:
+                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在一個語音頻道裡面才能使用音樂指令!',
+                ephemeral: true
+            })
+        if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
+            return interaction.reply({
+                content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
+                ephemeral: true
+            })
 
-    if (Volume > 100 || Volume < 1)
-      return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 你必須指定1到100之間的數字!" });
-    
-    if (!queue) return interaction.reply({ content: "<:outage_868122243845206087:1202112862990897172> | 找不到歌曲!", ephemeral: true });
+        if (Volume > 100 || Volume < 1)
+            return interaction.reply({
+                content:
+                    '<:outage_868122243845206087:1202112862990897172> | 你必須指定1到100之間的數字!'
+            })
 
-    client.distube.setVolume(VoiceChannel, Volume);
+        if (!queue)
+            return interaction.reply({
+                content: '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲!',
+                ephemeral: true
+            })
 
-    await DB.findOneAndUpdate(
-      { GuildID: guild.id },
-      { volume: Volume },
-      { new: true, upsert: true },
-    );
-    message.edit({ embeds: [Embed(queue, queue.songs[0])]});
+        client.distube.setVolume(VoiceChannel, Volume)
 
-    if (Volume < 50 && Volume > 0)
-      return await interaction.reply({ content: `<:speaker_low_860133546278387763:1201844302725255178> | 成功設置音量: \`${Volume}%\`` });
-    else if (Volume >= 50)
-      return await interaction.reply({ content: `<:speaker_860133545544908802:1201844300099354644> | 成功設置音量: \`${Volume}%\`` });
-  },
-};
+        await DB.findOneAndUpdate(
+            { GuildID: guild.id },
+            { volume: Volume },
+            { new: true, upsert: true }
+        )
+        await message.edit({ embeds: [Embed(queue, queue.songs[0])] })
+
+        if (Volume < 50 && Volume > 0)
+            return await interaction.reply({
+                content: `<:speaker_low_860133546278387763:1201844302725255178> | 成功設置音量: \`${Volume}%\``
+            })
+        else if (Volume >= 50)
+            return await interaction.reply({
+                content: `<:speaker_860133545544908802:1201844300099354644> | 成功設置音量: \`${Volume}%\``
+            })
+    }
+}

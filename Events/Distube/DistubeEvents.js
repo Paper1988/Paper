@@ -10,10 +10,9 @@ client.distube
             embeds: [MusicEmbed(queue, song)],
             components: MusicButtons
         })
-        const update = setInterval(() => {
-            if (message) message.edit({ embeds: [MusicEmbed(queue, song)] })
-        }, 5000)
-        module.exports = { message, update }
+        await DB.findOneAndUpdate({ GuildID: queue.id }, { message: message.id }, { upsert: true })
+        const update = setInterval(() => message.edit({ embeds: [MusicEmbed(queue, song)] }), 5000)
+        module.exports = { update }
     })
     .on('addSong', (queue, song) => {
         let embed = MusicEmbed(queue, song)
@@ -59,7 +58,8 @@ client.distube
             ]
         })
     )
-    .on('finish', (queue) =>
+    .on('finish', (queue) => {
+        const { update } = require('./DistubeEvents')
         queue.textChannel.send({
             embeds: [
                 new EmbedBuilder()
@@ -70,7 +70,9 @@ client.distube
                     .setTimestamp()
             ]
         })
-    )
+        clearInterval(update)
+        DB.findOneAndUpdate({ GuildID: queue.id }, { message: '' }).exec()
+    })
     .on('initQueue', async (queue) => {
         let Data = await DB.findOne({ GuildID: queue.id })
         if (!Data) {
@@ -78,7 +80,8 @@ client.distube
                 GuildID: queue.id,
                 volume: queue.volume,
                 autoplay: queue.autoplay,
-                repeatMode: queue.repeatMode
+                repeatMode: queue.repeatMode,
+                message: ''
             })
             await Data.save()
         }
@@ -86,13 +89,11 @@ client.distube
         queue.volume = Data.volume
         queue.repeatMode = Data.repeatMode
     })
-    .on('finishSong', (queue, song) => {
-        const { message, update } = require('./DistubeEvents')
-        if (message) {
-            message.edit({ embeds: [MusicEmbed(queue, song)] })
-        }
-        if (queue.repeatMode === 0 && !queue.songs[1] && message) {
+    .on('finishSong', async (queue, song) => {
+        const { update } = require('./DistubeEvents')
+        let Data = await DB.findOne({ GuildID: queue.id })
+        if (queue.repeatMode === 0 && !queue.songs[1]) {
             clearInterval(update)
-            message.delete()
+            await queue.textChannel.messages.fetch(Data.message).then((msg) => msg.delete())
         }
     })
