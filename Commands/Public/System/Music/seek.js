@@ -1,5 +1,6 @@
 const { ChatInputCommandInteraction, Client } = require('discord.js')
 const Embed = require('../../../../Systems/MusicEmbed')
+const MusicDB = require('../../../../Structures/Schemas/MusicDB')
 
 module.exports = {
     subCommand: 'music.seek',
