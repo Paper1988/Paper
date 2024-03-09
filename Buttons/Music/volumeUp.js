@@ -7,7 +7,6 @@ module.exports = {
         // To access an id / value from a button you MUST INCLUDE `client` AND `args` and in the same order as shown
         const { member, guild } = interaction
         const VoiceChannel = member.voice.channel
-        const { message } = require('../../Events/Distube/DistubeEvents')
 
         if (!VoiceChannel)
             return interaction.reply({
