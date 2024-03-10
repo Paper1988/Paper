@@ -60,16 +60,18 @@ client.distube
     )
     .on('finish', (queue) => {
         const { update } = require('./DistubeEvents')
-        queue.textChannel.send({
-            embeds: [
-                new EmbedBuilder()
-                    .setColor('Red')
-                    .setDescription(
-                        `<:musicstop_861852633979420712:1201843718215438386> | 清單播放完畢！`
-                    )
-                    .setTimestamp()
-            ]
-        })
+        queue.textChannel
+            .send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor('Red')
+                        .setDescription(
+                            `<:musicstop_861852633979420712:1201843718215438386> | 清單播放完畢！`
+                        )
+                        .setTimestamp()
+                ]
+            })
+            .then((msg) => setTimeout(() => msg.delete(), 5000))
         clearInterval(update)
         DB.findOneAndUpdate({ GuildID: queue.id }, { message: '' }).exec()
     })
@@ -94,6 +96,9 @@ client.distube
         let Data = await DB.findOne({ GuildID: queue.id })
         if (queue.repeatMode === 0 && !queue.songs[1]) {
             clearInterval(update)
-            await queue.textChannel.messages.fetch(Data.message).then((msg) => msg.delete())
+            await queue.textChannel.messages
+                .fetch(Data.message)
+                .then((msg) => msg.delete())
+                .catch((err) => console.log(`刪不掉訊息\n${err.title}`))
         }
     })

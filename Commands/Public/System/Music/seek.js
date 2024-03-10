@@ -31,14 +31,15 @@ module.exports = {
 
         if (!queue)
             return interaction.reply({
-                content: '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲!',
+                content:
+                    '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true
             })
 
         await queue.seek(Time)
         message.edit({ embeds: Embed(queue, queue.songs[0]) })
         return await interaction.reply({
-            content: `<:rightarrow_859388126653186058:1202113627122061403> | 跳到 **\`${Time}\`**`
+            content: `<:rightarrow_859388126653186058:1202113627122061403> | 成功跳到 **\`${Time}\`**`
         })
     }
 }
