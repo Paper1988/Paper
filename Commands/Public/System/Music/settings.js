@@ -1,4 +1,5 @@
 const { EmbedBuilder, ChatInputCommandInteraction, Client } = require('discord.js')
+const MusicDB = require('../../../../Structures/Schemas/MusicDB')
 
 module.exports = {
     subCommand: 'music.settings',
@@ -32,7 +33,8 @@ module.exports = {
 
         if (!queue)
             return interaction.reply({
-                content: '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲!',
+                content:
+                    '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true
             })
 

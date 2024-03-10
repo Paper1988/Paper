@@ -66,7 +66,7 @@ passport.deserializeUser((obj, done) => {
 })
 
 app.get('/', (req, res) => {
-    res.render('index', { client })
+    res.render('index', { client: client })
 })
 
 app.get('/dashboard', ensureAuthenticated, (req, res) => {

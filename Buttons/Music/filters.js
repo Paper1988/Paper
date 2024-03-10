@@ -39,9 +39,9 @@ module.exports = {
                 .setMinValues(1)
                 .addOptions(
                     new StringSelectMenuOptionBuilder()
-                        .setLabel('8d')
-                        .setDescription('增加/移除 `8d` 過濾器')
-                        .setValue('8d'),
+                        .setLabel('3d')
+                        .setDescription('增加/移除 `3d` 過濾器')
+                        .setValue('3d'),
                     new StringSelectMenuOptionBuilder()
                         .setLabel('karaoke')
                         .setDescription('增加/移除 `karaoke` 過濾器')

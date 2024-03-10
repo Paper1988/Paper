@@ -1,31 +1,27 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Dashboard - Paper Bot</title>
+        <link rel="stylesheet" href="/css/index.css" />
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Paper Bot</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    <body>
+        <header>
+            <div class="container">
+                <h1>Paper Bot Dashboard</h1>
+                <nav>
+                    <a href="/dashboard" class="active">Dashboard</a>
+                    <a href="/user/:userId"><%= user %></a>
+                </nav>
+            </div>
+        </header>
 
-<body>
-
-    <header>
-        <div class="container">
-            <h1>Paper Bot Dashboard</h1>
-            <nav>
-                <a href="/dashboard" class="active">Dashboard</a>
-                <a href="/logout">Logout</a>
-            </nav>
-        </div>
-    </header>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 Paper Bot. All rights reserved.</p>
-        </div>
-    </footer>
-
-</body>
-
+        <footer>
+            <div class="container">
+                <p>&copy; 2024 Paper Bot. All rights reserved.</p>
+            </div>
+        </footer>
+    </body>
 </html>

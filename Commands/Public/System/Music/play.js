@@ -49,7 +49,7 @@ module.exports = {
                         .setColor('Red')
                         .setTitle('拒絕請求')
                         .setDescription(
-                            '<:warning_908958943466893323:1201844340276862976> | Discord禁止機器人播放來自Youtube的連結!\n我們支援Spotify、SoundCloud和關鍵字搜尋'
+                            '<:warning_908958943466893323:1201844340276862976> | Discord禁止機器人播放來自Youtube的連結!\n> 我們支援Spotify、SoundCloud和關鍵字搜尋'
                         )
                 ]
             })

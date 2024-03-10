@@ -55,7 +55,7 @@ module.exports = {
                         `<:owner_859429432380227594:1201843734917152858> **擁有者** ${`<@${client.application.owner.ownerId}> (${client.application.owner.owner.user.tag})`}`,
                         `<:verifiedserver_86192075475596083:1201844337542180874> **驗證** ${
                             client.user.flags & UserFlags.VerifiedBot
-                                ? '<:icons_verified:859424400939286549>'
+                                ? '<:verified_859424400939286549:1216339526209769533>'
                                 : '<:xmark_988409378161954866:1201844342029815848>'
                         }`,
                         `<:label_875395222673186817:1201883989212921886> **標籤** \`${
