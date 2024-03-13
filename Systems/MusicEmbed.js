@@ -49,8 +49,4 @@ module.exports = (queue, song) =>
             }
         )
         .setImage(song.thumbnail)
-        .setFooter({
-            text: '此訊息將會在歌曲結束播放完畢後自動刪除',
-            iconURL: queue.client.user.displayAvatarURL()
-        })
         .setTimestamp()

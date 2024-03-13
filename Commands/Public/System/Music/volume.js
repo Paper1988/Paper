@@ -51,12 +51,16 @@ module.exports = {
         await message.edit({ embeds: [Embed(queue, queue.songs[0])] })
 
         if (Volume < 50 && Volume > 0)
-            return await interaction.reply({
-                content: `<:speaker_low_860133546278387763:1201844302725255178> | 成功設置音量: \`${Volume}%\``
-            })
+            return await interaction
+                .reply({
+                    content: `<:speaker_low_860133546278387763:1201844302725255178> | 成功設置音量: \`${Volume}%\``
+                })
+                .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
         else if (Volume >= 50)
-            return await interaction.reply({
-                content: `<:speaker_860133545544908802:1201844300099354644> | 成功設置音量: \`${Volume}%\``
-            })
+            return await interaction
+                .reply({
+                    content: `<:speaker_860133545544908802:1201844300099354644> | 成功設置音量: \`${Volume}%\``
+                })
+                .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     }
 }

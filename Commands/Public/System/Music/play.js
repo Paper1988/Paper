@@ -43,16 +43,18 @@ module.exports = {
                 member: member
             })
         } else {
-            return interaction.reply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setColor('Red')
-                        .setTitle('拒絕請求')
-                        .setDescription(
-                            '<:warning_908958943466893323:1201844340276862976> | Discord禁止機器人播放來自Youtube的連結!\n> 我們支援Spotify、SoundCloud和關鍵字搜尋'
-                        )
-                ]
-            })
+            return interaction
+                .reply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setColor('Red')
+                            .setTitle('拒絕請求')
+                            .setDescription(
+                                '<:warning_908958943466893323:1201844340276862976> | Discord禁止機器人播放來自Youtube的連結!\n> 我們支援Spotify、SoundCloud和關鍵字搜尋'
+                            )
+                    ]
+                })
+                .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
         }
         return await interaction
             .reply({ content: '<:queue_861852633240961024:1202112866069520385> | 接受請求' })

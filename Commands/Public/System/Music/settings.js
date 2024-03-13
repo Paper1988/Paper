@@ -88,7 +88,7 @@ module.exports = {
 
             case 'autoplay':
                 let Mode = await queue.toggleAutoplay(VoiceChannel)
-                message.edit({ embeds: [Embed(queue, song)] })
+                message.edit({ embeds: [Embed(queue, queue.songs[0])] })
                 await MusicDB.findOneAndUpdate(
                     { GuildID: guild.id },
                     { autoplayMode: Mode ? true : false },
@@ -120,7 +120,7 @@ module.exports = {
                 message.edit({ embeds: [Embed(queue, song)] })
                 await MusicDB.findOneAndUpdate(
                     { GuildID: guild.id },
-                    { repeatMode: (Mode = Mode ? (Mode == 2 ? 2 : 1) : 0) },
+                    { repeatMode: (Mode2 = Mode2 ? (Mode2 == 2 ? 2 : 1) : 0) },
                     { new: true, upsert: true }
                 )
                 return interaction.reply({
@@ -134,26 +134,28 @@ module.exports = {
                 })
 
             case 'queue':
-                return interaction.reply({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setColor('Purple')
-                            .setDescription(
-                                `<:queue_861852633240961024:1202112866069520385> | 播放清單\n${queue.songs
-                                    .slice(0, 10)
-                                    .map(
-                                        (song, id) =>
-                                            `\n**${id + 1}**. \`${song.name}\` - \`${song.formattedDuration}\``
-                                    )}`
-                            )
-                            .setImage(queue.songs[0].thumbnail)
-                            .setTimestamp()
-                            .setFooter({
-                                text: `${client.user.username}`,
-                                iconURL: client.user.displayAvatarURL()
-                            })
-                    ]
-                })
+                return interaction
+                    .reply({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setColor('Purple')
+                                .setDescription(
+                                    `<:queue_861852633240961024:1202112866069520385> | 播放清單\n${queue.songs
+                                        .slice(0, 10)
+                                        .map(
+                                            (song, id) =>
+                                                `\n**${id + 1}**. \`${song.name}\` - \`${song.formattedDuration}\``
+                                        )}`
+                                )
+                                .setImage(queue.songs[0].thumbnail)
+                                .setTimestamp()
+                                .setFooter({
+                                    text: `${client.user.username}`,
+                                    iconURL: client.user.displayAvatarURL()
+                                })
+                        ]
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 20 * 1000))
         }
     }
 }
