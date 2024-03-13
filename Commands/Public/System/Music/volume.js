@@ -14,7 +14,7 @@ module.exports = {
         const Volume = options.getNumber('percent')
         const queue = await client.distube.getQueue(VoiceChannel)
         const Data = await MusicDB.findOne({ GuildID: queue.id })
-        const message = await queue.textChannel.messages.fetch(Data.message)
+        const message = await queue.textChannel.messages.fetch(Data.message).catch(console.log)
 
         if (!VoiceChannel)
             return interaction.reply({
