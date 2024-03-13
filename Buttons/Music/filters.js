@@ -99,7 +99,7 @@ module.exports = {
 
         const button = new ActionRowBuilder().addComponents([
             new ButtonBuilder()
-                .setLabel('關')
+                .setLabel('移除所有過濾器')
                 .setCustomId('false')
                 .setEmoji('<:xmark_988409378161954866:1201844342029815848>')
                 .setStyle(ButtonStyle.Danger)
