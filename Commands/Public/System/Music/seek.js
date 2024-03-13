@@ -37,9 +37,11 @@ module.exports = {
             })
 
         await queue.seek(Time)
-        message.edit({ embeds: Embed(queue, queue.songs[0]) })
-        return await interaction.reply({
-            content: `<:rightarrow_859388126653186058:1202113627122061403> | 成功跳到 **\`${Time}\`**`
-        })
+        message.edit({ embeds: [Embed(queue, queue.songs[0])] })
+        return await interaction
+            .reply({
+                content: `<:rightarrow_859388126653186058:1202113627122061403> | 成功跳到 **\`${Time}\`**`
+            })
+            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     }
 }

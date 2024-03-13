@@ -10,9 +10,22 @@ client.distube
             embeds: [MusicEmbed(queue, song)],
             components: MusicButtons
         })
-        await DB.findOneAndUpdate({ GuildID: queue.id }, { message: message.id }, { upsert: true })
-        const update = setInterval(() => message.edit({ embeds: [MusicEmbed(queue, song)] }), 5000)
-        module.exports = { update }
+        await DB.findOneAndUpdate(
+            { GuildID: queue.id },
+            { message: message.id },
+            { upsert: true }
+        ).then(() => {
+            if (message) {
+                const update = setInterval(
+                    () =>
+                        message.edit({ embeds: [MusicEmbed(queue, song)] }).catch(() => {
+                            clearInterval(this.update)
+                        }),
+                    5000
+                )
+                module.exports = { update }
+            } else return
+        })
     })
     .on('addSong', (queue, song) => {
         let embed = MusicEmbed(queue, song)
@@ -59,7 +72,6 @@ client.distube
         })
     )
     .on('finish', (queue) => {
-        const { update } = require('./DistubeEvents')
         queue.textChannel
             .send({
                 embeds: [
@@ -68,11 +80,10 @@ client.distube
                         .setDescription(
                             `<:musicstop_861852633979420712:1201843718215438386> | 清單播放完畢！`
                         )
-                        .setTimestamp()
                 ]
             })
-            .then((msg) => setTimeout(() => msg.delete(), 5000))
-        clearInterval(update)
+            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
+        clearInterval(this.update)
         DB.findOneAndUpdate({ GuildID: queue.id }, { message: '' }).exec()
     })
     .on('initQueue', async (queue) => {
@@ -92,13 +103,12 @@ client.distube
         queue.repeatMode = Data.repeatMode
     })
     .on('finishSong', async (queue, song) => {
-        const { update } = require('./DistubeEvents')
         let Data = await DB.findOne({ GuildID: queue.id })
         if (queue.repeatMode === 0 && !queue.songs[1]) {
-            clearInterval(update)
-            await queue.textChannel.messages
-                .fetch(Data.message)
-                .then((msg) => msg.delete())
-                .catch((err) => console.log(`刪不掉訊息\n${err.title}`))
+            clearInterval(this.update)
+            const msg = await queue.textChannel.messages.fetch(Data.message)
+            await msg
+                .delete()
+                .catch((err) => console.log(`----------------刪不掉訊息----------------\n${err}`))
         }
     })
