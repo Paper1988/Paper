@@ -114,8 +114,8 @@ app.get('/logout', (req, res) => {
     res.redirect('/')
 })
 
-app.get('/tp', (req, res) => {
-    res.render('tp')
+app.get('/terms', (req, res) => {
+    res.render('terms')
 })
 
 app.use((req, res, next) => {
