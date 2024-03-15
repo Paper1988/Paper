@@ -43,7 +43,7 @@ module.exports = {
                     },
                     {
                         name: '帳號創立時間',
-                        value: `<t:${ms(member.user.createdTimestamp)}:R>`,
+                        value: `<t:${parseInt(member.user.createdTimestamp / 1000)}:R>`,
                         inline: true
                     }
                 )
