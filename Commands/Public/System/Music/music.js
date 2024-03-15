@@ -106,6 +106,10 @@ module.exports = {
                 return interaction.respond([]) // 不回應任何選項
             }
 
+            if (value.startsWith('https://')) {
+                return interaction.respond([])
+            }
+
             let choices = []
             // 假設有一個搜索功能可以返回歌曲列表
             await client.distube
