@@ -76,27 +76,31 @@ app.get('/dashboard', ensureAuthenticated, (req, res) => {
 app.post('/dashboard', ensureAuthenticated, (req, res) => {
     const { guildId } = req.body
     // Save guild settings to MongoDB
-    GuildSettings.findOneAndUpdate({ guildId }, { upsert: true }, (err, doc) => {
-        if (err) {
-            winston.error(err)
-            return res.status(500).send('Internal Server Error')
-        }
-        res.redirect('/dashboard')
-    })
+    GuildSettings.findOneAndUpdate({ guildId }, { upsert: true })
+        .exec()
+        .then((err, doc) => {
+            if (err) {
+                winston.error(err)
+                return res.status(500).send('Internal Server Error')
+            }
+            res.redirect('/dashboard')
+        })
 })
 
 app.get('/api/guild/:guildId', ensureAuthenticated, (req, res) => {
     const { guildId } = req.params
-    GuildSettings.findOne({ guildId }, (err, settings) => {
-        if (err) {
-            winston.error(err)
-            return res.status(500).json({ error: 'Internal Server Error' })
-        }
-        if (!settings) {
-            return res.status(404).json({ error: 'Guild settings not found' })
-        }
-        res.json(settings)
-    })
+    GuildSettings.findOne({ guildId })
+        .exec()
+        .then((err, settings) => {
+            if (err) {
+                winston.error(err)
+                return res.status(500).json({ error: res.__('Internal Server Error') })
+            }
+            if (!settings) {
+                return res.status(404).json({ error: res.__('Guild settings not found') })
+            }
+            res.json(settings)
+        })
 })
 
 app.get('/login', passport.authenticate('discord'))

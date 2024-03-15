@@ -39,7 +39,7 @@ client.distube
         })
     })
     .on('addList', (queue, playlist) => {
-        let embed = MusicEmbed(queue, playlist)
+        let embed = MusicEmbed(queue, playlist.songs[0])
         embed.data.fields = null
         queue.textChannel.send({
             embeds: [
@@ -104,7 +104,7 @@ client.distube
     })
     .on('finishSong', async (queue, song) => {
         let Data = await DB.findOne({ GuildID: queue.id })
-        if (queue.repeatMode === 0 && !queue.songs[1]) {
+        if (queue.repeatMode === 0 || !queue.songs[1]) {
             clearInterval(this.update)
             const msg = await queue.textChannel.messages.fetch(Data.message).catch(console.log)
             if (!msg) return
