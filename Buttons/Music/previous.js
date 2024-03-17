@@ -30,7 +30,7 @@ module.exports = {
             .then(() =>
                 interaction.reply({
                     content:
-                        '<:frontforward_988409335791124551:1202215991694856262> | 成功返回上一首歌曲',
+                        '<:backforward_988409328698523708:1201843626435686440> | 成功返回上一首歌曲',
                     ephemeral: true
                 })
             )
