@@ -14,6 +14,12 @@ module.exports = {
         if (interaction.customId === 'report:cancel') return
         if (interaction.customId === 'unban:confirm') return
         if (interaction.customId === 'unban:cancel') return
+        if (interaction.customId === 'rps_r') return
+        if (interaction.customId === 'rps_p') return
+        if (interaction.customId === 'rps_s') return
+        if (interaction.customId === 'approve_accept') return
+        if (interaction.customId === 'approve_reject') return
+
         try {
             const buttonCustomId = interaction.customId.split('_')
             const Button = client.buttons.get(buttonCustomId[0])
