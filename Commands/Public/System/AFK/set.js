@@ -1,30 +1,30 @@
-const { EmbedBuilder, ChatInputCommandInteraction } = require("discord.js");
-const DB = require("../../../../Structures/Schemas/AFKSystem");
+const { EmbedBuilder, ChatInputCommandInteraction } = require('discord.js')
+const DB = require('../../../../Structures/Schemas/AFKSystem')
 
 module.exports = {
-  subCommand: "afk.set",
-  /**
-   * @param {ChatInputCommandInteraction} interaction
-   */
-  async execute(interaction) {
-    const { guild, options, user, createdTimestamp } = interaction;
+    subCommand: 'afk.set',
+    /**
+     * @param {ChatInputCommandInteraction} interaction
+     */
+    async execute(interaction) {
+        const { guild, options, user, createdTimestamp } = interaction
 
-    const Embed = new EmbedBuilder().setAuthor({
-      name: user.tag,
-      iconURL: user.displayAvatarURL()
-    });
+        const Embed = new EmbedBuilder().setAuthor({
+            name: user.tag,
+            iconURL: user.displayAvatarURL()
+        })
 
-    const afkStatus = options.getString("status");
+        const afkStatus = options.getString('status')
 
-    await DB.findOneAndUpdate(
-      { GuildID: guild.id, UserID: user.id },
-      { Status: afkStatus, Time: parseInt(createdTimestamp / 1000) },
-      { new: true, upsert: true }
-    );
+        await DB.findOneAndUpdate(
+            { GuildID: guild.id, UserID: user.id },
+            { Status: afkStatus, Time: parseInt(createdTimestamp / 1000) },
+            { new: true, upsert: true }
+        )
 
-    Embed.setColor("Green").setDescription(
-      `<:correct_859388130411282442:1201843648229294121> | 你的afk狀態已被設置為: \`${afkStatus}\``
-    );
-    return interaction.reply({ embeds: [Embed], ephemeral: true });
-  },
-};
+        Embed.setColor('Green').setDescription(
+            `<:correct_859388130411282442:1201843648229294121> | 你的afk狀態已被設置為: \`${afkStatus}\``
+        )
+        return interaction.reply({ embeds: [Embed], ephemeral: true })
+    }
+}

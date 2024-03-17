@@ -19,8 +19,7 @@ module.exports = {
             message.mentions.members.forEach((m) => {
                 DB.findOne({ GuildID: message.guild.id, UserID: m.id })
                     .exec()
-                    .then(async (err, data) => {
-                        if (err) throw err
+                    .then(async (data) => {
                         if (data)
                             return message.reply({
                                 embeds: [
