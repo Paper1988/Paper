@@ -28,15 +28,15 @@ module.exports = {
 
         const queue = await client.distube.getQueue(VoiceChannel)
 
-        const Data = await MusicDB.findOne({ GuildID: queue.id })
-        const message = await queue.textChannel.messages.fetch(Data.message).catch(console.log)
-
         if (!queue)
             return interaction.reply({
                 content:
                     '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true
             })
+
+        const Data = await MusicDB.findOne({ GuildID: queue.id })
+        const message = await queue.textChannel.messages.fetch(Data.message).catch(console.log)
 
         switch (options.getString('options')) {
             case 'skip':

@@ -1,5 +1,5 @@
 const { ChatInputCommandInteraction, Client } = require('discord.js')
-const DB = require('../../../../Structures/Schemas/MusicDB')
+const MusicDB = require('../../../../Structures/Schemas/MusicDB')
 
 module.exports = {
     subCommand: 'music.volume',
@@ -13,8 +13,6 @@ module.exports = {
         const Embed = require('../../../../Systems/MusicEmbed')
         const Volume = options.getNumber('percent')
         const queue = await client.distube.getQueue(VoiceChannel)
-        const Data = await MusicDB.findOne({ GuildID: queue.id })
-        const message = await queue.textChannel.messages.fetch(Data.message).catch(console.log)
 
         if (!VoiceChannel)
             return interaction.reply({
@@ -41,9 +39,12 @@ module.exports = {
                 ephemeral: true
             })
 
+        const Data = await MusicDB.findOne({ GuildID: queue.id })
+        const message = await queue.textChannel.messages.fetch(Data.message).catch(console.log)
+
         client.distube.setVolume(VoiceChannel, Volume)
 
-        await DB.findOneAndUpdate(
+        await MusicDB.findOneAndUpdate(
             { GuildID: guild.id },
             { volume: Volume },
             { new: true, upsert: true }

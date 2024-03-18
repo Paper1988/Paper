@@ -25,8 +25,6 @@ module.exports = {
             })
 
         const queue = await client.distube.getQueue(VoiceChannel)
-        const Data = await MusicDB.findOne({ GuildID: queue.id })
-        const message = await queue.textChannel.messages.fetch(Data.message).catch(console.log)
         const Time = options.getNumber('time')
 
         if (!queue)
@@ -35,6 +33,9 @@ module.exports = {
                     '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true
             })
+
+        const Data = await MusicDB.findOne({ GuildID: queue.id })
+        const message = await queue.textChannel.messages.fetch(Data.message).catch(console.log)
 
         await queue.seek(Time)
         message.edit({ embeds: [Embed(queue, queue.songs[0])] })
