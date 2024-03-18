@@ -28,9 +28,6 @@ module.exports = {
             })
 
         await queue.clientMember.voice.disconnect()
-        const Data = await MusicDB.findOne({ GuildID: queue.id })
-        const message = await queue.textChannel.messages.fetch(Data.message)
-        await message.delete()
         clearInterval(update)
         return interaction.reply({
             content: '<:leave_860487640113217546:1202217506991771658> | 成功退出語音頻道'
