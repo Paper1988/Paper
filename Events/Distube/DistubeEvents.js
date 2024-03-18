@@ -30,35 +30,41 @@ client.distube
     .on('addSong', (queue, song) => {
         let embed = MusicEmbed(queue, song)
         embed.data.fields = null
-        queue.textChannel.send({
-            embeds: [
-                embed.setDescription(
-                    `<:plus_988409343743496232:1202215484318302208> | 加入 [${song.name}](${song.url}) - \` ${song.formattedDuration} \` 到清單中`
-                )
-            ]
-        })
+        queue.textChannel
+            .send({
+                embeds: [
+                    embed.setDescription(
+                        `<:plus_988409343743496232:1202215484318302208> | 加入 [${song.name}](${song.url}) - \` ${song.formattedDuration} \` 到清單中`
+                    )
+                ]
+            })
+            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     })
     .on('addList', (queue, playlist) => {
         let embed = MusicEmbed(queue, playlist.songs[0])
         embed.data.fields = null
-        queue.textChannel.send({
-            embeds: [
-                embed.setDescription(
-                    `<:plus_988409343743496232:1202215484318302208> | 加入 [${playlist.name}](${playlist.url}) 播放清單 (\` ${playlist.songs.length} \`首歌) 到清單中`
-                )
-            ]
-        })
+        queue.textChannel
+            .send({
+                embeds: [
+                    embed.setDescription(
+                        `<:plus_988409343743496232:1202215484318302208> | 加入 [${playlist.name}](${playlist.url}) 播放清單 (\` ${playlist.songs.length} \`首歌) 到清單中`
+                    )
+                ]
+            })
+            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     })
     .on('error', (channel, e) => {
-        channel.send({
-            embeds: [
-                new EmbedBuilder()
-                    .setColor('Red')
-                    .setDescription(
-                        `<:outage_868122243845206087:1202112862990897172> | 發生錯誤: ${e.toString().slice(0, 1974)}`
-                    )
-            ]
-        })
+        channel
+            .send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor('Red')
+                        .setDescription(
+                            `<:outage_868122243845206087:1202112862990897172> | 發生錯誤: ${e.toString().slice(0, 1974)}`
+                        )
+                ]
+            })
+            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     })
     .on('empty', (queue) =>
         queue.textChannel.send({

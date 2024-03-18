@@ -21,9 +21,7 @@ client.subCommands = new Collection()
 client.modals = new Collection()
 client.selectMenus = new Collection()
 
-;['GiveawaySys', 'antiCrash'].forEach((sys) => {
-    require(`./Systems/${sys}`)(client)
-})
+require(`./Systems/GiveawaySys`)(client)
 /**************************************************/
 const { DisTube } = require('distube')
 const { SpotifyPlugin } = require('@distube/spotify')
@@ -57,9 +55,17 @@ client.distube = new DisTube(client, {
     }
 })
 /**************************************************/
-module.exports = client
+const errorHandling = require('discord.js-anticrash')
 
+const config = {
+    webhookUrl:
+        '***REMOV$'
+}
+
+errorHandling(client, config)
 process.setMaxListeners(0)
+
+module.exports = client
 
 loadEvents(client)
 
