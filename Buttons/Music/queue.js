@@ -36,7 +36,7 @@ module.exports = {
                             .map(
                                 (song, id) =>
                                     `\n**${id + 1}**. \`${song.name}\` - \`${song.formattedDuration}\``
-                            )}`
+                            )}\n\n- \`和另外${leftSongs}首歌\``
                     )
                     .setImage(queue.songs[0].thumbnail)
                     .setTimestamp()
