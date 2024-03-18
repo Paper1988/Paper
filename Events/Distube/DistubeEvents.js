@@ -107,7 +107,6 @@ client.distube
         if (queue.repeatMode === 0 || !queue.songs[1]) {
             clearInterval(this.update)
             const msg = await queue.textChannel.messages.fetch(Data.message).catch((e) => {})
-            if (!msg) return
-            await msg.delete()
+            if (msg) return await msg.delete()
         }
     })
