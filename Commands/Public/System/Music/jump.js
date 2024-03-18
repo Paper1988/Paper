@@ -36,9 +36,11 @@ module.exports = {
         await client.distube
             .jump(VoiceChannel, position)
             .then(() => {
-                return interaction.reply({
-                    content: `<:frontforward_988409335791124551:1202215991694856262> | 成功跳至清單位置 \`${position}\` - ${queue.songs[position]}`
-                })
+                return interaction
+                    .reply({
+                        content: `<:frontforward_988409335791124551:1202215991694856262> | 成功跳至清單位置 \`${position}\` - ${queue.songs[position]}`
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             })
             .catch((err) =>
                 interaction.reply({
