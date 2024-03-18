@@ -1,4 +1,4 @@
-const { PermissionFlagsBits, SlashCommandBuilder } = require('discord.js')
+const { PermissionFlagsBits, SlashCommandBuilder, ChannelType } = require('discord.js')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -13,6 +13,7 @@ module.exports = {
                     options
                         .setName('channel')
                         .setDescription('選擇用於紀錄日誌的頻道')
+                        .addChannelTypes(ChannelType.GuildText)
                         .setRequired(true)
                 )
         )
