@@ -111,8 +111,8 @@ client.distube
     .on('finishSong', async (queue, song) => {
         let Data = await DB.findOne({ GuildID: queue.id })
         if (queue.repeatMode === 0 || !queue.songs[1]) {
+            clearInterval(this.update)
             try {
-                clearInterval(this.update)
                 const msg = await queue.textChannel.messages.fetch(Data.message)
                 if (msg) return await msg.delete()
             } catch (err) {
