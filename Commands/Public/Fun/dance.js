@@ -1,25 +1,21 @@
-const {
-  EmbedBuilder,
-  ChatInputCommandInteraction,
-  SlashCommandBuilder,
-} = require("discord.js");
-const rga = require("random-gif-api");
+const { EmbedBuilder, ChatInputCommandInteraction, SlashCommandBuilder } = require('discord.js')
+const rga = require('random-gif-api')
 
 module.exports = {
-  data: new SlashCommandBuilder().setName("dance").setDescription("跳舞!"),
-  usage: "/dance",
-  /**
-   * @param {ChatInputCommandInteraction} interaction
-   */
-  async execute(interaction) {
-    const Executer = interaction.user;
-    const data = await rga.getGif("dance");
-    const HugEmbed = new EmbedBuilder()
-      .setColor("#000000")
-      .setDescription(`**${Executer} 跳了一支舞 **`)
-      .setImage(data)
-      .setTimestamp();
+    data: new SlashCommandBuilder().setName('dance').setDescription('跳舞!'),
+    usage: '/dance',
+    /**
+     * @param {ChatInputCommandInteraction} interaction
+     */
+    async execute(interaction) {
+        const Executer = interaction.user
+        const data = await rga.getGif('dance')
+        const HugEmbed = new EmbedBuilder()
+            .setColor('#000000')
+            .setDescription(`**${Executer} 跳了一支舞 **`)
+            .setImage(data)
+            .setTimestamp()
 
-    interaction.reply({ embeds: [HugEmbed] });
-  },
-};
+        interaction.reply({ embeds: [HugEmbed] })
+    }
+}
