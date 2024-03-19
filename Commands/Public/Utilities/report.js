@@ -10,7 +10,7 @@ const client = require('../../../index.js') // - path to your index.js, you need
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('report')
-        .setDescription('回報給我們訊息')
+        .setDescription('回報Bug、提出建議')
         .setDMPermission(false)
         .addStringOption((options) =>
             options.setName('type').setDescription('選擇類別').setRequired(true).addChoices(
@@ -43,7 +43,7 @@ module.exports = {
         .addAttachmentOption((options) =>
             options.setName('picture').setDescription('新增圖片').setRequired(false)
         ),
-    usage: '/report [內容]',
+    usage: '/report (bug|suggest|other) [內容]',
     /**
      *
      * @param {ChatInputCommandInteraction} interaction
