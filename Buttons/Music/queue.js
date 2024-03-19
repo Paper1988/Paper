@@ -26,6 +26,13 @@ module.exports = {
                     '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true
             })
+
+        let leftSongs
+        if (queue.songs.length - 10 > 0) {
+            leftSongs = queue.songs.length - 10
+        } else {
+            leftSongs = 0
+        }
         return interaction.reply({
             embeds: [
                 new EmbedBuilder()
