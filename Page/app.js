@@ -38,14 +38,18 @@ app.use(
         resave: false,
         saveUninitialized: false,
         store: MongoStore.create({
-            mongoUrl: '***REMOVED***/Js?retryWrites=true&w=majority',
+            mongoUrl:
+                '***REMOVED***/Js?retryWrites=true&w=majority',
             autoRemove: 'interval',
             autoRemoveInterval: 7 * 24 * 60, // In minutes.
             touchAfter: 24 * 3600, // time period in seconds
             crypto: {
                 secret: 'papere-otb-seceur-code'
             }
-        })
+        }),
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+        }
     })
 )
 
