@@ -81,11 +81,11 @@ passport.deserializeUser((obj, done) => {
 })
 
 app.get('/', (req, res) => {
-    res.render('index', { client: client })
+    res.render('index', { client: client, user: req.user })
 })
 
 app.get('/dashboard', ensureAuthenticated, (req, res) => {
-    res.render('dashboard', { user: req.user }, { title: res.__('Dashboard') })
+    res.render('dashboard', { user: req.user })
 })
 
 app.post('/dashboard', ensureAuthenticated, (req, res) => {

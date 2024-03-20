@@ -15,7 +15,7 @@
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
             crossorigin="anonymous"
         />
-        <link rel="icon" type="image/png" href="../public/favicon.png" />
+        <link rel="icon" type="image/png" href="/public/favicon.png" />
         <title>Paper-Bot | Home</title>
         <style>
             body {
@@ -97,14 +97,20 @@
                             >首頁 <span class="sr-only">(current)</span></a
                         >
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/api/guild/:guildId">伺服器</a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="/login">登入</a></li>
+                    <% if (user) { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">登出</a>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/api/guild/:guildId">伺服器</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="/login">登入</a></li>
+                    <% } %>
                 </ul>
             </div>
         </nav>
-        <div class="text-center" style="width: 30rem">
+        <div class="text-center items-center justify-center" style="width: 30rem">
             <div class="card-deck">
                 <div class="card">
                     <div class="card-body">
@@ -130,8 +136,7 @@
             </div>
         </div>
         <footer class="footer">
-            <a class="" href="/tp">隱私權政策&使用者條款</a>
-            <a class="" href=""></a>
+            <a class="" href="/terms">隱私權政策&使用者條款</a>
         </footer>
     </body>
     <script src="https://paper-bot.statuspage.io/embed/script.js"></script>
