@@ -43,7 +43,7 @@ app.use(
             autoRemoveInterval: 7 * 24 * 60, // In minutes.
             touchAfter: 24 * 3600, // time period in seconds
             crypto: {
-                secret: 'squirrel'
+                secret: 'papere-otb-seceur-code'
             }
         })
     })
