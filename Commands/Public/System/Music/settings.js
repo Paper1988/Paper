@@ -8,7 +8,7 @@ module.exports = {
      * @param {Client} client
      */
     async execute(interaction, client) {
-        const { options, member } = interaction
+        const { options, member, guild } = interaction
         const VoiceChannel = member.voice.channel
 
         const Embed = require('../../../../Systems/MusicEmbed')
