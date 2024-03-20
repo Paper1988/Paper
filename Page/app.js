@@ -1,7 +1,8 @@
 const express = require('express')
 const app = express()
 const session = require('express-session')
-const MongoStore = require('connect-mongo')(session);
+const connectMongo = require('connect-mongo')
+const MongoStore = connectMongo(session)
 
 const path = require('path')
 const bodyParser = require('body-parser')
