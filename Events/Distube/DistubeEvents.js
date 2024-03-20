@@ -107,6 +107,7 @@ client.distube
         queue.autoplay = Data.autoplay
         queue.volume = Data.volume
         queue.repeatMode = Data.repeatMode
+        queue.paused = false
     })
     .on('finishSong', async (queue, song) => {
         let Data = await DB.findOne({ GuildID: queue.id })
