@@ -37,7 +37,7 @@ app.use(
         secret: 'paper-bot-secret',
         resave: false,
         saveUninitialized: false,
-        store: new MongoStore.create({
+        store: MongoStore.create({
             mongoUrl: '***REMOVED***/Js?retryWrites=true&w=majority',
             autoRemove: 'interval',
             autoRemoveInterval: 7 * 24 * 60, // In minutes.
@@ -48,6 +48,7 @@ app.use(
         })
     })
 )
+
 app.use(passport.initialize())
 app.use(passport.session())
 
