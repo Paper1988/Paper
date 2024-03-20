@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const session = require('express-session')
+const MongoStore = require('connect-mongo')(session);
 
 const path = require('path')
 const bodyParser = require('body-parser')
@@ -35,7 +36,16 @@ app.use(
     session({
         secret: 'paper-bot-secret',
         resave: false,
-        saveUninitialized: false
+        saveUninitialized: false,
+        store: new MongoStore.create({
+            mongoUrl: '***REMOVED***/Js?retryWrites=true&w=majority',
+            autoRemove: 'interval',
+            autoRemoveInterval: 7 * 24 * 60, // In minutes.
+            touchAfter: 24 * 3600, // time period in seconds
+            crypto: {
+                secret: 'squirrel'
+            }
+        })
     })
 )
 app.use(passport.initialize())
