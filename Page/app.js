@@ -128,9 +128,11 @@ app.get(
     }
 )
 
-app.get('/logout', (req, res) => {
-    req.logout()
-    res.redirect('/')
+app.get('/logout', (req, res, next) => {
+    req.logout((err) => {
+        if (err) return next(err)
+        res.redirect('/')
+    })
 })
 
 app.get('/terms', (req, res) => {
