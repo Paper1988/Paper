@@ -26,10 +26,10 @@ module.exports = {
                 ephemeral: true
             })
 
-        if (Volume > 100 || Volume < 1)
+        if (Volume > 100 || Volume < 0)
             return interaction.reply({
                 content:
-                    '<:outage_868122243845206087:1202112862990897172> | 你必須指定1到100之間的數字!'
+                    '<:outage_868122243845206087:1202112862990897172> | 你必須指定0到100之間的數字!'
             })
 
         if (!queue)
