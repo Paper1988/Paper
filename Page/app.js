@@ -9,6 +9,7 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const { Strategy } = require('passport-discord')
 const winston = require('winston')
+winston.add(new winston.transports.File({ filename: 'logger.log' }))
 let port = 8080
 
 const config = require('../Structures/config.json')
