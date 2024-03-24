@@ -13,14 +13,6 @@ module.exports = {
      * @param {Client} client
      */
     async execute(client) {
-        let memberCount = client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)
-
-        const activities = [
-            `${client.guilds.cache.size} 個伺服器`,
-            `${memberCount} 位用戶`,
-            `/help`
-        ]
-
         loadCommands(client)
         loadButtons(client)
         loadModals(client)
@@ -30,11 +22,6 @@ module.exports = {
             .connect(client.config.Database, {})
             .then(() => console.log(`>>> ✅ 成功連結到 MongoDB!`))
         console.log(`${client.user.username} 準備好ㄌ!`)
-
-        setInterval(() => {
-            const status = activities[Math.floor(Math.random() * activities.length)]
-            client.user.setPresence({ activities: [{ name: status, type: ActivityType.Watching }] })
-        }, 15000)
 
         const channel = client.channels.cache.get('961615076220092496')
         const Embed = new EmbedBuilder()
@@ -46,5 +33,16 @@ module.exports = {
             .setTimestamp()
 
         channel.send({ embeds: [Embed] })
+
+        let memberCount = client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)
+        const activities = [
+            `${client.guilds.cache.size} 個伺服器`,
+            `${memberCount} 位用戶`,
+            `/help`
+        ]
+        setInterval(() => {
+            const status = activities[Math.floor(Math.random() * activities.length)]
+            client.user.setPresence({ activities: [{ name: status, type: ActivityType.Watching }] })
+        }, 15000)
     }
 }

@@ -15,7 +15,7 @@
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
             crossorigin="anonymous"
         />
-        <link rel="icon" type="image/png" href="/public/favicon.png" />
+        <link rel="shortcut icon" type="image/png" href="public/favicon.png" />
         <title>Paper-Bot | Home</title>
         <style>
             body {
@@ -116,7 +116,7 @@
                     <div class="card-body">
                         <div class="card-title">狀態</div>
                         <hr />
-                        <div class="card-text"><%= client.user.presence.status %></div>
+                        <div class="card-text"><%= client.user.presence.activities || "無" %></div>
                     </div>
                 </div>
                 <div class="card">
