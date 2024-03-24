@@ -9,7 +9,20 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const { Strategy } = require('passport-discord')
 const winston = require('winston')
-winston.add(new winston.transports.File({ filename: 'logger.log' }))
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    defaultMeta: { service: 'user-service' },
+    transports: [
+        //
+        // - Write all logs with importance level of `error` or less to `error.log`
+        // - Write all logs with importance level of `info` or less to `combined.log`
+        //
+        new winston.transports.File({ filename: 'error.log', level: 'error' }),
+        new winston.transports.File({ filename: 'combined.log' })
+    ]
+})
+// port 設定
 let port = 8080
 
 const config = require('../Structures/config.json')
@@ -96,7 +109,7 @@ app.post('/dashboard', ensureAuthenticated, (req, res) => {
         .exec()
         .then((err, doc) => {
             if (err) {
-                winston.error(err)
+                logger.error(err)
                 return res.status(500).send('Internal Server Error')
             }
             res.redirect('/dashboard')
@@ -109,7 +122,7 @@ app.get('/api/guild/:guildId', ensureAuthenticated, (req, res) => {
         .exec()
         .then((err, settings) => {
             if (err) {
-                winston.error(err)
+                logger.error(err)
                 return res.status(500).json({ error: res.__('Internal Server Error') })
             }
             if (!settings) {
@@ -145,7 +158,7 @@ app.use((req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-    winston.error(err.stack)
+    logger.error(err.stack)
     res.status(500).send('Something went wrong!')
 })
 
