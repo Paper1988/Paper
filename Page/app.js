@@ -53,7 +53,7 @@ app.use(
         saveUninitialized: false,
         store: MongoStore.create({
             mongoUrl:
-                '***REMOVED***/Js?retryWrites=true&w=majority',
+                '***REMOVED***/?retryWrites=true&w=majority&appName=DClvl',
             autoRemove: 'interval',
             autoRemoveInterval: 7 * 24 * 60, // In minutes.
             touchAfter: 24 * 3600, // time period in seconds
@@ -95,7 +95,7 @@ passport.deserializeUser((obj, done) => {
 })
 
 app.get('/', (req, res) => {
-    res.render('index', { client: client, user: req.user })
+    res.render('index', { client, user: req.user })
 })
 
 app.get('/dashboard', ensureAuthenticated, (req, res) => {
