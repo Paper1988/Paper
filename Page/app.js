@@ -116,7 +116,7 @@ app.post('/dashboard', ensureAuthenticated, (req, res) => {
         })
 })
 
-app.get('/api/guild/:guildId', ensureAuthenticated, (req, res) => {
+app.get('/guild/:guildId', ensureAuthenticated, (req, res) => {
     const { guildId } = req.params
     GuildSettings.findOne({ guildId })
         .exec()
