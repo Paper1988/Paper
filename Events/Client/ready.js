@@ -34,7 +34,7 @@ module.exports = {
         setInterval(() => {
             const status = activities[Math.floor(Math.random() * activities.length)]
             client.user.setPresence({ activities: [{ name: status, type: ActivityType.Watching }] })
-        }, 5000)
+        }, 15000)
 
         const channel = client.channels.cache.get('961615076220092496')
         const Embed = new EmbedBuilder()
