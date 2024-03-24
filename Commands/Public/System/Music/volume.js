@@ -40,7 +40,7 @@ module.exports = {
             })
 
         const Data = await MusicDB.findOne({ GuildID: queue.id })
-        const message = await queue.textChannel.messages.fetch(Data.message).catch(console.log)
+        const message = await queue.textChannel.messages.fetch(Data.message)
 
         client.distube.setVolume(VoiceChannel, Volume)
 

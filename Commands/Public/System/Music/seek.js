@@ -35,7 +35,7 @@ module.exports = {
             })
 
         const Data = await MusicDB.findOne({ GuildID: queue.id })
-        const message = await queue.textChannel.messages.fetch(Data.message).catch(console.log)
+        const message = await queue.textChannel.messages.fetch(Data.message)
 
         await queue.seek(Time)
         message.edit({ embeds: [Embed(queue, queue.songs[0])] })
