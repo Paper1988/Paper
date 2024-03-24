@@ -25,7 +25,6 @@ const logger = winston.createLogger({
 // port 設定
 let port = 8080
 
-const config = require('../Structures/config.json')
 const GuildSettings = require('./Schemas/GuildSettings')
 const client = require('../index.js')
 
@@ -75,9 +74,9 @@ app.set('locale', 'zh')
 passport.use(
     new Strategy(
         {
-            clientID: config.clientId,
-            clientSecret: config.clientSecret,
-            callbackURL: config.callbackURL,
+            clientID: client.config.clientId,
+            clientSecret: client.config.clientSecret,
+            callbackURL: client.config.callbackURL,
             scope: ['identify', 'guilds']
         },
         (accessToken, refreshToken, profile, done) => {
