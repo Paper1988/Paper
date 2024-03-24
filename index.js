@@ -64,8 +64,8 @@ const config = {
 errorHandling(client, config)
 process.setMaxListeners(0)
 
-module.exports = client
-
 loadEvents(client)
 
 client.login(client.config.Token)
+
+module.exports = client
