@@ -27,9 +27,6 @@ let port = 8080
 
 const config = require('../Structures/config.json')
 const GuildSettings = require('./Schemas/GuildSettings')
-const client = require('../index.js')
-
-console.log(client)
 
 const helmet = require('helmet')
 app.use(helmet())
@@ -97,7 +94,7 @@ passport.deserializeUser((obj, done) => {
 })
 
 app.get('/', (req, res) => {
-    res.render('index', { client, user: req.user })
+    res.render('index', { user: req.user })
 })
 
 app.get('/dashboard', ensureAuthenticated, (req, res) => {
@@ -129,23 +126,6 @@ app.get('/guild/:guildId', ensureAuthenticated, (req, res) => {
             }
             if (!settings) {
                 return res.status(404).json({ error: res.__('Guild settings not found') })
-            }
-            res.json(settings)
-        })
-})
-
-app.get('/user/:userId', ensureAuthenticated, (req, res) => {
-    const { userId } = req.params
-    UserSettings.findOne({ userId })
-        .exec()
-        .then(async (err, settings) => {
-            if (err) {
-                logger.error(err)
-                return res.status(500).json({ error: 'Internal Server Error' })
-            }
-            if (!settings) {
-                const data = new UserSettings({ userId: req.user.id })
-                await data.save()
             }
             res.json(settings)
         })
