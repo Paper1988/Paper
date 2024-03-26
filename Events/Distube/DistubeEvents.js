@@ -117,3 +117,8 @@ client.distube
             if (msg) return await msg.delete()
         }
     })
+    .on('searchNoResult', async (message, query) => {
+        message.channel
+            .send(`<:warning_908958943466893323:1201844340276862976> | 找不到 \`${query}\`!`)
+            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
+    })
