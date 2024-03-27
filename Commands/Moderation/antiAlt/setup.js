@@ -1,47 +1,50 @@
-const {
-  ChatInputCommandInteraction,
-  Client,
-  EmbedBuilder,
-} = require("discord.js");
-const DB = require("../../../Structures/Schemas/AntiAlt");
+const { ChatInputCommandInteraction, Client, EmbedBuilder } = require('discord.js')
+const DB = require('../../../Structures/Schemas/AntiAlt')
 
 module.exports = {
-  subCommand: "anti-alt.setup",
-  /**
-   * @param {ChatInputCommandInteraction} interaction
-   * @param {Client} client
-   */
-  async execute(interaction, client) {
-    const options = interaction.options;
-    const { guild } = interaction;
+    subCommand: 'anti-alt.setup',
+    /**
+     * @param {ChatInputCommandInteraction} interaction
+     * @param {Client} client
+     */
+    async execute(interaction, client) {
+        const options = interaction.options
+        const { guild } = interaction
 
-    const LogsChannel = options.getChannel("channel");
+        const LogsChannel = options.getChannel('channel')
 
-    await DB.findOneAndUpdate(
-      { GuildID: guild.id },
-      { LogsChannel: LogsChannel.id },
-      {
-        new: true,
-        upsert: true
-      }
-    ).catch((err) => console.log(err));
+        await DB.findOneAndUpdate(
+            { GuildID: guild.id },
+            { LogsChannel: LogsChannel.id },
+            {
+                new: true,
+                upsert: true
+            }
+        ).catch((err) => console.log(err))
 
-    const LogsSetup = new EmbedBuilder()
-      .setDescription("<:correct_859388130411282442:1201843648229294121> | 成功設定日誌")
-      .setColor("#43b581");
+        const LogsSetup = new EmbedBuilder()
+            .setDescription('<:correct_859388130411282442:1201843648229294121> | 成功設定日誌')
+            .setColor('#43b581')
 
-    await guild.channels.cache
-      .get(LogsChannel.id)
-      .send({ embeds: [LogsSetup] })
-      .then((m) => {
-        setTimeout(() => {
-          m.delete();
-        }, 1 * 7500);
-      });
+        await guild.channels.cache
+            .get(LogsChannel.id)
+            .send({ embeds: [LogsSetup] })
+            .then((m) => {
+                setTimeout(() => {
+                    m.delete()
+                }, 1 * 7500)
+            })
+            .catch(() => {
+                return interaction.reply({
+                    content:
+                        '<:warning_908958943466893323:1201844340276862976> | 無法設定日誌，可能是因為我沒有讀取那個頻道的權限!',
+                    ephemeral: true
+                })
+            })
 
-    await interaction.reply({
-      content: "<:correct_859388130411282442:1201843648229294121> | 完成!",
-      ephemeral: true,
-    });
-  },
-};
+        await interaction.reply({
+            content: '<:correct_859388130411282442:1201843648229294121> | 完成!',
+            ephemeral: true
+        })
+    }
+}
