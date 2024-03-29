@@ -8,5 +8,7 @@
 
   "developerGuild": "1008313564349616169",
   "SpotifyClientId": "ee120e7d486d4c818304f68d6a3573cf",
-  "SpotifyClientSecret": "5599633c14b947d2b8d3823afbd93fc8"
+  "SpotifyClientSecret": "5599633c14b947d2b8d3823afbd93fc8",
+
+  "virusAPIKey": "9ab7cbc55f75696f0e8af96528266a06d8a8436084cb622508169f77e2bcb3c2"
 }
