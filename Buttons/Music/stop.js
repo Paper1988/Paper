@@ -1,10 +1,11 @@
+const DB = require('../../Structures/Schemas/MusicDB')
+
 module.exports = {
     id: 'stop',
     async execute(interaction, client) {
         // To access an id / value from a button you MUST INCLUDE `client` AND `args` and in the same order as shown
         const { member } = interaction
         const VoiceChannel = member.voice.channel
-        const { update } = require('../../Events/Distube/DistubeEvents')
 
         if (!VoiceChannel)
             return interaction.reply({
@@ -25,10 +26,16 @@ module.exports = {
                     '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true
             })
+        let Data = await DB.findOne({ GuildID: queue.id })
+        const msg = await queue.textChannel.messages.fetch(Data.message)
+
+        await msg.delete()
         await queue.stop(VoiceChannel)
-        clearInterval(update)
-        return interaction.reply({
-            content: '<:stop_988409337837924422:1201844316675510364> | 成功停止音樂並退出語音頻道'
-        })
+        return interaction
+            .reply({
+                content:
+                    '<:stop_988409337837924422:1201844316675510364> | 成功停止音樂並退出語音頻道'
+            })
+            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     }
 }

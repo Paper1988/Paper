@@ -1,4 +1,9 @@
-const { ChatInputCommandInteraction, Client, EmbedBuilder } = require('discord.js')
+const {
+    ChatInputCommandInteraction,
+    Client,
+    EmbedBuilder,
+    PermissionFlagsBits
+} = require('discord.js')
 
 module.exports = {
     subCommand: 'music.play',
@@ -21,13 +26,13 @@ module.exports = {
                 content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
                 ephemeral: true
             })
-        if (!VoiceChannel.permissionsFor(client.user).has('Connect')) {
+        if (!VoiceChannel.permissionsFor(client.user).has(PermissionFlagsBits.Connect)) {
             return interaction.reply({
                 embeds: [
                     new EmbedBuilder()
                         .setTitle('拒絕請求')
                         .setDescription(
-                            '<:warning_908958943466893323:1201844340276862976> | 我沒有權限進入你的頻道!'
+                            `<:warning_908958943466893323:1201844340276862976> | 我沒有權限進入 <#${VoiceChannel.id}> !`
                         )
                         .setColor('Red')
                 ],
