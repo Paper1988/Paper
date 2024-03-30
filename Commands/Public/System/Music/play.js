@@ -62,7 +62,7 @@ module.exports = {
                 .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
         }
         return await interaction
-            .reply({ content: '<:queue_861852633240961024:1202112866069520385> | 接受請求' })
+            .reply({ content: '<a:discord1792loading:1212016238839070791> | 處理請求中...' })
             .then((m) => {
                 setTimeout(() => {
                     m.delete()

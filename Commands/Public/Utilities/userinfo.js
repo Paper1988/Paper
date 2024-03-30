@@ -54,7 +54,7 @@ module.exports = {
      */
     async execute(interaction) {
         await interaction.reply({
-            content: '<a:discord1792loading:1212016238839070791>載入中......',
+            content: '<a:discord1792loading:1212016238839070791> | 載入中......',
             ephemeral: true
         })
 
