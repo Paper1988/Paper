@@ -30,7 +30,7 @@ module.exports = {
             if (button) {
                 const button = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
-                        .setCustomId('mcstats_refresh')
+                        .setCustomId('mcstats:refresh')
                         .setLabel('🔄 刷新數據')
                         .setStyle(ButtonStyle.Primary)
                 )
