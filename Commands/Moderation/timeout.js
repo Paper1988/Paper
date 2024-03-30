@@ -42,11 +42,7 @@ module.exports = {
 
         if (!target)
             return interaction.reply({
-                embeds: [
-                    errorsEmbed.setDescription(
-                        '<:warning_908958943466893323:1201844340276862976> | 該名成員很可能已經離開伺服器了'
-                    )
-                ],
+                embeds: [errorsEmbed.setDescription('該名成員很可能已經離開伺服器了')],
                 ephemeral: true
             })
 
@@ -72,19 +68,12 @@ module.exports = {
 
         if (timeError)
             return interaction.reply({
-                embeds: [
-                    errorsEmbed.setDescription(
-                        '<:warning_908958943466893323:1201844340276862976> | 無法禁言該名成員，因為一個不常見的錯誤： `時間不能取負值`'
-                    )
-                ],
+                embeds: [errorsEmbed.setDescription('一個不常見的錯誤： `時間不能取負值`')],
                 ephemeral: true
             })
 
         const successEmbed = new EmbedBuilder()
-            .setAuthor({
-                name: '<:timeout_930797536900415548:1201844326322151454>',
-                iconURL: guild.iconURL()
-            })
+            .setTitle('<:timeout_930797536900415548:1201844326322151454>')
             .setColor('Green')
             .setDescription(
                 [
