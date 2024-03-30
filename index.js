@@ -25,7 +25,6 @@ const { DisTube } = require('distube')
 const { SpotifyPlugin } = require('@distube/spotify')
 const { SoundCloudPlugin } = require('@distube/soundcloud')
 const { SpotifyClientId, SpotifyClientSecret } = require('./Structures/config.json')
-const { YtDlpPlugin } = require('@distube/yt-dlp')
 
 client.distube = new DisTube(client, {
     searchSongs: 10,
@@ -43,8 +42,7 @@ client.distube = new DisTube(client, {
                 topTracksCountry: 'TW'
             }
         }),
-        new SoundCloudPlugin(),
-        new YtDlpPlugin({ update: true })
+        new SoundCloudPlugin()
     ],
     ytdlOptions: {
         highWaterMark: 1024 * 1024 * 64,
