@@ -21,6 +21,10 @@ module.exports = {
         mongoose
             .connect(client.config.Database, {})
             .then(() => console.log(`>>> ✅ 成功連結到 MongoDB!`))
+
+        client.giveawaysManager
+            ._init()
+            .then(() => console.log('>>> ✅ 成功連結到 discord-giveaways!'))
         require('../../Page/app.js')
 
         let memberCount = client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)
