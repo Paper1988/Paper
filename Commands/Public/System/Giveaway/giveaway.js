@@ -34,6 +34,14 @@ module.exports = {
                         .addChannelTypes(ChannelType.GuildText)
                         .setRequired(false)
                 )
+                .addBooleanOption((options) =>
+                    options
+                        .setName('drop')
+                        .setDescription(
+                            '是否為Drop?(Drop即為 "當贏家人數等於參與人數時，就立即終止" 的一種抽獎活動)'
+                        )
+                        .setRequired(false)
+                )
         )
         .addSubcommand((sub) =>
             sub
