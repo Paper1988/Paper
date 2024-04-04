@@ -1,16 +1,14 @@
-const { ChatInputCommandInteraction, Client, EmbedBuilder } = require('discord.js')
+const { Guild } = require('discord.js')
 
 const MusicDB = require('../../Structures/Schemas/MusicDB.js')
 
 module.exports = {
     name: 'guildDelete',
     /**
-     * @param {ChatInputCommandInteraction} interaction
-     * @param {Client} client
+     *
+     * @param {Guild} guild
      */
-    async execute(interaction, client) {
-        const { guild } = interaction
-
+    async execute(guild) {
         const data = await MusicDB.findOne({ GuildId: guild.id })
 
         if (data) await data.deleteOne({ GuildId: guild.id })
