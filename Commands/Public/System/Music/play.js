@@ -48,7 +48,7 @@ module.exports = {
                 member: member
             })
         } else {
-            return interaction
+            return await interaction
                 .reply({
                     embeds: [
                         new EmbedBuilder()
