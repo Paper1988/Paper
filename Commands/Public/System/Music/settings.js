@@ -11,8 +11,6 @@ module.exports = {
         const { options, member, guild } = interaction
         const VoiceChannel = member.voice.channel
 
-        const Embed = require('../../../../Systems/MusicEmbed')
-
         if (!VoiceChannel)
             return interaction.reply({
                 content:
@@ -34,9 +32,6 @@ module.exports = {
                 ephemeral: true
             })
 
-        const Data = await MusicDB.findOne({ GuildID: queue.id })
-        const message = await queue.textChannel.messages.fetch(Data.message)
-
         switch (options.getString('options')) {
             case 'skip':
                 if (!queue.songs[1])
@@ -54,7 +49,6 @@ module.exports = {
 
             case 'stop':
                 await queue.stop(VoiceChannel)
-                await message.delete()
                 return interaction.reply({
                     content:
                         '<:stop_988409337837924422:1201844316675510364> | 成功停止音樂並退出語音頻道',
@@ -87,7 +81,6 @@ module.exports = {
 
             case 'autoplay':
                 let Mode = await queue.toggleAutoplay(VoiceChannel)
-                message.edit({ embeds: [Embed(queue, queue.songs[0])] })
                 await MusicDB.findOneAndUpdate(
                     { GuildID: guild.id },
                     { autoplayMode: Mode ? true : false },
@@ -116,7 +109,6 @@ module.exports = {
 
             case 'repeat':
                 let Mode2 = await client.distube.setRepeatMode(queue)
-                message.edit({ embeds: [Embed(queue, song)] })
                 await MusicDB.findOneAndUpdate(
                     { GuildID: guild.id },
                     { repeatMode: (Mode2 = Mode2 ? (Mode2 == 2 ? 2 : 1) : 0) },
