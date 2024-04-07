@@ -5,13 +5,14 @@ const MusicEmbed = require('../../Systems/MusicEmbed.js')
 const MusicButtons = require('../../Systems/MusicButtons.js')
 
 client.distube
-    .on('playSong', (queue, song) => {
-        const message = queue.textChannel.send({
+    .on('playSong', async (queue, song) => {
+        const message = await queue.textChannel.send({
             embeds: [MusicEmbed(queue, song)],
             components: MusicButtons
         })
-        DB.findOneAndUpdate({ GuildID: queue.id }, { message: message.id }, { upsert: true }).then(
-            () => {
+        await DB.findOneAndUpdate({ GuildID: queue.id }, { message: message.id }, { upsert: true })
+            .exec()
+            .then(() => {
                 if (message) {
                     const update = setInterval(
                         () =>
@@ -22,8 +23,7 @@ client.distube
                     )
                     module.exports = { update }
                 } else return
-            }
-        )
+            })
     })
     .on('addSong', (queue, song) => {
         let embed = MusicEmbed(queue, song)
@@ -87,7 +87,6 @@ client.distube
                 ]
             })
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
-        clearInterval(this.update)
         DB.findOneAndUpdate({ GuildID: queue.id }, { message: '' }).exec()
     })
     .on('initQueue', async (queue) => {
