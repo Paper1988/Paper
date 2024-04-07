@@ -35,7 +35,7 @@ const row2 = new ActionRowBuilder().addComponents([
     new ButtonBuilder()
         .setCustomId(`stop`)
         .setEmoji('<:stop_988409337837924422:1201844316675510364>')
-        .setStyle(ButtonStyle.Secondary),
+        .setStyle(ButtonStyle.Danger),
     new ButtonBuilder()
         .setCustomId(`volumeUp`)
         .setEmoji('<:speaker_860133545544908802:1201844300099354644>')
