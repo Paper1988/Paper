@@ -12,17 +12,19 @@ client.distube
         })
         await DB.findOneAndUpdate({ GuildID: queue.id }, { message: message.id }, { upsert: true })
             .exec()
-            .then(() => {
-                if (message) {
+            .then(async () => {
+                const Data = await DB.findOne({ GuildID: queue.id })
+                const msg = await queue.textChannel.messages.fetch(Data.message)
+                if (msg) {
                     const update = setInterval(
                         () =>
-                            message.edit({ embeds: [MusicEmbed(queue, song)] }).catch(() => {
+                            msg.edit({ embeds: [MusicEmbed(queue, song)] }).catch(() => {
                                 clearInterval(this.update)
                             }),
                         5000
                     )
                     module.exports = { update }
-                } else return
+                }
             })
     })
     .on('addSong', (queue, song) => {
@@ -32,7 +34,7 @@ client.distube
             .send({
                 embeds: [
                     embed.setDescription(
-                        `<:plus_988409343743496232:1202215484318302208> | 加入 [${song.name}](${song.url}) - \` ${song.formattedDuration} \` 到清單中`
+                        `<:plus_988409343743496232:1202215484318302208> | 加入 [${song.name}](${song.url}) - \`${song.formattedDuration}\` 到清單中`
                     )
                 ]
             })
@@ -45,7 +47,7 @@ client.distube
             .send({
                 embeds: [
                     embed.setDescription(
-                        `<:plus_988409343743496232:1202215484318302208> | 加入 [${playlist.name}](${playlist.url}) 播放清單 (\` ${playlist.songs.length} \`首歌) 到清單中`
+                        `<:plus_988409343743496232:1202215484318302208> | 加入 [${playlist.name}](${playlist.url}) 播放清單 (\`${playlist.songs.length}\`首歌) 到清單中`
                     )
                 ]
             })
@@ -109,8 +111,8 @@ client.distube
     .on('finishSong', async (queue, song) => {
         let Data = await DB.findOne({ GuildID: queue.id })
         const msg = await queue.textChannel.messages.fetch(Data.message)
-        if (!msg) return
-        if (queue.repeatMode !== 0) return
+        if (queue.repeatMode === 1) return
+        else if (queue.repeatMode === 2) return await msg.delete()
         else if (queue.songs[1]) return
         await msg.delete()
     })
