@@ -112,8 +112,7 @@ client.distube
         let Data = await DB.findOne({ GuildID: queue.id })
         const msg = await queue.textChannel.messages.fetch(Data.message)
         if (queue.repeatMode === 1) return
-        else if (queue.repeatMode === 2 && !queue.songs[1]) return await msg.delete()
-        else if (queue.songs[1]) return
+        else if (queue.repeatMode === 2 && queue.songs[1]) return await msg.delete()
         await msg.delete()
     })
     .on('searchNoResult', async (message, query) => {
