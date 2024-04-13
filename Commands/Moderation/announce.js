@@ -54,7 +54,7 @@ module.exports = {
         const timestamp = options.getBoolean('timestamp')
         const ping = options.getString('ping')
 
-        const splitedMsg = message.replace(/\\n/g, '\n')
+        const splittedMsg = message.replace(/\\n/g, '\n')
 
         const embed = new EmbedBuilder()
             .setAuthor({
@@ -62,16 +62,9 @@ module.exports = {
                 iconURL: `${user.displayAvatarURL({ dynamic: true })}`
             })
             .setTitle(`${title}`)
-            .setDescription(`${splitedMsg}`)
+            .setDescription(`${splittedMsg}`)
 
-        if (color)
-            embed.setColor(color.toUpperCase()).catch((err) =>
-                interaction.reply({
-                    content:
-                        '顏色色碼輸入錯誤，請參考: \n> https://discordjs.dev/docs/packages/discord.js/14.14.1/ColorResolvable:TypeAlias \n> https://discordjs.dev/docs/packages/discord.js/14.14.1/Colors:Variable',
-                    ephemeral: true
-                })
-            )
+        if (color) embed.setColor(color.toUpperCase())
         if (footer) embed.setFooter({ text: footer })
         if (timestamp) embed.setTimestamp()
 
