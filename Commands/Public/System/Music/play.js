@@ -68,5 +68,18 @@ module.exports = {
                     m.delete()
                 }, 10 * 1000)
             })
+            .catch((e) => {
+                channel
+                    .send({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setColor('Red')
+                                .setDescription(
+                                    `<:outage_868122243845206087:1202112862990897172> | 發生錯誤: ${e.toString().slice(0, 1974)}`
+                                )
+                        ]
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
+            })
     }
 }
