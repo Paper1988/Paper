@@ -7,8 +7,6 @@ module.exports = {
         const { member, guild } = interaction
         const VoiceChannel = member.voice.channel
         const queue = client.distube.getQueue(VoiceChannel)
-        const Data = await MusicDB.findOne({ GuildID: queue.id })
-        const message = await queue.textChannel.messages.fetch(Data.message)
 
         if (!VoiceChannel)
             return interaction.reply({
@@ -28,6 +26,9 @@ module.exports = {
                     '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true
             })
+
+        const Data = await MusicDB.findOne({ GuildID: queue.id })
+        const message = await queue.textChannel.messages.fetch(Data.message)
 
         let Mode = await queue.toggleAutoplay(VoiceChannel)
         message.edit({ embeds: [Embed(queue, queue.songs[0])] })
