@@ -29,7 +29,11 @@ module.exports = {
         await guild.channels.cache
             .get(LogsChannel.id)
             .send({ embeds: [LogsSetup] })
-            .then((m) => {
+            .then(async (m) => {
+                await interaction.reply({
+                    content: '<:correct_859388130411282442:1201843648229294121> | 完成!',
+                    ephemeral: true
+                })
                 setTimeout(() => {
                     m.delete()
                 }, 1 * 7500)
@@ -41,10 +45,5 @@ module.exports = {
                     ephemeral: true
                 })
             })
-
-        await interaction.reply({
-            content: '<:correct_859388130411282442:1201843648229294121> | 完成!',
-            ephemeral: true
-        })
     }
 }
