@@ -9,6 +9,15 @@ module.exports = {
             sub
                 .setName('play')
                 .setDescription('播放音樂')
+                .addBooleanOption((options) =>
+                    options.setName('skip').setDescription('是否跳過目前的歌曲').setRequired(false)
+                )
+                .addNumberOption((options) =>
+                    options
+                        .setName('position')
+                        .setDescription('請提供歌曲位置(數字)')
+                        .setRequired(false)
+                )
                 .addStringOption((options) =>
                     options
                         .setName('query')
@@ -16,15 +25,6 @@ module.exports = {
                         .setRequired(true)
                         .setAutocomplete(true)
                 )
-                .addBooleanOption((options) => {
-                    options.setName('skip').setDescription('是否跳過目前的歌曲').setRequired(false)
-                })
-                .addNumberOption((options) => {
-                    options
-                        .setName('position')
-                        .setDescription('請提供歌曲位置(數字)')
-                        .setRequired(false)
-                })
         )
         .addSubcommand((sub) =>
             sub
