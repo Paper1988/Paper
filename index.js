@@ -25,6 +25,7 @@ client.selectMenus = new Collection()
 const { DisTube } = require('distube')
 const { SpotifyPlugin } = require('@distube/spotify')
 const { SoundCloudPlugin } = require('@distube/soundcloud')
+const { YtDlpPlugin } = require('@distube/yt-dlp')
 const { SpotifyClientId, SpotifyClientSecret } = require('./Structures/config.json')
 
 client.distube = new DisTube(client, {
@@ -35,7 +36,6 @@ client.distube = new DisTube(client, {
     emitAddListWhenCreatingQueue: false,
     plugins: [
         new SpotifyPlugin({
-            parallel: true,
             emitEventsAfterFetching: true,
             api: {
                 clientId: SpotifyClientId,
@@ -43,7 +43,8 @@ client.distube = new DisTube(client, {
                 topTracksCountry: 'TW'
             }
         }),
-        new SoundCloudPlugin()
+        new SoundCloudPlugin(),
+        new YtDlpPlugin({ update: true })
     ],
     ytdlOptions: {
         highWaterMark: 1024 * 1024 * 64,
