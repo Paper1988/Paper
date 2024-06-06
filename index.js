@@ -26,12 +26,11 @@ const { DisTube } = require('distube')
 const { SpotifyPlugin } = require('@distube/spotify')
 const { SoundCloudPlugin } = require('@distube/soundcloud')
 const { YtDlpPlugin } = require('@distube/yt-dlp')
+const { DirectLinkPlugin } = require('@distube/direct-link')
 const { SpotifyClientId, SpotifyClientSecret } = require('./Structures/config.json')
 
 client.distube = new DisTube(client, {
-    searchSongs: 10,
     emitNewSongOnly: true,
-    leaveOnFinish: false,
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: false,
     plugins: [
@@ -43,15 +42,11 @@ client.distube = new DisTube(client, {
             }
         }),
         new SoundCloudPlugin(),
-        new YtDlpPlugin({ update: true })
+        new YtDlpPlugin({ update: true }),
+        new DirectLinkPlugin()
     ],
-    ytdlOptions: {
-        highWaterMark: 1024 * 1024 * 64,
-        quality: 'highestaudio',
-        format: 'audioonly',
-        liveBuffer: 60000,
-        dlChunkSize: 1024 * 1024 * 4
-    }
+    nsfw: true,
+    savePreviousSongs: true
 })
 /**************************************************/
 const errorHandling = require('discord.js-anticrash')

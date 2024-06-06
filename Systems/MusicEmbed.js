@@ -4,7 +4,7 @@ module.exports = (queue, song) =>
     new EmbedBuilder()
         .setColor('Green')
         .setDescription(
-            `<:music_860123644201271326:1201843716097327185> | [${song.name}](${song.url}) - \` ${song.formattedDuration} \``
+            `<:music_860123644201271326:1201843716097327185> | [${song.name}](${song.url}) - \` ${song.stream.playFromSource ? song.formattedDuration : song.stream.song?.formattedDuration} \``
         )
         .setAuthor({ name: `${song.user.displayName}`, iconURL: song.user.displayAvatarURL() })
         .addFields(
@@ -44,7 +44,7 @@ module.exports = (queue, song) =>
             },
             {
                 name: '<:clock_964491800465276940:1201843646203433030>進度',
-                value: `\` ${queue.formattedCurrentTime} \` - \` ${song.formattedDuration} \``,
+                value: `\` ${queue.formattedCurrentTime} \` - \` ${song.stream.playFromSource ? song.formattedDuration : song.stream.song?.formattedDuration} \``,
                 inline: true
             }
         )
