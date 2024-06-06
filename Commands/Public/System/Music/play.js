@@ -15,6 +15,9 @@ module.exports = {
         const { options, channel, member } = interaction
         const VoiceChannel = member.voice.channel
 
+        const position = options.getNumber('position', false) ?? undefined
+        const skip = options.getBoolean('skip', false)
+
         if (!VoiceChannel)
             return interaction.reply({
                 content:
@@ -45,7 +48,9 @@ module.exports = {
         if (!youtubeRegex.test(options.getString('query'))) {
             client.distube.play(VoiceChannel, options.getString('query'), {
                 textChannel: channel,
-                member: member
+                member: member,
+                position: position,
+                skip: skip
             })
         } else {
             return await interaction

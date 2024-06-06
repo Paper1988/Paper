@@ -53,7 +53,7 @@ client.distube
             })
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     })
-    .on('error', (channel, e) => {
+    .on('error', (e, channel, song) => {
         channel
             .send({
                 embeds: [
@@ -65,6 +65,9 @@ client.distube
                 ]
             })
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
+    })
+    .on('debug', (message) => {
+        console.log(message)
     })
     .on('empty', (queue) =>
         queue.textChannel.send({
@@ -119,4 +122,9 @@ client.distube
         message.channel
             .send(`<:warning_908958943466893323:1201844340276862976> | 找不到 \`${query}\`!`)
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
+    })
+    .on('noRelated', async (queue, error) => {
+        queue.textChannel.send(
+            `<:warning_908958943466893323:1201844340276862976> | 找不到任何相關歌曲!`
+        )
     })

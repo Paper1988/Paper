@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js')
+const { defaultFilters } = require('distube')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,13 +16,27 @@ module.exports = {
                         .setRequired(true)
                         .setAutocomplete(true)
                 )
+                .addBooleanOption((options) => {
+                    options.setName('skip').setDescription('是否跳過目前的歌曲').setRequired(false)
+                })
+                .addNumberOption((options) => {
+                    options
+                        .setName('position')
+                        .setDescription('請提供歌曲位置(數字)')
+                        .setRequired(false)
+                })
         )
         .addSubcommand((sub) =>
             sub
                 .setName('volume')
                 .setDescription('調整音量大小')
                 .addNumberOption((options) =>
-                    options.setName('percent').setDescription('請提供音量(數字)').setRequired(true)
+                    options
+                        .setName('percent')
+                        .setDescription('請提供音量(數字)')
+                        .setRequired(true)
+                        .setMinValue(0)
+                        .setMaxValue(200)
                 )
         )
         .addSubcommand((sub) =>
@@ -46,21 +61,7 @@ module.exports = {
                         .setRequired(true)
                         .addChoices(
                             { name: '移除所有過濾器', value: 'false' },
-                            { name: '切換 3d 過濾器', value: '3d' },
-                            { name: '切換 bassboost 過濾器', value: 'bassboost' },
-                            { name: '切換 echo 過濾器', value: 'echo' },
-                            { name: '切換 nightcore 過濾器', value: 'nightcore' },
-                            { name: '切換 surround 過濾器', value: 'surround' },
-                            { name: '切換 karaoke 過濾器', value: 'karaoke' },
-                            { name: '切換 vaporwave 過濾器', value: 'vaporwave' },
-                            { name: '切換 flanger 過濾器', value: 'flanger' },
-                            { name: '切換 gate 過濾器', value: 'gate' },
-                            { name: '切換 haas 過濾器', value: 'haas' },
-                            { name: '切換 reverse 過濾器', value: 'reverse' },
-                            { name: '切換 mcompand 過濾器', value: 'mcompand' },
-                            { name: '切換 phaser 過濾器', value: 'phaser' },
-                            { name: '切換 tremolo 過濾器', value: 'tremolo' },
-                            { name: '切換 earwax 過濾器', value: 'earwax' }
+                            ...Object.keys(defaultFilters).map((k) => ({ name: k, value: k }))
                         )
                 )
         )
