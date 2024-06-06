@@ -36,7 +36,6 @@ client.distube = new DisTube(client, {
     emitAddListWhenCreatingQueue: false,
     plugins: [
         new SpotifyPlugin({
-            emitEventsAfterFetching: true,
             api: {
                 clientId: SpotifyClientId,
                 clientSecret: SpotifyClientSecret,
