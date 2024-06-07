@@ -27,6 +27,7 @@ const { SpotifyPlugin } = require('@distube/spotify')
 const { SoundCloudPlugin } = require('@distube/soundcloud')
 const { YtDlpPlugin } = require('@distube/yt-dlp')
 const { DirectLinkPlugin } = require('@distube/direct-link')
+const { YoutubePlugin } = require('@distube/youtube')
 const { SpotifyClientId, SpotifyClientSecret } = require('./Structures/config.json')
 
 client.distube = new DisTube(client, {
@@ -43,7 +44,16 @@ client.distube = new DisTube(client, {
         }),
         new SoundCloudPlugin(),
         new YtDlpPlugin({ update: true }),
-        new DirectLinkPlugin()
+        new DirectLinkPlugin(),
+        new YoutubePlugin({
+            ytdlOptions: {
+                highWaterMark: 1024 * 1024 * 64,
+                quality: 'highestaudio',
+                format: 'audioonly',
+                liveBuffer: 60000,
+                dlChunkSize: 1024 * 1024 * 4
+            }
+        })
     ],
     nsfw: true,
     savePreviousSongs: true

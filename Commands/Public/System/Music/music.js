@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js')
 const { defaultFilters } = require('distube')
+const { SoundCloudPlugin } = require('@distube/soundcloud')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -99,6 +100,7 @@ module.exports = {
     async autocomplete(interaction, client) {
         // 檢查是否為 "play" 子指令的自動完成
         if (interaction.commandName === 'music' && interaction.options.getSubcommand() === 'play') {
+            const scPlugin = new SoundCloudPlugin()
             const value = interaction.options.getFocused().toString().trim()
 
             // 確保搜索字符串不是空的
@@ -113,7 +115,7 @@ module.exports = {
 
             let choices = []
             // 假設有一個搜索功能可以返回歌曲列表
-            await client.distube
+            await scPlugin
                 .search(value)
                 .then((results) => {
                     choices = results.map((song, id) => ({
@@ -123,7 +125,12 @@ module.exports = {
                 })
                 .catch(async (error) => {
                     // 處理錯誤，例如通過回應一些預設選項或顯示錯誤信息
-                    await interaction.respond([]) // 這裡選擇不回應任何選項
+                    await client.distube.search(value).then((results) => {
+                        choices = results.map((song, id) => ({
+                            name: `${song.name}`,
+                            value: `${song.name}`
+                        }))
+                    })
                 })
 
             // 篩選出包含用戶輸入值的選項
