@@ -128,3 +128,6 @@ client.distube
             `<:warning_908958943466893323:1201844340276862976> | 找不到任何相關歌曲!`
         )
     })
+    .on('ffmpegDebug', async (debug) => {
+        console.log(debug)
+    })
