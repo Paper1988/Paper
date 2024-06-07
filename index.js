@@ -53,7 +53,6 @@ client.distube = new DisTube(client, {
 })
 /**************************************************/
 const errorHandling = require('discord.js-anticrash')
-
 const config = {
     webhookUrl:
         'https://discord.com/api/webhooks/967768559688249344/dp6yrq5Jw4boYyZiS6NBhS3hGKIP_lTL7uP6DDYNr-XrJL6T5Gy0_smg5lcoZsvAu5EB'
