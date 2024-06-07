@@ -53,7 +53,6 @@ client.distube = new DisTube(client, {
 })
 /**************************************************/
 const errorHandling = require('discord.js-anticrash')
-
 const config = {
     webhookUrl:
         '***REMOV$'
