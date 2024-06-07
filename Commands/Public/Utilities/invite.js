@@ -17,7 +17,7 @@ module.exports = {
     async execute(interaction, client) {
         const Invite = new EmbedBuilder()
             .setDescription(
-                '我是一個很酷的Discord Bot，不是嗎？\n使用下面的按鈕邀請我加入您的伺服器或加入我們的支援伺服器！'
+                '我是一個很酷的機器人，不是嗎？\n使用下面的按鈕邀請我加入您的伺服器或加入我們的支援伺服器！'
             )
             .setColor('Blue')
             .setThumbnail(client.user.displayAvatarURL())
