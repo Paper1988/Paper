@@ -146,6 +146,9 @@ module.exports = {
                         ]
                     })
                     .then((msg) => setTimeout(() => msg.delete(), 20 * 1000))
+
+            case 'quit':
+                return queue.voice.leave()
         }
     }
 }
