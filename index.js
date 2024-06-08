@@ -34,7 +34,7 @@ client.distube = new DisTube(client, {
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: false,
     ffmpeg: {
-        path: '../Paper/node_modules/ffmpeg-static/ffmpeg.exe'
+        path: '/node_modules/ffmpeg-static/ffmpeg.exe'
     },
     plugins: [
         new SpotifyPlugin({
