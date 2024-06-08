@@ -49,6 +49,7 @@ module.exports = {
 
             case 'stop':
                 await queue.stop(VoiceChannel)
+                await queue.voice.leave()
                 return interaction.reply({
                     content:
                         '<:stop_988409337837924422:1201844316675510364> | 成功停止音樂並退出語音頻道',
@@ -148,7 +149,7 @@ module.exports = {
                     .then((msg) => setTimeout(() => msg.delete(), 20 * 1000))
 
             case 'quit':
-                return queue.voice.leave()
+                return await queue.voice.leave()
         }
     }
 }
