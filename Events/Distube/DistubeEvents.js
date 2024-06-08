@@ -1,11 +1,12 @@
 const client = require('../../index.js')
 const { EmbedBuilder } = require('discord.js')
+const { Events } = require('distube')
 const DB = require('../../Structures/Schemas/MusicDB.js')
 const MusicEmbed = require('../../Systems/MusicEmbed.js')
 const MusicButtons = require('../../Systems/MusicButtons.js')
 
 client.distube
-    .on('playSong', async (queue, song) => {
+    .on(Events.PLAY_SONG, async (queue, song) => {
         const message = await queue.textChannel.send({
             embeds: [MusicEmbed(queue, song)],
             components: MusicButtons
@@ -27,7 +28,7 @@ client.distube
                 }
             })
     })
-    .on('addSong', (queue, song) => {
+    .on(Events.ADD_SONG, (queue, song) => {
         let embed = MusicEmbed(queue, song)
         embed.data.fields = null
         queue.textChannel
@@ -40,7 +41,7 @@ client.distube
             })
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     })
-    .on('addList', (queue, playlist) => {
+    .on(Events.ADD_LIST, (queue, playlist) => {
         let embed = MusicEmbed(queue, playlist.songs[0])
         embed.data.fields = null
         queue.textChannel
@@ -53,7 +54,7 @@ client.distube
             })
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     })
-    .on('error', (e, channel, song) => {
+    .on(Events.ERROR, (e, channel, song) => {
         channel
             .send({
                 embeds: [
@@ -66,7 +67,7 @@ client.distube
             })
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     })
-    .on('empty', (queue) =>
+    .on(Events.EMPTY, (queue) =>
         queue.textChannel.send({
             embeds: [
                 new EmbedBuilder()
@@ -77,7 +78,7 @@ client.distube
             ]
         })
     )
-    .on('finish', (queue) => {
+    .on(Events.FINISH, (queue) => {
         queue.textChannel
             .send({
                 embeds: [
@@ -91,7 +92,7 @@ client.distube
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
         DB.findOneAndUpdate({ GuildID: queue.id }, { message: '' }).exec()
     })
-    .on('initQueue', async (queue) => {
+    .on(Events.INIT_QUEUE, async (queue) => {
         let Data = await DB.findOne({ GuildID: queue.id })
         if (!Data) {
             Data = new DB({
@@ -108,23 +109,18 @@ client.distube
         queue.repeatMode = Data.repeatMode
         queue.paused = false
     })
-    .on('finishSong', async (queue, song) => {
+    .on(Events.FINISH_SONG, async (queue, song) => {
         let Data = await DB.findOne({ GuildID: queue.id })
         const msg = await queue.textChannel.messages.fetch(Data.message)
         if (queue.repeatMode === 1) return
         else if (queue.repeatMode === 2 && queue.songs[1]) return await msg.delete()
         await msg.delete()
     })
-    .on('searchNoResult', async (message, query) => {
-        message.channel
-            .send(`<:warning_908958943466893323:1201844340276862976> | 找不到 \`${query}\`!`)
-            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
-    })
-    .on('noRelated', async (queue, error) => {
+    .on(Events.NO_RELATED, async (queue, error) => {
         queue.textChannel.send(
             `<:warning_908958943466893323:1201844340276862976> | 找不到任何相關歌曲!`
         )
     })
-    .on('ffmpegDebug', async (debug) => {
+    .on(Events.FFMPEG_DEBUG, async (debug) => {
         console.log(debug)
     })
