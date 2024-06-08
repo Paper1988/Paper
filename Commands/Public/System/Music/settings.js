@@ -149,7 +149,11 @@ module.exports = {
                     .then((msg) => setTimeout(() => msg.delete(), 20 * 1000))
 
             case 'quit':
-                return await queue.voice.leave()
+                await queue.voice.leave()
+                return await interaction.reply({
+                    content: '<:leave_860487640113217546:1202217506991771658> | 成功退出語音頻道',
+                    ephemeral: true
+                })
         }
     }
 }
