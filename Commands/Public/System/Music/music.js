@@ -92,7 +92,8 @@ module.exports = {
                             { name: '隨機播放', value: 'shuffle' },
                             { name: '切換自動播放', value: 'autoplay' },
                             { name: '添加相似歌曲', value: 'related' },
-                            { name: '切換重複播放', value: 'repeat' }
+                            { name: '切換重複播放', value: 'repeat' },
+                            { name: '離開語音頻道', value: 'quit' }
                         )
                 )
         ),
