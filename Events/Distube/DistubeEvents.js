@@ -66,9 +66,6 @@ client.distube
             })
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     })
-    .on('debug', (message) => {
-        console.log(message)
-    })
     .on('empty', (queue) =>
         queue.textChannel.send({
             embeds: [
