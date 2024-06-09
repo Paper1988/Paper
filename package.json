@@ -31,7 +31,7 @@
         "distube": "^5.0.1",
         "dotenv": "^16.0.2",
         "express": "^4.18.2",
-        "ffmpeg-node": "^0.0.2",
+        "ffmpeg-installer": "^1.0.2",
         "ffmpeg-static": "^5.2.0",
         "file": "^0.2.2",
         "glob": "^9.3.4",
