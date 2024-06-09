@@ -48,5 +48,5 @@ module.exports = (queue, song) =>
                 inline: true
             }
         )
-        .setImage(song.thumbnail)
+        .setThumbnail(song.thumbnail)
         .setTimestamp()
