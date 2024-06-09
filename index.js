@@ -28,7 +28,7 @@ const { SoundCloudPlugin } = require('@distube/soundcloud')
 const { YtDlpPlugin } = require('@distube/yt-dlp')
 const { DirectLinkPlugin } = require('@distube/direct-link')
 const { SpotifyClientId, SpotifyClientSecret } = require('./Structures/config.json')
-const pathToFfmpeg = require('ffmpeg-static')
+const pathToFfmpeg = require('ffmpeg-node')
 
 client.distube = new DisTube(client, {
     emitNewSongOnly: true,
