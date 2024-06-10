@@ -13,7 +13,7 @@ module.exports = {
     async execute(interaction, client) {
         if (!interaction.isChatInputCommand()) return
 
-        const Maintenance = MaintenanceDB.findOne()
+        const Maintenance = MaintenanceDB.findOne({ ClientId: client.user.id })
 
         const GuildData = await BlackListGuild.findOne({
             Guild: interaction.guild.id
@@ -45,11 +45,19 @@ module.exports = {
             return await interaction.reply({
                 embeds: [
                     Embed.setTitle(`<:discordstaff:1094236985318707221> | 維護模式`)
-                        .setDescription(`${client.user.username} 正在進行維修，暫無法使用任何功能`)
+                        .setDescription(
+                            `${client.user.username} 正在進行維修，暫無法使用任何功能\n原因： ${Maintenance.Description}`
+                        )
                         .setFooter({
                             text: '造成不便，敬請見諒',
                             iconURL: client.user.avatarURL()
                         })
+                        .setAuthor({
+                            name: interaction.user.username,
+                            iconURL: interaction.user.avatarURL()
+                        })
+                        .setTimestamp()
+                        .setColor('Blurple')
                 ]
             })
         }
