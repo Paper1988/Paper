@@ -3,11 +3,11 @@ const MaintenanceDB = require('../../Structures/Schemas/MaintenanceDB.js')
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('toggleMaintenance')
+        .setName('toggle-maintenance')
         .setDescription('切換維護模式')
         .setDMPermission(false)
         .addBooleanOption((options) =>
-            options.setName('maintenance').setDescription('切換維護模式').setRequired(true)
+            options.setName('toggle').setDescription('切換維護模式').setRequired(true)
         ),
     developer: true,
     /**
