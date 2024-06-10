@@ -16,7 +16,7 @@ module.exports = {
      * @param {Client} client
      */
     async execute(interaction, client) {
-        const maintenance = interaction.options.getBoolean('maintenance')
+        const maintenance = interaction.options.getBoolean('toggle')
 
         let Data = await MaintenanceDB.findOne({ Client: client.user.id })
         if (!Data) {
