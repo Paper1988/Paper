@@ -18,19 +18,21 @@ module.exports = {
     async execute(interaction, client) {
         const maintenance = interaction.options.getBoolean('maintenance')
 
-        const Data = await MaintenanceDB.findOne()
-        if (!Data) return interaction.reply({ content: '資料庫錯誤', ephemeral: true })
+        let Data = await MaintenanceDB.findOne({ Client: client.user.id })
+        if (!Data) {
+            Data = new MaintenanceDB({
+                ClientId: client.user.id
+            })
+            await Data.save()
+        }
 
         Data.Maintenance = maintenance
 
         if (Data.Maintenance) {
-            Data.Maintenance = false
-            await interaction.reply({ content: '維護模式已關閉', ephemeral: true })
-            return await Data.save()
-        } else {
-            Data.Maintenance = true
             await interaction.reply({ content: '維護模式已開啟', ephemeral: true })
-            return await Data.save()
+        } else {
+            await interaction.reply({ content: '維護模式已關閉', ephemeral: true })
         }
+        return await Data.save()
     }
 }
