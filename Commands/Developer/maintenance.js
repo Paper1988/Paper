@@ -65,7 +65,7 @@ module.exports = {
 
             return await interaction.reply({ embeds: [Embed], ephemeral: true })
         } else {
-            await interaction.showModal(modal)
+            return await interaction.showModal(modal)
         }
     }
 }
