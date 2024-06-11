@@ -23,12 +23,12 @@ module.exports = {
 
         await Data.save()
 
-        if (Data.Maintenance) {
+        if (Data.Maintenance === 'True') {
             return await interaction.reply({
                 content: '<:correct_859388130411282442:1201843648229294121> | 維護模式已開啟',
                 ephemeral: true
             })
-        } else {
+        } else if (Data.Maintenance === 'False') {
             await Data.deleteOne({ ClientId: client.user.id, Description: Data.Description })
             return await interaction.reply({
                 content: '<:xmark_988409378161954866:1201844342029815848> | 維護模式已關閉',
