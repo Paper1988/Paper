@@ -1,6 +1,6 @@
 const client = require('../../index.js')
 const { EmbedBuilder } = require('discord.js')
-const { Events } = require('distube')
+const { Events, RepeatMode } = require('distube')
 const DB = require('../../Structures/Schemas/MusicDB.js')
 const MusicEmbed = require('../../Systems/MusicEmbed.js')
 const MusicButtons = require('../../Systems/MusicButtons.js')
@@ -61,7 +61,9 @@ client.distube
                     new EmbedBuilder()
                         .setColor('Red')
                         .setDescription(
-                            `<:outage_868122243845206087:1202112862990897172> | 發生錯誤: ${e.toString().slice(0, 1974)}`
+                            `<:outage_868122243845206087:1202112862990897172> | 發生錯誤: ${e
+                                .toString()
+                                .slice(0, 1974)}`
                         )
                 ]
             })
@@ -112,15 +114,13 @@ client.distube
     .on(Events.FINISH_SONG, async (queue, song) => {
         let Data = await DB.findOne({ GuildID: queue.id })
         const msg = await queue.textChannel.messages.fetch(Data.message)
-        if (queue.repeatMode === 1) return
-        else if (queue.repeatMode === 2 && queue.songs[1]) return await msg.delete()
+        if (queue.repeatMode === RepeatMode.DISABLED) return msg.delete()
+        else if (queue.repeatMode === RepeatMode.SONG) return
+        else if (queue.repeatMode === RepeatMode.QUEUE && queue.songs[1]) return await msg.delete()
         await msg.delete()
     })
     .on(Events.NO_RELATED, async (queue, error) => {
         queue.textChannel.send(
             `<:warning_908958943466893323:1201844340276862976> | 找不到任何相關歌曲!`
         )
-    })
-    .on(Events.FFMPEG_DEBUG, async (debug) => {
-        console.log(debug)
     })

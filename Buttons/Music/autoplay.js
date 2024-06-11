@@ -1,5 +1,7 @@
 const MusicDB = require('../../Structures/Schemas/MusicDB')
 const Embed = require('../../Systems/MusicEmbed')
+const Button = require('../../Systems/MusicButtons')
+const { ButtonStyle } = require('discord.js')
 
 module.exports = {
     id: 'autoplay',
@@ -31,6 +33,8 @@ module.exports = {
         const message = await queue.textChannel.messages.fetch(Data.message)
 
         let Mode = await queue.toggleAutoplay(VoiceChannel)
+        if (Mode) Button[0].components[0].setStyle(ButtonStyle.Success)
+        else Button[0].components[0].setStyle(ButtonStyle.Secondary)
         message.edit({ embeds: [Embed(queue, queue.songs[0])] })
 
         await MusicDB.findOneAndUpdate(

@@ -5,6 +5,8 @@ const {
     PermissionFlagsBits
 } = require('discord.js')
 
+const { YouTubePlugin, SearchResultType } = require('@distube/youtube')
+
 module.exports = {
     subCommand: 'music.play',
     /**
@@ -17,6 +19,8 @@ module.exports = {
 
         const position = options.getNumber('position', false) ?? undefined
         const skip = options.getBoolean('skip', false)
+
+        const ytPlugin = new YouTubePlugin()
 
         if (!VoiceChannel)
             return interaction.reply({
@@ -46,7 +50,11 @@ module.exports = {
         const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/
 
         if (!youtubeRegex.test(options.getString('query'))) {
-            client.distube.play(VoiceChannel, options.getString('query'), {
+            const results = await ytPlugin.search(options.getString('query'), {
+                type: SearchResultType.VIDEO
+            })
+
+            client.distube.play(VoiceChannel, results[0], {
                 textChannel: channel,
                 member: member,
                 position: position,
@@ -80,7 +88,9 @@ module.exports = {
                             new EmbedBuilder()
                                 .setColor('Red')
                                 .setDescription(
-                                    `<:outage_868122243845206087:1202112862990897172> | 發生錯誤: ${e.toString().slice(0, 1974)}`
+                                    `<:outage_868122243845206087:1202112862990897172> | 發生錯誤: ${e
+                                        .toString()
+                                        .slice(0, 1974)}`
                                 )
                         ]
                     })

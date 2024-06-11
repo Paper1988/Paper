@@ -1,20 +1,30 @@
-const { ModalSubmitInteraction, Client } = require("discord.js");
+const { ModalSubmitInteraction, Client } = require('discord.js')
 
 module.exports = {
-    id: "addSong",
+    id: 'addSong',
     /**
-     * @param {ModalSubmitInteraction} interaction 
+     * @param {ModalSubmitInteraction} interaction
      * @param {Client} client
      */
     async execute(interaction, client) {
-        const { member } = interaction;
-        const VoiceChannel = member.voice.channel;
-        const songName = interaction.fields.getTextInputValue('songName');
+        const { member } = interaction
+        const VoiceChannel = member.voice.channel
+        const songName = interaction.fields.getTextInputValue('songName')
+        const { YouTubePlugin } = require('@distube/youtube')
 
-        await client.distube.play(VoiceChannel, songName, { member });
-        const msg = await interaction.reply({ content: `<:plus_988409343743496232:1202215484318302208> | 成功添加新歌曲: ${songName}`, ephemeral: true });
+        const ytPlugin = new YouTubePlugin()
+
+        const results = await ytPlugin.search(songName, {
+            type: SearchResultType.VIDEO
+        })
+
+        await client.distube.play(VoiceChannel, results[0], { member })
+        const msg = await interaction.reply({
+            content: `<:plus_988409343743496232:1202215484318302208> | 成功添加新歌曲: ${songName}`,
+            ephemeral: true
+        })
         setTimeout(async () => {
-            await msg.delete();
-        }, 10 * 1000);
+            await msg.delete()
+        }, 10 * 1000)
     }
 }

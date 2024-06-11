@@ -29,77 +29,29 @@ module.exports = {
         if (!queue)
             return interaction.reply({
                 content:
-                    '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!'
+                    '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
+                ephemeral: true
             })
 
-        const selectMenu = new ActionRowBuilder().addComponents([
-            new StringSelectMenuBuilder()
-                .setCustomId('filters')
-                .setPlaceholder('請選擇過濾器')
-                .setMinValues(1)
-                .addOptions(
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel('3d')
-                        .setDescription('增加/移除 `3d` 過濾器')
-                        .setValue('3d'),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel('karaoke')
-                        .setDescription('增加/移除 `karaoke` 過濾器')
-                        .setValue('karaoke'),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel('vaporwave')
-                        .setDescription('增加/移除 `vaporwave` 過濾器')
-                        .setValue('vaporwave'),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel('flanger')
-                        .setDescription('增加/移除 `flanger` 過濾器')
-                        .setValue('flanger'),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel('gate')
-                        .setDescription('增加/移除 `gate` 過濾器')
-                        .setValue('gate'),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel('reverse')
-                        .setDescription('增加/移除 `reverse` 過濾器')
-                        .setValue('reverse'),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel('mcompand')
-                        .setDescription('增加/移除 `mcompand` 過濾器')
-                        .setValue('mcompand'),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel('phaser')
-                        .setDescription('增加/移除 `phaser` 過濾器')
-                        .setValue('phaser'),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel('tremolo')
-                        .setDescription('增加/移除 `tremolo` 過濾器')
-                        .setValue('tremolo'),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel('earwax')
-                        .setDescription('增加/移除 `earwax` 過濾器')
-                        .setValue('earwax'),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel('bassboost')
-                        .setDescription('增加/移除 `bassboost` 過濾器')
-                        .setValue('bassboost'),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel('echo')
-                        .setDescription('增加/移除 `echo` 過濾器')
-                        .setValue('echo'),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel('nightcore')
-                        .setDescription('增加/移除 `nightcore` 過濾器')
-                        .setValue('nightcore'),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel('surround')
-                        .setDescription('增加/移除 `surround` 過濾器')
-                        .setValue('surround')
-                )
-        ])
+        const filters = new StringSelectMenuBuilder()
+            .setCustomId('filters')
+            .setPlaceholder('請選擇過濾器')
+            .setMinValues(1)
+
+        for (const filter in client.distube.filters) {
+            filters.addOptions(
+                new StringSelectMenuOptionBuilder()
+                    .setLabel(filter)
+                    .setDescription(`增加/移除 ${filter}`)
+                    .setValue(filter)
+            )
+        }
+
+        const selectMenu = new ActionRowBuilder().addComponents([filters])
 
         const button = new ActionRowBuilder().addComponents([
             new ButtonBuilder()
-                .setLabel('移除所有過濾器')
+                .setLabel('關')
                 .setCustomId('false')
                 .setEmoji('<:xmark_988409378161954866:1201844342029815848>')
                 .setStyle(ButtonStyle.Danger)
@@ -110,5 +62,6 @@ module.exports = {
             components: [selectMenu, button],
             ephemeral: true
         })
+        module.exports = [selectMenu, button]
     }
 }
