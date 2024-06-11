@@ -1,5 +1,5 @@
 const { StringSelectMenuInteraction, Client } = require('discord.js')
-const { selectMenu, button } = require('../../Buttons/Music/filters')
+const { selectMenu, button } = require('../Buttons/Music/filters')
 
 module.exports = {
     id: 'filters',

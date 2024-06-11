@@ -1,5 +1,5 @@
 const { ModalSubmitInteraction, Client } = require('discord.js')
-const MaintenanceDB = require('../../Paper/Structures/Schemas/MaintenanceDB.js')
+const MaintenanceDB = require('../Structures/Schemas/MaintenanceDB.js')
 
 module.exports = {
     id: 'maintenance',
