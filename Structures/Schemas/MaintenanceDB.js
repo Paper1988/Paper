@@ -1,9 +1,9 @@
-const { model, Schema } = require('mongoose')
+const mongoose = require('mongoose')
 
-module.exports = model(
+module.exports = mongoose.model(
     'MaintenanceDB',
-    new Schema({
-        ClientId: Number,
+    new mongoose.Schema({
+        ClientId: mongoose.Mixed,
         Description: String,
         Maintenance: String
     })
