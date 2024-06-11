@@ -5,6 +5,6 @@ module.exports = model(
     new Schema({
         ClientId: Number,
         Description: String,
-        Maintenance: Boolean
+        Maintenance: String
     })
 )
