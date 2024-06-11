@@ -1,5 +1,7 @@
 const MusicDB = require('../../Structures/Schemas/MusicDB')
 const Embed = require('../../Systems/MusicEmbed')
+const Button = require('../../Systems/MusicButtons')
+const { ButtonStyle } = require('discord.js')
 
 module.exports = {
     id: 'volumeDown',
@@ -27,12 +29,18 @@ module.exports = {
                     '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true
             })
-        const Data = await MusicDB.findOne({ GuildID: queue.id })
+
+        const Data = await MusicDB.findOne({ GuildID: guild.id })
         const message = await queue.textChannel.messages.fetch(Data.message)
 
-        const song = queue.songs[0]
         client.distube.setVolume(VoiceChannel, queue.volume - 10)
-        message.edit({ embeds: [Embed(queue, song)] })
+
+        Button[1].components[1].setStyle(ButtonStyle.Success)
+        message.edit({ embeds: [Embed(queue, queue.songs[0])], components: Button })
+        Button[1].components[1].setStyle(ButtonStyle.Secondary)
+        setTimeout(() => {
+            message.edit({ embeds: [Embed(queue, queue.songs[0])], components: Button })
+        }, 500)
         await MusicDB.findOneAndUpdate(
             { GuildID: guild.id },
             { volume: queue.volume },
