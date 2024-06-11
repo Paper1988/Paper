@@ -41,7 +41,7 @@ module.exports = {
                 ephemeral: true
             })
 
-        if (mDB.Maintenance) {
+        if (mDB.Maintenance === 'True') {
             return await interaction.reply({
                 embeds: [
                     Embed.setTitle(`<:discordstaff:1094236985318707221> | 維護模式`)
