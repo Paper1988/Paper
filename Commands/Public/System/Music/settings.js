@@ -1,5 +1,6 @@
 const { EmbedBuilder, ChatInputCommandInteraction, Client } = require('discord.js')
 const MusicDB = require('../../../../Structures/Schemas/MusicDB')
+const { Events } = require('distube')
 
 module.exports = {
     subCommand: 'music.settings',
@@ -8,8 +9,10 @@ module.exports = {
      * @param {Client} client
      */
     async execute(interaction, client) {
-        const { options, member, guild } = interaction
+        const { options, member } = interaction
         const VoiceChannel = member.voice.channel
+
+        const { update } = require('../../../../Events/Distube/DistubeEvents')
 
         if (!VoiceChannel)
             return interaction.reply({
@@ -28,8 +31,7 @@ module.exports = {
         if (!queue)
             return interaction.reply({
                 content:
-                    '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
-                ephemeral: true
+                    '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!'
             })
 
         switch (options.getString('options')) {
@@ -37,8 +39,7 @@ module.exports = {
                 if (!queue.songs[1])
                     return interaction.reply({
                         content:
-                            '<:outage_868122243845206087:1202112862990897172> | 這是最後一首歌了!',
-                        ephemeral: true
+                            '<:outage_868122243845206087:1202112862990897172> | 這是最後一首歌了!'
                     })
                 await queue.skip(VoiceChannel)
                 return interaction.reply({
@@ -49,7 +50,9 @@ module.exports = {
 
             case 'stop':
                 await queue.stop(VoiceChannel)
+                await queue.emit(Events.FINISH_SONG)
                 await queue.voice.leave()
+                clearInterval(update)
                 return interaction.reply({
                     content:
                         '<:stop_988409337837924422:1201844316675510364> | 成功停止音樂並退出語音頻道',
@@ -87,13 +90,19 @@ module.exports = {
                     { autoplayMode: Mode ? true : false },
                     { new: true, upsert: true }
                 )
-                return await interaction.reply({
-                    content: `<:loop_861852632893227029:1201843696031764490> | 成功切換自動播放模式: ${Mode ? '<:correct_859388130411282442:1201843648229294121>' : '<:xmark_988409378161954866:1201844342029815848>'}`,
+                return interaction.reply({
+                    content: `<:loop_861852632893227029:1201843696031764490> | 成功切換自動播放模式: ${
+                        Mode
+                            ? '<:correct_859388130411282442:1201843648229294121>'
+                            : '<:xmark_988409378161954866:1201844342029815848>'
+                    }`,
                     ephemeral: true
                 })
 
             case 'previous':
                 await queue.previous(VoiceChannel)
+                await queue.emit(Events.FINISH_SONG, queue)
+                await queue.emit(Events.PLAY_SONG, queue, queue.songs[0])
                 return interaction.reply({
                     content:
                         '<:backforward_988409328698523708:1201843626435686440> | 成功播放上一首歌曲',
@@ -103,7 +112,8 @@ module.exports = {
             case 'related':
                 await queue.addRelatedSong(VoiceChannel)
                 return interaction.reply({
-                    content: `<:plus_988409343743496232:1202215484318302208> | 成功添加相似歌曲到播放清單中`,
+                    content:
+                        '<:plus_988409343743496232:1202215484318302208> | 成功添加相似歌曲到播放清單中',
                     ephemeral: true
                 })
 
@@ -125,34 +135,27 @@ module.exports = {
                 })
 
             case 'queue':
-                return interaction
-                    .reply({
-                        embeds: [
-                            new EmbedBuilder()
-                                .setColor('Purple')
-                                .setDescription(
-                                    `<:queue_861852633240961024:1202112866069520385> | 播放清單\n${queue.songs
-                                        .slice(0, 10)
-                                        .map(
-                                            (song, id) =>
-                                                `\n**${id + 1}**. \`${song.name}\` - \`${song.formattedDuration}\``
-                                        )}`
-                                )
-                                .setImage(queue.songs[0].thumbnail)
-                                .setTimestamp()
-                                .setFooter({
-                                    text: `${client.user.username}`,
-                                    iconURL: client.user.displayAvatarURL()
-                                })
-                        ]
-                    })
-                    .then((msg) => setTimeout(() => msg.delete(), 20 * 1000))
-
-            case 'quit':
-                await queue.voice.leave()
-                return await interaction.reply({
-                    content: '<:leave_860487640113217546:1202217506991771658> | 成功退出語音頻道',
-                    ephemeral: true
+                return interaction.reply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setColor('Purple')
+                            .setDescription(
+                                `<:queue_861852633240961024:1202112866069520385> | 播放清單\n${queue.songs
+                                    .slice(0, 10)
+                                    .map(
+                                        (song, id) =>
+                                            `\n**${id + 1}**. \`${song.name}\` - \`${
+                                                song.formattedDuration
+                                            }\``
+                                    )}`
+                            )
+                            .setImage(queue.songs[0].thumbnail)
+                            .setTimestamp()
+                            .setFooter({
+                                text: `${client.user.username}`,
+                                iconURL: client.user.displayAvatarURL()
+                            })
+                    ]
                 })
         }
     }

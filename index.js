@@ -27,15 +27,27 @@ const { SpotifyPlugin } = require('@distube/spotify')
 const { SoundCloudPlugin } = require('@distube/soundcloud')
 const { YtDlpPlugin } = require('@distube/yt-dlp')
 const { DirectLinkPlugin } = require('@distube/direct-link')
+const { YouTubePlugin } = require('@distube/youtube')
 const { SpotifyClientId, SpotifyClientSecret } = require('./Structures/config.json')
-const pathToFfmpeg = require('ffmpeg-static')
 
 client.distube = new DisTube(client, {
+    customFilters: {
+        // https://distube.js.org/types/DisTubeOptions.html
+        speed_025: 'atempo=0.25',
+        speed_050: 'atempo=0.5',
+        speed_075: 'atempo=0.75',
+        speed_1: 'atempo=1',
+        speed_125: 'atempo=1.25',
+        speed_150: 'atempo=1.5',
+        speed_175: 'atempo=1.75',
+        speed_2: 'atempo=2'
+    },
     emitNewSongOnly: true,
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: false,
+    nsfw: true,
     ffmpeg: {
-        path: pathToFfmpeg
+        path: '../Paper/Structures/ffmpeg.exe'
     },
     plugins: [
         new SpotifyPlugin({
@@ -47,10 +59,17 @@ client.distube = new DisTube(client, {
         }),
         new SoundCloudPlugin(),
         new YtDlpPlugin({ update: true }),
-        new DirectLinkPlugin()
-    ],
-    nsfw: true,
-    savePreviousSongs: true
+        new DirectLinkPlugin(),
+        new YouTubePlugin({
+            ytdlOptions: {
+                highWaterMark: 1024 * 1024 * 64,
+                quality: 'highestaudio',
+                format: 'audioonly',
+                liveBuffer: 60000,
+                dlChunkSize: 1024 * 1024 * 4
+            }
+        })
+    ]
 })
 /**************************************************/
 const errorHandling = require('discord.js-anticrash')

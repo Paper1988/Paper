@@ -1,4 +1,5 @@
 const DB = require('../../Structures/Schemas/MusicDB')
+const { Events } = require('distube')
 
 module.exports = {
     id: 'stop',
@@ -31,6 +32,7 @@ module.exports = {
 
         await msg.delete()
         await queue.stop(VoiceChannel)
+        await queue.emit(Events.FINISH_SONG, queue)
         return interaction
             .reply({
                 content:

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js')
 const { defaultFilters } = require('distube')
-const { SoundCloudPlugin } = require('@distube/soundcloud')
+const { YouTubePlugin, SearchResultType } = require('@distube/youtube')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -62,7 +62,18 @@ module.exports = {
                         .setRequired(true)
                         .addChoices(
                             { name: '移除所有過濾器', value: 'false' },
-                            ...Object.keys(defaultFilters).map((k) => ({ name: k, value: k }))
+                            ...Object.keys(defaultFilters).map((k) => ({ name: k, value: k })),
+                            ...Object.keys({
+                                // https://distube.js.org/types/DisTubeOptions.html
+                                speed_025: 'atempo=0.25',
+                                speed_050: 'atempo=0.5',
+                                speed_075: 'atempo=0.75',
+                                speed_1: 'atempo=1',
+                                speed_125: 'atempo=1.25',
+                                speed_150: 'atempo=1.5',
+                                speed_175: 'atempo=1.75',
+                                speed_2: 'atempo=2'
+                            }).map((k) => ({ name: k, value: k }))
                         )
                 )
         )
@@ -98,26 +109,26 @@ module.exports = {
                 )
         ),
     usage: '/music (play, volume, settings, seek, filters, jump)',
-    async autocomplete(interaction, client) {
+    async autocomplete(interaction) {
         // 檢查是否為 "play" 子指令的自動完成
         if (interaction.commandName === 'music' && interaction.options.getSubcommand() === 'play') {
-            const scPlugin = new SoundCloudPlugin()
+            const ytPlugin = new YouTubePlugin()
             const value = interaction.options.getFocused().toString().trim()
 
             // 確保搜索字符串不是空的
             if (!value) {
                 // 如果是空的，可以選擇回應一些預設選項或不回應
-                return interaction.respond([]) // 不回應任何選項
+                return await interaction.respond([]) // 不回應任何選項
             }
 
             if (value.startsWith('https://')) {
-                return interaction.respond([])
+                return await interaction.respond([])
             }
 
             let choices = []
             // 假設有一個搜索功能可以返回歌曲列表
-            await scPlugin
-                .search(value)
+            await ytPlugin
+                .search(value, { type: SearchResultType.VIDEO, limit: 10 })
                 .then((results) => {
                     choices = results.map((song, id) => ({
                         name: `${song.name}`,
@@ -126,12 +137,7 @@ module.exports = {
                 })
                 .catch(async (error) => {
                     // 處理錯誤，例如通過回應一些預設選項或顯示錯誤信息
-                    await client.distube.search(value).then((results) => {
-                        choices = results.map((song, id) => ({
-                            name: `${song.name}`,
-                            value: `${song.name}`
-                        }))
-                    })
+                    return await interaction.respond([])
                 })
 
             // 篩選出包含用戶輸入值的選項
@@ -140,7 +146,7 @@ module.exports = {
                 .slice(0, 10)
 
             // 回應用戶輸入，提供選項列表
-            await interaction.respond(filtered)
+            return await interaction.respond(filtered)
         }
     }
 }

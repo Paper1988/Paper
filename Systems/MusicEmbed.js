@@ -4,7 +4,11 @@ module.exports = (queue, song) =>
     new EmbedBuilder()
         .setColor('Green')
         .setDescription(
-            `<:music_860123644201271326:1201843716097327185> | [${song.name}](${song.url}) - \` ${song.stream.playFromSource ? song.formattedDuration : song.stream.song?.formattedDuration} \``
+            `<:music_860123644201271326:1201843716097327185> | [${song.name}](${song.url}) - \` ${
+                song.stream.playFromSource
+                    ? song.formattedDuration
+                    : song.stream.song?.formattedDuration
+            } \``
         )
         .setAuthor({ name: `${song.user.displayName}`, iconURL: song.user.displayAvatarURL() })
         .addFields(
@@ -16,7 +20,7 @@ module.exports = (queue, song) =>
             {
                 name: '<:spark_860123643722727444:1201844297041973320>過濾器',
                 value: `${
-                    queue.filters.names.join(', ') ||
+                    `\`${queue.filters.names.join(', ')}\`` ||
                     '<:xmark_988409378161954866:1201844342029815848>'
                 }`,
                 inline: true
@@ -34,7 +38,11 @@ module.exports = (queue, song) =>
             },
             {
                 name: '<:update_860123644297871382:1201844333968625695>自動播放',
-                value: `${queue.autoplay ? '<:correct_859388130411282442:1201843648229294121>' : '<:xmark_988409378161954866:1201844342029815848>'}`,
+                value: `${
+                    queue.autoplay
+                        ? '<:correct_859388130411282442:1201843648229294121>'
+                        : '<:xmark_988409378161954866:1201844342029815848>'
+                }`,
                 inline: true
             },
             {
@@ -44,9 +52,13 @@ module.exports = (queue, song) =>
             },
             {
                 name: '<:clock_964491800465276940:1201843646203433030>進度',
-                value: `\` ${queue.formattedCurrentTime} \` - \` ${song.stream.playFromSource ? song.formattedDuration : song.stream.song?.formattedDuration} \``,
+                value: `\` ${queue.formattedCurrentTime} \` - \` ${
+                    song.stream.playFromSource
+                        ? song.formattedDuration
+                        : song.stream.song?.formattedDuration
+                } \``,
                 inline: true
             }
         )
-        .setThumbnail(song.thumbnail)
+        .setImage(song.thumbnail)
         .setTimestamp()

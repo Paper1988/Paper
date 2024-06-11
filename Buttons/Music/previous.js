@@ -1,3 +1,5 @@
+const { Events } = require('distube')
+
 module.exports = {
     id: 'previous', // The buttons .setCustomId
     async execute(interaction, client) {
@@ -25,21 +27,17 @@ module.exports = {
                 ephemeral: true
             })
 
-        await queue
-            .previous(VoiceChannel)
-            .then(() =>
-                interaction.reply({
-                    content:
-                        '<:backforward_988409328698523708:1201843626435686440> | 成功返回上一首歌曲',
-                    ephemeral: true
-                })
-            )
-            .catch((err) =>
-                interaction.reply({
-                    content:
-                        '<:warning_908958943466893323:1201844340276862976> | 你提供的是無效的數字(可能是該位置沒有歌曲)!',
-                    ephemeral: true
-                })
-            )
+        if (!queue.previousSongs[0])
+            return interaction.reply({
+                content: '<:outage_868122243845206087:1202112862990897172> | 這是清單中第一首歌曲!',
+                ephemeral: true
+            })
+        await queue.previous(VoiceChannel)
+        await queue.emit(Events.FINISH_SONG, queue)
+        await queue.emit(Events.PLAY_SONG, queue, queue.songs[1])
+        return interaction.reply({
+            content: '<:backforward_988409328698523708:1201843626435686440> | 成功返回上一首歌曲',
+            ephemeral: true
+        })
     }
 }
