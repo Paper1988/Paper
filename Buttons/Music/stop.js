@@ -32,7 +32,7 @@ module.exports = {
 
         await msg.delete()
         await queue.stop(VoiceChannel)
-        await queue.emit(Events.FINISH_SONG, queue)
+        await queue.voice.leave()
         return interaction
             .reply({
                 content:
