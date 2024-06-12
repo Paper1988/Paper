@@ -54,8 +54,8 @@ client.distube
             })
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     })
-    .on(Events.ERROR, (e, channel, song) => {
-        channel
+    .on(Events.ERROR, (e, queue, song) => {
+        queue.textChannel
             .send({
                 embeds: [
                     new EmbedBuilder()

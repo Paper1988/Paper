@@ -27,6 +27,11 @@ module.exports = {
         const view = interaction.options.getBoolean('view')
 
         const Data = MaintenanceDB.findOne({ ClientId: client.user.id })
+        if (!Data)
+            return interaction.reply({
+                content: '<:warning_908958943466893323:1201844340276862976> | 找不到資料庫!',
+                ephemeral: true
+            })
 
         const modal = new ModalBuilder().setCustomId('maintenance').setTitle('切換維護模式')
 

@@ -50,16 +50,35 @@ module.exports = {
         const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/
 
         if (!youtubeRegex.test(options.getString('query'))) {
-            const results = await ytPlugin.search(options.getString('query'), {
-                type: SearchResultType.VIDEO
-            })
+            if (options.getString('query').startsWith('https://')) {
+                client.distube
+                    .play(VoiceChannel, options.getString('query'), {
+                        textChannel: channel,
+                        member: member,
+                        position,
+                        skip
+                    })
+                    .then(() => {
+                        const queue = client.distube.getQueue(interaction.guild)
+                        queue.filters.add('speed_1')
+                    })
+            } else {
+                const results = await ytPlugin.search(options.getString('query'), {
+                    type: SearchResultType.VIDEO
+                })
 
-            client.distube.play(VoiceChannel, results[0], {
-                textChannel: channel,
-                member: member,
-                position: position,
-                skip: skip
-            })
+                client.distube
+                    .play(VoiceChannel, results[0], {
+                        textChannel: channel,
+                        member: member,
+                        position,
+                        skip
+                    })
+                    .then(() => {
+                        const queue = client.distube.getQueue(interaction.guild)
+                        queue.filters.add('speed_1')
+                    })
+            }
         } else {
             return await interaction
                 .reply({
