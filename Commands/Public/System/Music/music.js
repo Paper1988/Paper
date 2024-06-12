@@ -23,7 +23,7 @@ module.exports = {
                 .addNumberOption((options) =>
                     options
                         .setName('position')
-                        .setDescription('請提供歌曲位置(數字)')
+                        .setDescription('請提供歌曲位置 [預設為0(第一首)，負數為最後一首]')
                         .setRequired(false)
                 )
         )
@@ -34,7 +34,7 @@ module.exports = {
                 .addNumberOption((options) =>
                     options
                         .setName('percent')
-                        .setDescription('請提供音量(數字)')
+                        .setDescription('請提供音量(1~200) [預設為50]')
                         .setRequired(true)
                         .setMinValue(0)
                         .setMaxValue(200)
