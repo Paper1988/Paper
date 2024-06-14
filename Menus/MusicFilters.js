@@ -36,13 +36,13 @@ module.exports = {
 
         const filters = queue.filters
         if (filters.has(filter)) {
-            filters.remove(filter)
-            interaction.reply({
+            await filters.remove(filter)
+            await interaction.reply({
                 content: `<:linkremove_865572289022394368:1201843685084647435> | 成功移除 \`${filter}\` 過濾器\n${msg}`
             })
         } else {
             await filters.add(filter)
-            interaction.reply({
+            await interaction.reply({
                 content: `<:linkadd_865572290065072128:1201884016404598814> | 成功增加 \`${filter}\` 過濾器\n${msg}`
             })
         }
