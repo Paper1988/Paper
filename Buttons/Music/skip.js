@@ -33,7 +33,7 @@ module.exports = {
             })
 
         await queue.skip(VoiceChannel)
-        if (queue.autoplay && queue.songs[1]) {
+        if (!queue.autoplay && !queue.songs[1]) {
             await queue.emit(Events.FINISH_SONG, queue)
             await queue.emit(Events.PLAY_SONG, queue, queue.songs[1])
         }

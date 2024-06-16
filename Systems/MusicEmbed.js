@@ -20,7 +20,7 @@ module.exports = (queue, song) =>
             {
                 name: '<:spark_860123643722727444:1201844297041973320>過濾器',
                 value: `${
-                    `\`${queue.filters.names.join(', ')}\`` ||
+                    queue.filters.names.join(', ') ??
                     '<:xmark_988409378161954866:1201844342029815848>'
                 }`,
                 inline: true
