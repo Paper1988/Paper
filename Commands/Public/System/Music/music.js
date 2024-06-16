@@ -103,11 +103,11 @@ module.exports = {
                             { name: '隨機播放', value: 'shuffle' },
                             { name: '切換自動播放', value: 'autoplay' },
                             { name: '添加相似歌曲', value: 'related' },
-                            { name: '切換重複播放', value: 'repeat' },
-                            { name: '離開語音頻道', value: 'quit' }
+                            { name: '切換重複播放', value: 'repeat' }
                         )
                 )
-        ),
+        )
+        .addSubcommand((sub) => sub.setName('quit').setDescription('退出語音頻道')),
     usage: '/music (play, volume, settings, seek, filters, jump)',
     async autocomplete(interaction) {
         // 檢查是否為 "play" 子指令的自動完成
