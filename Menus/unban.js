@@ -1,4 +1,10 @@
-const { SelectMenuInteraction, Client, ButtonBuilder, ButtonStyle } = require('discord.js')
+const {
+    SelectMenuInteraction,
+    Client,
+    ButtonBuilder,
+    ButtonStyle,
+    EmbedBuilder
+} = require('discord.js')
 
 module.exports = {
     id: 'unban:selectMenu',
