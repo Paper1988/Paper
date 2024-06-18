@@ -12,8 +12,6 @@ module.exports = {
         if (interaction.customId === 'mcstats_refresh') return
         if (interaction.customId === 'report:send') return
         if (interaction.customId === 'report:cancel') return
-        if (interaction.customId === 'unban:confirm') return
-        if (interaction.customId === 'unban:cancel') return
         if (interaction.customId === 'rps_r') return
         if (interaction.customId === 'rps_p') return
         if (interaction.customId === 'rps_s') return
