@@ -76,7 +76,7 @@ const config = {
 }
 
 errorHandling(client, config)
-process.setMaxListeners(0)
+client.setMaxListeners(0)
 
 loadEvents(client)
 
