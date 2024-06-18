@@ -1,7 +1,7 @@
 const { SelectMenuInteraction, Client, ButtonBuilder, ButtonStyle } = require('discord.js')
 
 module.exports = {
-    id: 'unban',
+    id: 'unban:selectMenu',
     /**
      *
      * @param {SelectMenuInteraction} interaction
