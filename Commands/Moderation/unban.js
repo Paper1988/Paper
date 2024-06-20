@@ -43,7 +43,7 @@ module.exports = {
             .setDescription('從下面的列表中選取一位用戶')
             .setFooter({
                 text: client.user.username,
-                iconURL: client.user.displayAvatarURL({ dynamic: true })
+                iconURL: client.user.displayAvatarURL()
             })
 
         const selectMenu = new ActionRowBuilder().addComponents([
