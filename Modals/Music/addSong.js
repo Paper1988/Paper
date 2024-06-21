@@ -1,4 +1,4 @@
-const { ModalSubmitInteraction, Client } = require('discord.js')
+const { ModalSubmitInteraction, Client, SearchResultType } = require('discord.js')
 
 module.exports = {
     id: 'addSong',
