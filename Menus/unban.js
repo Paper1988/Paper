@@ -46,5 +46,6 @@ module.exports = {
                 components: [buttons]
             })
         }
+        module.exports = { members }
     }
 }
