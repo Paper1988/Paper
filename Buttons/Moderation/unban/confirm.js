@@ -1,5 +1,6 @@
 const { EmbedBuilder, ButtonInteraction, Client } = require('discord.js')
 const { msg } = require('../../../Commands/Moderation/unban')
+const { members } = require('../../../Menus/unban')
 
 module.exports = {
     id: 'unban:confirm',
@@ -10,7 +11,6 @@ module.exports = {
      */
     async execute(interaction, client) {
         const { guild } = interaction
-        let members = await client.users.fetch(interaction.values[0])
         const processEmbed = new EmbedBuilder()
             .setColor('Blue')
             .setDescription(`<a:discord1792loading:1212016238839070791> | 正在執行中...`)

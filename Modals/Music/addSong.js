@@ -1,4 +1,5 @@
-const { ModalSubmitInteraction, Client, SearchResultType } = require('discord.js')
+const { ModalSubmitInteraction, Client } = require('discord.js')
+const { SearchResultType } = require('@distube/youtube')
 
 module.exports = {
     id: 'addSong',

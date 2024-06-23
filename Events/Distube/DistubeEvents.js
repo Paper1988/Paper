@@ -69,17 +69,6 @@ client.distube
             })
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     })
-    .on(Events.EMPTY, (queue) =>
-        queue.textChannel.send({
-            embeds: [
-                new EmbedBuilder()
-                    .setColor('Red')
-                    .setDescription(
-                        '<:nomember_859424400557604886:1201843730626400256> | 語音頻道是空的！<:leave_860487640113217546:1202217506991771658>離開頻道中...'
-                    )
-            ]
-        })
-    )
     .on(Events.FINISH, (queue) => {
         queue.textChannel
             .send({

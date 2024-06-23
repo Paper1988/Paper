@@ -86,7 +86,7 @@ module.exports = {
             case 'autoplay':
                 let Mode = await queue.toggleAutoplay(VoiceChannel)
                 await MusicDB.findOneAndUpdate(
-                    { GuildID: guild.id },
+                    { GuildID: queue.id },
                     { autoplayMode: Mode ? true : false },
                     { new: true, upsert: true }
                 )
