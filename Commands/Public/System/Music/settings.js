@@ -50,7 +50,7 @@ module.exports = {
 
             case 'stop':
                 await queue.stop(VoiceChannel)
-                await queue.emit(Events.FINISH_SONG)
+                await queue.emit(Events.FINISH_SONG, queue)
                 await queue.voice.leave()
                 clearInterval(update)
                 return interaction.reply({
