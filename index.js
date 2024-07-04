@@ -18,6 +18,7 @@ client.events = new Collection()
 client.subCommands = new Collection()
 client.modals = new Collection()
 client.selectMenus = new Collection()
+client.musicControllerMsgId = null
 ;['GiveawaySys'].forEach((sys) => {
     require(`./Systems/${sys}`)(client)
 })

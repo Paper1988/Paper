@@ -10,7 +10,7 @@ module.exports = {
         if (!VoiceChannel)
             return interaction.reply({
                 content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在一個語音頻道裡面才能使用音樂按鈕!',
+                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂按鈕!',
                 ephemeral: true
             })
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
@@ -34,7 +34,6 @@ module.exports = {
             })
         await queue.previous(VoiceChannel)
         await queue.emit(Events.FINISH_SONG, queue)
-        await queue.emit(Events.PLAY_SONG, queue, queue.songs[1])
         return interaction.reply({
             content: '<:backforward_988409328698523708:1201843626435686440> | 成功返回上一首歌曲',
             ephemeral: true

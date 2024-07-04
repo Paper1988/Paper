@@ -1,6 +1,6 @@
 const { EmbedBuilder, ButtonInteraction, Client } = require('discord.js')
 const { msg } = require('../../../Commands/Moderation/unban')
-const { members } = require('../../../Menus/unban')
+const { member } = require('../../../Menus/unban')
 
 module.exports = {
     id: 'unban:confirm',
@@ -24,11 +24,11 @@ module.exports = {
             components: []
         })
 
-        await guild.members.unban(members.id)
+        await guild.members.unban(member.id, `由 ${interaction.user.username} 操作`)
 
         const finishedEmbed = new EmbedBuilder()
             .setColor('Blue')
-            .setDescription(`${members} 已被解除封鎖!`)
+            .setDescription(`${member} 已被解除封鎖!`)
             .setFooter({
                 text: '你可以關閉這個視窗了'
             })

@@ -1,5 +1,4 @@
-const DB = require('../../Structures/Schemas/MusicDB')
-const { Events } = require('distube')
+const { updateMusicPlayerStatus, clearPlayer } = require('../../Systems/Music')
 
 module.exports = {
     id: 'stop',
@@ -11,7 +10,7 @@ module.exports = {
         if (!VoiceChannel)
             return interaction.reply({
                 content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在一個語音頻道裡面才能使用音樂按鈕!',
+                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂按鈕!',
                 ephemeral: true
             })
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
@@ -27,11 +26,10 @@ module.exports = {
                     '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true
             })
-        let Data = await DB.findOne({ GuildID: queue.id })
-        const msg = await queue.textChannel.messages.fetch(Data.message)
 
-        await msg.delete()
         await queue.stop(VoiceChannel)
+        clearPlayer(queue)
+        await updateMusicPlayerStatus(queue, true)
         await queue.voice.leave()
         return interaction
             .reply({

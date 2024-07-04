@@ -1,5 +1,5 @@
-const Embed = require('../../Systems/MusicEmbed')
 const MusicDB = require('../../Structures/Schemas/MusicDB')
+const { updateMusicPlayerStatus } = require('../../Systems/Music')
 
 module.exports = {
     id: 'loop',
@@ -11,7 +11,7 @@ module.exports = {
         if (!VoiceChannel)
             return interaction.reply({
                 content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在一個語音頻道裡面才能使用音樂按鈕!',
+                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂按鈕!',
                 ephemeral: true
             })
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
@@ -27,12 +27,9 @@ module.exports = {
                 ephemeral: true
             })
 
-        const Data = await MusicDB.findOne({ GuildID: guild.id })
-        const message = await queue.textChannel.messages.fetch(Data.message)
-
         let Mode = await client.distube.setRepeatMode(queue)
 
-        message.edit({ embeds: [Embed(queue, queue.songs[0])] })
+        updateMusicPlayerStatus(queue)
 
         await MusicDB.findOneAndUpdate(
             { GuildID: guild.id },

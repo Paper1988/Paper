@@ -1,19 +1,18 @@
 const MusicDB = require('../../Structures/Schemas/MusicDB')
-const Embed = require('../../Systems/MusicEmbed')
-const Button = require('../../Systems/MusicButtons')
+const { updateMusicPlayerStatus, generateMusicStatusButtons } = require('../../Systems/Music')
 const { ButtonStyle } = require('discord.js')
 
 module.exports = {
     id: 'volumeDown',
     async execute(interaction, client) {
         // To access an id / value from a button you MUST INCLUDE `client` AND `args` and in the same order as shown
-        const { member, guild } = interaction
+        const { member } = interaction
         const VoiceChannel = member.voice.channel
 
         if (!VoiceChannel)
             return interaction.reply({
                 content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在一個語音頻道裡面才能使用音樂按鈕!',
+                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂按鈕!',
                 ephemeral: true
             })
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
@@ -30,19 +29,16 @@ module.exports = {
                 ephemeral: true
             })
 
-        const Data = await MusicDB.findOne({ GuildID: guild.id })
-        const message = await queue.textChannel.messages.fetch(Data.message)
-
         client.distube.setVolume(VoiceChannel, queue.volume - 10)
 
-        Button[1].components[1].setStyle(ButtonStyle.Success)
-        message.edit({ embeds: [Embed(queue, queue.songs[0])], components: Button })
-        Button[1].components[1].setStyle(ButtonStyle.Secondary)
+        generateMusicStatusButtons(queue)[0].components[1].setStyle(ButtonStyle.Success)
+        await updateMusicPlayerStatus(queue)
+        generateMusicStatusButtons(queue)[0].components[1].setStyle(ButtonStyle.Secondary)
         setTimeout(() => {
-            message.edit({ embeds: [Embed(queue, queue.songs[0])], components: Button })
+            updateMusicPlayerStatus(queue)
         }, 500)
         await MusicDB.findOneAndUpdate(
-            { GuildID: guild.id },
+            { GuildID: queue.id },
             { volume: queue.volume },
             { new: true, upsert: true }
         )
