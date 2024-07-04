@@ -1,5 +1,6 @@
 const { EmbedBuilder, ChatInputCommandInteraction, Client } = require('discord.js')
 const MusicDB = require('../../../../Structures/Schemas/MusicDB')
+const { updateMusicPlayerStatus, clearPlayer } = require('../../../../Systems/Music')
 const { Events } = require('distube')
 
 module.exports = {
@@ -12,12 +13,10 @@ module.exports = {
         const { options, member } = interaction
         const VoiceChannel = member.voice.channel
 
-        const { update } = require('../../../../Events/Distube/DistubeEvents')
-
         if (!VoiceChannel)
             return interaction.reply({
                 content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在一個語音頻道裡面才能使用音樂指令!',
+                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂指令!',
                 ephemeral: true
             })
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
@@ -50,9 +49,9 @@ module.exports = {
 
             case 'stop':
                 await queue.stop(VoiceChannel)
-                await queue.emit(Events.FINISH_SONG, queue)
+                clearPlayer(queue)
+                await updateMusicPlayerStatus(queue, true)
                 await queue.voice.leave()
-                clearInterval(update)
                 return interaction.reply({
                     content:
                         '<:stop_988409337837924422:1201844316675510364> | 成功停止音樂並退出語音頻道',
@@ -102,7 +101,6 @@ module.exports = {
             case 'previous':
                 await queue.previous(VoiceChannel)
                 await queue.emit(Events.FINISH_SONG, queue)
-                await queue.emit(Events.PLAY_SONG, queue, queue.songs[0])
                 return interaction.reply({
                     content:
                         '<:backforward_988409328698523708:1201843626435686440> | 成功播放上一首歌曲',
@@ -120,7 +118,7 @@ module.exports = {
             case 'repeat':
                 let Mode2 = await client.distube.setRepeatMode(queue)
                 await MusicDB.findOneAndUpdate(
-                    { GuildID: guild.id },
+                    { GuildID: queue.id },
                     { repeatMode: (Mode2 = Mode2 ? (Mode2 == 2 ? 2 : 1) : 0) },
                     { new: true, upsert: true }
                 )
@@ -144,17 +142,11 @@ module.exports = {
                                     .slice(0, 10)
                                     .map(
                                         (song, id) =>
-                                            `\n**${id + 1}**. \`${song.name}\` - \`${
-                                                song.formattedDuration
-                                            }\``
-                                    )}`
+                                            `\n**${id + 1}**. \`${song.name}\` - \`${song.formattedDuration}\``
+                                    )}\n\n- \`和另外${leftSongs}首歌\``
                             )
                             .setImage(queue.songs[0].thumbnail)
                             .setTimestamp()
-                            .setFooter({
-                                text: `${client.user.username}`,
-                                iconURL: client.user.displayAvatarURL()
-                            })
                     ]
                 })
         }

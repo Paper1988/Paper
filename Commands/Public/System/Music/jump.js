@@ -35,7 +35,7 @@ module.exports = {
 
         await client.distube
             .jump(VoiceChannel, position)
-            .then(() => {
+            .then(async () => {
                 return interaction
                     .reply({
                         content: `<:frontforward_988409335791124551:1202215991694856262> | 成功跳至清單位置 \`${position}\` - ${queue.songs[position]}`

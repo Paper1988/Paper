@@ -6,7 +6,6 @@ module.exports = model(
         GuildID: String,
         volume: { type: Number, default: 50 },
         autoplay: { type: Boolean, default: false },
-        repeatMode: { type: Number, default: 0 },
-        message: { type: String, default: '' }
+        repeatMode: { type: Number, default: 0 }
     })
 )

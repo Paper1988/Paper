@@ -16,7 +16,7 @@ module.exports = {
      */
     async execute(interaction, client) {
         if (interaction.isStringSelectMenu() && interaction.customId == 'unban:selectMenu') {
-            let members = await client.users.fetch(interaction.values[0])
+            const member = await client.users.fetch(interaction.values[0])
 
             const confirmationEmbed = new EmbedBuilder()
                 .setColor('Blue')
@@ -45,7 +45,7 @@ module.exports = {
                 embeds: [confirmationEmbed],
                 components: [buttons]
             })
+            module.exports = { member }
         }
-        module.exports = { members }
     }
 }

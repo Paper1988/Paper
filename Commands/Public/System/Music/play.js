@@ -25,7 +25,7 @@ module.exports = {
         if (!VoiceChannel)
             return interaction.reply({
                 content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在一個語音頻道裡面才能使用音樂指令!',
+                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂指令!',
                 ephemeral: true
             })
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
@@ -111,6 +111,7 @@ module.exports = {
                                         .toString()
                                         .slice(0, 1974)}`
                                 )
+                                .setFooter({ text: `請使用 /report bug 協助回報!` })
                         ]
                     })
                     .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))

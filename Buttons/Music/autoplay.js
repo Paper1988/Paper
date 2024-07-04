@@ -1,6 +1,5 @@
 const MusicDB = require('../../Structures/Schemas/MusicDB')
-const Embed = require('../../Systems/MusicEmbed')
-const Button = require('../../Systems/MusicButtons')
+const { updateMusicPlayerStatus, generateMusicStatusButtons } = require('../../Systems/Music')
 const { ButtonStyle } = require('discord.js')
 
 module.exports = {
@@ -13,7 +12,7 @@ module.exports = {
         if (!VoiceChannel)
             return interaction.reply({
                 content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在一個語音頻道裡面才能使用音樂按鈕!',
+                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂按鈕!',
                 ephemeral: true
             })
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
@@ -29,16 +28,13 @@ module.exports = {
                 ephemeral: true
             })
 
-        const Data = await MusicDB.findOne({ GuildID: queue.id })
-        const message = await queue.textChannel.messages.fetch(Data.message)
-
         let Mode = await queue.toggleAutoplay(VoiceChannel)
 
         Mode
-            ? Button[0].components[0].setStyle(ButtonStyle.Success)
-            : Button[0].components[0].setStyle(ButtonStyle.Secondary)
+            ? generateMusicStatusButtons(queue)[0].components[0].setStyle(ButtonStyle.Success)
+            : generateMusicStatusButtons(queue)[0].components[0].setStyle(ButtonStyle.Secondary)
 
-        message.edit({ embeds: [Embed(queue, queue.songs[0])], components: Button })
+        await updateMusicPlayerStatus(queue)
 
         await MusicDB.findOneAndUpdate(
             { GuildID: guild.id },
