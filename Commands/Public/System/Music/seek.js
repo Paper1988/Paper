@@ -1,5 +1,4 @@
 const { ChatInputCommandInteraction, Client } = require('discord.js')
-const Embed = require('../../../../Systems/MusicEmbed')
 const MusicDB = require('../../../../Structures/Schemas/MusicDB')
 
 module.exports = {
@@ -34,12 +33,8 @@ module.exports = {
                 ephemeral: true
             })
 
-        const Data = await MusicDB.findOne({ GuildID: queue.id })
-        const message = await queue.textChannel.messages.fetch(Data.message)
-
         await queue.seek(Time)
-        message.edit({ embeds: [Embed(queue, queue.songs[0])] })
-        return await interaction
+        await interaction
             .reply({
                 content: `<:rightarrow_859388126653186058:1202113627122061403> | 成功跳到 **\`${Time}\`**`
             })
