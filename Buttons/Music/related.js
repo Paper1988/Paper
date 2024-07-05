@@ -6,7 +6,6 @@ module.exports = {
         // To access an id / value from a button you MUST INCLUDE `client` AND `args` and in the same order as shown
         const { member } = interaction
         const VoiceChannel = member.voice.channel
-        const Embed = require('../../Systems/MusicEmbed')
 
         if (!VoiceChannel)
             return interaction.reply({
@@ -28,10 +27,7 @@ module.exports = {
                 ephemeral: true
             })
 
-        const Data = await MusicDB.findOne({ GuildID: queue.id })
-        const message = await queue.textChannel.messages.fetch(Data.message)
         await queue.addRelatedSong(VoiceChannel)
-        message.edit({ embeds: [Embed(queue, queue.songs[0])] })
         return interaction.reply({
             content:
                 '<:plus_988409343743496232:1202215484318302208> | 成功添加相似歌曲到播放清單中',

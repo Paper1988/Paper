@@ -12,12 +12,14 @@ module.exports = {
      * @param {Guild} guild
      */
     async execute(guild) {
-        return [
-            await MusicDB.findOne({ GuildId: guild.id }),
-            await AntiAlt.findOne({ GuildID: guild.id }),
-            await AFKSystem.findOne({ GuildId: guild.id }),
-            await GiveawayDB.findOne({ GuildId: guild.id })
-        ].forEach((database) => {
+        const music = await MusicDB.findOne({ GuildId: guild.id })
+        const antiAlt = await AntiAlt.findOne({ GuildID: guild.id })
+        const AFK = await AFKSystem.findOne({ GuildId: guild.id })
+        const giveaway = await GiveawayDB.findOne({ GuildId: guild.id })
+
+        const li = [music, antiAlt, AFK, giveaway]
+
+        return li.forEach((database) => {
             deleteData(database)
         })
 
