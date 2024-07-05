@@ -28,8 +28,8 @@ module.exports = {
             })
 
         await queue.stop(VoiceChannel)
+        updateMusicPlayerStatus(queue, true)
         clearPlayer(queue)
-        await updateMusicPlayerStatus(queue, true)
         await queue.voice.leave()
         return interaction
             .reply({

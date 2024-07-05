@@ -51,33 +51,23 @@ module.exports = {
 
         if (!youtubeRegex.test(options.getString('query'))) {
             if (options.getString('query').startsWith('https://')) {
-                client.distube
-                    .play(VoiceChannel, options.getString('query'), {
-                        textChannel: channel,
-                        member: member,
-                        position,
-                        skip
-                    })
-                    .then(() => {
-                        const queue = client.distube.getQueue(interaction.guild)
-                        queue.filters.add('speed_1')
-                    })
+                client.distube.play(VoiceChannel, options.getString('query'), {
+                    textChannel: channel,
+                    member: member,
+                    position,
+                    skip
+                })
             } else {
                 const results = await ytPlugin.search(options.getString('query'), {
                     type: SearchResultType.VIDEO
                 })
 
-                client.distube
-                    .play(VoiceChannel, results[0], {
-                        textChannel: channel,
-                        member: member,
-                        position,
-                        skip
-                    })
-                    .then(() => {
-                        const queue = client.distube.getQueue(interaction.guild)
-                        queue.filters.add('speed_1')
-                    })
+                client.distube.play(VoiceChannel, results[0], {
+                    textChannel: channel,
+                    member: member,
+                    position,
+                    skip
+                })
             }
         } else {
             return await interaction

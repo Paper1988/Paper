@@ -1,5 +1,5 @@
 const { ModalSubmitInteraction, Client } = require('discord.js')
-const { SearchResultType } = require('@distube/youtube')
+const { SearchResultType, YouTubePlugin } = require('@distube/youtube')
 
 module.exports = {
     id: 'addSong',
@@ -11,7 +11,6 @@ module.exports = {
         const { member } = interaction
         const VoiceChannel = member.voice.channel
         const songName = interaction.fields.getTextInputValue('songName')
-        const { YouTubePlugin } = require('@distube/youtube')
 
         const ytPlugin = new YouTubePlugin()
 
@@ -19,13 +18,11 @@ module.exports = {
             type: SearchResultType.VIDEO
         })
 
-        await client.distube.play(VoiceChannel, results[0], { member })
-        const msg = await interaction.reply({
+        client.distube.play(VoiceChannel, results[0], { member })
+
+        await interaction.reply({
             content: `<:plus_988409343743496232:1202215484318302208> | 成功添加新歌曲: ${songName}`,
             ephemeral: true
         })
-        setTimeout(async () => {
-            await msg.delete()
-        }, 10 * 1000)
     }
 }
