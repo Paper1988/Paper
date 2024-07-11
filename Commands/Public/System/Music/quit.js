@@ -18,6 +18,10 @@ module.exports = {
                 ephemeral: true
             })
 
-        return await client.distube.voices.leave(VoiceChannel)
+        await client.distube.voices.leave(VoiceChannel)
+        return interaction.reply({
+            content: '<:leave_860487640113217546:1202217506991771658> | 成功離開語音頻道!',
+            ephemeral: true
+        })
     }
 }

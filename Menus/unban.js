@@ -21,7 +21,7 @@ module.exports = {
             const confirmationEmbed = new EmbedBuilder()
                 .setColor('Blue')
                 .setDescription(
-                    `<:question_860133545905225768:1202218555844853760> | 你確定要解除封鎖 ${members} 嗎?`
+                    `<:question_860133545905225768:1202218555844853760> | 你確定要解除封鎖 ${member} 嗎?`
                 )
                 .setFooter({
                     text: client.user.username,

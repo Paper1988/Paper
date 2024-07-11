@@ -83,28 +83,28 @@ module.exports = {
                 })
                 .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
         }
-        return await interaction
+        await interaction
             .reply({ content: '<a:discord1792loading:1212016238839070791> | 處理請求中...' })
-            .then((m) => {
+            .then((msg) => {
                 setTimeout(() => {
-                    m.delete()
+                    msg.delete()
                 }, 10 * 1000)
             })
-            .catch((e) => {
+            .catch((err) => {
                 channel
                     .send({
                         embeds: [
                             new EmbedBuilder()
                                 .setColor('Red')
                                 .setDescription(
-                                    `<:outage_868122243845206087:1202112862990897172> | 發生錯誤: ${e
+                                    `<:outage_868122243845206087:1202112862990897172> | 發生錯誤: ${err
                                         .toString()
                                         .slice(0, 1974)}`
                                 )
                                 .setFooter({ text: `請使用 /report bug 協助回報!` })
                         ]
                     })
-                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
+                    .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
             })
     }
 }
