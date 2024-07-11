@@ -35,27 +35,24 @@ module.exports = {
 
         switch (options.getString('options')) {
             case 'skip':
-                if (!queue.songs[1])
+                if (!queue.songs[1] && !queue.autoplay)
                     return interaction.reply({
                         content:
                             '<:outage_868122243845206087:1202112862990897172> | 這是最後一首歌了!'
                     })
                 await queue.skip(VoiceChannel)
                 return interaction.reply({
-                    content:
-                        '<:frontforward_988409335791124551:1202215991694856262> | 成功跳過歌曲',
-                    ephemeral: true
+                    content: '<:frontforward_988409335791124551:1202215991694856262> | 成功跳過歌曲'
                 })
 
             case 'stop':
                 await queue.stop(VoiceChannel)
-                clearPlayer(queue)
                 await updateMusicPlayerStatus(queue, true)
+                clearPlayer(queue)
                 await queue.voice.leave()
                 return interaction.reply({
                     content:
-                        '<:stop_988409337837924422:1201844316675510364> | 成功停止音樂並退出語音頻道',
-                    ephemeral: true
+                        '<:stop_988409337837924422:1201844316675510364> | 成功停止音樂並退出語音頻道'
                 })
 
             case 'togglePause':
@@ -63,23 +60,19 @@ module.exports = {
                     await queue.pause(VoiceChannel)
                     return interaction.reply({
                         content:
-                            '<:pause_861852632914198548:1201843739728035961> | 成功暫停播放歌曲',
-                        ephemeral: true
+                            '<:pause_861852632914198548:1201843739728035961> | 成功暫停播放歌曲'
                     })
                 } else {
                     await queue.resume(VoiceChannel)
                     return interaction.reply({
-                        content:
-                            '<:play_861852632800952320:1202112864857628692> | 成功恢復播放歌曲',
-                        ephemeral: true
+                        content: '<:play_861852632800952320:1202112864857628692> | 成功恢復播放歌曲'
                     })
                 }
 
             case 'shuffle':
                 await queue.shuffle(VoiceChannel)
                 return interaction.reply({
-                    content: '<:shuffle_988409354208313404:1201844292751212574> | 成功隨機播放歌曲',
-                    ephemeral: true
+                    content: '<:shuffle_988409354208313404:1201844292751212574> | 成功隨機播放歌曲'
                 })
 
             case 'autoplay':
@@ -94,8 +87,7 @@ module.exports = {
                         Mode
                             ? '<:correct_859388130411282442:1201843648229294121>'
                             : '<:xmark_988409378161954866:1201844342029815848>'
-                    }`,
-                    ephemeral: true
+                    }`
                 })
 
             case 'previous':
@@ -103,16 +95,14 @@ module.exports = {
                 await queue.emit(Events.FINISH_SONG, queue)
                 return interaction.reply({
                     content:
-                        '<:backforward_988409328698523708:1201843626435686440> | 成功播放上一首歌曲',
-                    ephemeral: true
+                        '<:backforward_988409328698523708:1201843626435686440> | 成功播放上一首歌曲'
                 })
 
             case 'related':
                 await queue.addRelatedSong(VoiceChannel)
                 return interaction.reply({
                     content:
-                        '<:plus_988409343743496232:1202215484318302208> | 成功添加相似歌曲到播放清單中',
-                    ephemeral: true
+                        '<:plus_988409343743496232:1202215484318302208> | 成功添加相似歌曲到播放清單中'
                 })
 
             case 'repeat':
@@ -128,8 +118,7 @@ module.exports = {
                             ? Mode2 == 2
                                 ? '<:loop_988409346637594744:1201843698976178246>整個清單'
                                 : '<:looponce_988409348826992680:1201884069399363634>單曲'
-                            : '<:xmark_988409378161954866:1201844342029815848>')}`,
-                    ephemeral: true
+                            : '<:xmark_988409378161954866:1201844342029815848>')}`
                 })
 
             case 'queue':

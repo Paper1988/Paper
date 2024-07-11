@@ -92,7 +92,7 @@ client.distube
     .on(Events.FINISH_SONG, async (queue, song) => {
         if (queue.repeatMode === RepeatMode.DISABLED) return updateMusicPlayerStatus(queue, true)
         if (queue.repeatMode === RepeatMode.SONG) return updateMusicPlayerStatus(queue, false)
-        if (queue.repeatMode === RepeatMode.QUEUE && queue.songs[1])
+        if (queue.repeatMode === RepeatMode.QUEUE && (queue.songs[1] || queue.autoplay))
             return updateMusicPlayerStatus(queue, false)
         else if (!queue.songs[1]) return updateMusicPlayerStatus(queue, true)
     })
