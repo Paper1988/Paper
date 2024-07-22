@@ -90,8 +90,8 @@ module.exports = {
                     msg.delete()
                 }, 10 * 1000)
             })
-            .catch((err) => {
-                channel
+            .catch(async (err) => {
+                return await channel
                     .send({
                         embeds: [
                             new EmbedBuilder()

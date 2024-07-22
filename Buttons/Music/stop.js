@@ -28,10 +28,10 @@ module.exports = {
             })
 
         await queue.stop(VoiceChannel)
-        updateMusicPlayerStatus(queue, true)
+        await updateMusicPlayerStatus(queue, true)
         clearPlayer(queue)
         await queue.voice.leave()
-        return interaction
+        await interaction
             .reply({
                 content:
                     '<:stop_988409337837924422:1201844316675510364> | 成功停止音樂並退出語音頻道'
