@@ -23,7 +23,9 @@ module.exports = {
                 .addNumberOption((options) =>
                     options
                         .setName('position')
-                        .setDescription('請提供歌曲位置 [預設為0(第一首)，負數為最後一首]')
+                        .setDescription(
+                            '請提供歌曲插入位置 [預設為0(第一首)，所有負數皆為最後一首]'
+                        )
                         .setRequired(false)
                 )
         )

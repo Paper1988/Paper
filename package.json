@@ -1,6 +1,6 @@
 {
     "name": "paper",
-    "version": "2.1.0",
+    "version": "2.2.1",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -14,7 +14,7 @@
         "@discordjs/voice": "^0.17.0",
         "@distube/direct-link": "^1.0.0",
         "@distube/soundcloud": "^2.0.1",
-        "@distube/spotify": "^2.0.1",
+        "@distube/spotify": "^2.0.2",
         "@distube/youtube": "^1.0.2",
         "@distube/yt-dlp": "^2.0.1",
         "@distube/ytdl-core": "^4.13.5",

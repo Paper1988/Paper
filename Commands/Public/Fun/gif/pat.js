@@ -2,12 +2,7 @@ const { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } = requi
 const rga = require('random-gif-api')
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('pat')
-        .setDescription('摸某人!')
-        .addUserOption((option) =>
-            option.setName('member').setDescription('提及您要摸的用戶').setRequired(true)
-        ),
+    subCommand: 'gif.pat',
     usage: '/pat <member>',
     /**
      * @param {ChatInputCommandInteraction} interaction

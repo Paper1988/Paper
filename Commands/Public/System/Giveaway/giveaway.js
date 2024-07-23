@@ -13,9 +13,7 @@ module.exports = {
                 .addStringOption((options) =>
                     options
                         .setName('duration')
-                        .setDescription(
-                            '請為這個抽獎活動提供時間(例如: 10d 2h 30m [翻譯: 10天 2小時 30分鐘])'
-                        )
+                        .setDescription('請為這個抽獎活動提供時間(時間單位: d h m s)')
                         .setRequired(true)
                 )
                 .addStringOption((options) =>
@@ -76,7 +74,7 @@ module.exports = {
                         )
                 )
                 .addStringOption((options) =>
-                    options.setName('query').setDescription('請提供訊息ID').setRequired(true)
+                    options.setName('message-ID').setDescription('請提供訊息ID').setRequired(true)
                 )
         )
         .addSubcommand((sub) =>
@@ -84,7 +82,7 @@ module.exports = {
                 .setName('edit')
                 .setDescription('修改設定')
                 .addStringOption((options) =>
-                    options.setName('query').setDescription('請提供訊息ID').setRequired(true)
+                    options.setName('message-ID').setDescription('請提供訊息ID').setRequired(true)
                 )
                 .addStringOption((options) =>
                     options

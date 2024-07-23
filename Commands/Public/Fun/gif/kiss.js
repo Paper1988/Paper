@@ -2,23 +2,18 @@ const { EmbedBuilder, ChatInputCommandInteraction, SlashCommandBuilder } = requi
 const rga = require('random-gif-api')
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('kill')
-        .setDescription('殺掉某人!')
-        .addUserOption((option) =>
-            option.setName('member').setDescription('提及你想殺掉的用戶').setRequired(true)
-        ),
-    usage: '/kill <member>',
+    subCommand: 'gif.kiss',
+    usage: '/kiss <member>',
     /**
      * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
         const Target = interaction.options.getUser('member')
         const Executer = interaction.user
-        const data = await rga.getGif('kill')
-        const HugEmbed = new EmbedBuilder()
+        const data = await rga.getGif('kiss')
+        const kissEmbed = new EmbedBuilder()
             .setColor('#000000')
-            .setDescription(`**${Executer} 殺了 ${Target}**`)
+            .setDescription(`**${Executer} 親了一下 ${Target}**`)
             .setImage(data)
             .setTimestamp()
 
@@ -26,11 +21,11 @@ module.exports = {
             Response = new EmbedBuilder()
                 .setColor('#000000')
                 .setDescription(
-                    '<:outage_868122243845206087:1202112862990897172> | 你不能殺掉你自己！'
+                    '<:outage_868122243845206087:1202112862990897172> | 你不能親吻你自己！'
                 )
             return interaction.reply({ embeds: [Response] })
         } else {
-            interaction.reply({ embeds: [HugEmbed] })
+            interaction.reply({ embeds: [kissEmbed] })
         }
     }
 }

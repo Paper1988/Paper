@@ -12,7 +12,7 @@ module.exports = {
         const successEmbed = new EmbedBuilder().setColor('Green')
 
         const choices = interaction.options.getString('options')
-        const query = interaction.options.getString('query')
+        const query = interaction.options.getString('message-ID')
         const giveaway =
             // Search with giveaway prize
             client.giveawaysManager.giveaways.find(

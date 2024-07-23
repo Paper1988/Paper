@@ -16,7 +16,7 @@ module.exports = {
             options.setName('target').setDescription('選擇目標成員').setRequired(true)
         )
         .addStringOption((options) =>
-            options.setName('duration').setDescription('請提供時間 (1m,1h,1d)').setRequired(true)
+            options.setName('duration').setDescription('請提供時間(d h m s)').setRequired(true)
         )
         .addStringOption((options) =>
             options.setName('reason').setDescription('請提供一個理由').setMaxLength(512)
