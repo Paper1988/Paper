@@ -9,7 +9,7 @@ module.exports = {
      */
     async execute(interaction, client) {
         if (!interaction.isButton()) return
-        if (interaction.customId === 'mcstats_refresh') return
+        if (interaction.customId === 'mcstats:refresh') return
         if (interaction.customId === 'report:send') return
         if (interaction.customId === 'report:cancel') return
         if (interaction.customId === 'rps_r') return

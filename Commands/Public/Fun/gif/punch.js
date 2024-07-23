@@ -2,23 +2,18 @@ const { EmbedBuilder, ChatInputCommandInteraction, SlashCommandBuilder } = requi
 const rga = require('random-gif-api')
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('hug')
-        .setDescription('擁抱某人!')
-        .addUserOption((option) =>
-            option.setName('member').setDescription('提及你想擁抱的用戶').setRequired(true)
-        ),
-    usage: '/hug <member>',
+    subCommand: 'gif.punch',
+    usage: '/punch <member>',
     /**
      * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
         const Target = interaction.options.getUser('member')
         const Executer = interaction.user
-        const data = await rga.getGif('cuddle')
+        const data = await rga.getGif('punch')
         const HugEmbed = new EmbedBuilder()
             .setColor('#000000')
-            .setDescription(`**${Executer} 給了 ${Target} 一個大大的擁抱**`)
+            .setDescription(`**${Executer} 揍了一頓 ${Target}**`)
             .setImage(data)
             .setTimestamp()
 
@@ -26,7 +21,7 @@ module.exports = {
             Response = new EmbedBuilder()
                 .setColor('#000000')
                 .setDescription(
-                    '<:outage_868122243845206087:1202112862990897172> | 你不能擁抱自己！'
+                    '<:outage_868122243845206087:1202112862990897172> | 你不能揍你自己！'
                 )
             return interaction.reply({ embeds: [Response] })
         } else {

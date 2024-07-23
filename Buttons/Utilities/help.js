@@ -23,7 +23,7 @@ module.exports = {
                     {
                         label: '🔧功能',
                         description: '顯示所有功能指令',
-                        value: 'Utilities'
+                        value: 'General'
                     },
 
                     {

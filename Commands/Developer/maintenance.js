@@ -68,9 +68,9 @@ module.exports = {
                 .setFooter({ text: client.user.username, iconURL: client.user.avatarURL() })
                 .setColor('Blurple')
 
-            return await interaction.reply({ embeds: [Embed], ephemeral: true })
+            await interaction.reply({ embeds: [Embed], ephemeral: true })
         } else {
-            return await interaction.showModal(modal)
+            await interaction.showModal(modal)
         }
     }
 }

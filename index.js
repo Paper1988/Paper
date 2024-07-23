@@ -19,9 +19,6 @@ client.subCommands = new Collection()
 client.modals = new Collection()
 client.selectMenus = new Collection()
 client.musicControllerMsgId = null
-;['GiveawaySys'].forEach((sys) => {
-    require(`./Systems/${sys}`)(client)
-})
 /**************************************************/
 const { DisTube } = require('distube')
 const { SpotifyPlugin } = require('@distube/spotify')

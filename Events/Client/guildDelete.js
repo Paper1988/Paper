@@ -12,23 +12,9 @@ module.exports = {
      * @param {Guild} guild
      */
     async execute(guild) {
-        const music = await MusicDB.findOne({ GuildId: guild.id })
-        const antiAlt = await AntiAlt.findOne({ GuildID: guild.id })
-        const AFK = await AFKSystem.findOne({ GuildId: guild.id })
-        const giveaway = await GiveawayDB.findOne({ GuildId: guild.id })
-
-        const li = [music, antiAlt, AFK, giveaway]
-
-        return li.forEach((database) => {
-            deleteData(database)
-        })
-
-        async function deleteData(database) {
-            try {
-                database.deleteOne({ GuildId: guild.id })
-            } catch (error) {
-                console.error('無法刪除資料庫檔案:', error)
-            }
-        }
+        await MusicDB.findOneAndDelete({ GuildID: guild.id })
+        await AntiAlt.findOneAndDelete({ GuildID: guild.id })
+        await AFKSystem.findOneAndDelete({ GuildID: guild.id })
+        await GiveawayDB.findOneAndDelete({ guildId: guild.id })
     }
 }

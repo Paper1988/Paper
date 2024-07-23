@@ -2,7 +2,7 @@ const { EmbedBuilder, ChatInputCommandInteraction, SlashCommandBuilder } = requi
 const rga = require('random-gif-api')
 
 module.exports = {
-    data: new SlashCommandBuilder().setName('dance').setDescription('跳舞!'),
+    subCommand: 'gif.dance',
     usage: '/dance',
     /**
      * @param {ChatInputCommandInteraction} interaction

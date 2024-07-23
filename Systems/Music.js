@@ -34,7 +34,7 @@ const generateMusicStatusButtons = (queue) => {
         new ButtonBuilder()
             .setCustomId(`autoplay`)
             .setEmoji('<:update_860123644297871382:1201844333968625695>')
-            .setStyle(ButtonStyle.Secondary),
+            .setStyle(queue.autoplay ? ButtonStyle.Success : ButtonStyle.Secondary),
         new ButtonBuilder()
             .setCustomId(`previous`) // Note the buttons ID is on the left of the _ and the id is on the right. Also note your CANNOT have another _ in the customid eg `my_coolbutton_${target.id}`
             .setEmoji('<:backforward_988409328698523708:1201843626435686440>')
@@ -42,8 +42,12 @@ const generateMusicStatusButtons = (queue) => {
             .setDisabled(queue.previousSongs.length === 0),
         new ButtonBuilder()
             .setCustomId(`togglePause`)
-            .setEmoji('<:pause_861852632914198548:1201843739728035961>')
-            .setStyle(ButtonStyle.Secondary),
+            .setEmoji(
+                queue.paused
+                    ? '<:pause_861852632914198548:1201843739728035961>'
+                    : '<:play_861852632800952320:1202112864857628692>'
+            )
+            .setStyle(queue.paused ? ButtonStyle.Primary : ButtonStyle.Secondary),
         new ButtonBuilder()
             .setCustomId(`skip`)
             .setEmoji('<:frontforward_988409335791124551:1202215991694856262>')
@@ -59,7 +63,7 @@ const generateMusicStatusButtons = (queue) => {
         new ButtonBuilder()
             .setCustomId(`loop`)
             .setEmoji('<:loop_988409346637594744:1201843698976178246>')
-            .setStyle(ButtonStyle.Secondary),
+            .setStyle(queue.repeatMode ? ButtonStyle.Success : ButtonStyle.Secondary),
         new ButtonBuilder()
             .setCustomId(`volumeDown`)
             .setEmoji('<:speaker_low_860133546278387763:1201844302725255178>')

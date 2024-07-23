@@ -3,9 +3,10 @@ const {
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
-    SlashCommandBuilder
+    SlashCommandBuilder,
+    ButtonStyle,
+    Client
 } = require('discord.js')
-const client = require('../../../index.js') // - path to your index.js, you need to have ( module.exports = client; ) in your index.js
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -41,14 +42,15 @@ module.exports = {
                 .setRequired(false)
         )
         .addAttachmentOption((options) =>
-            options.setName('picture').setDescription('新增圖片').setRequired(false)
+            options.setName('picture').setDescription('請提供圖片').setRequired(false)
         ),
-    usage: '/report (bug|suggest|other) [內容]',
+    usage: '/report <bug|suggest|other> [內容]',
     /**
      *
      * @param {ChatInputCommandInteraction} interaction
+     * @param {Client} client
      */
-    async execute(interaction) {
+    async execute(interaction, client) {
         const type = interaction.options.getString('type')
         const description = interaction.options.getString('description')
         const command = interaction.options.getString('command')
@@ -70,23 +72,31 @@ module.exports = {
                 .setCustomId('report:send')
                 .setLabel(`提交回報`)
                 .setEmoji('<:correct_859388130411282442:1201843648229294121>')
-                .setStyle('Success')
+                .setStyle(ButtonStyle.Success)
         )
         const cancel_button = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId('report:cancel')
                 .setLabel(`取消`)
                 .setEmoji('<:xmark_988409378161954866:1201844342029815848>')
-                .setStyle('Danger')
+                .setStyle(ButtonStyle.Danger)
+        )
+
+        const fix = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId('report:fix')
+                .setLabel(`標示為以解決`)
+                .setEmoji('<:fix:1265269709834813462>')
+                .setStyle(ButtonStyle.Primary)
         )
 
         switch (type) {
             case 'bug':
                 {
-                    const B_embed = new EmbedBuilder()
+                    const embed = new EmbedBuilder()
                         .setTitle('<:bug_859388130803974174:1201843636313280564> | Bug')
                         .setColor('Red')
-                        .setDescription(`提交者: ${interaction.user}  (伺服器: ${guild.name})`)
+                        .setDescription(`提交者: ${interaction.user.id}  (伺服器: ${guild.name})`)
                         .addFields(
                             {
                                 name: `提供的描述:`,
@@ -99,20 +109,47 @@ module.exports = {
                                 inline: false
                             }
                         )
+                        .setAuthor({
+                            name: `${interaction.user.username}`,
+                            iconURL: interaction.user.avatarURL
+                        })
                         .setThumbnail(picture.url)
                         .setTimestamp()
 
-                    const Bmessage = await interaction.reply({
+                    const message = await interaction.reply({
                         content: `預覽:`,
-                        embeds: [B_embed],
+                        embeds: [embed],
                         components: [cancel_button, send_button],
                         ephemeral: true
                     })
-                    const clr = Bmessage.createMessageComponentCollector()
+                    const clr = message.createMessageComponentCollector()
 
                     clr.on('collect', async (ButtonInteraction) => {
                         if (ButtonInteraction.customId == 'report:send') {
-                            await sch.send({ embeds: [B_embed] })
+                            const fixed = new EmbedBuilder()
+                                .setTitle('Bug已解決')
+                                .setDescription(
+                                    `<:exclamation_859388127885131796:1222867026805260380> | 正如標題所述，你在 ${message.createdAt()} 回報的Bug已經被開發人員修復，再次感謝你的回報!`
+                                )
+                                .setColor('Blurple')
+                                .setTimestamp()
+
+                            const msg = await sch.send({ embeds: [embed], components: [fix] })
+
+                            const collector = msg.createMessageComponentCollector()
+                            collector.on('collect', async (i) => {
+                                if (i.customId == 'report:fix') {
+                                    await i.update({
+                                        content: '',
+                                        embeds: [embed.setColor('Green')],
+                                        components: []
+                                    })
+                                    await interaction.user.send({
+                                        embeds: [fixed]
+                                    })
+                                }
+                            })
+
                             ButtonInteraction.update({
                                 content: '',
                                 embeds: [send_m],
@@ -133,29 +170,33 @@ module.exports = {
                 break
             case 'suggestion':
                 {
-                    const S_embed = new EmbedBuilder()
+                    const embed = new EmbedBuilder()
                         .setTitle('<:buld_882595243579559958:1201843638427209738> | 建議')
                         .setColor('Yellow')
                         .setDescription(`提交者: ${interaction.user}  (伺服器: ${guild.name})`)
                         .addFields({
-                            name: `提供的敘述:`,
+                            name: `提供的建議:`,
                             value: `\`\`\`${description}\`\`\``,
                             inline: true
+                        })
+                        .setAuthor({
+                            name: `${interaction.user.username}`,
+                            iconURL: interaction.user.avatarURL
                         })
                         .setThumbnail(picture.url)
                         .setTimestamp()
 
-                    const Smessage = await interaction.reply({
+                    const message = await interaction.reply({
                         content: `預覽:`,
-                        embeds: [S_embed],
+                        embeds: [embed],
                         components: [cancel_button, send_button],
                         ephemeral: true
                     })
-                    const clr = Smessage.createMessageComponentCollector()
+                    const clr = message.createMessageComponentCollector()
 
                     clr.on('collect', async (ButtonInteraction) => {
                         if (ButtonInteraction.customId == 'report:send') {
-                            await sch.send({ embeds: [S_embed] })
+                            await sch.send({ embeds: [embed] })
                             ButtonInteraction.update({
                                 content: '',
                                 embeds: [send_m],
@@ -176,7 +217,7 @@ module.exports = {
                 break
             case 'other':
                 {
-                    const O_embed = new EmbedBuilder()
+                    const embed = new EmbedBuilder()
                         .setTitle('<:globe_859424401971609600:1201843661785284659> | 其他')
                         .setColor('Purple')
                         .setDescription(`提交者: ${interaction.user}  (伺服器: ${guild.name})`)
@@ -185,20 +226,24 @@ module.exports = {
                             value: `\`\`\`${description}\`\`\``,
                             inline: true
                         })
+                        .setAuthor({
+                            name: `${interaction.user.username}`,
+                            iconURL: interaction.user.avatarURL
+                        })
                         .setThumbnail(picture.url)
                         .setTimestamp()
 
-                    const Omessage = await interaction.reply({
+                    const message = await interaction.reply({
                         content: `預覽:`,
-                        embeds: [O_embed],
+                        embeds: [embed],
                         components: [cancel_button, send_button],
                         ephemeral: true
                     })
-                    const clr = Omessage.createMessageComponentCollector()
+                    const clr = message.createMessageComponentCollector()
 
                     clr.on('collect', async (ButtonInteraction) => {
                         if (ButtonInteraction.customId == 'report:send') {
-                            await sch.send({ embeds: [O_embed] })
+                            await sch.send({ embeds: [embed] })
                             ButtonInteraction.update({
                                 content: '',
                                 embeds: [send_m],

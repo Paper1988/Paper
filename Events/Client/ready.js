@@ -17,15 +17,19 @@ module.exports = {
         loadButtons(client)
         loadModals(client)
         loadMenus(client)
+
+        require('../../Page/app.js')
+
+        require(`./Systems/GiveawaySys`)(client)
+
         mongoose.set('strictQuery', false)
         mongoose
-            .connect(client.config.Database, {})
+            .connect(client.config.Database)
             .then(() => console.log(`>>> ✅ 成功連結到 MongoDB!`))
 
         client.giveawaysManager
             ._init()
             .then(() => console.log('>>> ✅ 成功連結到 discord-giveaways!'))
-        require('../../Page/app.js')
 
         let memberCount = client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)
         const activities = [
@@ -36,17 +40,20 @@ module.exports = {
         setInterval(() => {
             const status = activities[Math.floor(Math.random() * activities.length)]
             client.user.setPresence({ activities: [{ name: status, type: ActivityType.Watching }] })
-        }, 15000)
+        }, 15 * 1000)
 
-        const channel = client.channels.cache.get('961615076220092496')
         const Embed = new EmbedBuilder()
             .setColor('Green')
             .setDescription(
                 `<:online_860123643395571713:1202213698467274792> ${client.user} 上線了!`
             )
-            .setFooter({ text: client.user.tag })
             .setTimestamp()
 
-        channel.send({ embeds: [Embed] })
+        client
+            .fetchWebhook(
+                '1265249137327214674',
+                'JKxcMDXNaR0Y2Y-LVt-syEGHsGIrab97FdyliUTGFH_dNEGaXf8Ty7RXLeAGEvliT5IN'
+            )
+            .then((webhook) => webhook.send({ embeds: [Embed] }))
     }
 }

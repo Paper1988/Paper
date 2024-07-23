@@ -11,7 +11,7 @@ const {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('help')
-        .setDescription('顯示完整的指令列表')
+        .setDescription('顯示所有指令的使用方法及用途')
         .setDMPermission(false),
     /**
      *
@@ -26,7 +26,7 @@ module.exports = {
                     {
                         label: '🔧功能',
                         description: '顯示所有功能指令',
-                        value: 'Utilities'
+                        value: 'General'
                     },
 
                     {
@@ -64,16 +64,16 @@ module.exports = {
                 )
         )
 
-        const embed = new EmbedBuilder()
+        const Embed = new EmbedBuilder()
             .setColor('Blue')
             .setTitle('指令幫助')
             .setDescription(
-                'Paper📄是一個多功能機器人，有許多指令，像是：音樂、抽獎、管理以及更多有趣的指令等你來發現！'
+                'Paper📄是一個多功能機器人，具備豐富且多樣的指令功能。\n無論你是想要`播放音樂`、`舉辦抽獎活動`、`管理伺服器`，還是尋找更多有趣和實用的功能，Paper📄都能滿足你的需求！'
             )
             .setTimestamp()
 
         await interaction.reply({
-            embeds: [embed],
+            embeds: [Embed],
             components: [helpMenu, inviteMe]
         })
     }
