@@ -1,10 +1,5 @@
 const { Guild } = require('discord.js')
 
-const MusicDB = require('../../Structures/Schemas/MusicDB')
-const AntiAlt = require('../../Structures/Schemas/AntiAlt')
-const AFKSystem = require('../../Structures/Schemas/AFKSystem')
-const GiveawayDB = require('../../Structures/Schemas/GiveawayDB')
-
 module.exports = {
     name: 'guildDelete',
     /**
@@ -12,9 +7,14 @@ module.exports = {
      * @param {Guild} guild
      */
     async execute(guild) {
-        await MusicDB.findOneAndDelete({ GuildID: guild.id })
-        await AntiAlt.findOneAndDelete({ GuildID: guild.id })
-        await AFKSystem.findOneAndDelete({ GuildID: guild.id })
-        await GiveawayDB.findOneAndDelete({ guildId: guild.id })
+        const MusicDB = require('../../Structures/Schemas/MusicDB')
+        const AntiAlt = require('../../Structures/Schemas/AntiAlt')
+        const AFKSystem = require('../../Structures/Schemas/AFKSystem')
+        const GiveawayDB = require('../../Structures/Schemas/GiveawayDB')
+
+        await MusicDB.deleteOne({ GuildID: guild.id })
+        await AntiAlt.deleteOne({ GuildID: guild.id })
+        await AFKSystem.deleteOne({ GuildID: guild.id })
+        await GiveawayDB.deleteOne({ guildId: guild.id })
     }
 }
