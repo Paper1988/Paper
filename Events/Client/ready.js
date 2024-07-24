@@ -20,7 +20,7 @@ module.exports = {
 
         require('../../Page/app.js')
 
-        require(`./Systems/GiveawaySys`)(client)
+        require(`../../Systems/GiveawaySys`)(client)
 
         mongoose.set('strictQuery', false)
         mongoose
@@ -49,7 +49,7 @@ module.exports = {
             )
             .setTimestamp()
 
-        client
+        await client
             .fetchWebhook(
                 '1265249137327214674',
                 'JKxcMDXNaR0Y2Y-LVt-syEGHsGIrab97FdyliUTGFH_dNEGaXf8Ty7RXLeAGEvliT5IN'
