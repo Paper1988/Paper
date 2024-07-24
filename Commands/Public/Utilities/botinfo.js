@@ -21,6 +21,7 @@ module.exports = {
      * @param {Client} client
      */
     async execute(interaction, client) {
+        await interaction.deferReply({ ephemeral: true })
         const formatter = new Intl.ListFormat('en-GB', {
             style: 'long',
             type: 'conjunction'
@@ -109,6 +110,6 @@ module.exports = {
                     inline: true
                 }
             )
-        await interaction.reply({ embeds: [embed], ephemeral: true })
+        await interaction.editReply({ embeds: [embed], ephemeral: true })
     }
 }

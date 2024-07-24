@@ -25,7 +25,7 @@ module.exports = {
         mongoose.set('strictQuery', false)
         mongoose
             .connect(client.config.Database)
-            .then(() => console.log(`>>> ✅ 成功連結到 MongoDB!`))
+            .then(() => console.log('>>> ✅ 成功連結到 MongoDB!'))
 
         client.giveawaysManager
             ._init()

@@ -44,8 +44,8 @@ const generateMusicStatusButtons = (queue) => {
             .setCustomId(`togglePause`)
             .setEmoji(
                 queue.paused
-                    ? '<:pause_861852632914198548:1201843739728035961>'
-                    : '<:play_861852632800952320:1202112864857628692>'
+                    ? '<:play_861852632800952320:1202112864857628692>'
+                    : '<:pause_861852632914198548:1201843739728035961>'
             )
             .setStyle(queue.paused ? ButtonStyle.Primary : ButtonStyle.Secondary),
         new ButtonBuilder()

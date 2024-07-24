@@ -18,6 +18,7 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
+        await interaction.deferReply()
         const helpMenu = new ActionRowBuilder().addComponents(
             new StringSelectMenuBuilder()
                 .setCustomId('helpMenu')
@@ -72,7 +73,7 @@ module.exports = {
             )
             .setTimestamp()
 
-        await interaction.reply({
+        await interaction.ediReply({
             embeds: [Embed],
             components: [helpMenu, inviteMe]
         })
