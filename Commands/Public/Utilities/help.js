@@ -73,7 +73,7 @@ module.exports = {
             )
             .setTimestamp()
 
-        await interaction.ediReply({
+        await interaction.editReply({
             embeds: [Embed],
             components: [helpMenu, inviteMe]
         })
