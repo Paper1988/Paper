@@ -17,10 +17,10 @@ module.exports = {
 
         const GuildData = await BlackListGuild.findOne({
             Guild: interaction.guild.id
-        }).catch((err) => {})
+        })
         const UserData = await BlackListUser.findOne({
             User: interaction.user.id
-        }).catch((err) => {})
+        })
 
         const Embed = new EmbedBuilder()
             .setColor('Red')

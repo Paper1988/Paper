@@ -20,21 +20,27 @@ module.exports = {
         const position = options.getNumber('position', false) ?? undefined
         const skip = options.getBoolean('skip', false)
 
+        await interaction.reply({
+            content: '<a:discord1792loading:1212016238839070791> | 處理請求中...'
+        })
+
         const ytPlugin = new YouTubePlugin()
 
         if (!VoiceChannel)
-            return interaction.reply({
+            return interaction.editReply({
                 content:
                     '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂指令!',
                 ephemeral: true
             })
+
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
-            return interaction.reply({
+            return interaction.editReply({
                 content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
                 ephemeral: true
             })
+
         if (!VoiceChannel.permissionsFor(client.user).has(PermissionFlagsBits.Connect)) {
-            return interaction.reply({
+            return interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setTitle('拒絕請求')
@@ -51,27 +57,31 @@ module.exports = {
 
         if (!youtubeRegex.test(options.getString('query'))) {
             if (options.getString('query').startsWith('https://')) {
-                client.distube.play(VoiceChannel, options.getString('query'), {
-                    textChannel: channel,
-                    member: member,
-                    position,
-                    skip
-                })
+                client.distube
+                    .play(VoiceChannel, options.getString('query'), {
+                        textChannel: channel,
+                        member: member,
+                        position,
+                        skip
+                    })
+                    .then(() => interaction.deleteReply('@original'))
             } else {
                 const results = await ytPlugin.search(options.getString('query'), {
                     type: SearchResultType.VIDEO
                 })
 
-                client.distube.play(VoiceChannel, results[0], {
-                    textChannel: channel,
-                    member: member,
-                    position,
-                    skip
-                })
+                client.distube
+                    .play(VoiceChannel, results[0], {
+                        textChannel: channel,
+                        member: member,
+                        position,
+                        skip
+                    })
+                    .then(() => interaction.deleteReply('@original'))
             }
         } else {
             return await interaction
-                .reply({
+                .editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
@@ -83,28 +93,5 @@ module.exports = {
                 })
                 .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
         }
-        await interaction
-            .reply({ content: '<a:discord1792loading:1212016238839070791> | 處理請求中...' })
-            .then((msg) => {
-                setTimeout(() => {
-                    msg.delete()
-                }, 10 * 1000)
-            })
-            .catch(async (err) => {
-                return await channel
-                    .send({
-                        embeds: [
-                            new EmbedBuilder()
-                                .setColor('Red')
-                                .setDescription(
-                                    `<:outage_868122243845206087:1202112862990897172> | 發生錯誤: ${err
-                                        .toString()
-                                        .slice(0, 1974)}`
-                                )
-                                .setFooter({ text: `請使用 /report bug 協助回報!` })
-                        ]
-                    })
-                    .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
-            })
     }
 }

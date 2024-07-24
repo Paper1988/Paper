@@ -27,9 +27,9 @@ module.exports = {
                 ephemeral: true
             })
 
-        await queue.stop(VoiceChannel)
         await updateMusicPlayerStatus(queue, true)
         clearPlayer(queue)
+        await queue.stop(VoiceChannel)
         await queue.voice.leave()
         await interaction
             .reply({

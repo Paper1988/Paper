@@ -1,42 +1,39 @@
-const {
-    Client,
-    ModalSubmitInteraction,
-    EmbedBuilder,
-} = require("discord.js");
+const { Client, ModalSubmitInteraction, EmbedBuilder } = require('discord.js')
 
 module.exports = {
-    name: "interactionCreate",
+    name: 'interactionCreate',
     /**
      * @param {ModalSubmitInteraction} interaction
      * @param {Client} client
      */
     async execute(interaction, client) {
-        if (!interaction.isModalSubmit()) return;
+        if (!interaction.isModalSubmit()) return
         try {
-            const Modal = client.modals.get(interaction.customId);
+            const Modal = client.modals.get(interaction.customId)
 
             if (!Modal)
                 return interaction.reply({
-                embeds: [
-                    new EmbedBuilder().setColor("Red").setDescription("<:outage_868122243845206087:1202112862990897172> | 找不到該Modal"),
-                ],
-                ephemeral: true,
-            });
+                    embeds: [
+                        new EmbedBuilder()
+                            .setColor('Red')
+                            .setDescription(
+                                '<:outage_868122243845206087:1202112862990897172> | 找不到該Modal'
+                            )
+                    ],
+                    ephemeral: true
+                })
 
-            if (
-                Modal.permission &&
-                !interaction.member.permissions.has(Modal.permission)
-            )
+            if (Modal.permission && !interaction.member.permissions.has(Modal.permission))
                 return interaction.reply({
-                embeds: [
-                    new EmbedBuilder()
-                    .setColor("RED")
-                    .setDescription(
-                        "<:warning_908958943466893323:1201844340276862976> | 你沒有權限使用!"
-                    ),
-                ],
-                ephemeral: true,
-            });
+                    embeds: [
+                        new EmbedBuilder()
+                            .setColor('Red')
+                            .setDescription(
+                                '<:warning_908958943466893323:1201844340276862976> | 你沒有權限使用!'
+                            )
+                    ],
+                    ephemeral: true
+                })
 
             /**
             let dev;
@@ -55,19 +52,19 @@ module.exports = {
             });
             */
 
-            Modal.execute(interaction, client);
+            Modal.execute(interaction, client)
         } catch (err) {
-            console.log(err);
+            console.log('[Modal]' + err)
             return interaction.reply({
                 embeds: [
                     new EmbedBuilder()
-                    .setColor("RED")
-                    .setDescription(
-                        "<:outage_868122243845206087:1202112862990897172> | 發生未知錯誤，請協助回報!"
-                    ),
+                        .setColor('RED')
+                        .setDescription(
+                            '<:outage_868122243845206087:1202112862990897172> | 發生未知錯誤，請協助回報!'
+                        )
                 ],
-                ephemeral: true,
-            });
+                ephemeral: true
+            })
         }
-    },
-};
+    }
+}

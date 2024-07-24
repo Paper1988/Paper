@@ -50,7 +50,7 @@ client.distube
                         .setFooter({ text: `請使用 /report 協助回報!` })
                 ]
             })
-            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
+            .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
     })
     .on(Events.FINISH, (queue) => {
         queue.textChannel
@@ -63,7 +63,7 @@ client.distube
                         )
                 ]
             })
-            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
+            .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
         clearPlayer(queue)
     })
     .on(Events.INIT_QUEUE, async (queue) => {
@@ -84,7 +84,7 @@ client.distube
         queue.paused = false
         queue.playerIntervalId = setInterval(async () => {
             await updateMusicPlayerStatus(queue)
-        }, 1000 * 5)
+        }, 1 * 1000)
     })
     .on(Events.DELETE_QUEUE, (queue) => {
         clearPlayer(queue)

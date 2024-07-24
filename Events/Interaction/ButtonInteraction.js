@@ -12,6 +12,7 @@ module.exports = {
         if (interaction.customId === 'mcstats:refresh') return
         if (interaction.customId === 'report:send') return
         if (interaction.customId === 'report:cancel') return
+        if (interaction.customId === 'report:solved') return
         if (interaction.customId === 'rps_r') return
         if (interaction.customId === 'rps_p') return
         if (interaction.customId === 'rps_s') return
@@ -19,8 +20,7 @@ module.exports = {
         if (interaction.customId === 'approve_reject') return
 
         try {
-            const buttonCustomId = interaction.customId.split('_')
-            const Button = client.buttons.get(buttonCustomId[0])
+            const Button = client.buttons.get(interaction.customId)
             if (!Button)
                 return interaction.reply({
                     content:
@@ -32,7 +32,7 @@ module.exports = {
                 return interaction.reply({
                     embeds: [
                         new EmbedBuilder()
-                            .setColor('RED')
+                            .setColor('Red')
                             .setDescription(
                                 '<:warning_908958943466893323:1201844340276862976> | 你沒有權限使用!'
                             )
@@ -40,13 +40,13 @@ module.exports = {
                     ephemeral: true
                 })
 
-            Button.execute(interaction, client, buttonCustomId.slice(1))
+            Button.execute(interaction, client)
         } catch (err) {
-            console.log(err)
+            console.log('[Button]' + err)
             return interaction.reply({
                 embeds: [
                     new EmbedBuilder()
-                        .setColor('RED')
+                        .setColor('Red')
                         .setDescription(
                             '<:outage_868122243845206087:1202112862990897172> | 發生未知錯誤，請協助回報!'
                         )

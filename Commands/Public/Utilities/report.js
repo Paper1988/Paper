@@ -57,7 +57,7 @@ module.exports = {
         const picture = interaction.options.getAttachment('picture') || ''
         const guild = interaction.guild
 
-        const sch = client.channels.cache.get('975253353913254029')
+        const sch = client.channels.cache.get('1265293916635140147') //'975253353913254029'
 
         const send_m = new EmbedBuilder()
             .setTitle(`<:correct_859388130411282442:1201843648229294121> | 你的回報已成功提交!`)
@@ -82,10 +82,10 @@ module.exports = {
                 .setStyle(ButtonStyle.Danger)
         )
 
-        const fix = new ActionRowBuilder().addComponents(
+        const solved_button = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
-                .setCustomId('report:fix')
-                .setLabel(`標示為以解決`)
+                .setCustomId('report:solved')
+                .setLabel(`標示為已解決`)
                 .setEmoji('<:fix:1265269709834813462>')
                 .setStyle(ButtonStyle.Primary)
         )
@@ -96,7 +96,9 @@ module.exports = {
                     const embed = new EmbedBuilder()
                         .setTitle('<:bug_859388130803974174:1201843636313280564> | Bug')
                         .setColor('Red')
-                        .setDescription(`提交者: ${interaction.user.id}  (伺服器: ${guild.name})`)
+                        .setDescription(
+                            `提交者: ${interaction.user}(${interaction.user.id})  (伺服器: ${guild.name})`
+                        )
                         .addFields(
                             {
                                 name: `提供的描述:`,
@@ -113,7 +115,11 @@ module.exports = {
                             name: `${interaction.user.username}`,
                             iconURL: interaction.user.avatarURL()
                         })
-                        .setThumbnail(picture.url)
+                        .setFooter({
+                            text: `${guild.name}`,
+                            iconURL: guild.iconURL()
+                        })
+                        .setImage(picture.url)
                         .setTimestamp()
 
                     const message = await interaction.reply({
@@ -129,16 +135,23 @@ module.exports = {
                             const fixed = new EmbedBuilder()
                                 .setTitle('Bug已解決')
                                 .setDescription(
-                                    `<:exclamation_859388127885131796:1222867026805260380> | 正如標題所述，你在 ${message.createdAt()} 回報的Bug已經被開發人員修復，再次感謝你的回報!`
+                                    `<:exclamation_859388127885131796:1222867026805260380> | 正如標題所述，你在 ${interaction.createdAt} 回報的Bug已經被開發人員認定為已修復，再次感謝你的回報!`
                                 )
                                 .setColor('Blurple')
+                                .setFooter({
+                                    text: `${client.user.username}`,
+                                    iconURL: client.user.avatarURL()
+                                })
                                 .setTimestamp()
 
-                            const msg = await sch.send({ embeds: [embed], components: [fix] })
+                            const msg = await sch.send({
+                                embeds: [embed],
+                                components: [solved_button]
+                            })
 
                             const collector = msg.createMessageComponentCollector()
                             collector.on('collect', async (i) => {
-                                if (i.customId == 'report:fix') {
+                                if (i.customId == 'report:solved') {
                                     await i.update({
                                         content: '',
                                         embeds: [embed.setColor('Green')],
@@ -173,7 +186,9 @@ module.exports = {
                     const embed = new EmbedBuilder()
                         .setTitle('<:buld_882595243579559958:1201843638427209738> | 建議')
                         .setColor('Yellow')
-                        .setDescription(`提交者: ${interaction.user}  (伺服器: ${guild.name})`)
+                        .setDescription(
+                            `提交者: ${interaction.user}(${interaction.user.id})  (伺服器: ${guild.name})`
+                        )
                         .addFields({
                             name: `提供的建議:`,
                             value: `\`\`\`${description}\`\`\``,
@@ -183,7 +198,11 @@ module.exports = {
                             name: `${interaction.user.username}`,
                             iconURL: interaction.user.avatarURL()
                         })
-                        .setThumbnail(picture.url)
+                        .setFooter({
+                            text: `${guild.name}`,
+                            iconURL: guild.iconURL()
+                        })
+                        .setImage(picture.url)
                         .setTimestamp()
 
                     const message = await interaction.reply({
@@ -220,7 +239,9 @@ module.exports = {
                     const embed = new EmbedBuilder()
                         .setTitle('<:globe_859424401971609600:1201843661785284659> | 其他')
                         .setColor('Purple')
-                        .setDescription(`提交者: ${interaction.user}  (伺服器: ${guild.name})`)
+                        .setDescription(
+                            `提交者: ${interaction.user}(${interaction.user.id})  (伺服器: ${guild.name})`
+                        )
                         .addFields({
                             name: `提供的描述:`,
                             value: `\`\`\`${description}\`\`\``,
@@ -230,7 +251,11 @@ module.exports = {
                             name: `${interaction.user.username}`,
                             iconURL: interaction.user.avatarURL()
                         })
-                        .setThumbnail(picture.url)
+                        .setFooter({
+                            text: `${guild.name}`,
+                            iconURL: guild.iconURL()
+                        })
+                        .setImage(picture.url)
                         .setTimestamp()
 
                     const message = await interaction.reply({

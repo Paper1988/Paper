@@ -1,4 +1,13 @@
-const { EmbedBuilder, ChatInputCommandInteraction, Client } = require('discord.js')
+const {
+    EmbedBuilder,
+    ChatInputCommandInteraction,
+    Client,
+    PermissionFlagsBits,
+    GuildMember,
+    ButtonBuilder,
+    ActionRowBuilder,
+    ButtonStyle
+} = require('discord.js')
 const ms = require('ms')
 
 module.exports = {
@@ -7,7 +16,7 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      * @param {Client} client
      */
-    execute(interaction, client) {
+    async execute(interaction, client) {
         const errEmbed = new EmbedBuilder().setColor('Red')
         const successEmbed = new EmbedBuilder().setColor('Green')
 
@@ -16,8 +25,10 @@ module.exports = {
         const prize = interaction.options.getString('prize')
         const gchannel = interaction.options.getChannel('channel') || interaction.channel
         const isDrop = interaction.options.getBoolean('drop') || false
+        const attachment = interaction.options.getAttachment('attachment') || null
+        const role = interaction.options.getRole('role')
 
-        client.giveawaysManager
+        await client.giveawaysManager
             .start(gchannel, {
                 duration: ms(duration),
                 winnerCount,
@@ -26,7 +37,9 @@ module.exports = {
                     giveaway:
                         '<:tada_868022351508414474:1201844318940442624>**抽獎活動開始了**<:tada_868022351508414474:1201844318940442624>',
                     giveawayEnded: '🎊**抽獎活動結束了**🎊',
-                    inviteToParticipate: '**點擊🎉來參加抽獎!**',
+                    inviteToParticipate: role
+                        ? `**點擊🎉來參加抽獎!**\n需要擁有 ${role} 才能參與`
+                        : '**點擊🎉來參加抽獎!**',
                     winMessage:
                         '<:tada_868022351508414474:1201844318940442624>恭喜贏家 {winners} 贏得獎品: **`{this.prize}`** !\n{this.messageURL}',
                     noWinner: '抽獎活動已取消，因為: `參與人數不足`',
@@ -37,7 +50,9 @@ module.exports = {
                     hostedBy: '舉辦人: {this.hostedBy}',
                     embedFooter: '{this.winnerCount}位贏家'
                 },
+                thumbnail: attachment,
                 isDrop,
+                allowMentions: ['users'],
                 pauseOptions: {
                     isPaused: false,
                     content:
@@ -52,7 +67,8 @@ module.exports = {
                         '<:warning_908958943466893323:1201844340276862976> **最後加入的機會!** <:warning_908958943466893323:1201844340276862976>',
                     threshold: 10_000,
                     embedColor: '#FF0000'
-                }
+                },
+                exemptMembers: (member) => !member.roles.cache.some((r) => r.name === role.name)
             })
             .then(async () => {
                 successEmbed.setDescription(

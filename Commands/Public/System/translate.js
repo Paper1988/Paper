@@ -10,20 +10,20 @@ module.exports = {
                 .setName('language')
                 .setDescription('你想要翻成的語言')
                 .addChoices(
-                    { name: 'Arabic(阿拉伯文)', value: 'ar' },
-                    { name: 'Dutch(荷蘭文)', value: 'nl' },
+                    { name: 'العربية(阿拉伯文)', value: 'ar' },
+                    { name: 'Nederlands(荷蘭文)', value: 'nl' },
                     { name: 'English(英文)', value: 'en' },
-                    { name: 'French(法文)', value: 'fr' },
-                    { name: 'Greek(希臘文)', value: 'gl' },
-                    { name: 'German(德文)', value: 'de' },
-                    { name: 'Italian(義大利文)', value: 'it' },
-                    { name: 'Japanese(日文)', value: 'ja' },
-                    { name: 'Latin(拉丁文)', value: 'la' },
-                    { name: 'Portuguese(葡萄牙文)', value: 'pt' },
-                    { name: 'Russian(俄羅斯文)', value: 'ru' },
-                    { name: 'Spanish(西班牙文)', value: 'es' },
-                    { name: 'Chinese-Traditional(中文-繁體)', value: 'zh-tw' },
-                    { name: 'Chinese-Simplified(中文-簡體)', value: 'zh-cn' }
+                    { name: 'Français(法文)', value: 'fr' },
+                    { name: 'Ελληνικά(希臘文)', value: 'gl' },
+                    { name: 'Deutsch(德文)', value: 'de' },
+                    { name: 'Italiano(義大利文)', value: 'it' },
+                    { name: '日本語(日文)', value: 'ja' },
+                    { name: 'Lingua Latīna(拉丁文)', value: 'la' },
+                    { name: 'Português(葡萄牙文)', value: 'pt' },
+                    { name: 'Русский(俄羅斯文)', value: 'ru' },
+                    { name: 'Español(西班牙文)', value: 'es' },
+                    { name: '中文(繁體)', value: 'zh-tw' },
+                    { name: '中文(簡體)', value: 'zh-cn' }
                 )
                 .setRequired(true)
         )
