@@ -74,7 +74,7 @@ module.exports = {
                         )
                 )
                 .addStringOption((options) =>
-                    options.setName('message-ID').setDescription('請提供訊息ID').setRequired(true)
+                    options.setName('ID').setDescription('請提供訊息ID').setRequired(true)
                 )
         )
         .addSubcommand((sub) =>
@@ -82,7 +82,7 @@ module.exports = {
                 .setName('edit')
                 .setDescription('修改設定')
                 .addStringOption((options) =>
-                    options.setName('message-ID').setDescription('請提供訊息ID').setRequired(true)
+                    options.setName('ID').setDescription('請提供訊息ID').setRequired(true)
                 )
                 .addStringOption((options) =>
                     options
