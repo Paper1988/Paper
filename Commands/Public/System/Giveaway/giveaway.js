@@ -40,6 +40,18 @@ module.exports = {
                         )
                         .setRequired(false)
                 )
+                .addAttachmentOption((options) =>
+                    options
+                        .setName('attachment')
+                        .setDescription('新增一張放在抽獎訊息下的橫幅圖片')
+                        .setRequired(false)
+                )
+                .addRoleOption((options) =>
+                    options
+                        .setName('role')
+                        .setDescription('請提供一個成員需要擁有才能參與抽獎的身分組')
+                        .setRequired(false)
+                )
         )
         .addSubcommand((sub) =>
             sub
@@ -74,27 +86,39 @@ module.exports = {
                         )
                 )
                 .addStringOption((options) =>
-                    options.setName('id').setDescription('請提供訊息ID').setRequired(true)
+                    options.setName('message_id').setDescription('請提供訊息ID').setRequired(true)
                 )
         )
         .addSubcommand((sub) =>
             sub
                 .setName('edit')
-                .setDescription('修改設定')
+                .setDescription('修改參數')
                 .addStringOption((options) =>
-                    options.setName('id').setDescription('請提供訊息ID').setRequired(true)
+                    options.setName('message_id').setDescription('請提供訊息ID').setRequired(true)
                 )
                 .addStringOption((options) =>
                     options
                         .setName('new-duration')
-                        .setDescription('新的結束時間(相同格式)')
+                        .setDescription('請提供要增加或減少(用負數)的時間(d h m s)')
                         .setRequired(false)
                 )
                 .addIntegerOption((options) =>
-                    options.setName('new-winners').setDescription('新的贏家數量').setRequired(false)
+                    options.setName('new-winner').setDescription('新的贏家數量').setRequired(false)
                 )
                 .addStringOption((options) =>
-                    options.setName('new-prizes').setDescription('新的獎品').setRequired(false)
+                    options.setName('new-prize').setDescription('新的獎品').setRequired(false)
+                )
+                .addAttachmentOption((options) =>
+                    options
+                        .setName('attachment')
+                        .setDescription('新增一張放在抽獎訊息下的橫幅圖片')
+                        .setRequired(false)
+                )
+                .addRoleOption((options) =>
+                    options
+                        .setName('role')
+                        .setDescription('請提供一個成員需要擁有才能參與抽獎的身分組')
+                        .setRequired(false)
                 )
         ),
     usage: '/giveaway (start, actions)'

@@ -12,8 +12,7 @@ module.exports = {
 
         const successEmbed = new EmbedBuilder().setColor('Green')
 
-        const query = interaction.options.getString('id')
-
+        const query = interaction.options.getString('message_id')
         const giveaway =
             // Search with giveaway prize
             client.giveawaysManager.giveaways.find(
@@ -32,14 +31,20 @@ module.exports = {
         }
 
         const newDuration = interaction.options.getString('new-duration') || 0
-        const newWinners = interaction.options.getInteger('new-winners') || giveaway.winnerCount
-        const newPrizes = interaction.options.getString('new-prizes') || giveaway.prize
+        const newWinners = interaction.options.getInteger('new-winner') || giveaway.winnerCount
+        const newPrizes = interaction.options.getString('new-prize') || giveaway.prize
+        const attachment = interaction.options.getAttachment('attachment') || null
+        const role = interaction.options.getRole('role')
 
         client.giveawaysManager
-            .edit(giveaway, {
-                setEndTimestamp: Date.now() + ms(newDuration),
+            .edit(query, {
+                addTime: ms(newDuration),
                 newWinnerCount: newWinners,
-                newPrize: newPrizes
+                newPrize: newPrizes,
+                newThumbnail: attachment,
+                newExemptMembers: role
+                    ? (member) => !member.roles.cache.some((r) => r.name == role.name)
+                    : giveaway.exemptMembers(member)
             })
             .then(() => {
                 successEmbed.setDescription(

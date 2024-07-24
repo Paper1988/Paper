@@ -36,7 +36,7 @@ module.exports = {
                 })
                 setTimeout(() => {
                     m.delete()
-                }, 1 * 7500)
+                }, 10 * 1000)
             })
             .catch(() => {
                 return interaction.reply({

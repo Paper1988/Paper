@@ -12,7 +12,7 @@ module.exports = {
         const successEmbed = new EmbedBuilder().setColor('Green')
 
         const choices = interaction.options.getString('options')
-        const query = interaction.options.getString('id')
+        const query = interaction.options.getString('message_id')
         const giveaway =
             // Search with giveaway prize
             client.giveawaysManager.giveaways.find(
@@ -27,7 +27,7 @@ module.exports = {
             errEmbed.setDescription(
                 `<:warning_908958943466893323:1201844340276862976> | 無法找到訊息ID: ${query}\n請確認有無輸入錯誤!`
             )
-            interaction.reply({ embeds: [errEmbed], ephemeral: true })
+            return interaction.reply({ embeds: [errEmbed], ephemeral: true })
         }
 
         switch (choices) {
@@ -37,7 +37,7 @@ module.exports = {
                         .end(query)
                         .then(() => {
                             successEmbed.setDescription(
-                                '<:xmark_988409378161954866:1201844342029815848> | 成功結束抽獎活動!'
+                                '<:correct_859388130411282442:1201843648229294121> | 成功結束抽獎活動!'
                             )
                             interaction.reply({ embeds: [successEmbed], ephemeral: true })
                         })
@@ -92,7 +92,7 @@ module.exports = {
                             messages: {
                                 congrat:
                                     '<:tada_868022351508414474:1201844318940442624>恭喜新贏家: {winners}! 贏得獎品: **{this.prize}**!',
-                                error: '<:outage_868122243845206087:1202112862990897172> | 無有效的參與, 於是沒有新贏家!'
+                                error: '<:outage_868122243845206087:1202112862990897172> | 無有效的參與人數，所以沒有新贏家!'
                             }
                         })
                         .then(() => {
