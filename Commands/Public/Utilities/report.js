@@ -111,7 +111,7 @@ module.exports = {
                         )
                         .setAuthor({
                             name: `${interaction.user.username}`,
-                            iconURL: interaction.user.avatarURL
+                            iconURL: interaction.user.avatarURL()
                         })
                         .setThumbnail(picture.url)
                         .setTimestamp()
@@ -181,7 +181,7 @@ module.exports = {
                         })
                         .setAuthor({
                             name: `${interaction.user.username}`,
-                            iconURL: interaction.user.avatarURL
+                            iconURL: interaction.user.avatarURL()
                         })
                         .setThumbnail(picture.url)
                         .setTimestamp()
@@ -228,7 +228,7 @@ module.exports = {
                         })
                         .setAuthor({
                             name: `${interaction.user.username}`,
-                            iconURL: interaction.user.avatarURL
+                            iconURL: interaction.user.avatarURL()
                         })
                         .setThumbnail(picture.url)
                         .setTimestamp()
