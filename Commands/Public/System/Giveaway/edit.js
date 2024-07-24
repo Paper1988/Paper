@@ -12,7 +12,7 @@ module.exports = {
 
         const successEmbed = new EmbedBuilder().setColor('Green')
 
-        const query = interaction.options.getString('ID')
+        const query = interaction.options.getString('id')
 
         const giveaway =
             // Search with giveaway prize

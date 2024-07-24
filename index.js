@@ -66,6 +66,9 @@ client.distube = new DisTube(client, {
         })
     ]
 })
+
+process.env.YTSR_NO_UPDATE = 1
+process.env.YTDL_NO_UPDATE = 1
 /**************************************************/
 const errorHandling = require('discord.js-anticrash')
 const config = {
