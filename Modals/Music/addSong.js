@@ -16,7 +16,7 @@ module.exports = {
 
         const ytPlugin = new YouTubePlugin()
 
-        if (!youtubeRegex.test(options.getString('query'))) {
+        if (!youtubeRegex.test(songName)) {
             const results = await ytPlugin.search(songName, {
                 type: SearchResultType.VIDEO
             })

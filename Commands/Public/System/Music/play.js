@@ -21,7 +21,8 @@ module.exports = {
         const skip = options.getBoolean('skip', false)
 
         await interaction.reply({
-            content: '<a:discord1792loading:1212016238839070791> | 處理請求中...'
+            content: '<a:discord1792loading:1212016238839070791> | 處理請求中...',
+            fetchReply: true
         })
 
         const ytPlugin = new YouTubePlugin()
