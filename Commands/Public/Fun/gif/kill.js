@@ -1,4 +1,4 @@
-const { EmbedBuilder, ChatInputCommandInteraction, SlashCommandBuilder } = require('discord.js')
+const { EmbedBuilder, ChatInputCommandInteraction } = require('discord.js')
 const rga = require('random-gif-api')
 
 module.exports = {
@@ -23,9 +23,9 @@ module.exports = {
                 .setDescription(
                     '<:outage_868122243845206087:1202112862990897172> | 你不能殺掉你自己！'
                 )
-            return interaction.reply({ embeds: [Response] })
+            return await interaction.reply({ embeds: [Response] })
         } else {
-            interaction.reply({ embeds: [HugEmbed] })
+            await interaction.reply({ embeds: [HugEmbed] })
         }
     }
 }
