@@ -44,7 +44,8 @@ module.exports = {
         if (mDB.Maintenance === 'True') {
             return await interaction.reply({
                 embeds: [
-                    Embed.setTitle(`<:discordstaff:1094236985318707221> | 維護模式`)
+                    new EmbedBuilder()
+                        .setTitle(`<:discordstaff:1094236985318707221> | 維護模式`)
                         .setDescription(
                             `${client.user.username} 正在進行維修，暫無法使用任何功能\n原因： ${mDB.Description}`
                         )
@@ -63,7 +64,7 @@ module.exports = {
         }
 
         if (GuildData)
-            return interaction.reply({
+            return await interaction.reply({
                 embeds: [
                     Embed.setTitle(`該伺服器為黑名單伺服器!`).setDescription(
                         `<:outage_868122243845206087:1202112862990897172> | 您的伺服器已被列入黑名單，自從<t:${parseInt(
@@ -74,7 +75,7 @@ module.exports = {
             })
 
         if (UserData)
-            return interaction.reply({
+            return await interaction.reply({
                 embeds: [
                     Embed.setTitle(`該用戶為黑名單用戶!`).setDescription(
                         `<:outage_868122243845206087:1202112862990897172> | 您已被列入黑名單，自從<t:${parseInt(

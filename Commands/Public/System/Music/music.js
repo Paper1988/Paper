@@ -118,13 +118,9 @@ module.exports = {
             const value = interaction.options.getFocused().toString().trim()
 
             // 確保搜索字符串不是空的
-            if (!value) {
+            if (!value || value.startsWith('https://' || 'http://')) {
                 // 如果是空的，可以選擇回應一些預設選項或不回應
                 return await interaction.respond([]) // 不回應任何選項
-            }
-
-            if (value.startsWith('https://')) {
-                return await interaction.respond([])
             }
 
             let choices = []
