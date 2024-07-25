@@ -10,7 +10,7 @@ module.exports = {
                 .setName('bite')
                 .setDescription('咬某人一口!')
                 .addUserOption((option) =>
-                    option.setName('user').setDescription('請選擇一名用戶').setRequired(true)
+                    option.setName('member').setDescription('請選擇一名用戶').setRequired(true)
                 )
         )
         .addSubcommand((sub) => sub.setName('dance').setDescription('跳舞!'))
@@ -19,7 +19,7 @@ module.exports = {
                 .setName('hug')
                 .setDescription('擁抱某人!')
                 .addUserOption((option) =>
-                    option.setName('user').setDescription('請選擇一名用戶').setRequired(true)
+                    option.setName('member').setDescription('請選擇一名用戶').setRequired(true)
                 )
         )
         .addSubcommand((sub) =>
@@ -27,7 +27,7 @@ module.exports = {
                 .setName('kill')
                 .setDescription('殺掉某人!')
                 .addUserOption((option) =>
-                    option.setName('user').setDescription('請選擇一名用戶').setRequired(true)
+                    option.setName('member').setDescription('請選擇一名用戶').setRequired(true)
                 )
         )
         .addSubcommand((sub) =>
@@ -35,7 +35,7 @@ module.exports = {
                 .setName('kiss')
                 .setDescription('親吻某人!')
                 .addUserOption((option) =>
-                    option.setName('user').setDescription('請選擇一名用戶').setRequired(true)
+                    option.setName('member').setDescription('請選擇一名用戶').setRequired(true)
                 )
         )
         .addSubcommand((sub) =>
@@ -43,7 +43,7 @@ module.exports = {
                 .setName('pat')
                 .setDescription('摸摸某人!')
                 .addUserOption((option) =>
-                    option.setName('user').setDescription('請選擇一名用戶').setRequired(true)
+                    option.setName('member').setDescription('請選擇一名用戶').setRequired(true)
                 )
         )
         .addSubcommand((sub) =>
@@ -51,7 +51,7 @@ module.exports = {
                 .setName('punch')
                 .setDescription('揍爆某人!')
                 .addUserOption((option) =>
-                    option.setName('user').setDescription('請選擇一名用戶').setRequired(true)
+                    option.setName('member').setDescription('請選擇一名用戶').setRequired(true)
                 )
         )
 }

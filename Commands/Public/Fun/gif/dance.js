@@ -1,4 +1,4 @@
-const { EmbedBuilder, ChatInputCommandInteraction, SlashCommandBuilder } = require('discord.js')
+const { EmbedBuilder, ChatInputCommandInteraction } = require('discord.js')
 const rga = require('random-gif-api')
 
 module.exports = {
@@ -16,6 +16,6 @@ module.exports = {
             .setImage(data)
             .setTimestamp()
 
-        interaction.reply({ embeds: [HugEmbed] })
+        await interaction.reply({ embeds: [HugEmbed] })
     }
 }
