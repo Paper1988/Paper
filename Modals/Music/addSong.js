@@ -1,4 +1,4 @@
-const { ModalSubmitInteraction, Client } = require('discord.js')
+const { ModalSubmitInteraction, Client, EmbedBuilder } = require('discord.js')
 const { SearchResultType, YouTubePlugin } = require('@distube/youtube')
 
 module.exports = {
@@ -8,6 +8,7 @@ module.exports = {
      * @param {Client} client
      */
     async execute(interaction, client) {
+        await interaction.deferReply({ fetchReply: true })
         const { member } = interaction
         const VoiceChannel = member.voice.channel
         const songName = interaction.fields.getTextInputValue('songName')
@@ -23,13 +24,12 @@ module.exports = {
 
             client.distube.play(VoiceChannel, results[0], { member })
 
-            await interaction.reply({
-                content: `<:plus_988409343743496232:1202215484318302208> | 成功添加新歌曲: ${results[0]}`,
-                ephemeral: true
+            return await interaction.editReply({
+                content: `<:plus_988409343743496232:1202215484318302208> | 成功添加新歌曲: ${results[0]}`
             })
         } else {
             return await interaction
-                .reply({
+                .editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
