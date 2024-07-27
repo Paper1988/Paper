@@ -12,7 +12,7 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
-        await interaction.deferReply()
+        await interaction.deferReply({ fetchReply: true })
         await interaction.editReply(interaction.options.getString('text'))
     }
 }

@@ -9,7 +9,7 @@ module.exports = {
         if (!interaction.isAutocomplete()) return
 
         // 假設您的指令名稱和子指令名稱是以 '.' 分隔
-        const [commandName, subCommandName] = interaction.commandName.split('.')
+        const commandName = interaction.commandName
 
         const command = await interaction.client.commands.get(commandName)
 
@@ -18,19 +18,11 @@ module.exports = {
             return
         }
 
-        // 如果存在子指令，並且該子指令有 autocomplete 方法
-        if (subCommandName && typeof command[subCommandName]?.autocomplete === 'function') {
-            try {
-                await command[subCommandName].autocomplete(interaction, interaction.client)
-            } catch (error) {
-                console.log('[Autocomplete]' + error)
-            }
-        } else if (typeof command.autocomplete === 'function') {
-            // 如果沒有子指令，但指令本身有 autocomplete 方法
+        if (command.autocomplete) {
             try {
                 await command.autocomplete(interaction, interaction.client)
             } catch (error) {
-                console.log('[Autocomplete]' + error)
+                return console.log('[Autocomplete]' + error)
             }
         } else {
             console.warn(

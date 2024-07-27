@@ -122,6 +122,13 @@ module.exports = {
                 })
 
             case 'queue':
+                let leftSongs
+                if (queue.songs.length - 10 > 0) {
+                    leftSongs = queue.songs.length - 10
+                } else {
+                    leftSongs = 0
+                }
+
                 return interaction.reply({
                     embeds: [
                         new EmbedBuilder()
