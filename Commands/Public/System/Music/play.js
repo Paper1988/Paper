@@ -46,7 +46,7 @@ module.exports = {
                     new EmbedBuilder()
                         .setTitle('拒絕請求')
                         .setDescription(
-                            `<:warning_908958943466893323:1201844340276862976> | 我沒有權限進入 <#${VoiceChannel.id}> !`
+                            `<:warning_908958943466893323:1201844340276862976> | 我沒有權限進入 <#${VoiceChannel.id}>!`
                         )
                         .setColor('Red')
                 ],
