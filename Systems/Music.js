@@ -96,6 +96,10 @@ const generateMusicStatusButtons = (queue) => {
         new ButtonBuilder()
             .setCustomId(`filters`)
             .setEmoji('<:spark_860123643722727444:1201844297041973320>')
+            .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+            .setCustomId('lyrics')
+            .setEmoji('<:list_860123643710537789:1201843692546039829>')
             .setStyle(ButtonStyle.Secondary)
     ])
 
