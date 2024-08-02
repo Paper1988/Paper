@@ -101,6 +101,20 @@ client.distube
             `<:warning_908958943466893323:1201844340276862976> | 找不到任何相關歌曲!`
         )
     })
+    .on(Events.DEBUG, async (msg) => {
+        const channel = client.channels.cache.get('1268941820533149812')
+
+        channel.send({
+            embeds: [
+                new EmbedBuilder()
+                    .setColor('Orange')
+                    .setTitle(
+                        '<:error_707337005858611210:1202112862343168010> | [Distube] FFmpeg Debug:'
+                    )
+                    .setDescription(msg)
+            ]
+        })
+    })
     .on(Events.DISCONNECT, (queue) => {
         clearPlayer(queue)
     })
