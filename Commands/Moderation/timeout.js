@@ -35,9 +35,7 @@ module.exports = {
         const errorsArray = []
 
         const errorsEmbed = new EmbedBuilder()
-            .setAuthor({
-                name: '<:warning_908958943466893323:1201844340276862976> | 無法禁言該成員，因為'
-            })
+            .setTitle('<:warning_908958943466893323:1201844340276862976> | 無法禁言該成員，因為')
             .setColor('Red')
 
         if (!target)
