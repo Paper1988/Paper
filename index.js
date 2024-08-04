@@ -20,6 +20,7 @@ client.modals = new Collection()
 client.selectMenus = new Collection()
 client.musicControllerMsgId = null
 /**************************************************/
+const pathToFFmpeg = require('ffmpeg-static')
 const { DisTube } = require('distube')
 const { SpotifyPlugin } = require('@distube/spotify')
 const { SoundCloudPlugin } = require('@distube/soundcloud')
@@ -44,6 +45,7 @@ client.distube = new DisTube(client, {
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: false,
     nsfw: true,
+    ffmpeg: pathToFFmpeg,
     plugins: [
         new SpotifyPlugin({
             api: {
