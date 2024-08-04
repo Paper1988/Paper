@@ -108,9 +108,7 @@ client.distube
             embeds: [
                 new EmbedBuilder()
                     .setColor('Orange')
-                    .setTitle(
-                        '<:error_707337005858611210:1202112862343168010> | [Distube] FFmpeg Debug:'
-                    )
+                    .setTitle('[Distube] FFmpeg Debug:')
                     .setDescription(msg)
             ]
         })
