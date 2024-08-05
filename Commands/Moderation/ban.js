@@ -13,7 +13,7 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
         .setDMPermission(false)
         .addUserOption((options) =>
-            options.setName('target').setDescription('選擇一個成員').setRequired(true)
+            options.setName('user').setDescription('選擇一個成員').setRequired(true)
         )
         .addStringOption((options) =>
             options
@@ -27,9 +27,10 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
+        await interaction.deferReply({ fetchReply: true })
         const { options, guild, member } = interaction
 
-        const target = options.getMember('target')
+        const target = options.getMember('user')
         const reason = options.getString('reason')
 
         const errorsArray = []
@@ -55,7 +56,7 @@ module.exports = {
             .setColor('Red')
 
         if (!target)
-            return interaction.reply({
+            return await interaction.editReply({
                 embeds: [errorsEmbed.setDescription('所選成員很可能已經離開伺服器了')],
                 ephemeral: true
             })
@@ -66,7 +67,7 @@ module.exports = {
             errorsArray.push('所選成員的權限比你高!')
 
         if (errorsArray.length)
-            return interaction.reply({
+            return await interaction.editReply({
                 embeds: [errorsEmbed.setDescription(errorsArray.join('\n'))],
                 ephemeral: true
             })
@@ -74,7 +75,7 @@ module.exports = {
         if (!target.user.bot) {
             target.send({ embeds: [dmEmbed] })
             target.ban({ reason: reason }).catch((err) => {
-                interaction.reply({
+                interaction.editReply({
                     embeds: [errorsEmbed.setDescription('發生一個罕見的錯誤')]
                 })
                 return console.log('錯誤發生 - 在 Ban.js', err)
@@ -87,6 +88,6 @@ module.exports = {
             })
             .setColor('Green')
             .setDescription(`被封鎖的成員: ${target}\n操作的管理員: ${member}\n原因: ${reason}`)
-        return interaction.reply({ embeds: [successEmbed] })
+        return await interaction.editReply({ embeds: [successEmbed] })
     }
 }

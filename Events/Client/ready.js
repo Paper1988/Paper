@@ -1,10 +1,11 @@
-const { Client, EmbedBuilder, ActivityType } = require('discord.js')
+const { Client, EmbedBuilder } = require('discord.js')
 const mongoose = require('mongoose')
 
 const { loadCommands } = require('../../Structures/Handlers/commandHandler.js')
 const { loadButtons } = require('../../Structures/Handlers/buttonHandler.js')
 const { loadModals } = require('../../Structures/Handlers/modalHandler.js')
 const { loadMenus } = require('../../Structures/Handlers/menuHandler.js')
+const { updatePresence } = require('../../Systems/updatePresence.js')
 
 module.exports = {
     name: 'ready',
@@ -19,28 +20,16 @@ module.exports = {
         loadMenus(client)
 
         require('../../Page/app.js')
-
         require(`../../Systems/GiveawaySys`)(client)
 
         mongoose.set('strictQuery', false)
-        mongoose
+        await mongoose
             .connect(client.config.Database)
             .then(() => console.log('>>> ✅ 成功連結到 MongoDB!'))
 
-        client.giveawaysManager
+        await client.giveawaysManager
             ._init()
             .then(() => console.log('>>> ✅ 成功連結到 discord-giveaways!'))
-
-        let memberCount = client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)
-        const activities = [
-            `${client.guilds.cache.size} 個伺服器`,
-            `${memberCount} 位用戶`,
-            `/help`
-        ]
-        setInterval(() => {
-            const status = activities[Math.floor(Math.random() * activities.length)]
-            client.user.setPresence({ activities: [{ name: status, type: ActivityType.Watching }] })
-        }, 15 * 1000)
 
         const Embed = new EmbedBuilder()
             .setColor('Green')
@@ -55,5 +44,7 @@ module.exports = {
                 'JKxcMDXNaR0Y2Y-LVt-syEGHsGIrab97FdyliUTGFH_dNEGaXf8Ty7RXLeAGEvliT5IN'
             )
             .then((webhook) => webhook.send({ embeds: [Embed] }))
+
+        setInterval(async () => await updatePresence(client), 10 * 1000)
     }
 }

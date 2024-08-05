@@ -28,20 +28,20 @@ module.exports = {
         const ytPlugin = new YouTubePlugin()
 
         if (!VoiceChannel)
-            return interaction.editReply({
+            return await interaction.editReply({
                 content:
                     '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂指令!',
                 ephemeral: true
             })
 
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
-            return interaction.editReply({
+            return await interaction.editReply({
                 content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
                 ephemeral: true
             })
 
         if (!VoiceChannel.permissionsFor(client.user).has(PermissionFlagsBits.Connect)) {
-            return interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setTitle('拒絕請求')
@@ -54,6 +54,8 @@ module.exports = {
             })
         }
 
+        await client.distube.voices.join(VoiceChannel)
+
         const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/
 
         if (!youtubeRegex.test(options.getString('query'))) {
@@ -65,7 +67,7 @@ module.exports = {
                         position,
                         skip
                     })
-                    .then(() => interaction.deleteReply('@original'))
+                    .then(() => interaction.deleteReply())
             } else {
                 const results = await ytPlugin.search(options.getString('query'), {
                     type: SearchResultType.VIDEO
@@ -78,7 +80,7 @@ module.exports = {
                         position,
                         skip
                     })
-                    .then(() => interaction.deleteReply('@original'))
+                    .then(() => interaction.deleteReply())
             }
         } else {
             return await interaction

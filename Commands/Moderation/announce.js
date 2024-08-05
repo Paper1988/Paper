@@ -8,7 +8,7 @@ const {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('announce')
-        .setDescription('通過機器人公告某事!')
+        .setDescription('製作一個嵌入式訊息公告!')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
         .setDMPermission(false)
         .addStringOption((option) =>

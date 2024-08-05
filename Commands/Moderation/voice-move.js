@@ -31,13 +31,13 @@ module.exports = {
         const target = options.getMember('target')
 
         if (!voiceChannel)
-            return interaction.reply({
+            return await interaction.reply({
                 content:
                     '<:warning_908958943466893323:1201844340276862976> | 您需要在語音頻道中才能移動成員!',
                 ephemeral: true
             })
         if (newChannel === voiceChannel)
-            return interaction.reply({
+            return await interaction.reply({
                 content:
                     '<:warning_908958943466893323:1201844340276862976> | 您不能將成員移動到同一個頻道!',
                 ephemeral: true
@@ -47,20 +47,20 @@ module.exports = {
             voiceChannel.members.forEach((m) => {
                 m.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`)
             })
-            return interaction.reply({
+            return await interaction.reply({
                 content: `<:moveaudiaunce_988409365428043776:1202219232104808489> | 成功將所有成員移動到 ${newChannel}`,
                 ephemeral: true
             })
         } else {
             const members = voiceChannel.members.map((m) => m.id)
             if (members.includes(target.id)) {
-                target.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`)
-                return interaction.reply({
+                await target.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`)
+                return await interaction.reply({
                     content: `<:moveaudiaunce_988409365428043776:1202219232104808489> | 成功將成員 ${target} 移動到 ${newChannel}`,
                     ephemeral: true
                 })
             } else {
-                return interaction.reply({
+                return await interaction.reply({
                     content:
                         '<:warning_908958943466893323:1201844340276862976> | 該成員不在語音頻道中!',
                     ephemeral: true

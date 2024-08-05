@@ -32,14 +32,11 @@ module.exports = {
         .addStringOption((options) =>
             options
                 .setName('description')
-                .setDescription('請盡可能清楚地描述你遭遇的bug或你想提供的建議')
+                .setDescription('請盡你可能使用最詳盡的文字來描述')
                 .setRequired(true)
         )
         .addStringOption((options) =>
-            options
-                .setName('command')
-                .setDescription('這是哪個指令造成的bug?\n若是建議則不需要填')
-                .setRequired(false)
+            options.setName('command').setDescription('這是哪個指令造成的bug?').setRequired(false)
         )
         .addAttachmentOption((options) =>
             options.setName('picture').setDescription('請提供圖片').setRequired(false)

@@ -12,7 +12,7 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
         .setDMPermission(false)
         .addUserOption((options) =>
-            options.setName('target').setDescription('選擇一名目標成員').setRequired(true)
+            options.setName('user').setDescription('選擇一名成員').setRequired(true)
         )
         .addStringOption((options) =>
             options.setName('reason').setDescription('請提供原因').setMaxLength(512)
@@ -22,9 +22,10 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
+        await interaction.deferReply({ fetchReply: true })
         const { options, guild, member } = interaction
 
-        const target = options.getMember('target')
+        const target = options.getMember('user')
         const reason = options.getString('reason') || '無指定'
 
         const errorsArray = []
@@ -46,7 +47,7 @@ module.exports = {
             .setColor('Red')
 
         if (!target)
-            return interaction.reply({
+            return interaction.editReply({
                 embeds: [errorsEmbed.setDescription('所選成員很可能已經離開伺服器了')],
                 ephemeral: true
             })
@@ -57,7 +58,7 @@ module.exports = {
             errorsArray.push('所選成員的權限比你高!')
 
         if (errorsArray.length)
-            return interaction.reply({
+            return interaction.editReply({
                 embeds: [errorsEmbed.setDescription(errorsArray.join('\n'))],
                 ephemeral: true
             })
@@ -68,7 +69,7 @@ module.exports = {
             return
         }
         target.kick({ reason: reason }).catch((err) => {
-            interaction.reply({
+            interaction.editReply({
                 embeds: [
                     errorsEmbed.setDescription(
                         '<:warning_908958943466893323:1201844340276862976> | 發生一個不常見的錯誤，無法踢出成員'
@@ -84,6 +85,6 @@ module.exports = {
                 [`被踢出成員: ${target}`, `操作者: ${member}`, `\n原因: ${reason}`].join('\n')
             )
 
-        return interaction.reply({ embeds: [successEmbed] })
+        return interaction.editReply({ embeds: [successEmbed] })
     }
 }
