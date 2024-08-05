@@ -39,8 +39,8 @@ client.distube
             })
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     })
-    .on(Events.ERROR, (e, queue, song) => {
-        queue.textChannel
+    .on(Events.ERROR, async (e, queue, song) => {
+        await queue.textChannel
             .send({
                 embeds: [
                     new EmbedBuilder()
@@ -51,9 +51,11 @@ client.distube
                 ]
             })
             .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
+        clearPlayer(queue)
+        await queue.voice.leave()
     })
-    .on(Events.FINISH, (queue) => {
-        queue.textChannel
+    .on(Events.FINISH, async (queue) => {
+        await queue.textChannel
             .send({
                 embeds: [
                     new EmbedBuilder()
@@ -84,27 +86,28 @@ client.distube
         queue.paused = false
         queue.playerIntervalId = setInterval(async () => {
             await updateMusicPlayerStatus(queue)
-        }, 1 * 1000)
+        }, 5 * 1000)
     })
     .on(Events.DELETE_QUEUE, (queue) => {
         clearPlayer(queue)
     })
     .on(Events.FINISH_SONG, async (queue, song) => {
-        if (queue.repeatMode === RepeatMode.DISABLED) return updateMusicPlayerStatus(queue, true)
-        if (queue.repeatMode === RepeatMode.SONG) return updateMusicPlayerStatus(queue, false)
+        if (queue.repeatMode === RepeatMode.DISABLED)
+            return await updateMusicPlayerStatus(queue, true)
+        if (queue.repeatMode === RepeatMode.SONG) return await updateMusicPlayerStatus(queue, false)
         if (queue.repeatMode === RepeatMode.QUEUE && (queue.songs[1] || queue.autoplay))
-            return updateMusicPlayerStatus(queue, false)
-        else if (!queue.songs[1]) return updateMusicPlayerStatus(queue, true)
+            return await updateMusicPlayerStatus(queue, false)
+        else if (!queue.songs[1]) return await updateMusicPlayerStatus(queue, true)
     })
     .on(Events.NO_RELATED, async (queue, error) => {
-        queue.textChannel.send(
+        await queue.textChannel.send(
             `<:warning_908958943466893323:1201844340276862976> | 找不到任何相關歌曲!`
         )
     })
     .on(Events.DEBUG, async (msg) => {
-        const channel = client.channels.cache.get('1268941820533149812')
+        const channel = client.channels.cache.get('1269555417420136528') // official 1268941820533149812
 
-        channel.send({
+        await channel.send({
             embeds: [
                 new EmbedBuilder()
                     .setColor('Orange')

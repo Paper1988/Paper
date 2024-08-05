@@ -22,6 +22,7 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
+        await interaction.deferReply({ fetchReply: true, ephemeral: true })
         const { options } = interaction
         const role = options.getRole('role')
         const target = options.getMember('target') || interaction.member
@@ -34,7 +35,7 @@ module.exports = {
             embed.setDescription(
                 `<:warning_908958943466893323:1201844340276862976> | 我無法編輯身分組: **${role}** !`
             )
-            return interaction.reply({ embeds: [embed], ephemeral: true })
+            return await interaction.editReply({ embeds: [embed], ephemeral: true })
         }
 
         embed.setDescription(
@@ -43,9 +44,8 @@ module.exports = {
                 : `<:correct_859388130411282442:1201843648229294121> | 成功添加身分組: **${role}** 至 ${target} 身上`
         )
         target.roles.cache.has(role.id) ? target.roles.remove(role) : target.roles.add(role)
-        const message = await interaction.reply({
-            embeds: [embed],
-            fetchReply: true
+        const message = await interaction.editReply({
+            embeds: [embed]
         })
         setTimeout(() => message.delete().catch(() => {}), 5000)
     }

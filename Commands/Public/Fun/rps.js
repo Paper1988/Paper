@@ -16,7 +16,7 @@ module.exports = {
         const opponent = options.getUser('opponent')
 
         if (interaction.user.id === opponent.id)
-            return interaction.reply({
+            return await interaction.reply({
                 content:
                     '<:warning_908958943466893323:1201844340276862976> | 你不能跟自己玩剪刀石頭布!',
                 ephemeral: true
@@ -58,6 +58,6 @@ module.exports = {
             reqTimeoutMessage: '遊戲取消，因為 {opponent} 未回應'
         })
 
-        Game.startGame()
+        await Game.startGame()
     }
 }

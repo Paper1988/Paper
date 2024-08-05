@@ -16,12 +16,11 @@ module.exports = {
             Data = new MaintenanceDB({
                 ClientId: client.user.id
             })
+            await Data.save()
         }
 
         Data.Maintenance = toggle
         Data.Description = description
-
-        await Data.save()
 
         if (Data.Maintenance === 'True') {
             return await interaction.reply({

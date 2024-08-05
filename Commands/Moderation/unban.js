@@ -3,7 +3,9 @@ const {
     EmbedBuilder,
     PermissionFlagsBits,
     ActionRowBuilder,
-    StringSelectMenuBuilder
+    StringSelectMenuBuilder,
+    ChatInputCommandInteraction,
+    Client
 } = require('discord.js')
 
 module.exports = {
@@ -12,6 +14,12 @@ module.exports = {
         .setDescription('解除封鎖伺服器中被封鎖的成員')
         .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
         .setDMPermission(false),
+    /**
+     *
+     * @param {ChatInputCommandInteraction} interaction
+     * @param {Client} client
+     * @returns
+     */
     async execute(interaction, client) {
         const { guild } = interaction
 
@@ -28,7 +36,7 @@ module.exports = {
             })
 
         if (fetchBan.size === 0)
-            return interaction.reply({
+            return await interaction.reply({
                 embeds: [noBanEmbed],
                 ephemeral: true
             })
