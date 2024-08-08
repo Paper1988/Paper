@@ -11,7 +11,7 @@ const {
 client.distube
     .on(Events.PLAY_SONG, async (queue, song) => {
         const msg = await queue.textChannel.send(generateMusicPlayerStatus(queue, song))
-        client.musicControllerMsgId = msg.id
+        queue.musicControllerMsgId = msg.id
     })
     .on(Events.ADD_SONG, (queue, song) => {
         const { embeds } = generateMusicPlayerStatus(queue, song)
@@ -84,6 +84,7 @@ client.distube
         queue.volume = Data.volume
         queue.repeatMode = Data.repeatMode
         queue.paused = false
+        queue.musicControllerMsgId = null
         queue.playerIntervalId = setInterval(async () => {
             await updateMusicPlayerStatus(queue)
         }, 5 * 1000)
