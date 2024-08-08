@@ -36,15 +36,19 @@ module.exports = {
         const attachment = interaction.options.getAttachment('attachment') || null
         const role = interaction.options.getRole('role')
 
+        function checkRole(member) {
+            if (role) {
+                return !member.roles.cache.some((r) => r.name == role.name)
+            } else return giveaway.exemptMembers(member)
+        }
+
         client.giveawaysManager
             .edit(query, {
                 addTime: ms(newDuration),
                 newWinnerCount: newWinners,
                 newPrize: newPrizes,
                 newThumbnail: attachment,
-                newExemptMembers: role
-                    ? (member) => !member.roles.cache.some((r) => r.name == role.name)
-                    : giveaway.exemptMembers(member)
+                newExemptMembers: (member) => checkRole(member)
             })
             .then(() => {
                 successEmbed.setDescription(

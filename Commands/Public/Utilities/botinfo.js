@@ -86,7 +86,9 @@ module.exports = {
                         ).toFixed(2)}%\``,
                         `<:library_867022827035164692:1202222757203419146> **資料庫連線** ${status[connection.readyState]}`,
                         `<:nodejs_891686636625223680:1201843728424378439> **Node.js** \`${process.version}\``,
-                        `<:djs_891686633991192607:1202223114134769715> **Discord.js** \`${version}\``
+                        `<:djs_891686633991192607:1202223114134769715> **Discord.js** \`${version}\``,
+                        `<:linkadd_865572290065072128:1201884016404598814> **已連接語音頻道** \`${client.distube.voices.size}\``,
+                        `<:queue_861852633240961024:1202112866069520385> **已創建音樂佇列** \`${client.distube.voices.queues.size}\``
                     ].join('\n'),
                     inline: true
                 },
@@ -94,9 +96,9 @@ module.exports = {
                     // Using the caches for some of these isn't always reliable, but it would be a waste of resources to loop through all servers every single time someone used this command.
                     name: '<:list_860123643710537789:1201843692546039829> | 各項統計',
                     value: [
-                        `<:globe_859424401971609600:1201843661785284659> **伺服器** \`${client.guilds.cache.size}\``,
-                        `<:people_964425853930995783:1201843743762681906> **使用者** \`${client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)}\``,
-                        `<:addreaction_866920224581746698:1201843621398323250> **表情符號** \`${client.emojis.cache.size}\``,
+                        `<:globe_859424401971609600:1201843661785284659> **伺服器**(快取) \`${client.guilds.cache.size}\``,
+                        `<:people_964425853930995783:1201843743762681906> **使用者**(快取) \`${client.users.cache.size}\``,
+                        `<:addreaction_866920224581746698:1201843621398323250> **表情符號**(快取) \`${client.emojis.cache.size}\``,
                         `<:channel_859424401950113822:1201843641124147280> **文字頻道** \`${getChannelTypeSize(
                             [ChannelType.GuildText, ChannelType.GuildForum]
                         )}\``,
