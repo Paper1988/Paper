@@ -105,7 +105,7 @@ client.distube
         )
     })
     .on(Events.DEBUG, async (msg) => {
-        const channel = client.channels.cache.get('1269555417420136528') // official 1268941820533149812
+        const channel = client.channels.cache.get('1268941820533149812') // official server's id is 1268941820533149812
 
         await channel.send({
             embeds: [
