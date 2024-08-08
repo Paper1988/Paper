@@ -37,9 +37,8 @@ module.exports = {
         const role = interaction.options.getRole('role')
 
         function checkRole(member) {
-            if (role) {
-                return !member.roles.cache.some((r) => r.name == role.name)
-            } else return giveaway.exemptMembers(member)
+            if (role) return !member.roles.cache.some((r) => r.name == role.name)
+            else return giveaway.exemptMembers(member)
         }
 
         client.giveawaysManager
