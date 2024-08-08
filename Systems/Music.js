@@ -127,9 +127,9 @@ const generateProgressBar = (length, totalLength, barLength = 20) => {
  * @returns
  */
 const updateMusicPlayerStatus = async (queue, completed) => {
-    if (!queue.client.musicControllerMsgId) return
+    if (!queue.musicControllerMsgId) return
 
-    const msg = queue?.textChannel?.messages.cache.get(queue.client.musicControllerMsgId)
+    const msg = queue?.textChannel?.messages.cache.get(queue.musicControllerMsgId)
     if (!msg) return
 
     const song = queue.songs[0]
