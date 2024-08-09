@@ -19,13 +19,15 @@ client.subCommands = new Collection()
 client.modals = new Collection()
 client.selectMenus = new Collection()
 /**************************************************/
-const pathToFFmpeg = require('ffmpeg-static')
 const { DisTube } = require('distube')
 const { SpotifyPlugin } = require('@distube/spotify')
 const { SoundCloudPlugin } = require('@distube/soundcloud')
 const { YtDlpPlugin } = require('@distube/yt-dlp')
 const { DirectLinkPlugin } = require('@distube/direct-link')
 const { YouTubePlugin } = require('@distube/youtube')
+const { DeezerPlugin } = require('@distube/deezer')
+const { AppleMusicPlugin } = require('distube-apple-music')
+const { TidalPlugin } = require('distube-tidal')
 const { SpotifyClientId, SpotifyClientSecret } = require('./Structures/config.json')
 
 client.distube = new DisTube(client, {
@@ -56,6 +58,9 @@ client.distube = new DisTube(client, {
         new SoundCloudPlugin(),
         new YtDlpPlugin({ update: true }),
         new DirectLinkPlugin(),
+        new TidalPlugin(),
+        new DeezerPlugin(),
+        new AppleMusicPlugin(),
         new YouTubePlugin({
             ytdlOptions: {
                 highWaterMark: 1024 * 1024 * 64,
