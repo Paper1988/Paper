@@ -22,7 +22,6 @@ client.selectMenus = new Collection()
 const { DisTube } = require('distube')
 const { SpotifyPlugin } = require('@distube/spotify')
 const { SoundCloudPlugin } = require('@distube/soundcloud')
-const { YtDlpPlugin } = require('@distube/yt-dlp')
 const { DirectLinkPlugin } = require('@distube/direct-link')
 const { YouTubePlugin } = require('@distube/youtube')
 const { DeezerPlugin } = require('@distube/deezer')
@@ -56,7 +55,6 @@ client.distube = new DisTube(client, {
             }
         }),
         new SoundCloudPlugin(),
-        new YtDlpPlugin({ update: true }),
         new DirectLinkPlugin(),
         new TidalPlugin(),
         new DeezerPlugin(),
