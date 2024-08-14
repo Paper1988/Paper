@@ -7,7 +7,6 @@ module.exports = {
         // To access an id / value from a button you MUST INCLUDE `client` AND `args` and in the same order as shown
         const { member } = interaction
         const VoiceChannel = member.voice.channel
-        const queue = client.distube.getQueue(VoiceChannel)
 
         if (!VoiceChannel)
             return await interaction.editReply({
@@ -21,6 +20,7 @@ module.exports = {
                 ephemeral: true
             })
 
+        const queue = await client.distube.getQueue(VoiceChannel)
         if (!queue)
             return await interaction.editReply({
                 content:

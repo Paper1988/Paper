@@ -28,7 +28,6 @@ const { YouTubePlugin } = require('@distube/youtube')
 const { DeezerPlugin } = require('@distube/deezer')
 const { AppleMusicPlugin } = require('distube-apple-music')
 const { TidalPlugin } = require('distube-tidal')
-const { SpotifyClientId, SpotifyClientSecret } = require('./Structures/config.json')
 
 client.distube = new DisTube(client, {
     customFilters: {
@@ -50,8 +49,8 @@ client.distube = new DisTube(client, {
     plugins: [
         new SpotifyPlugin({
             api: {
-                clientId: SpotifyClientId,
-                clientSecret: SpotifyClientSecret,
+                clientId: client.config.SpotifyClientId,
+                clientSecret: client.config.SpotifyClientSecret,
                 topTracksCountry: 'TW'
             }
         }),

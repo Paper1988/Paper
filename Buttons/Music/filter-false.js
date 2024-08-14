@@ -4,7 +4,6 @@ module.exports = {
         await interaction.deferReply({ fetchReply: true })
         const { member } = interaction
         const VoiceChannel = member.voice.channel
-        const queue = client.distube.getQueue(VoiceChannel)
 
         if (!VoiceChannel)
             return await interaction.editReply({
@@ -17,6 +16,7 @@ module.exports = {
                 content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
                 ephemeral: true
             })
+        const queue = await client.distube.getQueue(VoiceChannel)
         if (!queue)
             return await interaction.editReply({
                 content:

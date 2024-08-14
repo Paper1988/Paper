@@ -1,5 +1,5 @@
 const { ModalSubmitInteraction, Client, EmbedBuilder } = require('discord.js')
-const { SearchResultType, YouTubePlugin } = require('@distube/youtube')
+const { YouTubePlugin } = require('@distube/youtube')
 
 module.exports = {
     id: 'addSong',
@@ -18,9 +18,7 @@ module.exports = {
         const ytPlugin = new YouTubePlugin()
 
         if (!youtubeRegex.test(songName)) {
-            const results = await ytPlugin.search(songName, {
-                type: SearchResultType.VIDEO
-            })
+            const results = await ytPlugin.search(songName)
 
             client.distube.play(VoiceChannel, results[0], { member })
 
@@ -39,7 +37,7 @@ module.exports = {
                             )
                     ]
                 })
-                .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
+                .then(() => setTimeout(async () => await interaction.deleteReply(), 15 * 1000))
         }
     }
 }
