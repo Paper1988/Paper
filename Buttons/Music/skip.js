@@ -20,7 +20,7 @@ module.exports = {
                 ephemeral: true
             })
 
-        const queue = client.distube.getQueue(VoiceChannel)
+        const queue = await client.distube.getQueue(VoiceChannel)
         if (!queue)
             return await interaction.editReply({
                 content:

@@ -8,8 +8,6 @@ module.exports = {
         const { member } = interaction
         const VoiceChannel = member.voice.channel
 
-        const queue = client.distube.getQueue(VoiceChannel)
-
         if (!VoiceChannel)
             return await interaction.editReply({
                 content:
@@ -22,6 +20,7 @@ module.exports = {
                 ephemeral: true
             })
 
+        const queue = await client.distube.getQueue(VoiceChannel)
         if (!queue)
             return await interaction.editReply({
                 content:

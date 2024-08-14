@@ -52,7 +52,6 @@ client.distube
             })
             .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
         clearPlayer(queue)
-        await queue.voice.leave()
     })
     .on(Events.FINISH, async (queue) => {
         await queue.textChannel
@@ -93,9 +92,12 @@ client.distube
         clearPlayer(queue)
     })
     .on(Events.FINISH_SONG, async (queue, song) => {
-        if (queue.repeatMode === RepeatMode.DISABLED)
+        if (queue.repeatMode === RepeatMode.DISABLED) {
+            clearPlayer(queue)
             return await updateMusicPlayerStatus(queue, true)
+        }
         if (queue.repeatMode === RepeatMode.SONG) return await updateMusicPlayerStatus(queue, false)
+
         if (queue.repeatMode === RepeatMode.QUEUE && (queue.songs[1] || queue.autoplay))
             return await updateMusicPlayerStatus(queue, false)
         else if (!queue.songs[1]) return await updateMusicPlayerStatus(queue, true)

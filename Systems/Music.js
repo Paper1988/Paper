@@ -153,7 +153,7 @@ const clearPlayer = (queue) => {
  * @param {Queue} queue
  */
 const resetPlayer = (queue) => {
-    queue.client.musicControllerMsgId = null
+    queue.musicControllerMsgId = null
 }
 
 /**
