@@ -41,7 +41,7 @@ module.exports = {
                 ephemeral: true
             })
 
-        if (mDB.Maintenance === 'True') {
+        if (mDB.Maintenance == 'True') {
             return await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
