@@ -1,5 +1,10 @@
-const { ModalSubmitInteraction, EmbedBuilder } = require('discord.js')
-const { SoundCloudPlugin } = require('@distube/soundcloud')
+const {
+    ModalSubmitInteraction,
+    EmbedBuilder,
+    ActionRowBuilder,
+    StringSelectMenuBuilder
+} = require('discord.js')
+const { YouTubePlugin } = require('@distube/youtube')
 
 module.exports = {
     id: 'addSong',
@@ -13,11 +18,11 @@ module.exports = {
             .setCustomId('addSong')
             .setPlaceholder('請選擇歌曲')
 
-        const sc = new SoundCloudPlugin()
+        const yt = new YouTubePlugin()
 
         const Menu = new ActionRowBuilder().addComponents(select)
 
-        await sc.search(songName, { limit: 20 }).then((results) => {
+        await yt.search(songName, { limit: 20 }).then((results) => {
             select.addOptions(
                 results.map((song, id) => ({
                     label: `${song.name}`,

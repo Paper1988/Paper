@@ -1,8 +1,6 @@
-const { SlashCommandBuilder } = require('discord.js')
+const { SlashCommandBuilder, AutocompleteInteraction } = require('discord.js')
 const { defaultFilters } = require('distube')
-const { YouTubePlugin, SearchResultType } = require('@distube/youtube')
-const { default: SoundCloudPlugin } = require('@distube/soundcloud')
-
+const { YouTubePlugin } = require('@distube/youtube')
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('music')
@@ -112,10 +110,15 @@ module.exports = {
         )
         .addSubcommand((sub) => sub.setName('quit').setDescription('退出語音頻道')),
     usage: '/music (play, volume, settings, seek, filters, jump)',
+    /**
+     *
+     * @param {AutocompleteInteraction} interaction
+     * @returns
+     */
     async autocomplete(interaction) {
         // 檢查是否為 "play" 子指令的自動完成
         if (interaction.commandName === 'music' && interaction.options.getSubcommand() === 'play') {
-            const sc = new SoundCloudPlugin()
+            const yt = new YouTubePlugin()
             const value = interaction.options.getFocused().toString().trim()
 
             // 確保搜索字符串不是空的
@@ -126,7 +129,7 @@ module.exports = {
 
             let choices = []
             // 假設有一個搜索功能可以返回歌曲列表
-            await sc
+            await yt
                 .search(value, { limit: 10 })
                 .then((results) => {
                     choices = results.map((song, id) => ({
@@ -134,9 +137,9 @@ module.exports = {
                         value: `${song.name}`
                     }))
                 })
-                .catch(async (error) => {
+                .catch((error) => {
                     // 處理錯誤，例如通過回應一些預設選項或顯示錯誤信息
-                    return await interaction.respond([])
+                    return interaction.respond([])
                 })
 
             // 篩選出包含用戶輸入值的選項

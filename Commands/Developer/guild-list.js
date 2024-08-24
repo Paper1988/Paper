@@ -51,22 +51,10 @@ module.exports = {
                 .setEmoji('📃')
         )
 
-        interaction.reply({ embeds: [embed], components: [button], ephemeral: true })
-
-        const collect = interaction.channel.createMessageComponentCollector({})
-
-        collect.on('collect', async (i) => {
-            const guilds = client.guilds.cache.sort((a, b) => b.memberCount - a.memberCount)
-
-            const description = guilds
-                .map((guild) => {
-                    // console.log(guild);
-                    return `${guild.name} -> ${guild.memberCount} 位成員`
-                })
-                .join('\n')
-            const output = new AttachmentBuilder(Buffer.from(description), { name: 'servers.txt' })
-
-            await i.reply({ files: [output], ephemeral: true })
+        await interaction.reply({
+            embeds: [embed],
+            components: [button],
+            ephemeral: true
         })
     }
 }
