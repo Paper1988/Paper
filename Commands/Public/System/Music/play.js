@@ -5,7 +5,7 @@ const {
     PermissionFlagsBits
 } = require('discord.js')
 
-const { YouTubePlugin, SearchResultType } = require('@distube/youtube')
+const { SoundCloudPlugin } = require('@distube/soundcloud')
 
 module.exports = {
     subCommand: 'music.play',
@@ -25,7 +25,7 @@ module.exports = {
             fetchReply: true
         })
 
-        const ytPlugin = new YouTubePlugin()
+        const sc = new SoundCloudPlugin()
 
         if (!VoiceChannel)
             return await interaction.editReply({
@@ -69,9 +69,7 @@ module.exports = {
                     })
                     .then(() => interaction.deleteReply())
             } else {
-                const results = await ytPlugin.search(options.getString('query'), {
-                    type: SearchResultType.VIDEO
-                })
+                const results = await sc.search(options.getString('query'))
 
                 client.distube
                     .play(VoiceChannel, results[0], {

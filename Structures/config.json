@@ -10,5 +10,8 @@
   "SpotifyClientId": "***REMOVED***",
   "SpotifyClientSecret": "**REMOVED***",
 
+  "SoundCloudClientId": "JGyKOQau66jgGDVRBIbZlMZ0SUaaKo0Z",
+  "SoundCloudOauthToken": "***REMOVED***",
+
   "virusAPIKey": "***REMOVED***"
 }

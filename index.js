@@ -53,7 +53,10 @@ client.distube = new DisTube(client, {
                 topTracksCountry: 'TW'
             }
         }),
-        new SoundCloudPlugin(),
+        new SoundCloudPlugin({
+            clientId: client.config.SoundCloudClientId,
+            oauthToken: client.config.SoundCloudOAuthToken
+        }),
         new DirectLinkPlugin(),
         new TidalPlugin(),
         new DeezerPlugin(),

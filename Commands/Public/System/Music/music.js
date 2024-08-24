@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js')
 const { defaultFilters } = require('distube')
 const { YouTubePlugin, SearchResultType } = require('@distube/youtube')
+const { default: SoundCloudPlugin } = require('@distube/soundcloud')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -114,7 +115,7 @@ module.exports = {
     async autocomplete(interaction) {
         // 檢查是否為 "play" 子指令的自動完成
         if (interaction.commandName === 'music' && interaction.options.getSubcommand() === 'play') {
-            const ytPlugin = new YouTubePlugin()
+            const sc = new SoundCloudPlugin()
             const value = interaction.options.getFocused().toString().trim()
 
             // 確保搜索字符串不是空的
@@ -125,8 +126,8 @@ module.exports = {
 
             let choices = []
             // 假設有一個搜索功能可以返回歌曲列表
-            await ytPlugin
-                .search(value, { type: SearchResultType.VIDEO, limit: 10 })
+            await sc
+                .search(value, { limit: 10 })
                 .then((results) => {
                     choices = results.map((song, id) => ({
                         name: `${song.name}`,
