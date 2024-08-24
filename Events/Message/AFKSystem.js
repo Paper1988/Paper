@@ -13,6 +13,8 @@ module.exports = {
             GuildID: message.guild.id,
             UserID: message.author.id
         })
+            .exec()
+            .catch(() => {})
 
         if (message.mentions.members.size) {
             const Embed = new EmbedBuilder().setColor('Red')

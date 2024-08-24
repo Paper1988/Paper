@@ -13,8 +13,16 @@ module.exports = {
         const GiveawayDB = require('../../Structures/Schemas/GiveawayDB')
 
         await MusicDB.deleteOne({ GuildID: guild.id })
+            .exec()
+            .catch(() => {})
         await AntiAlt.deleteOne({ GuildID: guild.id })
+            .exec()
+            .catch(() => {})
         await AFKSystem.deleteOne({ GuildID: guild.id })
+            .exec()
+            .catch(() => {})
         await GiveawayDB.deleteOne({ guildId: guild.id })
+            .exec()
+            .catch(() => {})
     }
 }
