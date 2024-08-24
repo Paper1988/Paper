@@ -24,7 +24,7 @@ client.distube
                     )
                 ]
             })
-            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
+            .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
     })
     .on(Events.ADD_LIST, (queue, playlist) => {
         const { embeds } = generateMusicPlayerStatus(queue, playlist.songs[0])
@@ -37,7 +37,7 @@ client.distube
                     )
                 ]
             })
-            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
+            .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
     })
     .on(Events.ERROR, async (e, queue, song) => {
         await queue.textChannel
@@ -50,7 +50,8 @@ client.distube
                         .setFooter({ text: `請使用 /report 協助回報!` })
                 ]
             })
-            .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
+            .then((msg) => setTimeout(() => msg.delete(), 30 * 1000))
+        await updateMusicPlayerStatus(queue, true)
         clearPlayer(queue)
     })
     .on(Events.FINISH, async (queue) => {
@@ -64,7 +65,7 @@ client.distube
                         )
                 ]
             })
-            .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
+            .then((msg) => setTimeout(() => msg.delete(), 30 * 1000))
         clearPlayer(queue)
     })
     .on(Events.INIT_QUEUE, async (queue) => {
@@ -108,16 +109,7 @@ client.distube
         )
     })
     .on(Events.DEBUG, async (msg) => {
-        const channel = client.channels.cache.get('1268941820533149812') // official server's id is 1268941820533149812
-
-        await channel.send({
-            embeds: [
-                new EmbedBuilder()
-                    .setColor('Orange')
-                    .setTitle('[Distube] FFmpeg Debug:')
-                    .setDescription(msg)
-            ]
-        })
+        console.log(msg)
     })
     .on(Events.DISCONNECT, (queue) => {
         clearPlayer(queue)

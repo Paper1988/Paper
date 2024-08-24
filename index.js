@@ -57,8 +57,8 @@ client.distube = new DisTube(client, {
         new DirectLinkPlugin(),
         new TidalPlugin(),
         new DeezerPlugin(),
-        new AppleMusicPlugin(),
-        new YouTubePlugin({
+        new AppleMusicPlugin()
+        /* new YouTubePlugin({
             ytdlOptions: {
                 highWaterMark: 1024 * 1024 * 64,
                 quality: 'highestaudio',
@@ -375,7 +375,7 @@ client.distube = new DisTube(client, {
                     id: 22
                 }
             ]
-        })
+        }) */
     ]
 })
 

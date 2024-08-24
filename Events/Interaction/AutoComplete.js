@@ -14,18 +14,17 @@ module.exports = {
         const command = await interaction.client.commands.get(commandName)
 
         if (!command) {
-            console.log(`[Autocomplete] 找不到指令 ${commandName}`)
-            return
+            return console.log(`[Autocomplete] 找不到指令 ${commandName}`)
         }
 
         if (command.autocomplete) {
             try {
                 await command.autocomplete(interaction, interaction.client)
             } catch (error) {
-                return console.log('[Autocomplete]' + error)
+                return console.log('[Autocomplete] ' + error)
             }
         } else {
-            console.warn(
+            return console.warn(
                 `[Autocomplete] 指令 ${interaction.commandName} 沒有實現 autocomplete 方法。`
             )
         }

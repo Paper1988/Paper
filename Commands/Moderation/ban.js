@@ -73,14 +73,14 @@ module.exports = {
             })
 
         if (!target.user.bot) {
-            target.send({ embeds: [dmEmbed] })
-            target.ban({ reason: reason }).catch((err) => {
-                interaction.editReply({
-                    embeds: [errorsEmbed.setDescription('發生一個罕見的錯誤')]
-                })
-                return console.log('錯誤發生 - 在 Ban.js', err)
-            })
+            await target.send({ embeds: [dmEmbed] })
         }
+        await target.ban({ reason: reason }).catch((err) => {
+            interaction.editReply({
+                embeds: [errorsEmbed.setDescription('發生一個罕見的錯誤')]
+            })
+            return console.log('錯誤發生 - 在 Ban.js', err)
+        })
         const successEmbed = new EmbedBuilder()
             .setAuthor({
                 name: `${guild.name}`,

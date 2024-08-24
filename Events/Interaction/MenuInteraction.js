@@ -10,10 +10,10 @@ module.exports = {
     async execute(interaction, client) {
         if (!interaction.isStringSelectMenu()) return
         try {
-            const Menu = client.selectMenus.get(interaction.customId)
+            const Menu = await client.selectMenus.get(interaction.customId)
 
             if (!Menu)
-                return interaction.reply({
+                return await interaction.reply({
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
@@ -27,7 +27,7 @@ module.exports = {
             Menu.execute(interaction, client)
         } catch (err) {
             console.log(err)
-            return interaction.reply({
+            return await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
                         .setColor('Red')

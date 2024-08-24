@@ -4,7 +4,7 @@ module.exports = {
     developer: true,
     data: new SlashCommandBuilder()
         .setName('reload')
-        .setDescription('重新載入指令/事件')
+        .setDescription('重新載入指令/事件(僅限開發人員)')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
         .addSubcommand((options) => options.setName('events').setDescription('載入Events'))
         .addSubcommand((options) => options.setName('commands').setDescription('載入Commands'))
