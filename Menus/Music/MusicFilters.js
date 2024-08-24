@@ -41,14 +41,14 @@ module.exports = {
                 .send({
                     content: `<:linkremove_865572289022394368:1201843685084647435> | 成功移除 \`${filter}\` 過濾器\n${msg}`
                 })
-                .then((msg) => setTimeout(() => msg.delete(), 3 * 1000))
+                .then((msg) => setTimeout(() => msg.delete(), 5 * 1000))
         } else {
             await filters.add(filter)
             await interaction.channel
                 .send({
                     content: `<:linkadd_865572290065072128:1201884016404598814> | 成功增加 \`${filter}\` 過濾器\n${msg}`
                 })
-                .then((msg) => setTimeout(() => msg.delete(), 3 * 1000))
+                .then((msg) => setTimeout(() => msg.delete(), 5 * 1000))
         }
 
         await interaction

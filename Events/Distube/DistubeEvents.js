@@ -54,8 +54,8 @@ client.distube
         await updateMusicPlayerStatus(queue, true)
         clearPlayer(queue)
     })
-    .on(Events.FINISH, async (queue) => {
-        await queue.textChannel
+    .on(Events.FINISH, (queue) => {
+        queue.textChannel
             .send({
                 embeds: [
                     new EmbedBuilder()
@@ -103,14 +103,15 @@ client.distube
             return await updateMusicPlayerStatus(queue, false)
         else if (!queue.songs[1]) return await updateMusicPlayerStatus(queue, true)
     })
-    .on(Events.NO_RELATED, async (queue, error) => {
-        await queue.textChannel.send(
+    .on(Events.NO_RELATED, (queue) => {
+        queue.textChannel.send(
             `<:warning_908958943466893323:1201844340276862976> | 找不到任何相關歌曲!`
         )
     })
-    .on(Events.DEBUG, async (msg) => {
+    .on(Events.DEBUG, (msg) => {
         console.log(msg)
     })
+    .on(Events.FFMPEG_DEBUG, (msg) => console.log(msg))
     .on(Events.DISCONNECT, (queue) => {
         clearPlayer(queue)
     })
