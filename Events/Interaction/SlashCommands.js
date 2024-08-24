@@ -13,7 +13,7 @@ module.exports = {
     async execute(interaction, client) {
         if (!interaction.isChatInputCommand()) return
 
-        const mDB = MaintenanceDB.findOne({ ClientId: client.user.id })
+        const mDB = await MaintenanceDB.findOne({ ClientId: client.user.id })
 
         const GuildData = await BlackListGuild.findOne({
             Guild: interaction.guild.id
@@ -87,16 +87,16 @@ module.exports = {
 
         const subCommand = interaction.options.getSubcommand(false)
         if (subCommand) {
-            const subCommandFile = client.subCommands.get(
+            const subCommandFile = await client.subCommands.get(
                 `${interaction.commandName}.${subCommand}`
             )
             if (!subCommandFile)
-                return interaction.reply({
+                return await interaction.reply({
                     content:
                         '<:warning_908958943466893323:1201844340276862976> | 這項指令過期或不存在了!',
                     ephemeral: true
                 })
-            subCommandFile.execute(interaction, client)
-        } else command.execute(interaction, client)
+            await subCommandFile.execute(interaction, client)
+        } else await command.execute(interaction, client)
     }
 }

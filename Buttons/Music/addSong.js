@@ -1,28 +1,40 @@
-const { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js')
+const {
+    ActionRowBuilder,
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle,
+    ChatInputCommandInteraction,
+    Client
+} = require('discord.js')
 
 module.exports = {
     id: 'addSong', // The buttons .setCustomId
+    /**
+     *
+     * @param {ChatInputCommandInteraction} interaction
+     * @param {Client} client
+     * @returns
+     */
     async execute(interaction, client) {
-        await interaction.deferReply({ fetchReply: true, ephemeral: true })
         // To access an id / value from a button you MUST INCLUDE `client` AND `args` and in the same order as shown
         const { member } = interaction
         const VoiceChannel = member.voice.channel
 
         if (!VoiceChannel)
-            return await interaction.editReply({
+            return await interaction.reply({
                 content:
                     '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂按鈕!',
                 ephemeral: true
             })
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
-            return await interaction.editReply({
+            return await interaction.reply({
                 content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
                 ephemeral: true
             })
 
         const queue = await client.distube.getQueue(VoiceChannel)
         if (!queue)
-            return await interaction.editReply({
+            return await interaction.reply({
                 content:
                     '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true

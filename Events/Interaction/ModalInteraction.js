@@ -9,10 +9,10 @@ module.exports = {
     async execute(interaction, client) {
         if (!interaction.isModalSubmit()) return
         try {
-            const Modal = client.modals.get(interaction.customId)
+            const Modal = await client.modals.get(interaction.customId)
 
             if (!Modal)
-                return interaction.reply({
+                return await interaction.reply({
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
@@ -24,7 +24,7 @@ module.exports = {
                 })
 
             if (Modal.permission && !interaction.member.permissions.has(Modal.permission))
-                return interaction.reply({
+                return await interaction.reply({
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')

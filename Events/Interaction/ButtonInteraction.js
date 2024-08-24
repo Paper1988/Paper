@@ -20,16 +20,16 @@ module.exports = {
         if (interaction.customId === 'approve_reject') return
 
         try {
-            const Button = client.buttons.get(interaction.customId)
+            const Button = await client.buttons.get(interaction.customId)
             if (!Button)
-                return interaction.reply({
+                return await interaction.reply({
                     content:
                         '<:warning_908958943466893323:1201844340276862976> | 這個按鈕不存在或過期了!',
                     ephemeral: true
                 })
 
             if (Button.permission && !interaction.member.permissions.has(Button.permission))
-                return interaction.reply({
+                return await interaction.reply({
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
@@ -43,7 +43,7 @@ module.exports = {
             Button.execute(interaction, client)
         } catch (err) {
             console.log('[Button]' + err)
-            return interaction.reply({
+            return await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
                         .setColor('Red')

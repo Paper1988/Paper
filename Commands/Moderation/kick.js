@@ -64,11 +64,11 @@ module.exports = {
             })
 
         try {
-            target.send({ embeds: [dmEmbed] })
+            await target.send({ embeds: [dmEmbed] })
         } catch {
             return
         }
-        target.kick({ reason: reason }).catch((err) => {
+        await target.kick({ reason: reason }).catch((err) => {
             interaction.editReply({
                 embeds: [
                     errorsEmbed.setDescription(
