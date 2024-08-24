@@ -1,11 +1,10 @@
+const { YouTubePlugin } = require('@distube/youtube')
 const {
     ChatInputCommandInteraction,
     Client,
     EmbedBuilder,
     PermissionFlagsBits
 } = require('discord.js')
-
-const { SoundCloudPlugin } = require('@distube/soundcloud')
 
 module.exports = {
     subCommand: 'music.play',
@@ -25,7 +24,7 @@ module.exports = {
             fetchReply: true
         })
 
-        const sc = new SoundCloudPlugin()
+        const yt = new YouTubePlugin()
 
         if (!VoiceChannel)
             return await interaction.editReply({
@@ -69,7 +68,7 @@ module.exports = {
                     })
                     .then(() => interaction.deleteReply())
             } else {
-                const results = await sc.search(options.getString('query'))
+                const results = await yt.search(options.getString('query'))
 
                 client.distube
                     .play(VoiceChannel, results[0], {
