@@ -2,8 +2,8 @@ const { ChatInputCommandInteraction, EmbedBuilder, Client } = require('discord.j
 
 const BlackListGuild = require('../../Structures/Schemas/BlacklistGuild')
 const BlackListUser = require('../../Structures/Schemas/BlacklistUser')
-const MaintenanceDB = require('../../Structures/Schemas/MaintenanceDB')
-
+/* const MaintenanceDB = require('../../Structures/Schemas/MaintenanceDB')
+ */
 module.exports = {
     name: 'interactionCreate',
     /**
@@ -13,7 +13,7 @@ module.exports = {
     async execute(interaction, client) {
         if (!interaction.isChatInputCommand()) return
 
-        const mDB = await MaintenanceDB.findOne({ ClientId: client.user.id })
+        /* const mDB = await MaintenanceDB.findOne({ ClientId: client.user.id }) */
 
         const GuildData = await BlackListGuild.findOne({
             Guild: interaction.guild.id
@@ -41,7 +41,7 @@ module.exports = {
                 ephemeral: true
             })
 
-        if (mDB.Maintenance == 'True') {
+        /* if (mDB.Maintenance == 'True') {
             return await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
@@ -61,7 +61,7 @@ module.exports = {
                         .setColor('Blurple')
                 ]
             })
-        }
+        } */
 
         if (GuildData)
             return await interaction.reply({
@@ -97,6 +97,6 @@ module.exports = {
                     ephemeral: true
                 })
             await subCommandFile.execute(interaction, client)
-        } else await command.execute(interaction, client)
+        } else command.execute(interaction, client)
     }
 }
