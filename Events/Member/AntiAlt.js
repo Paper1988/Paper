@@ -12,6 +12,8 @@ module.exports = {
             // Checking for data in the DB
             GuildID: member.guild.id
         })
+            .exec()
+            .catch(() => {})
         if (!Data) return // If there is no data, we stop the event from running
 
         const logChannel = member.guild.channels.cache.get(Data.LogsChannel) // Get the logs channel

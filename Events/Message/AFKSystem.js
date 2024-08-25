@@ -16,6 +16,8 @@ module.exports = {
             .exec()
             .catch(() => {})
 
+        if (!DB) return
+
         if (message.mentions.members.size) {
             const Embed = new EmbedBuilder().setColor('Red')
             message.mentions.members.forEach((m) => {
@@ -23,7 +25,7 @@ module.exports = {
                     .exec()
                     .then(async (data) => {
                         if (data)
-                            return message.reply({
+                            return await message.reply({
                                 embeds: [
                                     Embed.setDescription(
                                         `<:idle_860123644265365514:1202228021826961448> | ${m} 已進入AFK模式\nAfk時間: <t:${data.Time}:R>\n **狀態**: ${data.Status}`

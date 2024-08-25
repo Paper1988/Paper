@@ -1,6 +1,6 @@
 {
   "Token": "***REMOVED***",
-  "Database": "***REMOVED***/Js?retryWrites=true&w=majority",
+  "Database": "***REMOVED***/?retryWrites=true&w=majority&appName=DClvl",
   
   "clientId": "***REMOVED***",
   "clientSecret": "***REMOVED***",
