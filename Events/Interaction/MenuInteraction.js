@@ -9,8 +9,10 @@ module.exports = {
      */
     async execute(interaction, client) {
         if (!interaction.isStringSelectMenu()) return
+        if (interaction.customId === 'unban:selectMenu') return
         try {
-            const Menu = await client.selectMenus.get(interaction.customId)
+            const CustomId = interaction.customId.split('/')
+            const Menu = await client.selectMenus.get(CustomId[0])
 
             if (!Menu)
                 return await interaction.reply({
@@ -24,7 +26,7 @@ module.exports = {
                     ephemeral: true
                 })
 
-            Menu.execute(interaction, client)
+            Menu.execute(interaction, client, CustomId.slice(1, -1))
         } catch (err) {
             console.log(err)
             return await interaction.reply({

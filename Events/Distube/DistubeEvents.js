@@ -85,13 +85,12 @@ client.distube
         queue.repeatMode = Data.repeatMode
         queue.paused = false
         queue.musicControllerMsgId = null
-        queue.playerIntervalId = setInterval(async () => {
-            await updateMusicPlayerStatus(queue)
-        }, 5 * 1000)
+        queue.playerIntervalId = setInterval(
+            async () => await updateMusicPlayerStatus(queue),
+            5 * 1000
+        )
     })
-    .on(Events.DELETE_QUEUE, (queue) => {
-        clearPlayer(queue)
-    })
+    .on(Events.DELETE_QUEUE, (queue) => clearPlayer(queue))
     .on(Events.FINISH_SONG, async (queue, song) => {
         if (queue.repeatMode === RepeatMode.DISABLED) {
             clearPlayer(queue)
@@ -103,15 +102,11 @@ client.distube
             return await updateMusicPlayerStatus(queue, false)
         else if (!queue.songs[1]) return await updateMusicPlayerStatus(queue, true)
     })
-    .on(Events.NO_RELATED, (queue) => {
+    .on(Events.NO_RELATED, (queue) =>
         queue.textChannel.send(
             `<:warning_908958943466893323:1201844340276862976> | 找不到任何相關歌曲!`
         )
-    })
-    .on(Events.DEBUG, (msg) => {
-        console.log(msg)
-    })
+    )
+    .on(Events.DEBUG, (msg) => console.log(msg))
     .on(Events.FFMPEG_DEBUG, (msg) => console.log(msg))
-    .on(Events.DISCONNECT, (queue) => {
-        clearPlayer(queue)
-    })
+    .on(Events.DISCONNECT, (queue) => clearPlayer(queue))

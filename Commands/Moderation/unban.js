@@ -5,7 +5,8 @@ const {
     ActionRowBuilder,
     StringSelectMenuBuilder,
     ChatInputCommandInteraction,
-    Client
+    Client,
+    ButtonStyle
 } = require('discord.js')
 
 module.exports = {
@@ -22,6 +23,7 @@ module.exports = {
      */
     async execute(interaction, client) {
         const { guild } = interaction
+        let member
 
         const fetchBan = await guild.bans.fetch({ limit: 25 })
 
@@ -69,30 +71,82 @@ module.exports = {
                 components: [selectMenu],
                 ephemeral: true
             })
-            .then(async (msg) => {
-                const collector = msg.createMessageComponentCollector({
-                    idle: 10 * 1000
-                })
+            .then((msg) => {
+                const collector = msg.createMessageComponentCollector()
 
-                collector.on('end', async () => {
-                    const msgC = await interaction.fetchReply()
-                    if (!msg) return
-                    if (!msgC.components.length) return
+                collector.on('collect', async (i) => {
+                    if (i.isStringSelectMenu() && i.customId == 'unban:selectMenu') {
+                        member = guild.members.cache.get(i.values[0])
+                        const confirmationEmbed = new EmbedBuilder()
+                            .setColor('Blue')
+                            .setDescription(
+                                `<:question_860133545905225768:1202218555844853760> | 你確定要解除封鎖 ${member} 嗎?`
+                            )
+                            .setFooter({
+                                text: client.user.username,
+                                iconURL: client.user.displayAvatarURL()
+                            })
 
-                    const noInteractionEmbed = new EmbedBuilder()
-                        .setColor('Orange')
-                        .setDescription(`10秒內未收到任何回應，動作已取消!`)
-                        .setFooter({
-                            text: '你可以關閉這個視窗了'
+                        const buttons = new ActionRowBuilder().addComponents(
+                            new ButtonBuilder()
+                                .setCustomId(`unban:confirm`)
+                                .setLabel('確認')
+                                .setEmoji('<:correct_859388130411282442:1201843648229294121>')
+                                .setStyle(ButtonStyle.Danger),
+                            new ButtonBuilder()
+                                .setCustomId('unban:cancel')
+                                .setLabel('取消')
+                                .setEmoji('<:xmark_988409378161954866:1201844342029815848>')
+                                .setStyle(ButtonStyle.Secondary)
+                        )
+
+                        await i.update({
+                            embeds: [confirmationEmbed],
+                            components: [buttons]
+                        })
+                    } else if (i.isButton() && i.customId == 'unban:confirm') {
+                        const processEmbed = new EmbedBuilder()
+                            .setColor('Blue')
+                            .setDescription(
+                                `<a:discord1792loading:1212016238839070791> | 正在執行中...`
+                            )
+                            .setFooter({
+                                text: client.user.username,
+                                iconURL: client.user.displayAvatarURL()
+                            })
+
+                        await i.update({
+                            embeds: [processEmbed],
+                            components: []
                         })
 
-                    await msg.edit({
-                        embeds: [noInteractionEmbed],
-                        components: []
-                    })
-                })
+                        await guild.members.unban(member.id, `由 ${i.user.username} 操作`)
 
-                module.exports = { msg }
+                        const finishedEmbed = new EmbedBuilder()
+                            .setColor('Blue')
+                            .setAuthor({
+                                name: member.user.username,
+                                iconURL: member.user.displayAvatarURL()
+                            })
+                            .setDescription(`${member} 已被解除封鎖!`)
+
+                        await msg.edit({
+                            embeds: [finishedEmbed],
+                            components: []
+                        })
+                    } else if (i.isButton() && i.customId == 'unban:cancel') {
+                        const canceledEmbed = new EmbedBuilder()
+                            .setColor('Blue')
+                            .setDescription(
+                                `<:outage_868122243845206087:1202112862990897172> | 動作已取消`
+                            )
+
+                        await i.update({
+                            embeds: [canceledEmbed],
+                            components: []
+                        })
+                    }
+                })
             })
     }
 }
