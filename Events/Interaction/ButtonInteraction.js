@@ -18,9 +18,12 @@ module.exports = {
         if (interaction.customId === 'rps_s') return
         if (interaction.customId === 'approve_accept') return
         if (interaction.customId === 'approve_reject') return
+        if (interaction.customId === 'unban:cancel') return
+        if (interaction.customId === 'unban:confirm') return
 
         try {
-            const Button = await client.buttons.get(interaction.customId)
+            const buttonCustomId = interaction.customId.split('/')
+            const Button = await client.buttons.get(buttonCustomId[0])
             if (!Button)
                 return await interaction.reply({
                     content:
@@ -40,7 +43,7 @@ module.exports = {
                     ephemeral: true
                 })
 
-            Button.execute(interaction, client)
+            Button.execute(interaction, client, buttonCustomId.slice(1, -1))
         } catch (err) {
             console.log('[Button]' + err)
             return await interaction.reply({

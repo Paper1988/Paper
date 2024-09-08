@@ -13,18 +13,19 @@ module.exports = {
      * @param {Client} client
      */
     async execute(interaction, client) {
+        await interaction.reply({
+            content: '<a:discord1792loading:1212016238839070791> | 處理請求中...',
+            fetchReply: true
+        })
         const { options, channel, member } = interaction
         const VoiceChannel = member.voice.channel
 
         const position = options.getNumber('position', false) ?? undefined
         const skip = options.getBoolean('skip', false)
 
-        await interaction.reply({
-            content: '<a:discord1792loading:1212016238839070791> | 處理請求中...',
-            fetchReply: true
-        })
-
         const yt = new YouTubePlugin()
+
+        const embed = new EmbedBuilder().setColor('Red').setTitle('發生錯誤').setTimestamp()
 
         if (!VoiceChannel)
             return await interaction.editReply({
@@ -39,8 +40,9 @@ module.exports = {
                 ephemeral: true
             })
 
-        if (!VoiceChannel.permissionsFor(client.user).has(PermissionFlagsBits.Connect)) {
+        if (!VoiceChannel.joinable) {
             return await interaction.editReply({
+                content: '',
                 embeds: [
                     new EmbedBuilder()
                         .setTitle('拒絕請求')
@@ -78,10 +80,20 @@ module.exports = {
                         skip
                     })
                     .then(() => interaction.deleteReply())
+                    .catch((err) =>
+                        interaction
+                            .editReply({
+                                embeds: [
+                                    embed.setDescription('<:warning:1265562532857380936> | ' + err)
+                                ]
+                            })
+                            .then(() => setTimeout(() => interaction.deleteReply(), 15 * 1000))
+                    )
             }
         } else {
             return await interaction
                 .editReply({
+                    content: '',
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
@@ -91,7 +103,7 @@ module.exports = {
                             )
                     ]
                 })
-                .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
+                .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
         }
     }
 }

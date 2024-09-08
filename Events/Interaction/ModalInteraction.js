@@ -9,7 +9,8 @@ module.exports = {
     async execute(interaction, client) {
         if (!interaction.isModalSubmit()) return
         try {
-            const Modal = await client.modals.get(interaction.customId)
+            const CustomId = interaction.customId.split('/')
+            const Modal = await client.modals.get(CustomId[0])
 
             if (!Modal)
                 return await interaction.reply({
@@ -35,30 +36,27 @@ module.exports = {
                     ephemeral: true
                 })
 
-            /**
-            let dev;
-            if (Modal.developers === true)
-                dev = interaction.user.id !== "538639229220028416";
+            let dev
+            if (Modal.developers === true) dev = interaction.user.id !== '538639229220028416'
             if (dev)
                 return interaction.reply({
-                embeds: [
-                    new EmbedBuilder()
-                    .setColor("BLUE")
-                    .setDescription(
-                    "<:warning_908958943466893323:1201844340276862976> | 這項Modal僅限於開發人員使用!"
-                    ),
-                ],
-                ephemeral: true,
-            });
-            */
+                    embeds: [
+                        new EmbedBuilder()
+                            .setColor('Blue')
+                            .setDescription(
+                                '<:warning_908958943466893323:1201844340276862976> | 這項Modal僅限於開發人員使用!'
+                            )
+                    ],
+                    ephemeral: true
+                })
 
-            Modal.execute(interaction, client)
+            Modal.execute(interaction, client, CustomId.slice(1, -1))
         } catch (err) {
             console.log('[Modal]' + err)
             return interaction.reply({
                 embeds: [
                     new EmbedBuilder()
-                        .setColor('RED')
+                        .setColor('Red')
                         .setDescription(
                             '<:outage_868122243845206087:1202112862990897172> | 發生未知錯誤，請協助回報!'
                         )

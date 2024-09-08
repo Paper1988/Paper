@@ -10,10 +10,16 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
-        const embed = new EmbedBuilder().setTitle('版權提供者').addFields({
-            name: 'Icons圖標',
-            value: 'https://discord.gg/9AtkECMX2P'
-        })
+        const embed = new EmbedBuilder().setTitle('版權提供者').addFields(
+            {
+                name: 'Icons圖標',
+                value: 'https://discord.gg/9AtkECMX2P'
+            },
+            {
+                name: '歌詞來源',
+                value: 'https://genius.com'
+            }
+        )
         await interaction.reply({ embeds: [embed], ephemeral: true })
     }
 }
