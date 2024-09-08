@@ -6,7 +6,8 @@ const {
     StringSelectMenuBuilder,
     ChatInputCommandInteraction,
     Client,
-    ButtonStyle
+    ButtonStyle,
+    ButtonBuilder
 } = require('discord.js')
 
 module.exports = {
