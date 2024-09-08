@@ -14,8 +14,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('unban')
         .setDescription('解除封鎖伺服器中被封鎖的成員')
-        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
-        .setDMPermission(false),
+        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
     /**
      *
      * @param {ChatInputCommandInteraction} interaction
@@ -24,7 +23,7 @@ module.exports = {
      */
     async execute(interaction, client) {
         const { guild } = interaction
-        let member
+        var member
 
         const fetchBan = await guild.bans.fetch({ limit: 25 })
 
@@ -69,19 +68,18 @@ module.exports = {
         await interaction
             .reply({
                 embeds: [choicesEmbed],
-                components: [selectMenu],
-                ephemeral: true
+                components: [selectMenu]
             })
             .then((msg) => {
                 const collector = msg.createMessageComponentCollector()
 
                 collector.on('collect', async (i) => {
                     if (i.isStringSelectMenu() && i.customId == 'unban:selectMenu') {
-                        member = guild.members.cache.get(i.values[0])
+                        member = await client.users.fetch(i.values[0])
                         const confirmationEmbed = new EmbedBuilder()
                             .setColor('Blue')
                             .setDescription(
-                                `<:question_860133545905225768:1202218555844853760> | 你確定要解除封鎖 ${member} 嗎?`
+                                `<:question_860133545905225768:1202218555844853760> | 你確定要解除封鎖 ${member.username} 嗎?`
                             )
                             .setFooter({
                                 text: client.user.username,
@@ -129,7 +127,7 @@ module.exports = {
                                 name: member.user.username,
                                 iconURL: member.user.displayAvatarURL()
                             })
-                            .setDescription(`${member} 已被解除封鎖!`)
+                            .setDescription(`${member.username} 已被解除封鎖!`)
 
                         await msg.edit({
                             embeds: [finishedEmbed],
