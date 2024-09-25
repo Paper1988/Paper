@@ -232,9 +232,11 @@ const generateMusicPlayerStatus = (queue, song, completed = false) => {
                     {
                         name: '<:clock_964491800465276940:1201843646203433030>進度',
                         value: `${
-                            completed
-                                ? `\`${secondsToDuration(songDuration)}\` - \`${secondsToDuration(songDuration)}\``
-                                : `\`${secondsToDuration(queue.currentTime)}\` - \`${secondsToDuration(songDuration)}\``
+                            song.isLive
+                                ? `${songDuration}`
+                                : completed
+                                  ? `\`${secondsToDuration(songDuration)}\` - \`${secondsToDuration(songDuration)}\``
+                                  : `\`${secondsToDuration(queue.currentTime)}\` - \`${secondsToDuration(songDuration)}\``
                         }`,
                         inline: true
                     },

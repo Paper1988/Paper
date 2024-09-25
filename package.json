@@ -21,7 +21,7 @@
         "@distube/ytdl-core": "^4.14.4",
         "@distube/ytsr": "^2.0.4",
         "@iamtraction/google-translate": "^2.0.1",
-        "apexify.js": "^4.4.36",
+        "apexify.js": "^4.5.20",
         "ascii-table": "^0.0.9",
         "axios": "^1.7.2",
         "chalk": "^5.3.0",
