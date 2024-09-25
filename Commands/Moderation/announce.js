@@ -64,7 +64,12 @@ module.exports = {
             .setTitle(`${title}`)
             .setDescription(`${splittedMsg}`)
 
-        if (color) embed.setColor(color.toUpperCase())
+        if (color)
+            try {
+                embed.setColor(color[0].toUpperCase())
+            } catch {
+                return await interaction.reply('無效的色碼格式! 請使用六進位制色碼!')
+            }
         if (footer) embed.setFooter({ text: footer })
         if (timestamp) embed.setTimestamp()
 
