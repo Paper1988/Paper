@@ -22,7 +22,7 @@ module.exports = {
 
         const embed = new EmbedBuilder().setColor('Aqua')
 
-        await ApexChat('v4', prompt, {
+        await ApexChat('gpt-4', prompt, {
             userId: interaction.user.id,
             memory: true,
             instruction: `你是一個在 ${serverName}-${channelName} 中協助服務的AI機器人(使用繁體中文回答)，負責回應用戶名稱為${username}的提示。`,
