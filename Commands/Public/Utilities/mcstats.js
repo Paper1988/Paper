@@ -65,7 +65,7 @@ module.exports = {
                 true
             )
             const collector = msg.createMessageComponentCollector()
-            collector.on('collector', async (interaction) => {
+            collector.on('collect', async (interaction) => {
                 if (interaction.customId == 'mcstats:refresh') {
                     let updatedData = await fetch(`https://mcapi.us/server/status?ip=${ip}`)
                     let response = await updatedData.json()
@@ -74,7 +74,7 @@ module.exports = {
                         true,
                         interaction
                     )
-                }
+                } else return
             })
         }
     }
