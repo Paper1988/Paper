@@ -33,73 +33,69 @@ const generateMusicStatusButtons = (queue) => {
     const row1 = new ActionRowBuilder().addComponents([
         new ButtonBuilder()
             .setCustomId(`autoplay`)
-            .setEmoji('<:update_860123644297871382:1201844333968625695>')
+            .setEmoji('<:update:1265562455828987968>')
             .setStyle(queue.autoplay ? ButtonStyle.Success : ButtonStyle.Secondary),
         new ButtonBuilder()
             .setCustomId(`previous`) // Note the buttons ID is on the left of the _ and the id is on the right. Also note your CANNOT have another _ in the customid eg `my_coolbutton_${target.id}`
-            .setEmoji('<:backforward_988409328698523708:1201843626435686440>')
+            .setEmoji('<:backforward:1265557186621345833>')
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(queue.previousSongs.length === 0),
         new ButtonBuilder()
             .setCustomId(`togglePause`)
-            .setEmoji(
-                queue.paused
-                    ? '<:play_861852632800952320:1202112864857628692>'
-                    : '<:pause_861852632914198548:1201843739728035961>'
-            )
+            .setEmoji(queue.paused ? '<:play:1265561505458294826>' : '<:pause:1265561390358331462>')
             .setStyle(queue.paused ? ButtonStyle.Primary : ButtonStyle.Secondary),
         new ButtonBuilder()
             .setCustomId(`skip`)
-            .setEmoji('<:frontforward_988409335791124551:1202215991694856262>')
+            .setEmoji('<:frontforward:1265560424510787584>')
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(queue.autoplay ? false : queue.songs.length === 1),
         new ButtonBuilder()
             .setCustomId(`shuffle`)
-            .setEmoji('<:shuffle_988409354208313404:1201844292751212574>')
+            .setEmoji('<:shuffle:1265561846690222081>')
             .setStyle(ButtonStyle.Secondary)
     ])
     // next column
     const row2 = new ActionRowBuilder().addComponents([
         new ButtonBuilder()
             .setCustomId(`loop`)
-            .setEmoji('<:loop_988409346637594744:1201843698976178246>')
+            .setEmoji('<:loop2:1265560938417754213>')
             .setStyle(queue.repeatMode ? ButtonStyle.Success : ButtonStyle.Secondary),
         new ButtonBuilder()
             .setCustomId(`volumeDown`)
-            .setEmoji('<:speaker_low_860133546278387763:1201844302725255178>')
+            .setEmoji('<:speaker_low:1265561976663310386>')
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(queue.volume <= 0),
         new ButtonBuilder()
             .setCustomId(`stop`)
-            .setEmoji('<:stop_988409337837924422:1201844316675510364>')
+            .setEmoji('<:stop:1265562218498363422>')
             .setStyle(ButtonStyle.Danger),
         new ButtonBuilder()
             .setCustomId(`volumeUp`)
-            .setEmoji('<:speaker_860133545544908802:1201844300099354644>')
+            .setEmoji('<:speaker:1265561928533807146>')
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(queue.volume >= 200),
         new ButtonBuilder()
             .setCustomId(`related`)
-            .setEmoji('<:add_988409343743496232:1201843618508185600>')
+            .setEmoji('<:add:1265556973202706503>')
             .setStyle(ButtonStyle.Secondary)
     ])
     // next column
     const row3 = new ActionRowBuilder().addComponents([
         new ButtonBuilder()
             .setCustomId(`queue`)
-            .setEmoji('<:queue_861852633240961024:1202112866069520385>')
+            .setEmoji('<:queue:1265561609632485478>')
             .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
             .setCustomId(`addSong`)
-            .setEmoji('<:friend_861852632767528970:1201843652704616448>')
+            .setEmoji('<:friend:1265560408895524957>')
             .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
             .setCustomId(`filters`)
-            .setEmoji('<:spark_860123643722727444:1201844297041973320>')
+            .setEmoji('<:spark:1265561903195750471>')
             .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
             .setCustomId('lyrics')
-            .setEmoji('<:list_860123643710537789:1201843692546039829>')
+            .setEmoji('<:list:1265560873876062340>')
             .setStyle(ButtonStyle.Secondary)
     ])
 
@@ -178,9 +174,7 @@ const generateMusicPlayerStatus = (queue, song, completed = false) => {
             new EmbedBuilder()
                 .setColor('Green')
                 .setDescription(
-                    `<:music_860123644201271326:1201843716097327185> | [${song.name}](${
-                        song.url
-                    }) - \` ${
+                    `<:music:1265561113039208512> | [${song.name}](${song.url}) - \` ${
                         song.stream.playFromSource
                             ? song.formattedDuration
                             : song.stream.song?.formattedDuration
@@ -192,45 +186,44 @@ const generateMusicPlayerStatus = (queue, song, completed = false) => {
                 })
                 .addFields(
                     {
-                        name: '<:speaker_860133545544908802:1201844300099354644>音量',
+                        name: '<:speaker:1265561928533807146>音量',
                         value: `\`${queue.volume}%\``,
                         inline: true
                     },
                     {
-                        name: '<:spark_860123643722727444:1201844297041973320>過濾器',
+                        name: '<:spark:1265561903195750471>過濾器',
                         value: `${
-                            queue.filters.names.join(', ') ||
-                            '<:xmark_988409378161954866:1201844342029815848>'
+                            queue.filters.names.join(', ') || '<:xmark:1265562550947545089>'
                         }`,
                         inline: true
                     },
                     {
-                        name: '<:loop_861852632893227029:1201843696031764490>重複播放',
+                        name: '<:loop1:1265560917345570918>重複播放',
                         value: `${
                             queue.repeatMode
                                 ? queue.repeatMode === 2
-                                    ? '<:loop_988409346637594744:1201843698976178246>整個清單'
-                                    : '<:looponce_988409348826992680:1201884069399363634>單曲'
-                                : '<:xmark_988409378161954866:1201844342029815848>'
+                                    ? '<:loop2:1265560938417754213>整個清單'
+                                    : '<:looponce:1265560956193210399>單曲'
+                                : '<:xmark:1265562550947545089>'
                         }`,
                         inline: true
                     },
                     {
-                        name: '<:update_860123644297871382:1201844333968625695>自動播放',
+                        name: '<:update:1265562455828987968>自動播放',
                         value: `${
                             queue.autoplay
-                                ? '<:correct_859388130411282442:1201843648229294121>'
-                                : '<:xmark_988409378161954866:1201844342029815848>'
+                                ? '<:correct:1265560254708711467>'
+                                : '<:xmark:1265562550947545089>'
                         }`,
                         inline: true
                     },
                     {
-                        name: '<:people_964425853930995783:1201843743762681906>歌曲作者',
+                        name: '<:people:1265561435220611196>作者',
                         value: `\`${song.uploader.name || '無'}\``,
                         inline: true
                     },
                     {
-                        name: '<:clock_964491800465276940:1201843646203433030>進度',
+                        name: '<:clock:1265560238137016372>進度',
                         value: `${
                             song.isLive
                                 ? `${songDuration}`

@@ -15,13 +15,12 @@ module.exports = {
 
         if (!VoiceChannel)
             return interaction.reply({
-                content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂指令!',
+                content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂指令!',
                 ephemeral: true
             })
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
             return interaction.reply({
-                content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
+                content: `<:warning:1265562532857380936> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
                 ephemeral: true
             })
 
@@ -29,20 +28,18 @@ module.exports = {
 
         if (!queue)
             return interaction.reply({
-                content:
-                    '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!'
+                content: '<:outage:1265561329528471613> | 找不到歌曲或該歌曲已經播放完畢!'
             })
 
         switch (options.getString('options')) {
             case 'skip':
                 if (!queue.songs[1] && !queue.autoplay)
                     return interaction.reply({
-                        content:
-                            '<:outage_868122243845206087:1202112862990897172> | 這是最後一首歌了!'
+                        content: '<:outage:1265561329528471613> | 這是最後一首歌了!'
                     })
                 await queue.skip(VoiceChannel)
                 return interaction.reply({
-                    content: '<:frontforward_988409335791124551:1202215991694856262> | 成功跳過歌曲'
+                    content: '<:frontforward:1265560424510787584> | 成功跳過歌曲'
                 })
 
             case 'stop':
@@ -51,28 +48,26 @@ module.exports = {
                 clearPlayer(queue)
                 await queue.voice.leave()
                 return interaction.reply({
-                    content:
-                        '<:stop_988409337837924422:1201844316675510364> | 成功停止音樂並退出語音頻道'
+                    content: '<:stop:1265562218498363422> | 成功停止音樂並退出語音頻道'
                 })
 
             case 'togglePause':
                 if (!queue.paused) {
                     await queue.pause(VoiceChannel)
                     return interaction.reply({
-                        content:
-                            '<:pause_861852632914198548:1201843739728035961> | 成功暫停播放歌曲'
+                        content: '<:pause:1265561390358331462> | 成功暫停播放歌曲'
                     })
                 } else {
                     await queue.resume(VoiceChannel)
                     return interaction.reply({
-                        content: '<:play_861852632800952320:1202112864857628692> | 成功恢復播放歌曲'
+                        content: '<:play:1265561505458294826> | 成功恢復播放歌曲'
                     })
                 }
 
             case 'shuffle':
                 await queue.shuffle(VoiceChannel)
                 return interaction.reply({
-                    content: '<:shuffle_988409354208313404:1201844292751212574> | 成功隨機播放歌曲'
+                    content: '<:shuffle:1265561846690222081> | 成功隨機播放歌曲'
                 })
 
             case 'autoplay':
@@ -83,10 +78,8 @@ module.exports = {
                     { new: true, upsert: true }
                 )
                 return interaction.reply({
-                    content: `<:loop_861852632893227029:1201843696031764490> | 成功切換自動播放模式: ${
-                        Mode
-                            ? '<:correct_859388130411282442:1201843648229294121>'
-                            : '<:xmark_988409378161954866:1201844342029815848>'
+                    content: `<:update:1265562455828987968> | 成功切換自動播放模式: ${
+                        Mode ? '<:correct:1265560254708711467>' : '<:xmark:1265562550947545089>'
                     }`
                 })
 
@@ -94,15 +87,13 @@ module.exports = {
                 await queue.previous(VoiceChannel)
                 await queue.emit(Events.FINISH_SONG, queue)
                 return interaction.reply({
-                    content:
-                        '<:backforward_988409328698523708:1201843626435686440> | 成功播放上一首歌曲'
+                    content: '<:backforward:1265557186621345833> | 成功播放上一首歌曲'
                 })
 
             case 'related':
                 await queue.addRelatedSong(VoiceChannel)
                 return interaction.reply({
-                    content:
-                        '<:plus_988409343743496232:1202215484318302208> | 成功添加相似歌曲到播放清單中'
+                    content: '<:plus:1265561528866967667> | 成功添加相似歌曲到播放清單中'
                 })
 
             case 'repeat':
@@ -113,12 +104,11 @@ module.exports = {
                     { new: true, upsert: true }
                 )
                 return interaction.reply({
-                    content: `<:loop_861852632893227029:1201843696031764490> | 成功切換重複播放模式: ${(Mode2 =
-                        Mode2
-                            ? Mode2 == 2
-                                ? '<:loop_988409346637594744:1201843698976178246>整個清單'
-                                : '<:looponce_988409348826992680:1201884069399363634>單曲'
-                            : '<:xmark_988409378161954866:1201844342029815848>')}`
+                    content: `<:loop1:1265560917345570918> | 成功切換重複播放模式: ${(Mode2 = Mode2
+                        ? Mode2 == 2
+                            ? '<:loop2:1265560938417754213>整個清單'
+                            : '<:looponce:1265560956193210399>單曲'
+                        : '<:xmark:1265562550947545089>')}`
                 })
 
             case 'queue':
@@ -134,7 +124,7 @@ module.exports = {
                         new EmbedBuilder()
                             .setColor('Purple')
                             .setDescription(
-                                `<:queue_861852633240961024:1202112866069520385> | 播放清單\n${queue.songs
+                                `<:queue:1265561609632485478> | 播放清單\n${queue.songs
                                     .slice(0, 10)
                                     .map(
                                         (song, id) =>

@@ -1,7 +1,7 @@
 const { ChatInputCommandInteraction, SlashCommandBuilder, Client } = require('discord.js')
 
 module.exports = {
-    data: new SlashCommandBuilder().setName('ping').setDescription('Pong!').setDMPermission(false),
+    data: new SlashCommandBuilder().setName('ping').setDescription('Pong!'),
     usage: '/ping',
     /**
      * @param {ChatInputCommandInteraction} interaction

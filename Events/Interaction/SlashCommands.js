@@ -30,13 +30,13 @@ module.exports = {
 
         if (!command)
             return await interaction.reply({
-                content: `<:warning_908958943466893323:1201844340276862976> | 這項指令過期或不存在了!`,
+                content: `<:warning:1265562532857380936> | 這項指令過期或不存在了!`,
                 ephemeral: true
             })
 
         if (command.developer && interaction.user.id !== '538639229220028416')
             return await interaction.reply({
-                content: `<:warning_908958943466893323:1201844340276862976> | 這項指令僅限於開發人員使用!`,
+                content: `<:warning:1265562532857380936> | 這項指令僅限於開發人員使用!`,
                 ephemeral: true
             })
 
@@ -66,7 +66,7 @@ module.exports = {
             return await interaction.reply({
                 embeds: [
                     Embed.setTitle(`該伺服器為黑名單伺服器!`).setDescription(
-                        `<:outage_868122243845206087:1202112862990897172> | 您的伺服器已被列入黑名單，自從<t:${parseInt(
+                        `<:outage:1265561329528471613> | 您的伺服器已被列入黑名單，自從<t:${parseInt(
                             GuildData.Time / 1000
                         )}:R>, 原因為: **${GuildData.Reason}**`
                     )
@@ -77,7 +77,7 @@ module.exports = {
             return await interaction.reply({
                 embeds: [
                     Embed.setTitle(`該用戶為黑名單用戶!`).setDescription(
-                        `<:outage_868122243845206087:1202112862990897172> | 您已被列入黑名單，自從<t:${parseInt(
+                        `<:outage:1265561329528471613> | 您已被列入黑名單，自從<t:${parseInt(
                             UserData.Time / 1000
                         )}:R>, 原因為: **${UserData.Reason}**`
                     )
@@ -91,8 +91,7 @@ module.exports = {
             )
             if (!subCommandFile)
                 return await interaction.reply({
-                    content:
-                        '<:warning_908958943466893323:1201844340276862976> | 這項指令過期或不存在了!',
+                    content: '<:warning:1265562532857380936> | 這項指令過期或不存在了!',
                     ephemeral: true
                 })
             await subCommandFile.execute(interaction, client)

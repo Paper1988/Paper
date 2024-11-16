@@ -10,7 +10,7 @@ module.exports = {
     async execute(interaction, client) {
         loadCommands(client)
         await interaction.reply({
-            content: '<:correct_859388130411282442:1201843648229294121> | 成功載入Commands!',
+            content: '<:correct:1265560254708711467> | 成功載入Commands!',
             ephemeral: true
         })
     }

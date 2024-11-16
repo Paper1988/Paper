@@ -1,13 +1,4 @@
-const {
-    EmbedBuilder,
-    ChatInputCommandInteraction,
-    Client,
-    PermissionFlagsBits,
-    GuildMember,
-    ButtonBuilder,
-    ActionRowBuilder,
-    ButtonStyle
-} = require('discord.js')
+const { EmbedBuilder, ChatInputCommandInteraction, Client } = require('discord.js')
 const ms = require('ms')
 
 module.exports = {
@@ -35,13 +26,13 @@ module.exports = {
                 prize,
                 messages: {
                     giveaway:
-                        '<:tada_868022351508414474:1201844318940442624>**抽獎活動開始了**<:tada_868022351508414474:1201844318940442624>',
+                        '<:tada:1265562251981750272>**抽獎活動開始了**<:tada:1265562251981750272>',
                     giveawayEnded: '🎊**抽獎活動結束了**🎊',
                     inviteToParticipate: role
                         ? `**點擊🎉來參加抽獎!**\n需要擁有 ${role} 才能參與`
                         : '**點擊🎉來參加抽獎!**',
                     winMessage:
-                        '<:tada_868022351508414474:1201844318940442624>恭喜贏家 {winners} 贏得獎品: **`{this.prize}`** !\n{this.messageURL}',
+                        '<:tada:1265562251981750272>恭喜贏家 {winners} 贏得獎品: **`{this.prize}`** !\n{this.messageURL}',
                     noWinner: '抽獎活動已取消，因為: `參與人數不足`',
                     dropMessage: '成為第一位參加的人!',
                     drawing: '剩餘時間: {timestamp}',
@@ -56,7 +47,7 @@ module.exports = {
                 pauseOptions: {
                     isPaused: false,
                     content:
-                        '<:warning_908958943466893323:1201844340276862976> **這個抽獎活動已被暫停!** <:warning_908958943466893323:1201844340276862976>',
+                        '<:warning:1265562532857380936> **這個抽獎活動已被暫停!** <:warning:1265562532857380936>',
                     unpauseAfter: null,
                     embedColor: '#FFFF00',
                     infiniteDurationText: '`無限長`'
@@ -64,22 +55,18 @@ module.exports = {
                 lastChance: {
                     enabled: true,
                     content:
-                        '<:warning_908958943466893323:1201844340276862976> **最後加入的機會!** <:warning_908958943466893323:1201844340276862976>',
+                        '<:warning:1265562532857380936> **最後加入的機會!** <:warning:1265562532857380936>',
                     threshold: 10_000,
                     embedColor: '#FF0000'
                 },
                 exemptMembers: (member) => !member.roles.cache.some((r) => r.name === role.name)
             })
             .then(async () => {
-                successEmbed.setDescription(
-                    '<:correct_859388130411282442:1201843648229294121> | 抽獎活動成功開始!'
-                )
+                successEmbed.setDescription('<:correct:1265560254708711467> | 抽獎活動成功開始!')
                 return interaction.reply({ embeds: [successEmbed], ephemeral: true })
             })
             .catch((err) => {
-                errEmbed.setDescription(
-                    `<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \n\`${err}\``
-                )
+                errEmbed.setDescription(`<:warning:1265562532857380936> | 發生錯誤: \n\`${err}\``)
                 return interaction.reply({ embeds: [errEmbed], ephemeral: true })
             })
     }

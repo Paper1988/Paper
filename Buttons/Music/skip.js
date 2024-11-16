@@ -10,26 +10,24 @@ module.exports = {
 
         if (!VoiceChannel)
             return await interaction.editReply({
-                content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂按鈕!',
+                content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂按鈕!',
                 ephemeral: true
             })
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
             return await interaction.editReply({
-                content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
+                content: `<:warning:1265562532857380936> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
                 ephemeral: true
             })
 
         const queue = await client.distube.getQueue(VoiceChannel)
         if (!queue)
             return await interaction.editReply({
-                content:
-                    '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
+                content: '<:outage:1265561329528471613> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true
             })
         if (!queue.songs[1] && !queue.autoplay)
             return await interaction.editReply({
-                content: '<:outage_868122243845206087:1202112862990897172> | 這是最後一首歌了!',
+                content: '<:outage:1265561329528471613> | 這是最後一首歌了!',
                 ephemeral: true
             })
 
@@ -37,7 +35,7 @@ module.exports = {
         await queue.emit(Events.FINISH_SONG, queue)
 
         return await interaction.editReply({
-            content: '<:frontforward_988409335791124551:1202215991694856262> | 成功跳過歌曲',
+            content: '<:frontforward:1265560424510787584> | 成功跳過歌曲',
             ephemeral: true
         })
     }

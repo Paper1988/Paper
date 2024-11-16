@@ -25,7 +25,7 @@ module.exports = {
 
         if (!giveaway) {
             errEmbed.setDescription(
-                `<:warning_908958943466893323:1201844340276862976> | 無法找到訊息ID: ${query}\n請確認有無輸入錯誤!`
+                `<:warning:1265562532857380936> | 無法找到訊息ID: ${query}\n請確認有無輸入錯誤!`
             )
             return interaction.reply({ embeds: [errEmbed], ephemeral: true })
         }
@@ -37,13 +37,13 @@ module.exports = {
                         .end(query)
                         .then(() => {
                             successEmbed.setDescription(
-                                '<:correct_859388130411282442:1201843648229294121> | 成功結束抽獎活動!'
+                                '<:correct:1265560254708711467> | 成功結束抽獎活動!'
                             )
                             interaction.reply({ embeds: [successEmbed], ephemeral: true })
                         })
                         .catch((err) => {
                             errEmbed.setDescription(
-                                `<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \n\`${err}\``
+                                `<:warning:1265562532857380936> | 發生錯誤: \n\`${err}\``
                             )
                             interaction.reply({ embeds: [errEmbed], ephemeral: true })
                         })
@@ -55,13 +55,13 @@ module.exports = {
                         .pause(query)
                         .then(() => {
                             successEmbed.setDescription(
-                                '<:pause_861852632914198548:1201843739728035961> | 成功暫停抽獎活動!'
+                                '<:pause:1265561390358331462> | 成功暫停抽獎活動!'
                             )
                             interaction.reply({ embeds: [successEmbed], ephemeral: true })
                         })
                         .catch((err) => {
                             errEmbed.setDescription(
-                                `<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \n\`${err}\``
+                                `<:warning:1265562532857380936> | 發生錯誤: \n\`${err}\``
                             )
                             interaction.reply({ embeds: [errEmbed], ephemeral: true })
                         })
@@ -73,13 +73,13 @@ module.exports = {
                         .unpause(query)
                         .then(() => {
                             successEmbed.setDescription(
-                                '<:play_861852632800952320:1202112864857628692> | 成功繼續進行抽獎活動!'
+                                '<:play:1265561505458294826> | 成功繼續進行抽獎活動!'
                             )
                             interaction.reply({ embeds: [successEmbed], ephemeral: true })
                         })
                         .catch((err) => {
                             errEmbed.setDescription(
-                                `<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \n\`${err}\``
+                                `<:warning:1265562532857380936> | 發生錯誤: \n\`${err}\``
                             )
                             interaction.reply({ embeds: [errEmbed], ephemeral: true })
                         })
@@ -91,19 +91,19 @@ module.exports = {
                         .reroll(query, {
                             messages: {
                                 congrat:
-                                    '<:tada_868022351508414474:1201844318940442624>恭喜新贏家: {winners}! 贏得獎品: **{this.prize}**!',
-                                error: '<:outage_868122243845206087:1202112862990897172> | 無有效的參與人數，所以沒有新贏家!'
+                                    '<:tada:1265562251981750272>恭喜新贏家: {winners}! 贏得獎品: **{this.prize}**!',
+                                error: '<:outage:1265561329528471613> | 無有效的參與人數，所以沒有新贏家!'
                             }
                         })
                         .then(() => {
                             successEmbed.setDescription(
-                                '<:loop_861852632893227029:1201843696031764490> | 成功重新抽選抽獎活動的贏家!'
+                                '<:loop1:1265560917345570918> | 成功重新抽選抽獎活動的贏家!'
                             )
                             interaction.reply({ embeds: [successEmbed], ephemeral: true })
                         })
                         .catch((err) => {
                             errEmbed.setDescription(
-                                `<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \n\`${err}\``
+                                `<:warning:1265562532857380936> | 發生錯誤: \n\`${err}\``
                             )
                             interaction.reply({ embeds: [errEmbed], ephemeral: true })
                         })
@@ -115,13 +115,13 @@ module.exports = {
                         .delete(query)
                         .then(() => {
                             successEmbed.setDescription(
-                                '<:delete_867650498030731315:1202218553109913700> | 成功刪除抽獎活動!'
+                                '<:delete:1265560264061882471> | 成功刪除抽獎活動!'
                             )
                             interaction.reply({ embeds: [successEmbed], ephemeral: true })
                         })
                         .catch((err) => {
                             errEmbed.setDescription(
-                                `<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \n\`${err}\``
+                                `<:warning:1265562532857380936> | 發生錯誤: \n\`${err}\``
                             )
                             interaction.reply({ embeds: [errEmbed], ephemeral: true })
                         })

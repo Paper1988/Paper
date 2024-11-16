@@ -11,7 +11,7 @@ module.exports = {
         for (const [key, value] of client.events) await client.removeListener(`${key}`, value, true)
         loadEvents(client)
         await interaction.reply({
-            content: '<:correct_859388130411282442:1201843648229294121> | 成功載入Events!',
+            content: '<:correct:1265560254708711467> | 成功載入Events!',
             ephemeral: true
         })
     }

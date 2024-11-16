@@ -29,7 +29,7 @@ module.exports = {
         const Data = MaintenanceDB.findOne({ ClientId: client.user.id })
         if (!Data)
             return interaction.reply({
-                content: '<:warning_908958943466893323:1201844340276862976> | 找不到資料庫!',
+                content: '<:warning:1265562532857380936> | 找不到資料庫!',
                 ephemeral: true
             })
 

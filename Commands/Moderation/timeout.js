@@ -36,7 +36,7 @@ module.exports = {
         const errorsArray = []
 
         const errorsEmbed = new EmbedBuilder()
-            .setTitle('<:warning_908958943466893323:1201844340276862976> | 無法禁言該成員，因為')
+            .setTitle('<:warning:1265562532857380936> | 無法禁言該成員，因為')
             .setColor('Red')
 
         if (!user)
@@ -68,7 +68,7 @@ module.exports = {
         })
 
         const successEmbed = new EmbedBuilder()
-            .setTitle('<:timeout_930797536900415548:1201844326322151454>')
+            .setTitle('<:timeout:1265562396412608623>')
             .setColor('Green')
             .setDescription(
                 [

@@ -9,10 +9,7 @@ const {
 } = require('discord.js')
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('help')
-        .setDescription('顯示所有指令的使用方法及用途')
-        .setDMPermission(false),
+    data: new SlashCommandBuilder().setName('help').setDescription('顯示所有指令的使用方法及用途'),
     /**
      *
      * @param {ChatInputCommandInteraction} interaction

@@ -20,9 +20,7 @@ module.exports = {
         if (Target.id === Executer.id) {
             const Response = new EmbedBuilder()
                 .setColor('#000000')
-                .setDescription(
-                    '<:outage_868122243845206087:1202112862990897172> | 你不能咬你自己！'
-                )
+                .setDescription('<:outage:1265561329528471613> | 你不能咬你自己！')
             return await interaction.reply({ embeds: [Response] })
         } else {
             await interaction.reply({ embeds: [HugEmbed] })

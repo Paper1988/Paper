@@ -17,9 +17,7 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
-                            .setDescription(
-                                '<:outage_868122243845206087:1202112862990897172> | 找不到該Modal'
-                            )
+                            .setDescription('<:outage:1265561329528471613> | 找不到該Modal')
                     ],
                     ephemeral: true
                 })
@@ -29,9 +27,7 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
-                            .setDescription(
-                                '<:warning_908958943466893323:1201844340276862976> | 你沒有權限使用!'
-                            )
+                            .setDescription('<:warning:1265562532857380936> | 你沒有權限使用!')
                     ],
                     ephemeral: true
                 })
@@ -44,7 +40,7 @@ module.exports = {
                         new EmbedBuilder()
                             .setColor('Blue')
                             .setDescription(
-                                '<:warning_908958943466893323:1201844340276862976> | 這項Modal僅限於開發人員使用!'
+                                '<:warning:1265562532857380936> | 這項Modal僅限於開發人員使用!'
                             )
                     ],
                     ephemeral: true
@@ -57,9 +53,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setColor('Red')
-                        .setDescription(
-                            '<:outage_868122243845206087:1202112862990897172> | 發生未知錯誤，請協助回報!'
-                        )
+                        .setDescription('<:outage:1265561329528471613> | 發生未知錯誤，請協助回報!')
                 ],
                 ephemeral: true
             })

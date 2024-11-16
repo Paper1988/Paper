@@ -50,7 +50,7 @@ module.exports = {
                         : res.text
 
                 const successEmbed = new EmbedBuilder()
-                    .setTitle(`<:translate_867656825527730176:1201844331837657128> | 成功翻譯訊息`)
+                    .setTitle(`<:translate:1265562430902243410> | 成功翻譯訊息`)
                     .setColor(`Green`)
                     .setTimestamp()
                     .addFields(
@@ -69,7 +69,7 @@ module.exports = {
             })
             .catch((err) => {
                 interaction.editReply({
-                    content: `<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \`${err.message}\`\n請協助回報!`,
+                    content: `<:warning:1265562532857380936> | 發生錯誤: \`${err.message}\`\n請協助回報!`,
                     ephemeral: true
                 })
             })

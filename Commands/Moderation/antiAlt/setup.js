@@ -23,7 +23,7 @@ module.exports = {
         ).catch((err) => console.log(err))
 
         const LogsSetup = new EmbedBuilder()
-            .setDescription('<:correct_859388130411282442:1201843648229294121> | 成功設定日誌')
+            .setDescription('<:correct:1265560254708711467> | 成功設定日誌')
             .setColor('#43b581')
 
         await guild.channels.cache
@@ -31,7 +31,7 @@ module.exports = {
             .send({ embeds: [LogsSetup] })
             .then(async (m) => {
                 await interaction.reply({
-                    content: '<:correct_859388130411282442:1201843648229294121> | 完成!',
+                    content: '<:correct:1265560254708711467> | 完成!',
                     ephemeral: true
                 })
                 setTimeout(() => {
@@ -41,7 +41,7 @@ module.exports = {
             .catch(() => {
                 return interaction.reply({
                     content:
-                        '<:warning_908958943466893323:1201844340276862976> | 無法設定日誌，可能是因為我沒有讀取那個頻道的權限!',
+                        '<:warning:1265562532857380936> | 無法設定日誌，可能是因為我沒有讀取那個頻道的權限!',
                     ephemeral: true
                 })
             })

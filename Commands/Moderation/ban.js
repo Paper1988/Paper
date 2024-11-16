@@ -37,7 +37,6 @@ module.exports = {
 
         const dmEmbed = new EmbedBuilder()
             .setColor('Green')
-            .setTitle('<:ban_859424400968646676:1201843628108943390> Ban')
             .setDescription(
                 [
                     `你已被伺服器 ${guild.name} **封鎖**`,
@@ -52,7 +51,7 @@ module.exports = {
             })
 
         const errorsEmbed = new EmbedBuilder()
-            .setTitle('<:warning_908958943466893323:1201844340276862976> | 無法封鎖該名成員，因為')
+            .setTitle('<:warning:1265562532857380936> | 無法封鎖該名成員，因為')
             .setColor('Red')
 
         if (!target)

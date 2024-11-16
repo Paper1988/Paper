@@ -42,7 +42,7 @@ module.exports = {
 
         const errorsEmbed = new EmbedBuilder()
             .setAuthor({
-                name: '<:warning_908958943466893323:1201844340276862976> | 無法踢出該名成員，因為'
+                name: '<:warning:1265562532857380936> | 無法踢出該名成員，因為'
             })
             .setColor('Red')
 
@@ -72,11 +72,11 @@ module.exports = {
             interaction.editReply({
                 embeds: [
                     errorsEmbed.setDescription(
-                        '<:warning_908958943466893323:1201844340276862976> | 發生一個不常見的錯誤，無法踢出成員'
+                        '<:warning:1265562532857380936> | 發生一個不常見的錯誤，無法踢出成員'
                     )
                 ]
             })
-            return console.log('錯誤發生 - 在Kick.js', err)
+            return console.log('錯誤發生 - 在 kick.js\n', err)
         })
 
         const successEmbed = new EmbedBuilder()

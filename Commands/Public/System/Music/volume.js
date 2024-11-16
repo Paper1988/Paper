@@ -16,26 +16,23 @@ module.exports = {
 
         if (!VoiceChannel)
             return await interaction.reply({
-                content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂指令!',
+                content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂指令!',
                 ephemeral: true
             })
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
             return await interaction.reply({
-                content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
+                content: `<:warning:1265562532857380936> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
                 ephemeral: true
             })
 
         if (Volume > 200 || Volume < 0)
             return await interaction.reply({
-                content:
-                    '<:outage_868122243845206087:1202112862990897172> | 你必須指定0到200之間的數字!'
+                content: '<:outage:1265561329528471613> | 你必須指定0到200之間的數字!'
             })
 
         if (!queue)
             return await interaction.reply({
-                content:
-                    '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
+                content: '<:outage:1265561329528471613> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true
             })
 
@@ -51,13 +48,19 @@ module.exports = {
         if (Volume < 50 && Volume > 0)
             return await interaction
                 .reply({
-                    content: `<:speaker_low_860133546278387763:1201844302725255178> | 成功設置音量: \`${Volume}%\``
+                    content: `<:speaker_low:1265561976663310386> | 成功設定音量: \`${Volume}%\``
+                })
+                .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
+        else if (Volume == 0)
+            return await interaction
+                .reply({
+                    content: `<:speaker_mute:1265561998192807936> | 成功設定音量: \`0%\``
                 })
                 .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
         else if (Volume >= 50)
             return await interaction
                 .reply({
-                    content: `<:speaker_860133545544908802:1201844300099354644> | 成功設置音量: \`${Volume}%\``
+                    content: `<:speaker:1265561928533807146> | 成功設定音量: \`${Volume}%\``
                 })
                 .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     }

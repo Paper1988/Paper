@@ -29,14 +29,13 @@ module.exports = {
 
         if (!VoiceChannel)
             return await interaction.editReply({
-                content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂指令!',
+                content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂指令!',
                 ephemeral: true
             })
 
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
             return await interaction.editReply({
-                content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
+                content: `<:warning:1265562532857380936> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
                 ephemeral: true
             })
 
@@ -47,7 +46,7 @@ module.exports = {
                     new EmbedBuilder()
                         .setTitle('拒絕請求')
                         .setDescription(
-                            `<:warning_908958943466893323:1201844340276862976> | 我沒有權限進入 <#${VoiceChannel.id}>!`
+                            `<:warning:1265562532857380936> | 我沒有權限進入 <#${VoiceChannel.id}>!`
                         )
                         .setColor('Red')
                 ],
@@ -99,7 +98,7 @@ module.exports = {
                             .setColor('Red')
                             .setTitle('拒絕請求')
                             .setDescription(
-                                '<:warning_908958943466893323:1201844340276862976> | Discord禁止機器人播放來自Youtube的連結!\n> 我們支援Spotify、SoundCloud和關鍵字搜尋'
+                                '<:warning:1265562532857380936> | Discord禁止機器人播放來自Youtube的連結!\n> 我們支援Spotify、SoundCloud和關鍵字搜尋'
                             )
                     ]
                 })

@@ -28,7 +28,7 @@ module.exports = {
                             return await message.reply({
                                 embeds: [
                                     Embed.setDescription(
-                                        `<:idle_860123644265365514:1202228021826961448> | ${m} 已進入AFK模式\nAfk時間: <t:${data.Time}:R>\n **狀態**: ${data.Status}`
+                                        `<:idle:1265560546212577352> | ${m} 已進入AFK模式\nAfk時間: <t:${data.Time}:R>\n **狀態**: ${data.Status}`
                                     )
                                 ]
                             })

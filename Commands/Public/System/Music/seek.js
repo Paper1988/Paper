@@ -12,13 +12,12 @@ module.exports = {
 
         if (!VoiceChannel)
             return interaction.reply({
-                content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂指令!',
+                content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂指令!',
                 ephemeral: true
             })
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
             return interaction.reply({
-                content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
+                content: `<:warning:1265562532857380936> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
                 ephemeral: true
             })
 
@@ -27,15 +26,14 @@ module.exports = {
 
         if (!queue)
             return interaction.reply({
-                content:
-                    '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
+                content: '<:outage:1265561329528471613> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true
             })
 
         await queue.seek(Time)
         await interaction
             .reply({
-                content: `<:rightarrow_859388126653186058:1202113627122061403> | 成功跳到 **\`${Time}\`**`
+                content: `<:rightarrow:1265561736593801276> | 成功跳到 **\`${Time}\`**`
             })
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     }

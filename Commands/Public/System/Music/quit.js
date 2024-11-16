@@ -13,14 +13,13 @@ module.exports = {
 
         if (!VoiceChannel)
             return await interaction.reply({
-                content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂指令!',
+                content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂指令!',
                 ephemeral: true
             })
 
         await client.distube.voices.leave(VoiceChannel)
         return await interaction.reply({
-            content: '<:leave_860487640113217546:1202217506991771658> | 成功離開語音頻道!',
+            content: '<:leave:1265560726240497684> | 成功離開語音頻道!',
             ephemeral: true
         })
     }
