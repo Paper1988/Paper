@@ -2,7 +2,7 @@ const { EmbedBuilder, ChatInputCommandInteraction } = require('discord.js')
 const { ApexImagine } = require('apexify.js')
 
 module.exports = {
-    subCommand: 'ai-service.orodia',
+    subCommand: 'ai-service.prodia',
     /**
      *
      * @param {ChatInputCommandInteraction} interaction
