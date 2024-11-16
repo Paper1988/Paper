@@ -25,7 +25,7 @@ module.exports = {
 
         if (!giveaway) {
             errEmbed.setDescription(
-                `<:warning_908958943466893323:1201844340276862976> | 無法找到訊息ID: ${query}\n請確認有無輸入錯誤!`
+                `<:warning:1265562532857380936> | 無法找到訊息ID: ${query}\n請確認有無輸入錯誤!`
             )
             return interaction.reply({ embeds: [errEmbed], ephemeral: true })
         }
@@ -50,15 +50,11 @@ module.exports = {
                 newExemptMembers: (member) => checkRole(member)
             })
             .then(() => {
-                successEmbed.setDescription(
-                    '<:correct_859388130411282442:1201843648229294121> | 成功編輯該抽獎活動!'
-                )
+                successEmbed.setDescription('<:correct:1265560254708711467> | 成功編輯該抽獎活動!')
                 interaction.reply({ embeds: [successEmbed], ephemeral: true })
             })
             .catch((err) => {
-                errEmbed.setDescription(
-                    `<:warning_908958943466893323:1201844340276862976> | 發生錯誤: \n\`${err}\``
-                )
+                errEmbed.setDescription(`<:warning:1265562532857380936> | 發生錯誤: \n\`${err}\``)
                 interaction.reply({ embeds: [errEmbed], ephemeral: true })
             })
     }

@@ -29,9 +29,7 @@ module.exports = {
 
         const noBanEmbed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(
-                `<:warning_908958943466893323:1201844340276862976> | 伺服器中沒有正被封鎖的用戶!`
-            )
+            .setDescription(`<:warning:1265562532857380936> | 伺服器中沒有正被封鎖的用戶!`)
             .setFooter({
                 text: client.user.username,
                 iconURL: client.user.displayAvatarURL()
@@ -79,7 +77,7 @@ module.exports = {
                         const confirmationEmbed = new EmbedBuilder()
                             .setColor('Blue')
                             .setDescription(
-                                `<:question_860133545905225768:1202218555844853760> | 你確定要解除封鎖 ${member.username} 嗎?`
+                                `<:question:1265561586693701703> | 你確定要解除封鎖 ${member.username} 嗎?`
                             )
                             .setFooter({
                                 text: client.user.username,
@@ -90,12 +88,12 @@ module.exports = {
                             new ButtonBuilder()
                                 .setCustomId(`unban:confirm`)
                                 .setLabel('確認')
-                                .setEmoji('<:correct_859388130411282442:1201843648229294121>')
+                                .setEmoji('<:correct:1265560254708711467>')
                                 .setStyle(ButtonStyle.Danger),
                             new ButtonBuilder()
                                 .setCustomId('unban:cancel')
                                 .setLabel('取消')
-                                .setEmoji('<:xmark_988409378161954866:1201844342029815848>')
+                                .setEmoji('<:xmark:1265562550947545089>')
                                 .setStyle(ButtonStyle.Secondary)
                         )
 
@@ -136,9 +134,7 @@ module.exports = {
                     } else if (i.isButton() && i.customId == 'unban:cancel') {
                         const canceledEmbed = new EmbedBuilder()
                             .setColor('Blue')
-                            .setDescription(
-                                `<:outage_868122243845206087:1202112862990897172> | 動作已取消`
-                            )
+                            .setDescription(`<:outage:1265561329528471613> | 動作已取消`)
 
                         await i.update({
                             embeds: [canceledEmbed],

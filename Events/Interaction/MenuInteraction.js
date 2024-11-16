@@ -19,9 +19,7 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
-                            .setDescription(
-                                '<:outage_868122243845206087:1202112862990897172> | 找不到該下拉選單'
-                            )
+                            .setDescription('<:outage:1265561329528471613> | 找不到該下拉選單')
                     ],
                     ephemeral: true
                 })
@@ -33,9 +31,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setColor('Red')
-                        .setDescription(
-                            '<:outage_868122243845206087:1202112862990897172> | 發生未知錯誤，請協助回報!'
-                        )
+                        .setDescription('<:outage:1265561329528471613> | 發生未知錯誤，請協助回報!')
                 ],
                 ephemeral: true
             })

@@ -33,9 +33,7 @@ module.exports = {
 
         const Embed = new EmbedBuilder()
             .setColor('Green')
-            .setDescription(
-                `<:online_860123643395571713:1202213698467274792> ${client.user} 上線了!`
-            )
+            .setDescription(`<:online:1265561305209638912> ${client.user} 上線了!`)
             .setTimestamp()
 
         await client

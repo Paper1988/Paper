@@ -1,10 +1,7 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } = require('discord.js')
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('credits')
-        .setDescription('檢視版權資訊')
-        .setDMPermission(false),
+    data: new SlashCommandBuilder().setName('credits').setDescription('檢視版權資訊'),
     /**
      *
      * @param {ChatInputCommandInteraction} interaction

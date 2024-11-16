@@ -6,7 +6,7 @@ module.exports = {
         .setName('rock-paper-scissors')
         .setDescription('和另一名成員遊玩剪刀石頭布!')
         .addUserOption((option) =>
-            option.setName('opponent').setDescription('選擇你的對手').setRequired(true)
+            option.setName('opponent').setDescription('請選擇你的對手').setRequired(true)
         ),
     /**
      * @param {ChatInputCommandInteraction} interaction
@@ -17,8 +17,7 @@ module.exports = {
 
         if (interaction.user.id === opponent.id)
             return await interaction.reply({
-                content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你不能跟自己玩剪刀石頭布!',
+                content: '<:warning:1265562532857380936> | 你不能跟自己玩剪刀石頭布!',
                 ephemeral: true
             })
 

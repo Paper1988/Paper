@@ -8,7 +8,7 @@ async function results(deletedMessages, interaction) {
 
     const userMessageMap = Object.entries(results)
 
-    const finalResult = `<:clean_861852633799065660:1201843643548180490>移除了\`${
+    const finalResult = `<:clean:1265560229438029915>移除了\`${
         deletedMessages.size
     }\`則訊息!\n\n${userMessageMap
         .map(([user, messages]) => `**${user}** : ${messages}`)

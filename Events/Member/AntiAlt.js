@@ -30,7 +30,7 @@ module.exports = {
                 .setColor('Red')
                 .setTitle('發現小號!')
                 .setDescription(
-                    `<:outage_868122243845206087:1202112862990897172> | 該用戶因帳號年齡未滿 \`7\` 天而被踢出`
+                    `<:outage:1265561329528471613> | 該用戶因帳號年齡未滿 \`7\` 天而被踢出`
                 )
                 .addFields(
                     {

@@ -15,7 +15,7 @@ module.exports = {
         const reason = options.getString('reason') || '無提供'
         if (isNaN(ID))
             return interaction.editReply({
-                content: `<:outage_868122243845206087:1202112862990897172> | ID應該要是一串數字`
+                content: `<:outage:1265561329528471613> | ID應該要是一串數字`
             })
         const User = await client.users.fetch(ID)
         let Data = await BlackListUser.findOne({ User: User.id }).catch(() => {})
@@ -27,12 +27,12 @@ module.exports = {
             })
             await Data.save()
             interaction.editReply({
-                content: `<:correct_859388130411282442:1201843648229294121> | 成功添加 **${User} | ${User.id} | ${User.username}** 至用戶黑名單 , 原因: ${reason}`
+                content: `<:correct:1265560254708711467> | 成功添加 **${User} | ${User.id} | ${User.username}** 至用戶黑名單 , 原因: ${reason}`
             })
         } else {
             await Data.delete()
             interaction.editReply({
-                content: `<:correct_859388130411282442:1201843648229294121> | 成功從用戶黑名單中移除 **${User} | ${User.id} | ${User.username}**`
+                content: `<:correct:1265560254708711467> | 成功從用戶黑名單中移除 **${User} | ${User.id} | ${User.username}**`
             })
         }
     }

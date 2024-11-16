@@ -21,7 +21,7 @@ function addSuffix(number) {
 }
 
 function addBadges(badgeNames) {
-    if (!badgeNames.length) return ['<:xmark_988409378161954866:1201844342029815848>']
+    if (!badgeNames.length) return ['<:xmark:1265562550947545089>']
     const badgeMap = {
         ActiveDeveloper: '<:activedeveloper:1201841218586152990>',
         BugHunterLevel1: '<:discordbughunter1:1201841226681438238>',
@@ -46,8 +46,7 @@ module.exports = {
         .setDescription('取得指定用戶的資訊')
         .addUserOption((option) =>
             option.setName('member').setDescription('選擇一個用戶').setRequired(false)
-        )
-        .setDMPermission(false),
+        ),
     usage: '/userinfo {user}',
     /**
      * @param {ChatInputCommandInteraction} interaction
@@ -66,9 +65,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setColor('Red')
-                        .setDescription(
-                            '<:warning_908958943466893323:1201844340276862976> | 機器人無法使用此功能!'
-                        )
+                        .setDescription('<:warning:1265562532857380936> | 機器人無法使用此功能!')
                 ],
                 ephemeral: true
             })
@@ -99,7 +96,7 @@ module.exports = {
 
             const Booster = member.premiumSince
                 ? '<:discordboost7:1201841221899915325>'
-                : '<:xmark_988409378161954866:1201844342029815848>'
+                : '<:xmark:1265562550947545089>'
 
             const Embed = new EmbedBuilder()
                 .setAuthor({
@@ -108,7 +105,7 @@ module.exports = {
                 })
                 .setColor(member.displayColor)
                 .setDescription(
-                    `<:newmember_964425853410893874:1201843720799133718>在 <t:${joinTime}:D>，${member.user.username}成為${addSuffix(
+                    `<:newmember:1265561140075954186>在 <t:${joinTime}:D>，${member.user.username}成為${addSuffix(
                         joinPosition
                     )}加入這個伺服器的人`
                 )
@@ -116,37 +113,37 @@ module.exports = {
                 .setThumbnail(member.displayAvatarURL({ size: 512 }))
                 .addFields([
                     {
-                        name: '<:award_869513411103424563:1201843623604527184>徽章',
+                        name: '<:award:1265557167453372459>徽章',
                         value: `${addBadges(userBadges).join('')}`,
                         inline: true
                     },
                     {
-                        name: '<:nitroboost_869528229436858378:1201843725446430791>加成',
+                        name: '<:nitroboost:1265561191103856661>加成',
                         value: `${Booster}`,
                         inline: true
                     },
                     {
-                        name: '<:owner_859429432380227594:1201843734917152858>最高權限的身分組',
+                        name: '<:owner:1265561364693258383>最高權限的身分組',
                         value: `${topRoles.join('').replace(`<@${interaction.guildId}>`)}`,
                         inline: false
                     },
                     {
-                        name: '<:clock_964491800465276940:1201843646203433030>帳號創建時間',
+                        name: '<:clock:1265560238137016372>帳號創建時間',
                         value: `<t:${createdTime}:R>`,
                         inline: true
                     },
                     {
-                        name: '<:clock_964491800465276940:1201843646203433030>帳號加入時間',
+                        name: '<:clock:1265560238137016372>帳號加入時間',
                         value: `<t:${joinTime}:R>`,
                         inline: true
                     },
                     {
-                        name: '<:id_860133546102620190:1201883864486916166>帳號ID',
+                        name: '<:id:1265560530462969978>帳號ID',
                         value: `\`${member.id}\``,
                         inline: false
                     },
                     {
-                        name: '<:jpg_908958943726956564:1201843675530018856>橫幅',
+                        name: '<:jpg:1265560632644735007>橫幅',
                         value: `[連結](${(await member.user.fetch()).bannerURL() || '無'})`,
                         inline: true
                     }
@@ -160,7 +157,7 @@ module.exports = {
             })
         } catch (err) {
             await interaction.editReply({
-                content: '<:warning_908958943466893323:1201844340276862976> | 發生錯誤，請協助回報!'
+                content: '<:warning:1265562532857380936> | 發生錯誤，請協助回報!'
             })
             throw err
         }

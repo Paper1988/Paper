@@ -15,21 +15,19 @@ module.exports = {
 
         if (!VoiceChannel)
             return await interaction.editReply({
-                content:
-                    '<:warning_908958943466893323:1201844340276862976> | 你必須待在語音頻道裡面才能使用音樂按鈕!',
+                content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂按鈕!',
                 ephemeral: true
             })
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
             return await interaction.editReply({
-                content: `<:warning_908958943466893323:1201844340276862976> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
+                content: `<:warning:1265562532857380936> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
                 ephemeral: true
             })
 
         const queue = await client.distube.getQueue(VoiceChannel)
         if (!queue)
             return await interaction.editReply({
-                content:
-                    '<:outage_868122243845206087:1202112862990897172> | 找不到歌曲或該歌曲已經播放完畢!',
+                content: '<:outage:1265561329528471613> | 找不到歌曲或該歌曲已經播放完畢!',
                 ephemeral: true
             })
 
@@ -51,14 +49,14 @@ module.exports = {
 
         const button = new ActionRowBuilder().addComponents([
             new ButtonBuilder()
-                .setLabel('關')
+                .setLabel('全部關閉')
                 .setCustomId('false')
-                .setEmoji('<:xmark_988409378161954866:1201844342029815848>')
+                .setEmoji('<:xmark:1265562550947545089>')
                 .setStyle(ButtonStyle.Danger)
         ])
 
         await interaction.editReply({
-            content: '<:spark_860123643722727444:1201844297041973320> | 請選擇過濾器',
+            content: '<:spark:1265561903195750471> | 請選擇過濾器',
             components: [selectMenu, button],
             ephemeral: true
         })

@@ -15,7 +15,7 @@ async function updatePresence(client) {
             activities: [{ name: status, type: ActivityType.Watching }]
         })
     } catch (error) {
-        console.error('Error updating presence:', error)
+        console.error('Error updating presence: ', error)
     }
 }
 

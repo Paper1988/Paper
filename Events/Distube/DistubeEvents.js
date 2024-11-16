@@ -20,7 +20,7 @@ client.distube
             .send({
                 embeds: [
                     embeds[0].setDescription(
-                        `<:plus_988409343743496232:1202215484318302208> | 加入 [${song.name}](${song.url}) - \`${song.formattedDuration}\` 到清單中`
+                        `<:plus:1265561528866967667> | 加入 [${song.name}](${song.url}) - \`${song.formattedDuration}\` 到清單中`
                     )
                 ]
             })
@@ -33,7 +33,7 @@ client.distube
             .send({
                 embeds: [
                     embeds[0].setDescription(
-                        `<:plus_988409343743496232:1202215484318302208> | 加入 [${playlist.name}](${playlist.url}) 播放清單 (\`${playlist.songs.length}\`首歌) 到清單中`
+                        `<:plus:1265561528866967667> | 加入 [${playlist.name}](${playlist.url}) 播放清單 (\`${playlist.songs.length}\`首歌) 到清單中`
                     )
                 ]
             })
@@ -45,7 +45,7 @@ client.distube
                 embeds: [
                     new EmbedBuilder()
                         .setColor('Red')
-                        .setTitle('<:outage_868122243845206087:1202112862990897172> | 發生錯誤:')
+                        .setTitle('<:outage:1265561329528471613> | 發生錯誤:')
                         .setDescription(`${e.toString().slice(0, 1974)}`)
                         .setFooter({ text: `請使用 /report 協助回報!` })
                 ]
@@ -60,9 +60,7 @@ client.distube
                 embeds: [
                     new EmbedBuilder()
                         .setColor('Red')
-                        .setDescription(
-                            `<:musicstop_861852633979420712:1201843718215438386> | 清單播放完畢！`
-                        )
+                        .setDescription(`<:musicstop:1265561125655805993> | 清單播放完畢！`)
                 ]
             })
             .then((msg) => setTimeout(() => msg.delete(), 30 * 1000))
@@ -103,9 +101,7 @@ client.distube
         else if (!queue.songs[1]) return await updateMusicPlayerStatus(queue, true)
     })
     .on(Events.NO_RELATED, (queue) =>
-        queue.textChannel.send(
-            `<:warning_908958943466893323:1201844340276862976> | 找不到任何相關歌曲!`
-        )
+        queue.textChannel.send(`<:warning:1265562532857380936> | 找不到任何相關歌曲!`)
     )
     .on(Events.DEBUG, (msg) => console.log(msg))
     .on(Events.FFMPEG_DEBUG, (msg) => console.log(msg))

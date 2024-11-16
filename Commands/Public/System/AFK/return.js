@@ -18,9 +18,7 @@ module.exports = {
             .exec()
             .catch(() => {})
 
-        Embed.setColor('Red').setDescription(
-            `<:correct_859388130411282442:1201843648229294121> | 你的afk狀態已被移除`
-        )
+        Embed.setColor('Red').setDescription(`<:correct:1265560254708711467> | 你的afk狀態已被移除`)
         return interaction.reply({ embeds: [Embed], ephemeral: true })
     }
 }

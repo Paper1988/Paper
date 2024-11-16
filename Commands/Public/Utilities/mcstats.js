@@ -13,8 +13,7 @@ module.exports = {
         .setDescription('顯示一個Minecraft伺服器的資訊')
         .addStringOption((option) =>
             option.setName('server-ip').setDescription('伺服器的IP').setRequired(true)
-        )
-        .setDMPermission(false),
+        ),
     /**
      *
      * @param {ChatInputCommandInteraction} interaction
@@ -37,7 +36,7 @@ module.exports = {
                 if (updated) {
                     await interaction.editReply({ embeds: [embed], components: [button] })
                     await updated.followUp({
-                        content: '<:correct_859388130411282442:1201843648229294121> | 已刷新數據!',
+                        content: '<:correct:1265560254708711467> | 已刷新數據!',
                         ephemeral: true
                     })
                 } else {
@@ -56,12 +55,10 @@ module.exports = {
         let response = await getData.json()
 
         if (response.status == 'error') {
-            await sendMessage(
-                `<:warning_908958943466893323:1201844340276862976> | \`${ip}\` 處於離線狀態或不存在!`
-            )
+            await sendMessage(`<:warning:1265562532857380936> | \`${ip}\` 處於離線狀態或不存在!`)
         } else if (response.status == 'success') {
             await sendMessage(
-                `<:globe_859424401971609600:1201843661785284659> | **Minecraft 伺服器**:\n\n在線: ${response.online}\n名稱: ${response.server.name}\nIP: ${ip.toLowerCase()}\n最大玩家上限: ${response.players.max}\n在線玩家: ${response.players.now}`,
+                `<:globe:1265560486208864318> | **Minecraft 伺服器**:\n\n在線: ${response.online}\n名稱: ${response.server.name}\nIP: ${ip.toLowerCase()}\n最大玩家上限: ${response.players.max}\n在線玩家: ${response.players.now}`,
                 true
             )
             const collector = msg.createMessageComponentCollector()
@@ -70,7 +67,7 @@ module.exports = {
                     let updatedData = await fetch(`https://mcapi.us/server/status?ip=${ip}`)
                     let response = await updatedData.json()
                     await sendMessage(
-                        `<:globe_859424401971609600:1201843661785284659> | **Minecraft 伺服器**:\n\n在線: ${response.online}\n名稱: ${response.server.name}\nIP: ${ip.toLowerCase()}\n最大玩家上限: ${response.players.max}\n在線玩家: ${response.players.now}`,
+                        `<:globe:1265560486208864318> | **Minecraft 伺服器**:\n\n在線: ${response.online}\n名稱: ${response.server.name}\nIP: ${ip.toLowerCase()}\n最大玩家上限: ${response.players.max}\n在線玩家: ${response.players.now}`,
                         true,
                         interaction
                     )
