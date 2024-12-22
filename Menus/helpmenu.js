@@ -65,6 +65,21 @@ module.exports = {
                 )
         )
 
+        const supportServer = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setLabel('支援伺服器')
+                .setStyle(ButtonStyle.Link)
+                .setURL('https://discord.gg/6qCTEer4pT')
+        )
+
+        const koFi = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setLabel('請我喝杯咖啡')
+                .setEmoji('<:kofi:1308733627496009738>')
+                .setStyle(ButtonStyle.Link)
+                .setURL('https://ko-fi.com/paper1988')
+        )
+
         const publicEm = new EmbedBuilder()
             .setTitle('🔧一般 General')
             .setColor('Green')
@@ -117,6 +132,7 @@ module.exports = {
             .setColor('Purple')
             .setDescription(
                 `
+                支援 Spotify、SoundCloud、Apple Music、Tidal、Deezer等網站。
                 > </music play:1131066239050063988> <搜尋文字> [跳過?] [歌曲插入位置] 提供連結或關鍵字來播放音樂
                 > </music seek:1131066239050063988> <秒數> 調整當前歌曲播放時間
                 > </music settings:1131066239050063988> <選項(↓列在下方↓)> 音樂設定
@@ -182,7 +198,7 @@ module.exports = {
                 {
                     await interaction.update({
                         embeds: [publicEm],
-                        components: [helpMenu, inviteMe, generalCommands]
+                        components: [helpMenu, inviteMe, generalCommands, supportServer, koFi]
                     })
                 }
                 break
@@ -190,7 +206,7 @@ module.exports = {
                 {
                     await interaction.update({
                         embeds: [modEm],
-                        components: [helpMenu, inviteMe, generalCommands]
+                        components: [helpMenu, inviteMe, generalCommands, supportServer, koFi]
                     })
                 }
                 break
@@ -198,7 +214,7 @@ module.exports = {
                 {
                     await interaction.update({
                         embeds: [musicInfoEm, musicEm],
-                        components: [helpMenu, inviteMe, generalCommands]
+                        components: [helpMenu, inviteMe, generalCommands, supportServer, koFi]
                     })
                 }
                 break
@@ -206,7 +222,7 @@ module.exports = {
                 {
                     await interaction.update({
                         embeds: [giveEm],
-                        components: [helpMenu, inviteMe, generalCommands]
+                        components: [helpMenu, inviteMe, generalCommands, supportServer, koFi]
                     })
                 }
                 break
@@ -214,7 +230,7 @@ module.exports = {
                 {
                     await interaction.update({
                         embeds: [funEm],
-                        components: [helpMenu, inviteMe, generalCommands]
+                        components: [helpMenu, inviteMe, generalCommands, supportServer, koFi]
                     })
                 }
                 break

@@ -40,6 +40,8 @@ client.distube
             .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
     })
     .on(Events.ERROR, async (e, queue, song) => {
+        await updateMusicPlayerStatus(queue, true)
+        clearPlayer(queue)
         await queue.textChannel
             .send({
                 embeds: [
@@ -51,10 +53,9 @@ client.distube
                 ]
             })
             .then((msg) => setTimeout(() => msg.delete(), 30 * 1000))
-        await updateMusicPlayerStatus(queue, true)
-        clearPlayer(queue)
     })
     .on(Events.FINISH, (queue) => {
+        clearPlayer(queue)
         queue.textChannel
             .send({
                 embeds: [
@@ -64,7 +65,6 @@ client.distube
                 ]
             })
             .then((msg) => setTimeout(() => msg.delete(), 30 * 1000))
-        clearPlayer(queue)
     })
     .on(Events.INIT_QUEUE, async (queue) => {
         clearPlayer(queue)

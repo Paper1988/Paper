@@ -20,16 +20,11 @@ module.exports = {
         loadMenus(client)
 
         require('../../Page/app.js')
-        require(`../../Systems/GiveawaySys`)(client)
 
         mongoose.set('strictQuery', false)
         await mongoose
             .connect(client.config.Database)
             .then(() => console.log('>>> ✅ 成功連結到 MongoDB!'))
-
-        await client.giveawaysManager
-            ._init()
-            .then(() => console.log('>>> ✅ 成功連結到 discord-giveaways!'))
 
         const Embed = new EmbedBuilder()
             .setColor('Green')
@@ -45,4 +40,103 @@ module.exports = {
 
         setInterval(async () => await updatePresence(client), 10 * 1000)
     }
+}
+
+async function endGiveaway(messageId, client) {
+    const giveaway = await Giveaway.findOne({ messageId, ended: false })
+    if (!giveaway) return
+
+    const channel = await client.channels.fetch(giveaway.channelId)
+    if (!channel) return
+
+    const message = await channel.messages.fetch(giveaway.messageId)
+    if (!message) return
+
+    const winners = selectWinners(giveaway.participants, giveaway.winners)
+    const winnerMentions = winners.map(id => `<@${id}>`).join(', ') || '沒有人參加抽獎'
+
+    const endEmbed = EmbedBuilder.from(message.embeds[0])
+        .setColor('Green')
+        .setDescription(
+            message.embeds[0].data.description.split('\n\n')[0] + 
+            `\n\n<:person:1265561455529562154> | 得獎者：${winnerMentions}`
+        )
+
+    const endButtons = new ActionRowBuilder()
+        .addComponents(
+            new ButtonBuilder()
+                .setCustomId('giveaway-join')
+                .setLabel('抽獎已結束')
+                .setEmoji('<:wave:1320296301862191104>')
+                .setStyle(ButtonStyle.Secondary)
+                .setDisabled(true),
+            new ButtonBuilder()
+                .setCustomId(`giveaway-reroll/${giveaway.hosterId}`)
+                .setLabel('重新抽獎')
+                .setEmoji('🎲')
+                .setStyle(ButtonStyle.Primary)
+                .setDisabled(false)
+        )
+
+    await message.edit({
+        embeds: [endEmbed],
+        components: [endButtons]
+    })
+
+    if (winners.length > 0) {
+        await channel.send({
+            content: `<:tada:1265562251981750272> 抽獎結束！\n恭喜 ${winnerMentions} 獲得 **${giveaway.prize}**！`,
+            allowedMentions: { users: winners }
+        })
+    }
+
+    giveaway.ended = true
+    await giveaway.save()
+
+    // 更新統計
+    const stats = await GiveawayStats.findOne({ guildId: giveaway.guildId }) || 
+        new GiveawayStats({ guildId: giveaway.guildId });
+
+    stats.activeGiveaways--;
+    stats.totalWinners += winners.length;
+
+    // 更新最幸運用戶
+    for (const winnerId of winners) {
+        const winHistory = await GiveawayHistory.countDocuments({
+            guildId: giveaway.guildId,
+            winners: winnerId
+        });
+
+        if (!stats.mostWonUser || winHistory > stats.mostWonUser.count) {
+            stats.mostWonUser = {
+                userId: winnerId,
+                count: winHistory
+            };
+        }
+    }
+
+    await stats.save();
+
+    // 添加到歷史記錄
+    const history = new GiveawayHistory({
+        guildId: giveaway.guildId,
+        giveawayId: giveaway.messageId,
+        prize: giveaway.prize,
+        hosterId: giveaway.hosterId,
+        winners,
+        participantCount: giveaway.participants.length,
+        endTime: giveaway.endTime,
+        requirements: {
+            roles: giveaway.requiredRoles,
+            minAccountAge: giveaway.minAccountAge,
+            minServerTime: giveaway.minServerTime
+        }
+    });
+
+    await history.save();
+}
+
+function selectWinners(participants, count) {
+    const shuffled = [...participants].sort(() => Math.random() - 0.5)
+    return shuffled.slice(0, Math.min(count, participants.length))
 }

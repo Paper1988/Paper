@@ -1,38 +1,45 @@
-const { loadFiles } = require("../Functions/fileLoader");
-const { Client } = require("discord.js");
+const { loadFiles } = require('../Functions/fileLoader')
+const { Client, ContextMenuCommandBuilder } = require('discord.js')
 
 /**
  * @param {Client} client
  */
 async function loadCommands(client) {
-  console.time("Commands Loaded");
-  const commands = new Array();
+    console.time('Commands Loaded')
+    const commands = new Array()
 
-  await client.commands.clear();
-  await client.subCommands.clear();
+    await client.commands.clear()
+    await client.subCommands.clear()
+    await client.contextMenus.clear()
 
-  let commandsArray = [];
+    let commandsArray = []
 
-  const Files = await loadFiles("Commands");
+    const Files = await loadFiles('Commands')
 
-  Files.forEach((file) => {
-    const command = require(file);
+    Files.forEach((file) => {
+        const command = require(file)
 
-    if (command.subCommand)
-      return client.subCommands.set(command.subCommand, command);
+        if (command.subCommand) return client.subCommands.set(command.subCommand, command)
 
-    client.commands.set(command.data.name, command);
+        if (command.data instanceof ContextMenuCommandBuilder) {
+            client.contextMenus.set(command.data.name, command)
+            commandsArray.push(command.data.toJSON())
+            commands.push({ Command: `[CM] ${command.data.name}`, Status: '✅' })
+            return
+        }
 
-    commandsArray.push(command.data.toJSON());
+        client.commands.set(command.data.name, command)
 
-    commands.push({ Command: command.data.name, Status: "✅" });
-  });
+        commandsArray.push(command.data)
 
-  client.application.commands.set(commandsArray);
+        commands.push({ Command: command.data.name, Status: '✅' })
+    })
 
-  console.table(commands, ["Command", "Status"]);
-  console.info("\n\x1b[36m%s\x1b[0m", "Loaded Commands.");
-  console.timeEnd("Commands Loaded");
+    client.application.commands.set(commandsArray)
+
+    console.table(commands, ['Command', 'Status'])
+    console.info('\n\x1b[36m%s\x1b[0m', 'Loaded Commands.')
+    console.timeEnd('Commands Loaded')
 }
 
-module.exports = { loadCommands };
+module.exports = { loadCommands }

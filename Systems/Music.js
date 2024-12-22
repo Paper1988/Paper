@@ -172,7 +172,7 @@ const generateMusicPlayerStatus = (queue, song, completed = false) => {
     return {
         embeds: [
             new EmbedBuilder()
-                .setColor('Green')
+                .setColor(queue.paused ? 'Orange' : 'Green')
                 .setDescription(
                     `<:music:1265561113039208512> | [${song.name}](${song.url}) - \` ${
                         song.stream.playFromSource

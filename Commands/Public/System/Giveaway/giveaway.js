@@ -1,125 +1,61 @@
-const { SlashCommandBuilder, PermissionFlagsBits, ChannelType } = require('discord.js')
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, PermissionsBitField } = require('discord.js');
+const Giveaway = require('../../../../Structures/Schemas/Giveaway');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('giveaway')
-        .setDescription('一個基本的抽獎系統')
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-        .setDMPermission(false)
-        .addSubcommand((sub) =>
-            sub
-                .setName('start')
-                .setDescription('開始一個抽獎活動')
-                .addStringOption((options) =>
-                    options
-                        .setName('duration')
-                        .setDescription('請為這個抽獎活動提供時間(時間單位: d h m s)')
-                        .setRequired(true)
-                )
-                .addStringOption((options) =>
-                    options.setName('prize').setDescription('請提供獎品').setRequired(true)
-                )
-                .addIntegerOption((options) =>
-                    options
-                        .setName('winners')
-                        .setDescription('請提供贏家數量(預設為1)')
-                        .setRequired(false)
-                )
-                .addChannelOption((options) =>
-                    options
-                        .setName('channel')
-                        .setDescription('選擇舉辦的頻道')
-                        .addChannelTypes(ChannelType.GuildText)
-                        .setRequired(false)
-                )
-                .addBooleanOption((options) =>
-                    options
-                        .setName('drop')
-                        .setDescription(
-                            '是否為Drop?(Drop即為 "當贏家人數等於參與人數時，就立即終止" 的一種抽獎活動)'
-                        )
-                        .setRequired(false)
-                )
-                .addAttachmentOption((options) =>
-                    options
-                        .setName('attachment')
-                        .setDescription('新增一張放在抽獎訊息下的橫幅圖片')
-                        .setRequired(false)
-                )
-                .addRoleOption((options) =>
-                    options
-                        .setName('role')
-                        .setDescription('請提供一個成員需要擁有才能參與抽獎的身分組')
-                        .setRequired(false)
-                )
-        )
-        .addSubcommand((sub) =>
-            sub
-                .setName('actions')
-                .setDescription('控制選項')
-                .addStringOption((options) =>
-                    options
-                        .setName('options')
-                        .setDescription('請選擇控制選項')
-                        .setRequired(true)
-                        .addChoices(
-                            {
-                                name: '結束',
-                                value: 'end'
-                            },
-                            {
-                                name: '暫停',
-                                value: 'pause'
-                            },
-                            {
-                                name: '繼續',
-                                value: 'unpause'
-                            },
-                            {
-                                name: '重抽',
-                                value: 'reroll'
-                            },
-                            {
-                                name: '刪除',
-                                value: 'delete'
-                            }
-                        )
-                )
-                .addStringOption((options) =>
-                    options.setName('message_id').setDescription('請提供訊息ID').setRequired(true)
-                )
-        )
-        .addSubcommand((sub) =>
-            sub
-                .setName('edit')
-                .setDescription('修改參數')
-                .addStringOption((options) =>
-                    options.setName('message_id').setDescription('請提供訊息ID').setRequired(true)
-                )
-                .addStringOption((options) =>
-                    options
-                        .setName('new-duration')
-                        .setDescription('請提供要增加或減少(用負數)的時間(d h m s)')
-                        .setRequired(false)
-                )
-                .addIntegerOption((options) =>
-                    options.setName('new-winner').setDescription('新的贏家數量').setRequired(false)
-                )
-                .addStringOption((options) =>
-                    options.setName('new-prize').setDescription('新的獎品').setRequired(false)
-                )
-                .addAttachmentOption((options) =>
-                    options
-                        .setName('attachment')
-                        .setDescription('新增一張放在抽獎訊息下的橫幅圖片')
-                        .setRequired(false)
-                )
-                .addRoleOption((options) =>
-                    options
-                        .setName('role')
-                        .setDescription('請提供一個成員需要擁有才能參與抽獎的身分組')
-                        .setRequired(false)
-                )
+        .setDescription('抽獎系統主選單')
+        .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
+        .addChannelOption(option => 
+            option.setName('channel')
+                .setDescription('選擇要創建抽獎的頻道')
+                .setRequired(false)
+                .addChannelTypes(ChannelType.GuildText)
         ),
-    usage: '/giveaway (start, actions)'
-}
+
+    async execute(interaction) {
+        if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
+            return interaction.reply({
+                content: '<:warning:1265562532857380936> | 你需要管理伺服器的權限才能使用抽獎系統！',
+                ephemeral: true
+            });
+        }
+
+        const channel = interaction.options.getChannel('channel') || interaction.channel;
+
+        const giveawayEmbed = new EmbedBuilder()
+            .setColor('Purple')
+            .setTitle('<:gift:1265560472409735181> | 抽獎系統')
+            .setDescription(`請選擇要執行的操作：\n目前選擇的頻道：${channel}`)
+            .setTimestamp();
+
+        const buttons = new ActionRowBuilder()
+            .addComponents(
+                new ButtonBuilder()
+                    .setCustomId(`giveaway-create/${channel.id}`)
+                    .setLabel('創建抽獎')
+                    .setStyle(ButtonStyle.Primary)
+                    .setEmoji('<:tada:1265562251981750272>'),
+                new ButtonBuilder()
+                    .setCustomId('giveaway-list')
+                    .setLabel('查看列表')
+                    .setStyle(ButtonStyle.Secondary)
+                    .setEmoji('<:list:1265560873876062340>'),
+                new ButtonBuilder()
+                    .setCustomId('giveaway-stats')
+                    .setLabel('統計資訊')
+                    .setStyle(ButtonStyle.Secondary)
+                    .setEmoji('<:richpresent:1265561713969987676>'),
+                new ButtonBuilder()
+                    .setCustomId('giveaway-end')
+                    .setLabel('結束抽獎')
+                    .setStyle(ButtonStyle.Danger)
+                    .setEmoji('<:stop:1265562218498363422>')
+            );
+
+        await interaction.reply({
+            embeds: [giveawayEmbed],
+            components: [buttons]
+        });
+    }
+};
