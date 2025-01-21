@@ -16,7 +16,6 @@ const {
 
 const BlackListGuild = require('../../Structures/Schemas/BlacklistGuild')
 const BlackListUser = require('../../Structures/Schemas/BlacklistUser')
-const MaintenanceDB = require('../../Structures/Schemas/MaintenanceDB')
 
 module.exports = {
     name: 'interactionCreate',
@@ -28,33 +27,10 @@ module.exports = {
         try {
             // 檢查黑名單和維護模式
             if (interaction.guild) {
-                const [mDB, GuildData, UserData] = await Promise.all([
-                    MaintenanceDB.findOne({ ClientId: client.user.id }),
+                const [GuildData, UserData] = await Promise.all([
                     BlackListGuild.findOne({ Guild: interaction.guild.id }),
                     BlackListUser.findOne({ User: interaction.user.id })
                 ])
-
-                if (mDB?.Maintenance === 'True') {
-                    return await interaction.reply({
-                        embeds: [
-                            new EmbedBuilder()
-                                .setTitle(`<:discordstaff:1094236985318707221> | 維護模式`)
-                                .setDescription(
-                                    `${client.user.username} 正在進行維修，暫無法使用任何功能\n原因： ${mDB.Description}`
-                                )
-                                .setFooter({
-                                    text: '造成不便，敬請見諒',
-                                    iconURL: client.user.avatarURL()
-                                })
-                                .setAuthor({
-                                    name: interaction.user.username,
-                                    iconURL: interaction.user.avatarURL()
-                                })
-                                .setTimestamp()
-                                .setColor('Blurple')
-                        ]
-                    })
-                }
 
                 if (GuildData || UserData) {
                     const data = GuildData || UserData
