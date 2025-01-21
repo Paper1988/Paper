@@ -72,7 +72,7 @@ module.exports = {
         .addSubcommand((sub) =>
             sub
                 .setName('seek')
-                .setNameLocalization('zh-TW', '跳到')
+                .setNameLocalization('zh-TW', '時間')
                 .setNameLocalization('ja', 'シーク')
                 .setDescription('Jump to a specific time in the song')
                 .setDescriptionLocalization('zh-TW', '跳到歌曲中的某個時間點')
@@ -133,7 +133,19 @@ module.exports = {
         .addSubcommand((sub) =>
             sub
                 .setName('jump')
-                .setDescription('跳到清單中的歌曲位置(下一首為1，上一首為-1，以此類推)')
+                .setNameLocalization('zh-TW', '跳轉')
+                .setNameLocalization('ja', 'ジャンプ')
+                .setDescription(
+                    'Jump to a position in the queue (next is 1, previous is -1, so on)'
+                )
+                .setDescriptionLocalization(
+                    'zh-TW',
+                    '跳到清單中的歌曲位置(下一首為1，上一首為-1，以此類推)'
+                )
+                .setDescriptionLocalization(
+                    'ja',
+                    'キュー内の位置にジャンプします（次は1、前は-1、以降同様）'
+                )
                 .addNumberOption((options) =>
                     options.setName('position').setDescription('請提供歌曲位置').setRequired(true)
                 )
@@ -141,11 +153,15 @@ module.exports = {
         .addSubcommand((sub) =>
             sub
                 .setName('settings')
-                .setDescription('⚙歌曲設定')
+                .setNameLocalization('zh-TW', '選項')
+                .setNameLocalization('ja', '選項')
+                .setDescription('The options of the song')
+                .setDescriptionLocalization('zh-TW', '⚙歌曲設定')
+                .setDescriptionLocalization('ja', '⚙曲の設定')
                 .addStringOption((options) =>
                     options
                         .setName('options')
-                        .setDescription('請選擇一個選項')
+                        .setDescription('請選擇一個控制項目')
                         .setRequired(true)
                         .addChoices(
                             { name: '顯示播放清單', value: 'queue' },
