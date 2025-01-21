@@ -49,7 +49,7 @@ client.distube = new DisTube(client, {
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: false,
     nsfw: true,
-    //ffmpeg: pathToFFmpeg,
+    ffmpeg: require('./Functions/ffmpeg-n7.1-latest-linux64-gpl-shared-7.1.tar.xz'),
     plugins: [
         new SpotifyPlugin({
             api: {
