@@ -68,6 +68,9 @@ module.exports = {
                 'Paper📄是一個多功能機器人，具備豐富且多樣的指令功能。\n無論你是想要`播放音樂`、`舉辦抽獎活動`、`管理伺服器`，還是尋找更多有趣和實用的功能，Paper📄都能滿足你的需求！'
             )
             .setTimestamp()
-        await interaction.update({ embeds: [embed], components: [helpMenu, inviteMe] })
+        await interaction.update({
+            embeds: [embed],
+            components: [helpMenu, inviteMe]
+        })
     }
 }

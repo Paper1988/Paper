@@ -4,18 +4,20 @@ const translate = require(`@iamtraction/google-translate`)
 module.exports = {
     data: new ContextMenuCommandBuilder()
         .setName('translate')
+        .setNameLocalization('zh-TW', '翻譯')
+        .setNameLocalization('ja', '翻訳')
         .setType(ApplicationCommandType.Message),
     async execute(interaction) {
         // 獲取被選取的訊息內容
-        const targetMessage = interaction.targetMessage;
-        const text = targetMessage.content;
-        
+        const targetMessage = interaction.targetMessage
+        const text = targetMessage.content
+
         // 如果訊息是空的
         if (!text) {
             return interaction.reply({
                 content: '<:warning:1265562532857380936> | 無法翻譯空白訊息!',
                 ephemeral: true
-            });
+            })
         }
 
         await interaction.reply({

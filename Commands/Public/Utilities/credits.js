@@ -1,7 +1,13 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } = require('discord.js')
 
 module.exports = {
-    data: new SlashCommandBuilder().setName('credits').setDescription('檢視版權資訊'),
+    data: new SlashCommandBuilder()
+        .setName('credits')
+        .setNameLocalization('zh-TW', '版權資訊')
+        .setNameLocalization('ja', 'クレジット')
+        .setDescription('檢視版權資訊')
+        .setDescriptionLocalization('zh-TW', '檢視版權資訊')
+        .setDescriptionLocalization('ja', 'クレジットを表示'),
     /**
      *
      * @param {ChatInputCommandInteraction} interaction

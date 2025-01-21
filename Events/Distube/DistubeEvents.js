@@ -85,20 +85,20 @@ client.distube
         queue.musicControllerMsgId = null
         queue.playerIntervalId = setInterval(
             async () => await updateMusicPlayerStatus(queue),
-            5 * 1000
+            3 * 1000
         )
     })
     .on(Events.DELETE_QUEUE, (queue) => clearPlayer(queue))
     .on(Events.FINISH_SONG, async (queue, song) => {
         if (queue.repeatMode === RepeatMode.DISABLED) {
+            await updateMusicPlayerStatus(queue, true)
             clearPlayer(queue)
-            return await updateMusicPlayerStatus(queue, true)
         }
         if (queue.repeatMode === RepeatMode.SONG) return await updateMusicPlayerStatus(queue, false)
 
         if (queue.repeatMode === RepeatMode.QUEUE && (queue.songs[1] || queue.autoplay))
-            return await updateMusicPlayerStatus(queue, false)
-        else if (!queue.songs[1]) return await updateMusicPlayerStatus(queue, true)
+            await updateMusicPlayerStatus(queue, false)
+        else if (!queue.songs[1]) await updateMusicPlayerStatus(queue, true)
     })
     .on(Events.NO_RELATED, (queue) =>
         queue.textChannel.send(`<:warning:1265562532857380936> | 找不到任何相關歌曲!`)

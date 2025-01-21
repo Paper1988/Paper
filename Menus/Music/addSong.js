@@ -16,5 +16,6 @@ module.exports = {
         })
 
         await interaction.deferUpdate({ fetchReply: true })
+        await interaction.deleteReply()
     }
 }

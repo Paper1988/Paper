@@ -11,7 +11,11 @@ const {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('unban')
-        .setDescription('解除封鎖伺服器中被封鎖的成員')
+        .setNameLocalization('zh-TW', '解除封鎖')
+        .setNameLocalization('ja', 'アンバン')
+        .setDescription('Unban a member who was banned from the server')
+        .setDescriptionLocalization('zh-TW', '解除封鎖伺服器中被封鎖的成員')
+        .setDescriptionLocalization('ja', 'サーバー内のバンされたメンバーを解除します')
         .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
     /**
      *
@@ -26,9 +30,7 @@ module.exports = {
 
         const noBanEmbed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(
-                `<:warning:1265562532857380936> | 伺服器中沒有正被封鎖的用戶!`
-            )
+            .setDescription(`<:warning:1265562532857380936> | 伺服器中沒有正被封鎖的用戶!`)
             .setFooter({
                 text: client.user.username,
                 iconURL: client.user.displayAvatarURL()

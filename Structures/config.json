@@ -1,17 +1,18 @@
 {
-  "Token": "ODY5MTY2OTA2NzY1MTAzMTM1.YP6Qwg.a0Rm7YtLddDGh6yFmLg1Vz-k0TY",
-  "Database": "mongodb+srv://Paper:13345627@dclvl.62oke.mongodb.net/?retryWrites=true&w=majority&appName=DClvl",
-  
-  "clientId": "869166906765103135",
-  "clientSecret": "TI-FnEQnpkN31oUkSJqhLM0yE5zKdbo4",
-  "callbackURL": "https://paper-2hjj.onrender.com/auth/discord/callback",
+    "Token": "ODY5MTY2OTA2NzY1MTAzMTM1.YP6Qwg.a0Rm7YtLddDGh6yFmLg1Vz-k0TY",
+    "Database": "mongodb+srv://Paper:13345627@dclvl.62oke.mongodb.net/?retryWrites=true&w=majority&appName=DClvl",
 
-  "developerGuild": "1008313564349616169",
-  "SpotifyClientId": "ee120e7d486d4c818304f68d6a3573cf",
-  "SpotifyClientSecret": "5599633c14b947d2b8d3823afbd93fc8",
+    "clientId": "869166906765103135",
+    "clientSecret": "TI-FnEQnpkN31oUkSJqhLM0yE5zKdbo4",
+    "callbackURL": "https://paper-2hjj.onrender.com/auth/discord/callback",
 
-  "SoundCloudClientId": "JGyKOQau66jgGDVRBIbZlMZ0SUaaKo0Z",
-  "SoundCloudOauthToken": "2-296139-1401119139-XKXVoZJmDMwbn",
+    "developerGuild": "1008313564349616169",
+    "SpotifyClientId": "ee120e7d486d4c818304f68d6a3573cf",
+    "SpotifyClientSecret": "5599633c14b947d2b8d3823afbd93fc8",
 
-  "virusAPIKey": "9ab7cbc55f75696f0e8af96528266a06d8a8436084cb622508169f77e2bcb3c2"
+    "SoundCloudClientId": "JGyKOQau66jgGDVRBIbZlMZ0SUaaKo0Z",
+    "SoundCloudOauthToken": "2-296139-1401119139-XKXVoZJmDMwbn",
+
+    "virusAPIKey": "9ab7cbc55f75696f0e8af96528266a06d8a8436084cb622508169f77e2bcb3c2",
+    "AntiCrashWebhookUrl": "https://discord.com/api/webhooks/967768559688249344/dp6yrq5Jw4boYyZiS6NBhS3hGKIP_lTL7uP6DDYNr-XrJL6T5Gy0_smg5lcoZsvAu5EB"
 }

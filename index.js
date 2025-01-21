@@ -18,6 +18,7 @@ client.events = new Collection()
 client.subCommands = new Collection()
 client.modals = new Collection()
 client.selectMenus = new Collection()
+client.contextMenus = new Collection()
 
 require(`./Systems/Giveaway`)(client)
 /**************************************************/
@@ -30,7 +31,7 @@ const { DeezerPlugin } = require('@distube/deezer')
 const { AppleMusicPlugin } = require('distube-apple-music')
 const { TidalPlugin } = require('distube-tidal')
 const cookieManager = require('./Structures/youtubeCookies.js')
-cookieManager.formatExistingFile();
+cookieManager.formatExistingFile()
 
 client.distube = new DisTube(client, {
     customFilters: {
@@ -83,8 +84,7 @@ process.env.YTDL_NO_UPDATE = 1
 /**************************************************/
 const errorHandling = require('discord.js-anticrash')
 const config = {
-    webhookUrl:
-        'https://discord.com/api/webhooks/967768559688249344/dp6yrq5Jw4boYyZiS6NBhS3hGKIP_lTL7uP6DDYNr-XrJL6T5Gy0_smg5lcoZsvAu5EB'
+    webhookUrl: client.config.AntiCrashWebhookUrl
 }
 
 errorHandling(client, config)
@@ -93,10 +93,5 @@ client.setMaxListeners(0)
 loadEvents(client)
 
 client.login(client.config.Token)
-
-// 定期檢查 cookies 是否過期
-setInterval(() => {
-    cookieManager.checkExpiration();
-}, 24 * 60 * 60 * 1000); // 每24小時檢查一次
 
 module.exports = client

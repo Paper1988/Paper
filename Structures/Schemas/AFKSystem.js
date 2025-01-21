@@ -1,11 +1,11 @@
-const { model, Schema } = require("mongoose");
+const { model, Schema } = require('mongoose')
 
 module.exports = model(
-  "AFK",
-  new Schema({
-    GuildID: String,
-    UserID: String,
-    Status: String,
-    Time: String,
-  })
-);
+    'AFK',
+    new Schema({
+        GuildID: String,
+        UserID: String,
+        Status: String,
+        Time: String
+    })
+)

@@ -9,17 +9,41 @@ const ms = require('ms')
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('timeout')
-        .setDescription('禁言一位成員')
+        .setNameLocalization('zh-TW', '禁言')
+        .setNameLocalization('ja', 'タイムアウト')
+        .setDescription('Timeout a member')
+        .setDescriptionLocalization('zh-TW', '禁言一位成員')
+        .setDescriptionLocalization('ja', 'メンバーをタイムアウトする')
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
-        .setDMPermission(false)
         .addUserOption((options) =>
-            options.setName('user').setDescription('選擇目標成員').setRequired(true)
+            options
+                .setName('user')
+                .setNameLocalization('zh-TW', '用戶')
+                .setNameLocalization('ja', 'ユーザー')
+                .setDescription('Select target member')
+                .setDescriptionLocalization('zh-TW', '選擇目標成員')
+                .setDescriptionLocalization('ja', '対象メンバーを選択')
+                .setRequired(true)
         )
         .addStringOption((options) =>
-            options.setName('duration').setDescription('請提供時間(d h m s)').setRequired(true)
+            options
+                .setName('duration')
+                .setNameLocalization('zh-TW', '時間')
+                .setNameLocalization('ja', '期間')
+                .setDescription('Provide duration (d h m s)')
+                .setDescriptionLocalization('zh-TW', '請提供時間(d h m s)')
+                .setDescriptionLocalization('ja', '期間を入力 (d h m s)')
+                .setRequired(true)
         )
         .addStringOption((options) =>
-            options.setName('reason').setDescription('請提供理由').setMaxLength(512)
+            options
+                .setName('reason')
+                .setNameLocalization('zh-TW', '原因')
+                .setNameLocalization('ja', '理由')
+                .setDescription('Provide reason')
+                .setDescriptionLocalization('zh-TW', '請提供理由')
+                .setDescriptionLocalization('ja', '理由を入力')
+                .setMaxLength(512)
         ),
     usage: '/timeout (user, duration, reason)',
     /**

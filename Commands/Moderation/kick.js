@@ -8,14 +8,31 @@ const {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('kick')
-        .setDescription('將成員踢出伺服器')
+        .setNameLocalization('zh-TW', '踢出')
+        .setNameLocalization('ja', 'キック')
+        .setDescription('Kick a member')
+        .setDescriptionLocalization('zh-TW', '將成員踢出伺服器')
+        .setDescriptionLocalization('ja', 'メンバーをキックします')
         .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
-        .setDMPermission(false)
         .addUserOption((options) =>
-            options.setName('user').setDescription('選擇一名成員').setRequired(true)
+            options
+                .setName('user')
+                .setNameLocalization('zh-TW', '用戶')
+                .setNameLocalization('ja', 'ユーザー')
+                .setDescription('Please select a member')
+                .setDescriptionLocalization('zh-TW', '請選擇一名成員')
+                .setDescriptionLocalization('ja', 'メンバーを選択してください')
+                .setRequired(true)
         )
         .addStringOption((options) =>
-            options.setName('reason').setDescription('請提供原因').setMaxLength(512)
+            options
+                .setName('reason')
+                .setNameLocalization('zh-TW', '原因')
+                .setNameLocalization('ja', '理由')
+                .setDescription('Please provide a reason')
+                .setDescriptionLocalization('zh-TW', '請提供原因')
+                .setDescriptionLocalization('ja', 'キックの理由を入力してください')
+                .setMaxLength(512)
         ),
     /**
      *

@@ -11,9 +11,20 @@ const mal = require('mal-scraper')
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('anime')
-        .setDescription('💮 搜尋動漫資訊')
+        .setNameLocalization('zh-TW', '動漫')
+        .setNameLocalization('ja', 'アニメ')
+        .setDescription('Search for anime information')
+        .setDescriptionLocalization('zh-TW', '搜尋動漫資訊')
+        .setDescriptionLocalization('ja', 'アニメ情報を検索')
         .addStringOption((option) =>
-            option.setName('query').setDescription('動漫名稱').setRequired(true)
+            option
+                .setName('query')
+                .setNameLocalization('zh-TW', '搜尋')
+                .setNameLocalization('ja', '検索')
+                .setDescription('Please enter the anime name')
+                .setDescriptionLocalization('zh-TW', '請輸入動漫名稱')
+                .setDescriptionLocalization('ja', 'アニメ名を入力してください')
+                .setRequired(true)
         ),
     /**
      * @param {ChatInputCommandInteraction} interaction

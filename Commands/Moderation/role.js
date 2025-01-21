@@ -8,14 +8,29 @@ const {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('role-editor')
-        .setDescription('管理用戶的身分組')
+        .setDescription('Manage user roles')
+        .setDescriptionLocalization('zh-TW', '管理用戶身分組')
+        .setDescriptionLocalization('ja', 'ユーザーの役割を管理')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
-        .setDMPermission(false)
         .addRoleOption((option) =>
-            option.setName('role').setDescription('提供要添加或刪除的身分組').setRequired(true)
+            option
+                .setName('role')
+                .setNameLocalization('zh-TW', '身分組')
+                .setNameLocalization('ja', '役割')
+                .setDescription('Please provide the role to add or remove')
+                .setDescriptionLocalization('zh-TW', '請提供要添加或刪除的身分組')
+                .setDescriptionLocalization('ja', '追加または削除する役割を提供してください')
+                .setRequired(true)
         )
         .addUserOption((option) =>
-            option.setName('user').setDescription('提供要管理的用戶').setRequired(false)
+            option
+                .setName('user')
+                .setNameLocalization('zh-TW', '用戶')
+                .setNameLocalization('ja', 'ユーザー')
+                .setDescription('Please provide the user to manage')
+                .setDescriptionLocalization('zh-TW', '請提供要管理的用戶')
+                .setDescriptionLocalization('ja', '管理するユーザーを提供してください')
+                .setRequired(false)
         ),
     usage: '/role (role, user)',
     /**

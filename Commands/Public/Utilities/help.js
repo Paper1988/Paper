@@ -9,7 +9,23 @@ const {
 } = require('discord.js')
 
 module.exports = {
-    data: new SlashCommandBuilder().setName('help').setDescription('顯示所有指令的使用方法及用途'),
+    data: new SlashCommandBuilder()
+        .setName('help')
+        .setNameLocalization('zh-TW', '幫助')
+        .setNameLocalization('ja', 'ヘルプ')
+        .setDescription('View command list')
+        .setDescriptionLocalization('zh-TW', '查看指令列表')
+        .setDescriptionLocalization('ja', 'コマンドリストを表示')
+        .addStringOption((option) =>
+            option
+                .setName('command')
+                .setNameLocalization('zh-TW', '指令')
+                .setNameLocalization('ja', 'コマンド')
+                .setDescription('View specific command information')
+                .setDescriptionLocalization('zh-TW', '查看特定指令的資訊')
+                .setDescriptionLocalization('ja', '特定のコマンド情報を表示')
+                .setRequired(false)
+        ),
     /**
      *
      * @param {ChatInputCommandInteraction} interaction
@@ -53,21 +69,18 @@ module.exports = {
                 )
         )
 
-        const inviteMe = new ActionRowBuilder().addComponents(
+        const inviteAndSupport = new ActionRowBuilder().addComponents([
             new ButtonBuilder()
                 .setLabel('邀請我')
                 .setStyle(ButtonStyle.Link)
                 .setURL(
                     'https://discord.com/api/oauth2/authorize?client_id=869166906765103135&permissions=1644971945463&scope=bot%20applications.commands'
-                )
-        )
-
-        const supportServer = new ActionRowBuilder().addComponents(
+                ),
             new ButtonBuilder()
                 .setLabel('支援伺服器')
                 .setStyle(ButtonStyle.Link)
                 .setURL('https://discord.gg/6qCTEer4pT')
-        )
+        ])
 
         const koFi = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
@@ -82,23 +95,23 @@ module.exports = {
             .setTitle('📚 Paper 指令導覽')
             .setDescription(
                 '歡迎使用 Paper！我是一個功能豐富的多功能機器人 🤖\n\n' +
-                '**主要功能：**\n' +
-                '🎵 高品質音樂播放系統\n' +
-                '🎉 互動式抽獎活動\n' +
-                '🛡️ 完善的伺服器管理工具\n' +
-                '🎮 有趣的娛樂指令\n' +
-                '🌐 實用的工具功能\n\n' +
-                '**使用方式：**\n' +
-                '• 在下方選單選擇想了解的分類\n' +
-                '• 所有指令皆支援斜線指令 `/`\n' +
-                '• 需要協助可以加入支援伺服器'
+                    '**主要功能：**\n' +
+                    '🎵 高品質音樂播放系統\n' +
+                    '🎉 互動式抽獎活動\n' +
+                    '🛡️ 完善的伺服器管理工具\n' +
+                    '🎮 有趣的娛樂指令\n' +
+                    '🌐 實用的工具功能\n\n' +
+                    '**使用方式：**\n' +
+                    '• 在下方選單選擇想了解的分類\n' +
+                    '• 所有指令皆支援斜線指令 `/`\n' +
+                    '• 需要協助可以加入支援伺服器'
             )
             .setFooter({ text: '選擇下方分類以查看詳細指令說明' })
             .setTimestamp()
 
         await interaction.editReply({
             embeds: [Embed],
-            components: [helpMenu, inviteMe, supportServer, koFi]
+            components: [helpMenu, inviteAndSupport, koFi]
         })
     }
 }

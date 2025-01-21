@@ -1,10 +1,10 @@
-const { model, Schema } = require("mongoose");
+const { model, Schema } = require('mongoose')
 
 module.exports = model(
-	"blacklist-user",
-	new Schema({
-		User: String,
-		Reason: String,
-		Time: Number,
-	})
-);
+    'blacklist-user',
+    new Schema({
+        User: String,
+        Reason: String,
+        Time: Number
+    })
+)

@@ -8,18 +8,35 @@ const {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('voice-move')
-        .setDescription('將用戶從目前語音頻道移動到另一個語音頻道')
+        .setNameLocalization('zh-TW', '語音移動')
+        .setNameLocalization('ja', 'ボイス移動')
+        .setDescription('Move a user from the current voice channel to another voice channel')
+        .setDescriptionLocalization('zh-TW', '將用戶從目前語音頻道移動到另一個語音頻道')
+        .setDescriptionLocalization(
+            'ja',
+            'ユーザーを現在のボイスチャンネルから別のボイスチャンネルに移動します'
+        )
         .setDefaultMemberPermissions(PermissionFlagsBits.MoveMembers)
-        .setDMPermission(false)
         .addChannelOption((option) =>
             option
                 .setName('move-to')
-                .setDescription('請選擇頻道')
+                .setNameLocalization('zh-TW', '移動到')
+                .setNameLocalization('ja', '移動先')
+                .setDescription('Please select a channel')
+                .setDescriptionLocalization('zh-TW', '請選擇頻道')
+                .setDescriptionLocalization('ja', 'チャンネルを選択してください')
                 .addChannelTypes(ChannelType.GuildVoice)
                 .setRequired(true)
         )
         .addUserOption((option) =>
-            option.setName('target').setDescription('選擇用戶').setRequired(false)
+            option
+                .setName('target')
+                .setNameLocalization('zh-TW', '用戶')
+                .setNameLocalization('ja', 'ユーザー')
+                .setDescription('Please select a member')
+                .setDescriptionLocalization('zh-TW', '請選擇一名成員')
+                .setDescriptionLocalization('ja', 'メンバーを選択してください')
+                .setRequired(false)
         ),
     /**
      * @param {ChatInputCommandInteraction} interaction

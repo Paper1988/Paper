@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const giveawayHistorySchema = new mongoose.Schema({
     guildId: { type: String, required: true },
@@ -14,6 +14,6 @@ const giveawayHistorySchema = new mongoose.Schema({
         minServerTime: Number
     },
     createdAt: { type: Date, default: Date.now }
-});
+})
 
-module.exports = mongoose.model('GiveawayHistory', giveawayHistorySchema); 
+module.exports = mongoose.model('GiveawayHistory', giveawayHistorySchema)
