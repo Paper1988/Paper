@@ -65,7 +65,10 @@ module.exports = {
                     `目前維護模式： ${Data.Maintenance}\n狀態/原因： ${Data.Description}`
                 )
                 .setTimestamp()
-                .setFooter({ text: client.user.username, iconURL: client.user.avatarURL() })
+                .setFooter({
+                    text: client.user.username,
+                    iconURL: client.user.avatarURL()
+                })
                 .setColor('Blurple')
 
             await interaction.reply({ embeds: [Embed], ephemeral: true })

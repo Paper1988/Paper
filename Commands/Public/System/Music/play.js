@@ -1,10 +1,5 @@
 const { YouTubePlugin } = require('@distube/youtube')
-const {
-    ChatInputCommandInteraction,
-    Client,
-    EmbedBuilder,
-    PermissionFlagsBits
-} = require('discord.js')
+const { ChatInputCommandInteraction, Client, EmbedBuilder } = require('discord.js')
 
 module.exports = {
     subCommand: 'music.play',
@@ -58,8 +53,8 @@ module.exports = {
 
         const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/
 
-        if (!youtubeRegex.test(options.getString('query'))) {
-            if (options.getString('query').startsWith('https://')) {
+        if (!youtubeRegex.test(options.getString('search'))) {
+            if (options.getString('search').startsWith('https://')) {
                 client.distube
                     .play(VoiceChannel, options.getString('query'), {
                         textChannel: channel,
@@ -69,7 +64,7 @@ module.exports = {
                     })
                     .then(() => interaction.deleteReply())
             } else {
-                const results = await yt.search(options.getString('query'))
+                const results = await yt.search(options.getString('search'))
 
                 client.distube
                     .play(VoiceChannel, results[0], {

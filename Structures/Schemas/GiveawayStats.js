@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const giveawayStatsSchema = new mongoose.Schema({
     guildId: { type: String, required: true },
@@ -16,6 +16,6 @@ const giveawayStatsSchema = new mongoose.Schema({
         count: Number
     },
     lastUpdated: { type: Date, default: Date.now }
-});
+})
 
-module.exports = mongoose.model('GiveawayStats', giveawayStatsSchema); 
+module.exports = mongoose.model('GiveawayStats', giveawayStatsSchema)

@@ -109,11 +109,45 @@ const generateMusicStatusButtons = (queue) => {
  * @param {Number} barLength
  * @returns
  */
-const generateProgressBar = (length, totalLength, barLength = 20) => {
+const generateProgressBar = (length, totalLength, barLength = 22) => {
     let progress = Math.floor((length / totalLength) * barLength)
     progress = Math.min(progress, barLength)
-    const progressBar = '▰'.repeat(progress) + '▱'.repeat(barLength - progress)
-    return `[${progressBar}]`
+
+    // 定義六種不同的符號
+    const leftEmpty = '<:leftempty:1320325939137351711>' // 左邊空
+    const middleEmpty = '<:midempty:1320325989850415196>' // 中間空
+    const rightEmpty = '<:rightempty:1320325997203296276>' // 右邊空
+    const leftFilled = '<:leftfull:1320326004631142412>' // 左邊滿
+    const middleFilled = '<:midfull:1320326013523329035>' // 中間滿
+    const rightFilled = '<:rightfull:1320326021689638943>' // 右邊滿
+
+    let progressBar = ''
+
+    if (progress === 0) {
+        // 全部未播放，使用全空的符號
+        progressBar = leftEmpty + middleEmpty.repeat(barLength - 2) + rightEmpty
+    } else if (progress === barLength) {
+        // 全部已播放
+        progressBar = leftFilled + middleFilled.repeat(barLength - 2) + rightFilled
+    } else {
+        // 部分播放
+        progressBar = leftFilled // 開始符號使用已播放的左邊符號
+
+        // 處理中間部分
+        if (progress > 1) {
+            progressBar += middleFilled.repeat(progress - 1)
+        }
+
+        // 處理未播放部分
+        if (progress < barLength - 1) {
+            progressBar += middleEmpty.repeat(barLength - progress - 1)
+        }
+
+        // 結束符號根據是否到達最後決定
+        progressBar += progress === barLength - 1 ? rightFilled : rightEmpty
+    }
+
+    return progressBar
 }
 
 /**
@@ -218,11 +252,6 @@ const generateMusicPlayerStatus = (queue, song, completed = false) => {
                         inline: true
                     },
                     {
-                        name: '<:people:1265561435220611196>作者',
-                        value: `\`${song.uploader.name || '無'}\``,
-                        inline: true
-                    },
-                    {
                         name: '<:clock:1265560238137016372>進度',
                         value: `${
                             song.isLive
@@ -234,16 +263,39 @@ const generateMusicPlayerStatus = (queue, song, completed = false) => {
                         inline: true
                     },
                     {
+                        name: '<:playlist:1265561609632485478>播放清單',
+                        value: `\`${queue.songs.length} 首歌曲\``,
+                        inline: true
+                    },
+                    {
+                        name: '<:people:1265561435220611196>作者',
+                        value: `\`${song.uploader.name || '無'}\``,
+                        inline: true
+                    },
+                    {
+                        name: '<:views:1265561928533807146>觀看次數',
+                        value: `\`${song.views?.toLocaleString() || '無資料'}\``,
+                        inline: true
+                    },
+                    {
+                        name: '<:likes:1265561903195750471>喜歡數',
+                        value: `\`${song.likes?.toLocaleString() || '無資料'}\``,
+                        inline: true
+                    },
+                    {
                         name: '進度條',
                         value: `${
                             completed
-                                ? `${generateProgressBar(songDuration, songDuration, 28)}`
-                                : `${generateProgressBar(queue.currentTime, songDuration, 28)}`
+                                ? `${generateProgressBar(songDuration, songDuration, 22)}`
+                                : `${generateProgressBar(queue.currentTime, songDuration, 22)}`
                         }`
                     }
                 )
                 .setImage(song.thumbnail)
                 .setTimestamp()
+                .setFooter({
+                    text: `在 ${queue.voiceChannel.name} 中播放`
+                })
         ],
         components: completed ? [] : generateMusicStatusButtons(queue)
     }

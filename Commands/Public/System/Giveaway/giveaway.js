@@ -1,61 +1,30 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, PermissionsBitField } = require('discord.js');
-const Giveaway = require('../../../../Structures/Schemas/Giveaway');
+const { SlashCommandBuilder, PermissionsBitField } = require('discord.js')
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('giveaway')
-        .setDescription('抽獎系統主選單')
+        .setNameLocalization('zh-TW', '抽獎系統')
+        .setNameLocalization('ja', '抽獎システム')
+        .setDescription('The main menu of the giveaway system')
+        .setDescriptionLocalization('zh-TW', '抽獎系統主選單')
+        .setDescriptionLocalization('ja', '抽獎システムメインメニュー')
         .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
-        .addChannelOption(option => 
-            option.setName('channel')
-                .setDescription('選擇要創建抽獎的頻道')
-                .setRequired(false)
-                .addChannelTypes(ChannelType.GuildText)
-        ),
-
-    async execute(interaction) {
-        if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
-            return interaction.reply({
-                content: '<:warning:1265562532857380936> | 你需要管理伺服器的權限才能使用抽獎系統！',
-                ephemeral: true
-            });
-        }
-
-        const channel = interaction.options.getChannel('channel') || interaction.channel;
-
-        const giveawayEmbed = new EmbedBuilder()
-            .setColor('Purple')
-            .setTitle('<:gift:1265560472409735181> | 抽獎系統')
-            .setDescription(`請選擇要執行的操作：\n目前選擇的頻道：${channel}`)
-            .setTimestamp();
-
-        const buttons = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                    .setCustomId(`giveaway-create/${channel.id}`)
-                    .setLabel('創建抽獎')
-                    .setStyle(ButtonStyle.Primary)
-                    .setEmoji('<:tada:1265562251981750272>'),
-                new ButtonBuilder()
-                    .setCustomId('giveaway-list')
-                    .setLabel('查看列表')
-                    .setStyle(ButtonStyle.Secondary)
-                    .setEmoji('<:list:1265560873876062340>'),
-                new ButtonBuilder()
-                    .setCustomId('giveaway-stats')
-                    .setLabel('統計資訊')
-                    .setStyle(ButtonStyle.Secondary)
-                    .setEmoji('<:richpresent:1265561713969987676>'),
-                new ButtonBuilder()
-                    .setCustomId('giveaway-end')
-                    .setLabel('結束抽獎')
-                    .setStyle(ButtonStyle.Danger)
-                    .setEmoji('<:stop:1265562218498363422>')
-            );
-
-        await interaction.reply({
-            embeds: [giveawayEmbed],
-            components: [buttons]
-        });
-    }
-};
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName('menu')
+                .setNameLocalization('zh-TW', '主選單')
+                .setNameLocalization('ja', 'メインメニュー')
+                .setDescription('View the main menu of the giveaway system')
+                .setDescriptionLocalization('zh-TW', '查看抽獎系統主選單')
+                .setDescriptionLocalization('ja', '抽獎システムのメインメニューを表示する')
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName('notification')
+                .setNameLocalization('zh-TW', '通知')
+                .setNameLocalization('ja', '通知')
+                .setDescription('Set up giveaway notifications')
+                .setDescriptionLocalization('zh-TW', '設定抽獎通知')
+                .setDescriptionLocalization('ja', '抽獎通知を設定する')
+        )
+}

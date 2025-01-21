@@ -1,4 +1,5 @@
 # Paper: 一個擁有豐富功能的機器人
+
 - 抽獎
 - 音樂
 - 伺服器管理
@@ -10,22 +11,26 @@
 更特別的是，**Paper**全面支援 **斜線指令**。
 
 ## 抽獎
+
 -**Paper**為你打造獨特抽獎體驗，其多種功能和機制讓每次抽獎都充滿刺激和驚喜，成為伺服器成員間互動的亮點。
 
 ## 音樂
+
 -盡情享受低延遲音樂，支援**Spotify**、**SoundCloud**和關鍵字搜尋，同時也支援按鈕面板控制，讓你輕鬆操控。**Paper**擁有獨特的音樂系統，為伺服器提供最佳的音樂體驗。
 
 ## 伺服器管理
+
 -高效處理伺服器事務，保持和諧社群。**Paper**擁有自動踢小號系統、身分組管理、禁言、封鎖成員等管理功能，幫助伺服器群主輕鬆管理成員和頻道。
 
 ## 娛樂指令
+
 -提供各種有趣的娛樂指令，從迷你遊戲到有趣的互動。**Paper**的娛樂指令讓伺服器充滿更多樂趣和互動性。
 
 ## 斜線指令
+
 -透過斜線指令，你能輕鬆地執行各種操作，從查詢資訊到快速設定伺服器功能，一切掌握在指尖。<br/><br/><hr/>
 
 **Paper**不僅是一個機器人，更是一場冒險的開端，一段共鳴的旅程。
 加入我們的伺服器，和**Paper**一同開啟這場奇幻冒險之旅吧！
 
-> [點我進入支援伺服器](https://discord.gg/6qCTEer4pT)<br/>
-> [點我邀請](https://discord.com/api/oauth2/authorize?client_id=***REMOVED***&permissions=28205016149495&scope=bot%20applications.commands)
+> [點我進入支援伺服器](https://discord.gg/6qCTEer4pT)<br/> > [點我邀請](https://discord.com/api/oauth2/authorize?client_id=***REMOVED***&permissions=28205016149495&scope=bot%20applications.commands)

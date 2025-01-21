@@ -1,17 +1,18 @@
 {
-  "Token": "***REMOVED***",
-  "Database": "***REMOVED***/?retryWrites=true&w=majority&appName=DClvl",
-  
-  "clientId": "***REMOVED***",
-  "clientSecret": "***REMOVED***",
-  "callbackURL": "https://paper-2hjj.onrender.com/auth/discord/callback",
+    "Token": "***REMOVED***",
+    "Database": "***REMOVED***/?retryWrites=true&w=majority&appName=DClvl",
 
-  "developerGuild": "1008313564349616169",
-  "SpotifyClientId": "***REMOVED***",
-  "SpotifyClientSecret": "**REMOVED***",
+    "clientId": "***REMOVED***",
+    "clientSecret": "***REMOVED***",
+    "callbackURL": "https://paper-2hjj.onrender.com/auth/discord/callback",
 
-  "SoundCloudClientId": "JGyKOQau66jgGDVRBIbZlMZ0SUaaKo0Z",
-  "SoundCloudOauthToken": "***REMOVED***",
+    "developerGuild": "1008313564349616169",
+    "SpotifyClientId": "***REMOVED***",
+    "SpotifyClientSecret": "**REMOVED***",
 
-  "virusAPIKey": "***REMOVED***"
+    "SoundCloudClientId": "JGyKOQau66jgGDVRBIbZlMZ0SUaaKo0Z",
+    "SoundCloudOauthToken": "***REMOVED***",
+
+    "virusAPIKey": "***REMOVED***",
+    "AntiCrashWebhookUrl": "***REMOV$"
 }

@@ -34,7 +34,10 @@ module.exports = {
                 )
 
                 if (updated) {
-                    await interaction.editReply({ embeds: [embed], components: [button] })
+                    await interaction.editReply({
+                        embeds: [embed],
+                        components: [button]
+                    })
                     await updated.followUp({
                         content: '<:correct:1265560254708711467> | 已刷新數據!',
                         ephemeral: true

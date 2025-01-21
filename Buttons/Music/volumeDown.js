@@ -1,30 +1,41 @@
+const { ButtonInteraction, Client } = require('discord.js')
 const MusicDB = require('../../Structures/Schemas/MusicDB')
 
 module.exports = {
     id: 'volumeDown',
+    /**
+     *
+     * @param {ButtonInteraction} interaction
+     * @param {Client} client
+     * @returns
+     */
     async execute(interaction, client) {
-        await interaction.deferReply({ fetchReply: true, ephemeral: true })
+        await interaction.deferReply({ fetchReply: true })
         // To access an id / value from a button you MUST INCLUDE `client` AND `args` and in the same order as shown
         const { member } = interaction
         const VoiceChannel = member.voice.channel
 
         if (!VoiceChannel)
-            return await interaction.editReply({
-                content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂按鈕!',
-                ephemeral: true
-            })
+            return await interaction
+                .editReply({
+                    content:
+                        '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂按鈕!'
+                })
+                .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
-            return await interaction.editReply({
-                content: `<:warning:1265562532857380936> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
-                ephemeral: true
-            })
+            return await interaction
+                .editReply({
+                    content: `<:warning:1265562532857380936> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`
+                })
+                .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
 
         const queue = await client.distube.getQueue(VoiceChannel)
         if (!queue)
-            return await interaction.editReply({
-                content: '<:outage:1265561329528471613> | 找不到歌曲或該歌曲已經播放完畢!',
-                ephemeral: true
-            })
+            return await interaction
+                .editReply({
+                    content: '<:outage:1265561329528471613> | 找不到歌曲或該歌曲已經播放完畢!'
+                })
+                .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
 
         await client.distube.setVolume(VoiceChannel, queue.volume - 10)
 
@@ -33,9 +44,10 @@ module.exports = {
             { volume: queue.volume },
             { new: true, upsert: true }
         )
-        return await interaction.editReply({
-            content: `<:speaker_low:1265561976663310386> | 成功設置音量: \`${queue.volume}%\``,
-            ephemeral: true
-        })
+        return await interaction
+            .editReply({
+                content: `<:speaker_low:1265561976663310386> | 成功設置音量: \`${queue.volume}%\``
+            })
+            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
     }
 }

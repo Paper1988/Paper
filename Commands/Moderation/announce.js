@@ -7,35 +7,79 @@ const {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('announce')
-        .setDescription('製作一個嵌入式訊息公告!')
+        .setName('announcement')
+        .setNameLocalization('zh-TW', '公告')
+        .setNameLocalization('ja', 'アナウンス')
+        .setDescription('Make an embed message announcement!')
+        .setDescriptionLocalization('zh-TW', '製作一個嵌入式訊息公告!')
+        .setDescriptionLocalization('ja', '埋入式メッセージのアナウンスを作成!')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
-        .setDMPermission(false)
         .addStringOption((option) =>
-            option.setName('title').setDescription('將您的公告標題放在這裡!').setRequired(true)
+            option
+                .setName('title')
+                .setNameLocalization('zh-TW', '標題')
+                .setNameLocalization('ja', 'タイトル')
+                .setDescription('Please enter your announcement title!')
+                .setDescriptionLocalization('zh-TW', '請輸入您的公告標題!')
+                .setDescriptionLocalization('ja', 'あなたのアナウンスタイトルを入力してください!')
+                .setRequired(true)
         )
         .addStringOption((option) =>
             option
                 .setName('description')
-                .setDescription('輸入您要宣布的訊息(輸入\\n來換行)')
+                .setNameLocalization('zh-TW', '訊息')
+                .setNameLocalization('ja', 'メッセージ')
+                .setDescription('Please enter your announcement message! (Use \\n to break lines)')
+                .setDescriptionLocalization('zh-TW', '請輸入您的公告訊息(輸入\\n來換行)')
+                .setDescriptionLocalization(
+                    'ja',
+                    'あなたがアナウンスするメッセージを入力してください(\\nを使用して改行)'
+                )
                 .setRequired(true)
         )
         .addStringOption((option) =>
             option
                 .setName('color')
-                .setDescription('自定義您的嵌入顏色! (請使用六進位制色碼，例如: #00ff00)')
+                .setNameLocalization('zh-TW', '顏色')
+                .setNameLocalization('ja', 'カラー')
+                .setDescription(
+                    'Customize your embed message color.(Please use hex color code, example: #00ff00)'
+                )
+                .setDescriptionLocalization(
+                    'zh-TW',
+                    '自定義您的嵌入顏色 (請使用六進位制色碼，例如: #00ff00)'
+                )
+                .setDescriptionLocalization('ja', 'あなたの埋入カラーをカスタマイズ! (例: #00ff00)')
                 .setRequired(false)
         )
         .addStringOption((option) =>
-            option.setName('footer').setDescription('為您的公告添加頁腳!').setRequired(false)
+            option
+                .setName('footer')
+                .setNameLocalization('zh-TW', '頁腳')
+                .setNameLocalization('ja', 'フッター')
+                .setDescription('Please provide a footer for your embed message')
+                .setDescriptionLocalization('zh-TW', '為您的公告添加頁腳')
+                .setDescriptionLocalization('ja', 'あなたのアナウンスにフッターを追加!')
+                .setRequired(false)
         )
         .addBooleanOption((option) =>
-            option.setName('timestamp').setDescription('是否啟用時間戳?').setRequired(false)
+            option
+                .setName('timestamp')
+                .setNameLocalization('zh-TW', '時間戳')
+                .setNameLocalization('ja', 'タイムスタンプ')
+                .setDescription('Whether to add a timestamp to your embed message?')
+                .setDescriptionLocalization('zh-TW', '是否啟用時間戳?')
+                .setDescriptionLocalization('ja', 'タイムスタンプを有効にするか?')
+                .setRequired(false)
         )
         .addStringOption((option) =>
             option
                 .setName('ping')
-                .setDescription('對您的公告消息的附加標註')
+                .setNameLocalization('zh-TW', '標註')
+                .setNameLocalization('ja', 'ピン')
+                .setDescription('The ping option for your embed message')
+                .setDescriptionLocalization('zh-TW', '對您的公告消息的附加標註')
+                .setDescriptionLocalization('ja', 'あなたのアナウンスメッセージの追加標註')
                 .setRequired(false)
                 .addChoices(
                     { name: '@everyone', value: '@everyone' },

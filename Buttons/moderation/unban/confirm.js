@@ -50,7 +50,7 @@ module.exports = {
                     .setFooter({
                         text: '請稍後再試'
                     })
-                
+
                 await interaction.editReply({
                     embeds: [errorEmbed],
                     components: []
@@ -60,7 +60,7 @@ module.exports = {
             const errorEmbed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(`<:xmark:1265562550947545089> | 發生錯誤: ${error.message}`)
-                
+
             await interaction.reply({
                 embeds: [errorEmbed],
                 ephemeral: true

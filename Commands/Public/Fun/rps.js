@@ -4,9 +4,20 @@ const { RockPaperScissors } = require('discord-gamecord')
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('rock-paper-scissors')
-        .setDescription('和另一名成員遊玩剪刀石頭布!')
+        .setNameLocalization('zh-TW', '剪刀石頭布')
+        .setNameLocalization('ja', 'グー-チョキ-パー')
+        .setDescription('Play Rock-Paper-Scissors with another member!')
+        .setDescriptionLocalization('zh-TW', '和另一名成員遊玩剪刀石頭布!')
+        .setDescriptionLocalization('ja', '他のユーザーとグー、チョキ、パーを遊びます!')
         .addUserOption((option) =>
-            option.setName('opponent').setDescription('請選擇你的對手').setRequired(true)
+            option
+                .setName('opponent')
+                .setNameLocalization('zh-TW', '對手')
+                .setNameLocalization('ja', '相手')
+                .setDescription('Please select your opponent')
+                .setDescriptionLocalization('zh-TW', '請選擇你的對手')
+                .setDescriptionLocalization('ja', '相手を選択してください')
+                .setRequired(true)
         ),
     /**
      * @param {ChatInputCommandInteraction} interaction

@@ -11,7 +11,9 @@ module.exports = {
                 return `${guild.name} -> ${guild.memberCount} 位成員`
             })
             .join('\n')
-        const output = new AttachmentBuilder(Buffer.from(description), { name: 'servers.txt' })
+        const output = new AttachmentBuilder(Buffer.from(description), {
+            name: 'servers.txt'
+        })
 
         await interaction.reply({ files: [output], ephemeral: true })
     }

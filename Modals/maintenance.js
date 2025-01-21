@@ -28,7 +28,10 @@ module.exports = {
                 ephemeral: true
             })
         } else {
-            await Data.deleteOne({ ClientId: client.user.id, Description: Data.Description })
+            await Data.deleteOne({
+                ClientId: client.user.id,
+                Description: Data.Description
+            })
             return await interaction.reply({
                 content: '<:xmark_988409378161954866:1201844342029815848> | 維護模式已關閉',
                 ephemeral: true

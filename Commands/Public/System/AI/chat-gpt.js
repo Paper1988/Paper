@@ -10,7 +10,10 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setColor('Aqua')
-            .setAuthor({ name: interaction.user.username, iconURL: interaction.user.avatarURL() })
+            .setAuthor({
+                name: interaction.user.username,
+                iconURL: interaction.user.avatarURL()
+            })
             .setFooter({ text: '由 GPT-4o 驅動' })
 
         await ApexChat('gpt-4o', prompt, {
@@ -20,7 +23,9 @@ module.exports = {
         })
             .then(
                 async (response) =>
-                    await interaction.editReply({ embeds: [embed.setDescription(response)] })
+                    await interaction.editReply({
+                        embeds: [embed.setDescription(response)]
+                    })
             )
             .catch((err) => {
                 interaction.editReply({

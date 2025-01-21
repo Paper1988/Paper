@@ -14,7 +14,11 @@ const os = require('os')
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('botinfo')
-        .setDescription('顯示Paper的資訊及資料庫狀態'),
+        .setNameLocalization('zh-TW', '機器人資訊')
+        .setNameLocalization('ja', 'ボット情報')
+        .setDescription('View bot information')
+        .setDescriptionLocalization('zh-TW', '查看機器人資訊')
+        .setDescriptionLocalization('ja', 'ボットの情報を表示'),
     /**
      * @param {ChatInputCommandInteraction} interaction
      * @param {Client} client

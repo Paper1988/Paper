@@ -17,7 +17,10 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setColor('Aqua')
-            .setAuthor({ name: interaction.user.username, iconURL: interaction.user.avatarURL() })
+            .setAuthor({
+                name: interaction.user.username,
+                iconURL: interaction.user.avatarURL()
+            })
             .setFooter({ text: '由 Prodia 驅動' })
 
         await ApexImagine('prodia', prompt, {

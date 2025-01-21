@@ -6,9 +6,9 @@ module.exports = {
         .setName('tic-tac-toe')
         .setNameLocalization('zh-TW', '圈圈叉叉')
         .setNameLocalization('ja', '三目並べ')
-        .setDescription('Play Tic Tac Toe with another member')
-        .setDescriptionLocalization('zh-TW', '和另一位成員遊玩圈圈叉叉')
-        .setDescriptionLocalization('ja', '他のメンバーと三目並べをプレイします')
+        .setDescription('Play Tic Tac Toe with another member!')
+        .setDescriptionLocalization('zh-TW', '和另一位成員遊玩圈圈叉叉!')
+        .setDescriptionLocalization('ja', '他のメンバーと三目並べをプレイします!')
         .addUserOption((options) =>
             options
                 .setName('user')

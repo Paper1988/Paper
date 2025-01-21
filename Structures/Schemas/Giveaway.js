@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const giveawaySchema = new mongoose.Schema({
     messageId: { type: String, required: true },
@@ -18,6 +18,6 @@ const giveawaySchema = new mongoose.Schema({
     minAccountAge: Number,
     minServerTime: Number,
     reminded: { type: Boolean, default: false }
-});
+})
 
-module.exports = mongoose.model('Giveaway', giveawaySchema); 
+module.exports = mongoose.model('Giveaway', giveawaySchema)
