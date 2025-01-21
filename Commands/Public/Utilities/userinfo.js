@@ -43,7 +43,11 @@ function addBadges(badgeNames) {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('userinfo')
-        .setDescription('取得指定用戶的資訊')
+        .setNameLocalization('zh-TW', '用戶資訊')
+        .setNameLocalization('ja', 'ユーザー情報')
+        .setDescription('Get information about a specified user')
+        .setDescriptionLocalization('zh-TW', '取得指定用戶的資訊')
+        .setDescriptionLocalization('ja', '指定されたユーザーの情報を取得します')
         .addUserOption((option) =>
             option.setName('member').setDescription('選擇一個用戶').setRequired(false)
         ),

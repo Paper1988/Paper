@@ -4,7 +4,11 @@ const { EmbedBuilder, ChatInputCommandInteraction, SlashCommandBuilder } = requi
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('translate')
-        .setDescription('將任何文字翻譯成你想要的任何語言')
+        .setNameLocalization('zh-TW', '翻譯')
+        .setNameLocalization('ja', ' 翻訳する')
+        .setDescription('Translate any text into any language you want')
+        .setDescriptionLocalization('zh-TW', '將任何文字翻譯成你想要的任何語言')
+        .setDescriptionLocalization('ja', '任意のテキストを任意の言語に翻訳します')
         .addStringOption((option) =>
             option
                 .setName('language')

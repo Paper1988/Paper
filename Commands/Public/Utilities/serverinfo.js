@@ -3,8 +3,11 @@ const { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } = requi
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('serverinfo')
-        .setDescription('伺服器資訊')
-        .setDMPermission(false),
+        .setNameLocalization('zh-TW', '伺服器資訊')
+        .setNameLocalization('ja', 'サーバー情報')
+        .setDescription('Get information about the server')
+        .setDescriptionLocalization('zh-TW', '取得伺服器資訊')
+        .setDescriptionLocalization('ja', 'サーバー情報を取得します'),
     /**
      * @param {ChatInputCommandInteraction} interaction
      */
