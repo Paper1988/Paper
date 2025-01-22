@@ -71,19 +71,20 @@ client.distube = new DisTube(client, {
                 quality: 'highestaudio',
                 format: 'audioonly',
                 liveBuffer: 60000,
-                dlChunkSize: 1024 * 1024 * 4,
-                requestOptions: {
-                    headers: {
-                        cookie: cookieManager.getCookies()
-                    }
+                dlChunkSize: 1024 * 1024 * 4
+            },
+            cookies: cookieManager.getCookies(),
+            fetchOptions: {
+                headers: {
+                    cookie: cookieManager.getCookies(),
+                    'User-Agent':
+                        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                 }
             }
         })
     ]
 })
 
-process.env.YTSR_NO_UPDATE = 1
-process.env.YTDL_NO_UPDATE = 1
 /**************************************************/
 const errorHandling = require('discord.js-anticrash')
 const config = {
