@@ -56,7 +56,7 @@ module.exports = {
         if (!youtubeRegex.test(options.getString('search'))) {
             if (options.getString('search').startsWith('https://')) {
                 client.distube
-                    .play(VoiceChannel, options.getString('query'), {
+                    .play(VoiceChannel, options.getString('search'), {
                         textChannel: channel,
                         member: member,
                         position,
