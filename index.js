@@ -71,16 +71,16 @@ client.distube = new DisTube(client, {
                 quality: 'highestaudio',
                 format: 'audioonly',
                 liveBuffer: 60000,
-                dlChunkSize: 1024 * 1024 * 4
-            },
-            cookies: cookieManager.getCookies(),
-            fetchOptions: {
-                headers: {
-                    cookie: cookieManager.getCookies(),
-                    'User-Agent':
-                        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                dlChunkSize: 1024 * 1024 * 4,
+                requestOptions: {
+                    headers: {
+                        cookie: cookieManager.getCookies(),
+                        'User-Agent':
+                            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                    }
                 }
-            }
+            },
+            cookies: cookieManager.getCookies()
         })
     ]
 })
