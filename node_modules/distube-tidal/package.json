@@ -1,0 +1,70 @@
+{
+  "name": "distube-tidal",
+  "version": "0.1.0",
+  "author": "LakhindarPal",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LakhindarPal/distube-tidal.git"
+  },
+  "main": "./dist/index.js",
+  "devDependencies": {
+    "@types/node": "^20.14.1",
+    "discord.js": "^14.15.3",
+    "distube": "^5.0.1",
+    "eslint": "^8.57.0",
+    "eslint-config-distube": "^1.7.0",
+    "prettier": "^3.3.0",
+    "tslib": "^2.6.3",
+    "tsup": "^8.1.0",
+    "typescript": "^5.4.5"
+  },
+  "exports": "./dist/index.js",
+  "bugs": {
+    "url": "https://github.com/LakhindarPal/distube-tidal/issues"
+  },
+  "description": "A DisTube info extractor plugin for supporting Tidal Music.",
+  "directories": {
+    "lib": "src"
+  },
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/LakhindarPal/distube-tidal#readme",
+  "keywords": [
+    "distube",
+    "plugin",
+    "discord",
+    "music",
+    "tidal",
+    "distube-tidal",
+    "distube-tidal-plugin",
+    "tidal-plugin"
+  ],
+  "license": "MIT",
+  "nano-staged": {
+    "*.ts": [
+      "prettier --write",
+      "eslint"
+    ],
+    "*.{json,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "peerDependencies": {
+    "distube": "5"
+  },
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,ts,json,yml,yaml,md}\"",
+    "lint": "eslint .",
+    "build": "tsup",
+    "type": "tsc --noEmit",
+    "prepack": "bun run build"
+  },
+  "typings": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "tidal-music-api": "^1.2.1"
+  }
+}
