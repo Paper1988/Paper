@@ -91,7 +91,7 @@ module.exports = {
             .setFooter({ text: '選擇下方分類以查看詳細指令說明' })
             .setTimestamp()
 
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [Embed],
             components: [helpMenu, inviteAndSupport, koFi]
         })
