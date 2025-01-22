@@ -30,8 +30,6 @@ module.exports = {
                         ${settings.notifyEnd ? '<:correct:1265560254708711467>' : '<:xmark:1265562550947545089>'} 抽獎結束通知
                         ${settings.notifyWin ? '<:correct:1265560254708711467>' : '<:xmark:1265562550947545089>'} 中獎通知
                         ${settings.notifyReminder ? '<:correct:1265560254708711467>' : '<:xmark:1265562550947545089>'} 結束提醒通知
-                        
-                        <:mail:1320298639293415434> 通知方式: ${settings.dmNotification ? '私人訊息' : '伺服器頻道'}
                     `
             })
 
@@ -55,12 +53,7 @@ module.exports = {
                 .setCustomId('notify-reminder')
                 .setLabel('提醒通知')
                 .setStyle(settings.notifyReminder ? ButtonStyle.Success : ButtonStyle.Secondary)
-                .setEmoji('<:reminder:1265561686358753280>'),
-            new ButtonBuilder()
-                .setCustomId('notify-method')
-                .setLabel(settings.dmNotification ? 'DM通知' : '頻道通知')
-                .setStyle(ButtonStyle.Primary)
-                .setEmoji('<:mail:1320298639293415434>')
+                .setEmoji('<:reminder:1265561686358753280>')
         )
 
         await interaction.update({
