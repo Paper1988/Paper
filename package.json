@@ -20,7 +20,7 @@
         "@distube/spotify": "^2.0.2",
         "@distube/youtube": "^1.0.4",
         "@distube/yt-dlp": "^2.0.1",
-        "@distube/ytdl-core": "^4.15.8",
+        "@distube/ytdl-core": "github:ToddyTheNoobDud/ytdl-core-stuff",
         "@distube/ytsr": "^2.0.4",
         "@iamtraction/google-translate": "^2.0.1",
         "apexify.js": "^4.5.45",

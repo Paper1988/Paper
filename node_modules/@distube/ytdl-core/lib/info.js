@@ -224,7 +224,6 @@ const parseAdditionalManifests = (player_response, options) => {
   return manifests;
 };
 
-// TODO: Clean up this function for readability and support more clients
 /**
  * Gets info from a video additional formats and deciphered URLs.
  *
@@ -233,11 +232,14 @@ const parseAdditionalManifests = (player_response, options) => {
  * @returns {Promise<Object>}
  */
 exports.getInfo = async (id, options) => {
+  // Apply options and defaults
   utils.applyIPv6Rotations(options);
   utils.applyDefaultHeaders(options);
   utils.applyDefaultAgent(options);
   utils.applyOldLocalAddress(options);
   utils.applyPlayerClients(options);
+
+  // Retrieve basic info
   const info = await exports.getBasicInfo(id, options);
   let funcs = [];
 
@@ -246,7 +248,7 @@ exports.getInfo = async (id, options) => {
     info.html5player ||
     getHTML5player(await getWatchHTMLPageBody(id, options)) ||
     getHTML5player(await getEmbedPageBody(id, options));
-
+  
   if (!info.html5player) {
     throw Error("Unable to find html5player file");
   }
@@ -254,21 +256,21 @@ exports.getInfo = async (id, options) => {
   const html5player = new URL(info.html5player, BASE_URL).toString();
 
   try {
-    if (options.playerClients.includes("WEB")) {
-      funcs.push(sig.decipherFormats(parseFormats(info.player_response), html5player, options));
-      funcs.push(...parseAdditionalManifests(info.player_response));
+    // Use WEB_EMBEDDED for playback
+    if (options.playerClients.includes("WEB_EMBEDDED")) {
+      funcs.push(fetchWebEmbeddedPlayer(id, html5player, options));
     }
-    if (info.videoDetails.age_restricted) throw Error("Cannot download age restricted videos with mobile clients");
+
     const promises = [];
     if (options.playerClients.includes("WEB_CREATOR")) promises.push(fetchWebCreatorPlayer(id, html5player, options));
     if (options.playerClients.includes("IOS")) promises.push(fetchIosJsonPlayer(id, options));
     if (options.playerClients.includes("ANDROID")) promises.push(fetchAndroidJsonPlayer(id, options));
+
     const responses = await Promise.allSettled(promises);
     info.formats = [].concat(...responses.map(r => parseFormats(r.value)));
     if (info.formats.length === 0) throw new Error("Player JSON API failed");
-
+    
     funcs.push(sig.decipherFormats(info.formats, html5player, options));
-
     for (let resp of responses) {
       if (resp.value) {
         funcs.push(...parseAdditionalManifests(resp.value, options));
@@ -280,7 +282,6 @@ exports.getInfo = async (id, options) => {
   info.formats = Object.values(Object.assign({}, ...results));
   info.formats = info.formats.map(formatUtils.addFormatMeta);
   info.formats.sort(formatUtils.sortFormats);
-
   info.full = true;
   return info;
 };
@@ -307,6 +308,15 @@ const WEB_CREATOR_CONTEXT = {
     ...LOCALE,
   },
 };
+
+const WEB_EMBEDDED_CONTEXT = {
+  client: {
+    clientName: "WEB_EMBEDDED_PLAYER",
+    clientVersion: "1.20240723.01.00",
+    ...LOCALE,
+  },
+};
+
 
 const fetchWebCreatorPlayer = async (videoId, html5player, options) => {
   const payload = {
@@ -349,6 +359,16 @@ const playerAPI = async (videoId, payload, userAgent, options) => {
   }
   return response;
 };
+const fetchWebEmbeddedPlayer = async (videoId, html5player, options) => {
+  const payload = {
+    context: WEB_EMBEDDED_CONTEXT,
+    videoId,
+    playbackContext: await getPlaybackContext(html5player, options),
+    ...CHECK_FLAGS,
+  };
+  return await playerAPI(videoId, payload, undefined, options);
+};
+
 
 const IOS_CLIENT_VERSION = "19.42.1",
   IOS_DEVICE_MODEL = "iPhone16,2",
