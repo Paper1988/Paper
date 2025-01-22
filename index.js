@@ -71,9 +71,13 @@ client.distube = new DisTube(client, {
                 quality: 'highestaudio',
                 format: 'audioonly',
                 liveBuffer: 60000,
-                dlChunkSize: 1024 * 1024 * 4
-            },
-            cookies: cookieManager.getCookies()
+                dlChunkSize: 1024 * 1024 * 4,
+                requestOptions: {
+                    headers: {
+                        cookie: cookieManager.getCookies()
+                    }
+                }
+            }
         })
     ]
 })
