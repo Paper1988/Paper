@@ -1,59 +1,148 @@
 const fs = require('fs')
 const path = require('path')
 
-class CookieManager {
-    constructor() {
-        this.cookiesPath = path.join(__dirname, 'cookies.json')
-        this.cookies = this.loadCookies()
-    }
+const cookieFile = path.join(__dirname, 'cookies.json')
 
-    loadCookies() {
+module.exports = {
+    getCookies() {
         try {
-            return JSON.parse(fs.readFileSync(this.cookiesPath, 'utf8'))
+            if (fs.existsSync(cookieFile)) {
+                const cookieData = JSON.parse(fs.readFileSync(cookieFile, 'utf8'))
+                // 將 cookie 陣列轉換為字串格式
+                return cookieData.cookies
+                    .map((cookie) => `${cookie.name}=${cookie.value}`)
+                    .join('; ')
+            }
+            return ''
         } catch (error) {
-            console.error('無法讀取 cookies 文件: ', error)
-            return []
+            console.error('Error reading cookies:', error)
+            return ''
         }
-    }
+    },
 
-    updateCookies(newCookies) {
+    saveCookies(cookies) {
         try {
-            const formattedCookies = JSON.stringify(newCookies, null, 4)
-            fs.writeFileSync(this.cookiesPath, formattedCookies)
-            this.cookies = JSON.parse(formattedCookies)
+            const cookieData = {
+                cookies: cookies,
+                updatedAt: new Date().toISOString(),
+                expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30天後過期
+            }
+            fs.writeFileSync(cookieFile, JSON.stringify(cookieData, null, 2))
             return true
         } catch (error) {
-            console.error('更新 cookies 失敗: ', error)
+            console.error('Error saving cookies:', error)
             return false
         }
-    }
+    },
 
     formatExistingFile() {
         try {
-            const currentCookies = this.loadCookies()
-            return this.updateCookies(currentCookies)
+            if (fs.existsSync(cookieFile)) {
+                const cookieData = JSON.parse(fs.readFileSync(cookieFile, 'utf8'))
+                // 確保格式正確
+                if (!cookieData.cookies || !Array.isArray(cookieData.cookies)) {
+                    cookieData.cookies = []
+                }
+                if (!cookieData.lastUpdate) {
+                    cookieData.lastUpdate = new Date().toISOString()
+                }
+                fs.writeFileSync(cookieFile, JSON.stringify(cookieData, null, 2))
+            } else {
+                // 如果文件不存在，創建一個新的
+                this.saveCookies('')
+            }
         } catch (error) {
-            console.error('格式化 cookies 文件失敗: ', error)
+            console.error('Error formatting cookie file:', error)
+            // 如果解析失敗，創建一個新的
+            this.saveCookies('')
+        }
+    },
+
+    checkExpiration() {
+        try {
+            if (fs.existsSync(cookieFile)) {
+                const cookieData = JSON.parse(fs.readFileSync(cookieFile, 'utf8'))
+                const now = Date.now() / 1000 // 轉換為秒
+
+                // 檢查必要的 cookies 是否存在且未過期
+                const loginCookie = cookieData.cookies.find((c) => c.name === 'LOGIN_INFO')
+                const visitorCookie = cookieData.cookies.find(
+                    (c) => c.name === 'VISITOR_INFO1_LIVE'
+                )
+
+                if (!loginCookie || !visitorCookie) {
+                    console.warn('Warning: Required YouTube cookies are missing')
+                    return false
+                }
+
+                // 檢查是否有任何必要的 cookie 已過期
+                if (loginCookie.expirationDate && loginCookie.expirationDate < now) {
+                    console.warn('Warning: LOGIN_INFO cookie has expired')
+                    return false
+                }
+
+                if (visitorCookie.expirationDate && visitorCookie.expirationDate < now) {
+                    console.warn('Warning: VISITOR_INFO1_LIVE cookie has expired')
+                    return false
+                }
+
+                // 檢查是否快要過期（5天內）
+                const fiveDaysFromNow = now + 5 * 24 * 60 * 60
+                if (
+                    loginCookie.expirationDate < fiveDaysFromNow ||
+                    visitorCookie.expirationDate < fiveDaysFromNow
+                ) {
+                    console.warn('Warning: Some YouTube cookies will expire soon')
+                    return true
+                }
+
+                return true
+            }
+            return false
+        } catch (error) {
+            console.error('Error checking cookie expiration:', error)
             return false
         }
-    }
+    },
 
-    getCookies() {
-        return this.cookies.cookies || []
-    }
+    // 新增一個方法來獲取 cookie 狀態
+    getStatus() {
+        try {
+            if (fs.existsSync(cookieFile)) {
+                const cookieData = JSON.parse(fs.readFileSync(cookieFile, 'utf8'))
+                const loginCookie = cookieData.cookies.find((c) => c.name === 'LOGIN_INFO')
+                const visitorCookie = cookieData.cookies.find(
+                    (c) => c.name === 'VISITOR_INFO1_LIVE'
+                )
 
-    // 檢查 cookies 是否過期
-    checkExpiration() {
-        const now = Date.now() / 1000 // 轉換為秒
-        const expiredCookies = (this.cookies.cookies || []).filter(
-            (cookie) => cookie.expirationDate && cookie.expirationDate < now
-        )
-
-        if (expiredCookies.length > 0) {
-            console.warn('發現過期的 cookies，請更新')
-            console.warn('過期的 cookies:', expiredCookies.map((c) => c.name).join(', '))
+                return {
+                    hasCookies: cookieData.cookies.length > 0,
+                    lastUpdate: cookieData.lastUpdate,
+                    loginCookieExpires: loginCookie
+                        ? new Date(loginCookie.expirationDate * 1000).toISOString()
+                        : null,
+                    visitorCookieExpires: visitorCookie
+                        ? new Date(visitorCookie.expirationDate * 1000).toISOString()
+                        : null,
+                    isValid: this.checkExpiration()
+                }
+            }
+            return {
+                hasCookies: false,
+                lastUpdate: null,
+                loginCookieExpires: null,
+                visitorCookieExpires: null,
+                isValid: false
+            }
+        } catch (error) {
+            console.error('Error getting cookie status:', error)
+            return {
+                hasCookies: false,
+                lastUpdate: null,
+                loginCookieExpires: null,
+                visitorCookieExpires: null,
+                isValid: false
+            }
         }
     }
 }
-
-module.exports = new CookieManager()
