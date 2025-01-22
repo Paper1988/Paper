@@ -49,23 +49,20 @@ module.exports = {
                     }
                 )
         )
-        const generalCommands = new ActionRowBuilder().addComponents(
+        const back = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId('help:back')
                 .setLabel('返回')
                 .setStyle(ButtonStyle.Primary)
         )
 
-        const inviteMe = new ActionRowBuilder().addComponents(
+        const inviteAndSupport = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setLabel('邀請我')
                 .setStyle(ButtonStyle.Link)
                 .setURL(
                     'https://discord.com/api/oauth2/authorize?client_id=869166906765103135&permissions=1644971945463&scope=bot%20applications.commands'
-                )
-        )
-
-        const supportServer = new ActionRowBuilder().addComponents(
+                ),
             new ButtonBuilder()
                 .setLabel('支援伺服器')
                 .setStyle(ButtonStyle.Link)
@@ -198,7 +195,7 @@ module.exports = {
                 {
                     await interaction.update({
                         embeds: [publicEm],
-                        components: [helpMenu, inviteMe, generalCommands, supportServer, koFi]
+                        components: [helpMenu, inviteAndSupport, back, koFi]
                     })
                 }
                 break
@@ -206,7 +203,7 @@ module.exports = {
                 {
                     await interaction.update({
                         embeds: [modEm],
-                        components: [helpMenu, inviteMe, generalCommands, supportServer, koFi]
+                        components: [helpMenu, inviteAndSupport, back, koFi]
                     })
                 }
                 break
@@ -214,7 +211,7 @@ module.exports = {
                 {
                     await interaction.update({
                         embeds: [musicInfoEm, musicEm],
-                        components: [helpMenu, inviteMe, generalCommands, supportServer, koFi]
+                        components: [helpMenu, inviteAndSupport, back, koFi]
                     })
                 }
                 break
@@ -222,7 +219,7 @@ module.exports = {
                 {
                     await interaction.update({
                         embeds: [giveEm],
-                        components: [helpMenu, inviteMe, generalCommands, supportServer, koFi]
+                        components: [helpMenu, inviteAndSupport, back, koFi]
                     })
                 }
                 break
@@ -230,7 +227,7 @@ module.exports = {
                 {
                     await interaction.update({
                         embeds: [funEm],
-                        components: [helpMenu, inviteMe, generalCommands, supportServer, koFi]
+                        components: [helpMenu, inviteAndSupport, back, koFi]
                     })
                 }
                 break

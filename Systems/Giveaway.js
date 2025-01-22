@@ -55,17 +55,15 @@ module.exports = (client) => {
 
         async end(messageId) {
             const giveaway = await giveawayModel.findOne({ messageId, ended: false })
-            if (!giveaway) return
+            if (!giveaway) return null
+
+            const winners = this.selectWinners(giveaway.participants, giveaway.winnerCount)
 
             const channel = await this.client.channels.fetch(giveaway.channelId)
             if (!channel) return
 
             const message = await channel.messages.fetch(giveaway.messageId)
             if (!message) return
-
-            // 選擇得獎者
-            const winners = this.selectWinners(giveaway.participants, giveaway.winnerCount)
-            const winnerMentions = winners.map((id) => `<@${id}>`).join(', ') || '沒有人參加抽獎'
 
             // 更新嵌入訊息
             const endEmbed = EmbedBuilder.from(message.embeds[0])
@@ -96,14 +94,16 @@ module.exports = (client) => {
                 components: [endButtons]
             })
 
-            // 發送結束通知給所有參與者
-            for (const userId of giveaway.participants) {
-                await sendGiveawayNotification(this.client, 'end', giveaway, userId)
-            }
-
-            // 發送中獎通知給得獎者
+            // 先發送中獎通知給得獎者
             for (const winnerId of winners) {
                 await sendGiveawayNotification(this.client, 'win', giveaway, winnerId)
+            }
+
+            // 只發送結束通知給非得獎者
+            for (const userId of giveaway.participants) {
+                if (!winners.includes(userId)) {
+                    await sendGiveawayNotification(this.client, 'end', giveaway, userId)
+                }
             }
 
             // 更新資料庫
