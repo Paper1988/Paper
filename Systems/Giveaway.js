@@ -57,13 +57,15 @@ module.exports = (client) => {
             const giveaway = await giveawayModel.findOne({ messageId, ended: false })
             if (!giveaway) return null
 
+            // 選擇得獎者
             const winners = this.selectWinners(giveaway.participants, giveaway.winnerCount)
+            const winnerMentions = winners.map((id) => `<@${id}>`).join(', ') || '沒有人參加抽獎'
 
             const channel = await this.client.channels.fetch(giveaway.channelId)
-            if (!channel) return
+            if (!channel) return null
 
             const message = await channel.messages.fetch(giveaway.messageId)
-            if (!message) return
+            if (!message) return null
 
             // 更新嵌入訊息
             const endEmbed = EmbedBuilder.from(message.embeds[0])
