@@ -39,7 +39,7 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
-        await interaction.deferReply({ fetchReply: true })
+        await interaction.deferReply()
         const { options, guild, member } = interaction
 
         const target = options.getMember('user')

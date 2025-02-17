@@ -10,7 +10,7 @@ module.exports = {
      * @returns
      */
     async execute(interaction, client) {
-        await interaction.deferReply({ fetchReply: true })
+        await interaction.deferReply()
         // To access an id / value from a button you MUST INCLUDE `client` AND `args` and in the same order as shown
         const { member } = interaction
         const VoiceChannel = member.voice.channel

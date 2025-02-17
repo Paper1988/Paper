@@ -176,7 +176,15 @@ module.exports = {
                         )
                 )
         )
-        .addSubcommand((sub) => sub.setName('quit').setDescription('退出語音頻道')),
+        .addSubcommand((sub) =>
+            sub
+                .setName('quit')
+                .setNameLocalization('zh-TW', '退出語音頻道')
+                .setNameLocalization('ja', 'ボイスチャンネルを離れる')
+                .setDescription('Quit the voice channel')
+                .setDescriptionLocalization('zh-TW', '退出語音頻道')
+                .setDescriptionLocalization('ja', 'ボイスチャンネルを離れる')
+        ),
     usage: '/music (play, volume, settings, seek, filters, jump)',
     /**
      *
@@ -204,7 +212,7 @@ module.exports = {
                     value: `${song.name}`
                 }))
             })
-            .catch((error) => {
+            .catch(() => {
                 // 處理錯誤，例如通過回應一些預設選項或顯示錯誤信息
                 return interaction.respond([])
             })

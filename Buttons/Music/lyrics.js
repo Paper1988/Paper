@@ -11,7 +11,7 @@ module.exports = {
      * @param {Client} client
      */
     async execute(interaction, client) {
-        await interaction.deferReply({ fetchReply: true })
+        await interaction.deferReply()
 
         const VoiceChannel = interaction.member.voice.channel
 
@@ -68,7 +68,7 @@ module.exports = {
                             new EmbedBuilder()
                                 .setColor('Red')
                                 .setDescription(
-                                    `<:loadingerror:1268935312751595622> | 找不到 ${queue.songs[0].name} 的歌詞!`
+                                    `<:loadingerror:1268935312751595622> | 找不到 \`${queue.songs[0].name}\` 的歌詞!`
                                 )
                                 .setFooter({
                                     text: '資料來源: Genius Lyrics',

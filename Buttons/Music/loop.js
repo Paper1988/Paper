@@ -4,7 +4,7 @@ const { updateMusicPlayerStatus } = require('../../Systems/Music')
 module.exports = {
     id: 'loop',
     async execute(interaction, client) {
-        await interaction.deferReply({ fetchReply: true })
+        await interaction.deferReply()
         const { member, guild } = interaction
         const VoiceChannel = member.voice.channel
 

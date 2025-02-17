@@ -46,7 +46,7 @@ module.exports = {
 
         setInterval(async () => {
             const giveaways = await Giveaway.find({
-                endTime: { $lt: new Date() },
+                endAt: { $lt: new Date() },
                 ended: false
             })
 
@@ -95,7 +95,7 @@ async function endGiveaway(messageId, client) {
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(true),
         new ButtonBuilder()
-            .setCustomId(`giveaway-reroll/${giveaway.hosterId}`)
+            .setCustomId(`giveaway-reroll/${giveaway.hostedBy}`)
             .setLabel('重新抽獎')
             .setEmoji('🎲')
             .setStyle(ButtonStyle.Primary)
@@ -147,10 +147,10 @@ async function endGiveaway(messageId, client) {
         guildId: giveaway.guildId,
         giveawayId: giveaway.messageId,
         prize: giveaway.prize,
-        hosterId: giveaway.hosterId,
+        hosterId: giveaway.hostedBy,
         winners,
         participantCount: giveaway.participants.length,
-        endTime: giveaway.endTime,
+        endTime: giveaway.endAt,
         requirements: {
             roles: giveaway.requiredRoles,
             minAccountAge: giveaway.minAccountAge,

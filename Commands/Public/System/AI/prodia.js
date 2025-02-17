@@ -8,7 +8,7 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
-        await interaction.deferReply({ fetchReply: true })
+        await interaction.deferReply()
 
         const prompt = interaction.options.getString('prompt')
         const negative_prompt = interaction.options.getString('negative_prompt') || ''

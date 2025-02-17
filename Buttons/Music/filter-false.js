@@ -1,7 +1,7 @@
 module.exports = {
     id: 'false',
     async execute(interaction, client) {
-        await interaction.deferReply({ fetchReply: true })
+        await interaction.deferReply()
         const { member } = interaction
         const VoiceChannel = member.voice.channel
 

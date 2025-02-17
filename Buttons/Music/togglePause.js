@@ -3,7 +3,7 @@ const { updateMusicPlayerStatus } = require('../../Systems/Music')
 module.exports = {
     id: 'togglePause', // The buttons .setCustomId
     async execute(interaction, client) {
-        await interaction.deferReply({ fetchReply: true, ephemeral: true })
+        await interaction.deferReply()
         // To access an id / value from a button you MUST INCLUDE `client` AND `args` and in the same order as shown
         const { member } = interaction
         const VoiceChannel = member.voice.channel
