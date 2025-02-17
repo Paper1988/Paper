@@ -23,8 +23,6 @@ module.exports = {
         loadModals(client)
         loadMenus(client)
 
-        require('../../Page/app.js')
-
         mongoose.set('strictQuery', false)
         await mongoose
             .connect(client.config.Database)
@@ -56,7 +54,19 @@ module.exports = {
                     if (channel) {
                         const message = await channel.messages.fetch(giveaway.messageId)
                         if (message) {
-                            await endGiveaway(message.id, client)
+                            if (message.embeds.length > 0) {
+                                const endEmbed = EmbedBuilder.from(message.embeds[0])
+                                    .setColor('Green')
+                                    .setDescription(
+                                        message.embeds[0].data.description.split('\n\n')[0] +
+                                            `\n\n<:person:1265561455529562154> | 得獎者：${winnerMentions}`
+                                    )
+                                await endGiveaway(message.id, client)
+                            } else {
+                                console.error('Message does not contain embeds')
+                            }
+                        } else {
+                            console.error('Message not found')
                         }
                     }
                 } catch (error) {
