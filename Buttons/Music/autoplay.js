@@ -3,7 +3,7 @@ const MusicDB = require('../../Structures/Schemas/MusicDB')
 module.exports = {
     id: 'autoplay',
     async execute(interaction, client) {
-        await interaction.deferReply({ fetchReply: true })
+        await interaction.deferReply()
         const { member, guild } = interaction
         const VoiceChannel = member.voice.channel
 

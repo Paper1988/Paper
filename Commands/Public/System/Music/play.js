@@ -9,8 +9,7 @@ module.exports = {
      */
     async execute(interaction, client) {
         await interaction.reply({
-            content: '<a:discord1792loading:1212016238839070791> | 處理請求中...',
-            fetchReply: true
+            content: '<a:discord1792loading:1212016238839070791> | 處理請求中...'
         })
         const { options, channel, member } = interaction
         const VoiceChannel = member.voice.channel

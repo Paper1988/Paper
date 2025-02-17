@@ -31,7 +31,7 @@ module.exports = {
      */
     async execute(interaction) {
         const search = interaction.options.getString('query')
-        await interaction.deferReply({ fetchReply: true })
+        await interaction.deferReply()
         await mal.getInfoFromName(search).then(async (data) => {
             const embed = new EmbedBuilder()
                 .setAuthor({ name: `動漫搜尋結果: ${search}` })

@@ -1,7 +1,7 @@
 module.exports = {
     id: 'shuffle',
     async execute(interaction, client) {
-        await interaction.deferReply({ fetchReply: TextTrackCueList })
+        await interaction.deferReply()
         const { member } = interaction
         const VoiceChannel = member.voice.channel
 

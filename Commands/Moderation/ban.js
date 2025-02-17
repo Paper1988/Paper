@@ -15,7 +15,6 @@ module.exports = {
         .setDescriptionLocalization('zh-TW', '封鎖一名成員')
         .setDescriptionLocalization('ja', 'メンバーをバンします')
         .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
-        .setDMPermission(false)
         .addUserOption((options) =>
             options
                 .setName('user')
@@ -42,7 +41,7 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
-        await interaction.deferReply({ fetchReply: true })
+        await interaction.deferReply()
         const { options, guild, member } = interaction
 
         const target = options.getMember('user')

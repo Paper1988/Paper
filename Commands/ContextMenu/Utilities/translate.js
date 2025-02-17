@@ -1,4 +1,9 @@
-const { ContextMenuCommandBuilder, ApplicationCommandType, EmbedBuilder } = require('discord.js')
+const {
+    ContextMenuCommandBuilder,
+    ApplicationCommandType,
+    EmbedBuilder,
+    ContextMenuCommandInteraction
+} = require('discord.js')
 const translate = require(`@iamtraction/google-translate`)
 
 module.exports = {
@@ -6,7 +11,12 @@ module.exports = {
         .setName('translate')
         .setNameLocalization('zh-TW', '翻譯')
         .setNameLocalization('ja', '翻訳')
-        .setType(ApplicationCommandType.Message),
+        .setType(ApplicationCommandType.Message)
+        .setContexts(0, 1, 2)
+        .setIntegrationTypes(0, 1),
+    /**
+     * @param {ContextMenuCommandInteraction} interaction
+     */
     async execute(interaction) {
         // 獲取被選取的訊息內容
         const targetMessage = interaction.targetMessage

@@ -30,7 +30,7 @@ module.exports = (client) => {
             const giveaway = await giveawayModel.create(giveawayData)
             this.giveaways.set(messageId, giveaway)
 
-            // 發送開始通知
+            // 建議改為只發送給有開啟通知的用戶
             const guild = await this.client.guilds.fetch(giveawayData.guildId)
             const members = await guild.members.fetch()
             for (const [userId, member] of members) {
@@ -57,15 +57,15 @@ module.exports = (client) => {
             const giveaway = await giveawayModel.findOne({ messageId, ended: false })
             if (!giveaway) return null
 
-            // 選擇得獎者
-            const winners = this.selectWinners(giveaway.participants, giveaway.winnerCount)
-            const winnerMentions = winners.map((id) => `<@${id}>`).join(', ') || '沒有人參加抽獎'
-
             const channel = await this.client.channels.fetch(giveaway.channelId)
             if (!channel) return null
 
             const message = await channel.messages.fetch(giveaway.messageId)
             if (!message) return null
+
+            // 選擇得獎者
+            const winners = this.selectWinners(giveaway.participants, giveaway.winnerCount)
+            const winnerMentions = winners.map((id) => `<@${id}>`).join(', ') || '沒有人參加抽獎'
 
             // 更新嵌入訊息
             const endEmbed = EmbedBuilder.from(message.embeds[0])
@@ -96,6 +96,12 @@ module.exports = (client) => {
                 components: [endButtons]
             })
 
+            // 更新資料庫
+            giveaway.ended = true
+            giveaway.winners = winners
+            await giveaway.save()
+            this.giveaways.set(messageId, giveaway)
+
             // 先發送中獎通知給得獎者
             for (const winnerId of winners) {
                 await sendGiveawayNotification(this.client, 'win', giveaway, winnerId)
@@ -107,12 +113,6 @@ module.exports = (client) => {
                     await sendGiveawayNotification(this.client, 'end', giveaway, userId)
                 }
             }
-
-            // 更新資料庫
-            giveaway.ended = true
-            giveaway.winners = winners
-            await giveaway.save()
-            this.giveaways.set(messageId, giveaway)
 
             // 更新統計
             let stats = await GiveawayStats.findOne({ guildId: giveaway.guildId })
@@ -138,38 +138,24 @@ module.exports = (client) => {
                 })
 
                 // 更新最幸運用戶
-                const winnerStats = await GiveawayHistory.aggregate([
-                    {
-                        $match: {
-                            guildId: giveaway.guildId
-                        }
-                    },
-                    {
-                        $unwind: '$winners'
-                    },
-                    {
-                        $group: {
-                            _id: '$winners',
-                            winCount: { $sum: 1 }
-                        }
-                    },
-                    {
-                        $sort: { winCount: -1 }
-                    },
-                    {
-                        $limit: 1
-                    }
-                ])
+                for (const winnerId of winners) {
+                    const winHistory = await GiveawayHistory.countDocuments({
+                        guildId: giveaway.guildId,
+                        winners: winnerId
+                    })
 
-                if (winnerStats.length > 0) {
-                    stats.mostWonUser = {
-                        userId: winnerStats[0]._id,
-                        count: winnerStats[0].winCount
+                    if (!stats.mostWonUser || winHistory > stats.mostWonUser.count) {
+                        stats.mostWonUser = {
+                            userId: winnerId,
+                            count: winHistory
+                        }
                     }
                 }
 
                 await stats.save()
             }
+
+            return winners
         }
 
         selectWinners(participants, count) {

@@ -50,7 +50,7 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
-        await interaction.deferReply({ fetchReply: true, ephemeral: true })
+        await interaction.deferReply({ ephemeral: true })
         const { options, member } = interaction
 
         const user = options.getMember('user')
