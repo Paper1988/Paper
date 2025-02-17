@@ -54,19 +54,7 @@ module.exports = {
                     if (channel) {
                         const message = await channel.messages.fetch(giveaway.messageId)
                         if (message) {
-                            if (message.embeds.length > 0) {
-                                const endEmbed = EmbedBuilder.from(message.embeds[0])
-                                    .setColor('Green')
-                                    .setDescription(
-                                        message.embeds[0].data.description.split('\n\n')[0] +
-                                            `\n\n<:person:1265561455529562154> | 得獎者：${winnerMentions}`
-                                    )
-                                await endGiveaway(message.id, client)
-                            } else {
-                                console.error('Message does not contain embeds')
-                            }
-                        } else {
-                            console.error('Message not found')
+                            await endGiveaway(message.id, client)
                         }
                     }
                 } catch (error) {
@@ -90,38 +78,42 @@ async function endGiveaway(messageId, client) {
     const winners = selectWinners(giveaway.participants, giveaway.winners)
     const winnerMentions = winners.map((id) => `<@${id}>`).join(', ') || '沒有人參加抽獎'
 
-    const endEmbed = EmbedBuilder.from(message.embeds[0])
-        .setColor('Green')
-        .setDescription(
-            message.embeds[0].data.description.split('\n\n')[0] +
-                `\n\n<:person:1265561455529562154> | 得獎者：${winnerMentions}`
+    if (message.embeds.length > 0) {
+        const endEmbed = EmbedBuilder.from(message.embeds[0])
+            .setColor('Green')
+            .setDescription(
+                message.embeds[0].data.description.split('\n\n')[0] +
+                    `\n\n<:person:1265561455529562154> | 得獎者：${winnerMentions}`
+            )
+
+        const endButtons = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId('giveaway-join')
+                .setLabel('抽獎已結束')
+                .setEmoji('<:wave:1320296301862191104>')
+                .setStyle(ButtonStyle.Secondary)
+                .setDisabled(true),
+            new ButtonBuilder()
+                .setCustomId(`giveaway-reroll/${giveaway.hostedBy}`)
+                .setLabel('重新抽獎')
+                .setEmoji('🎲')
+                .setStyle(ButtonStyle.Primary)
+                .setDisabled(false)
         )
 
-    const endButtons = new ActionRowBuilder().addComponents(
-        new ButtonBuilder()
-            .setCustomId('giveaway-join')
-            .setLabel('抽獎已結束')
-            .setEmoji('<:wave:1320296301862191104>')
-            .setStyle(ButtonStyle.Secondary)
-            .setDisabled(true),
-        new ButtonBuilder()
-            .setCustomId(`giveaway-reroll/${giveaway.hostedBy}`)
-            .setLabel('重新抽獎')
-            .setEmoji('🎲')
-            .setStyle(ButtonStyle.Primary)
-            .setDisabled(false)
-    )
-
-    await message.edit({
-        embeds: [endEmbed],
-        components: [endButtons]
-    })
-
-    if (winners.length > 0) {
-        await channel.send({
-            content: `<:tada:1265562251981750272> 抽獎結束！\n恭喜 ${winnerMentions} 獲得 **${giveaway.prize}**！`,
-            allowedMentions: { users: winners }
+        await message.edit({
+            embeds: [endEmbed],
+            components: [endButtons]
         })
+
+        if (winners.length > 0) {
+            await channel.send({
+                content: `<:tada:1265562251981750272> 抽獎結束！\n恭喜 ${winnerMentions} 獲得 **${giveaway.prize}**！`,
+                allowedMentions: { users: winners }
+            })
+        }
+    } else {
+        console.error('Message does not contain embeds')
     }
 
     giveaway.ended = true
