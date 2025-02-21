@@ -22,8 +22,6 @@ client.contextMenus = new Collection()
 
 require(`./Systems/Giveaway`)(client)
 /**************************************************/
-const ytdlPatch = require('./Functions/ytdl-patch.js')
-ytdlPatch()
 
 const { DisTube } = require('distube')
 const { SpotifyPlugin } = require('@distube/spotify')
