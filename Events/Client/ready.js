@@ -1,5 +1,5 @@
 const { Client, EmbedBuilder } = require('discord.js')
-const { MongoClient, ServerApiVersion } = require('mongodb')
+const mongoose = require('mongoose')
 
 const { loadCommands } = require('../../Structures/Handlers/commandHandler.js')
 const { loadButtons } = require('../../Structures/Handlers/buttonHandler.js')
@@ -11,26 +11,6 @@ const Giveaway = require('../../Structures/Schemas/Giveaway')
 const GiveawayStats = require('../../Structures/Schemas/GiveawayStats')
 const GiveawayHistory = require('../../Structures/Schemas/GiveawayHistory')
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(client.config.Database, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true
-    }
-})
-async function run() {
-    try {
-        // Connect the client to the server	(optional starting in v4.7)
-        await client.connect()
-        // Send a ping to confirm a successful connection
-        await client.db('admin').command({ ping: 1 })
-        console.log('>>> ✅ 成功連結到 MongoDB!')
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close()
-    }
-}
 
 module.exports = {
     name: 'ready',
@@ -44,7 +24,10 @@ module.exports = {
         loadModals(client)
         loadMenus(client)
 
-        run().catch(console.dir)
+        mongoose.set('strictQuery', false)
+        await mongoose
+            .connect(client.config.Database)
+            .then(() => console.log('>>> ✅ 成功連結到 MongoDB!'))
 
         const Embed = new EmbedBuilder()
             .setColor('Green')
