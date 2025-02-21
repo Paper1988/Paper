@@ -137,3 +137,5 @@ node_modules
 replit.nix
 
 /.upm
+
+node_modules
