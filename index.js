@@ -89,12 +89,9 @@ client.distube = new DisTube(client, {
 })
 
 /**************************************************/
-const errorHandling = require('discord.js-anticrash')
-const config = {
-    webhookUrl: client.config.AntiCrashWebhookUrl
-}
+const Anticrash = require('discord.js-anticrash')
 
-errorHandling(client, config)
+Anticrash(client)
 client.setMaxListeners(0)
 
 loadEvents(client)
