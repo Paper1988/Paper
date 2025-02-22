@@ -1,4 +1,10 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js')
+const {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    MessageFlags
+} = require('discord.js')
 const GiveawayStats = require('../../Structures/Schemas/GiveawayStats')
 const GiveawayHistory = require('../../Structures/Schemas/GiveawayHistory')
 
@@ -86,7 +92,7 @@ module.exports = {
         await interaction.update({
             embeds: [statsEmbed],
             components: [row],
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 }

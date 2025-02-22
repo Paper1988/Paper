@@ -1,4 +1,4 @@
-const { EmbedBuilder, ButtonInteraction, Client } = require('discord.js')
+const { EmbedBuilder, ButtonInteraction, Client, MessageFlags } = require('discord.js')
 
 module.exports = {
     id: 'unban:confirm',
@@ -63,7 +63,7 @@ module.exports = {
 
             await interaction.reply({
                 embeds: [errorEmbed],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
     }

@@ -2,7 +2,8 @@ const {
     SlashCommandBuilder,
     PermissionFlagsBits,
     ChatInputCommandInteraction,
-    EmbedBuilder
+    EmbedBuilder,
+    MessageFlags
 } = require('discord.js')
 
 module.exports = {
@@ -66,7 +67,7 @@ module.exports = {
         if (!target)
             return interaction.editReply({
                 embeds: [errorsEmbed.setDescription('所選成員很可能已經離開伺服器了')],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
 
         if (!target.kickable) errorsArray.push('我的權限不夠大!')
@@ -77,7 +78,7 @@ module.exports = {
         if (errorsArray.length)
             return interaction.editReply({
                 embeds: [errorsEmbed.setDescription(errorsArray.join('\n'))],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
 
         try {

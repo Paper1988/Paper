@@ -5,7 +5,8 @@ const {
     ButtonBuilder,
     SlashCommandBuilder,
     ButtonStyle,
-    Client
+    Client,
+    MessageFlags
 } = require('discord.js')
 
 module.exports = {
@@ -152,7 +153,7 @@ module.exports = {
                         content: `預覽:`,
                         embeds: [embed],
                         components: [cancel_button, send_button],
-                        ephemeral: true
+                        flags: MessageFlags.Ephemeral
                     })
                     const clr = message.createMessageComponentCollector()
 
@@ -235,7 +236,7 @@ module.exports = {
                         content: `預覽:`,
                         embeds: [embed],
                         components: [cancel_button, send_button],
-                        ephemeral: true
+                        flags: MessageFlags.Ephemeral
                     })
                     const clr = message.createMessageComponentCollector()
 
@@ -288,7 +289,7 @@ module.exports = {
                         content: `預覽:`,
                         embeds: [embed],
                         components: [cancel_button, send_button],
-                        ephemeral: true
+                        flags: MessageFlags.Ephemeral
                     })
                     const clr = message.createMessageComponentCollector()
 

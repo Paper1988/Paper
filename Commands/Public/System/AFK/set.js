@@ -1,4 +1,4 @@
-const { EmbedBuilder, ChatInputCommandInteraction } = require('discord.js')
+const { EmbedBuilder, ChatInputCommandInteraction, MessageFlags } = require('discord.js')
 const DB = require('../../../../Structures/Schemas/AFKSystem')
 
 module.exports = {
@@ -25,6 +25,6 @@ module.exports = {
         Embed.setColor('Green').setDescription(
             `<:correct:1265560254708711467> | 你的afk狀態已被設置為: \`${afkStatus}\``
         )
-        return interaction.reply({ embeds: [Embed], ephemeral: true })
+        return interaction.reply({ embeds: [Embed], flags: MessageFlags.Ephemeral })
     }
 }

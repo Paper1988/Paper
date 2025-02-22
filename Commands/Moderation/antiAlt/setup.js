@@ -1,4 +1,4 @@
-const { ChatInputCommandInteraction, Client, EmbedBuilder } = require('discord.js')
+const { ChatInputCommandInteraction, Client, EmbedBuilder, MessageFlags } = require('discord.js')
 const DB = require('../../../Structures/Schemas/AntiAlt')
 
 module.exports = {
@@ -32,7 +32,7 @@ module.exports = {
             .then(async (m) => {
                 await interaction.reply({
                     content: '<:correct:1265560254708711467> | 完成!',
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 })
                 setTimeout(() => {
                     m.delete()
@@ -42,7 +42,7 @@ module.exports = {
                 return interaction.reply({
                     content:
                         '<:warning:1265562532857380936> | 無法設定日誌，可能是因為我沒有讀取那個頻道的權限!',
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 })
             })
     }

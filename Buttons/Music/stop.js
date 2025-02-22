@@ -26,8 +26,7 @@ module.exports = {
         if (!queue)
             return await interaction
                 .editReply({
-                    content: '<:outage:1265561329528471613> | 找不到歌曲或該歌曲已經播放完畢!',
-                    ephemeral: true
+                    content: '<:outage:1265561329528471613> | 找不到歌曲或該歌曲已經播放完畢!'
                 })
                 .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
 

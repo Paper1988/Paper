@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require('discord.js')
+const { EmbedBuilder, MessageFlags } = require('discord.js')
 const Giveaway = require('../../Structures/Schemas/Giveaway')
 const { sendGiveawayNotification } = require('../../Functions/sendGiveawayNotification')
 
@@ -58,12 +58,7 @@ module.exports = {
 
         return interaction.reply({
             content: '<:correct:1265560254708711467> | 重新抽獎完成！',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
-}
-
-function selectWinners(participants, count) {
-    const shuffled = [...participants].sort(() => Math.random() - 0.5)
-    return shuffled.slice(0, Math.min(count, participants.length))
 }

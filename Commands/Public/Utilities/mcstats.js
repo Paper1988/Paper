@@ -4,7 +4,8 @@ const {
     EmbedBuilder,
     ButtonBuilder,
     ButtonStyle,
-    ActionRowBuilder
+    ActionRowBuilder,
+    MessageFlags
 } = require('discord.js')
 
 module.exports = {
@@ -40,17 +41,17 @@ module.exports = {
                     })
                     await updated.followUp({
                         content: '<:correct:1265560254708711467> | 已刷新數據!',
-                        ephemeral: true
+                        flags: MessageFlags.Ephemeral
                     })
                 } else {
                     msg = await interaction.reply({
                         embeds: [embed],
                         components: [button],
-                        ephemeral: true
+                        flags: MessageFlags.Ephemeral
                     })
                 }
             } else {
-                await interaction.reply({ embeds: [embed], ephemeral: true })
+                await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral })
             }
         }
 

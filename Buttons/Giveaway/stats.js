@@ -97,8 +97,7 @@ module.exports = {
 
         await interaction.reply({
             embeds: [statsEmbed],
-            components: [row],
-            ephemeral: true
+            components: [row]
         })
     }
 }

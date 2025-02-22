@@ -11,7 +11,8 @@ const {
     ChannelSelectMenuInteraction,
     MentionableSelectMenuInteraction,
     ContextMenuInteraction,
-    AutocompleteInteraction
+    AutocompleteInteraction,
+    MessageFlags
 } = require('discord.js')
 
 const BlackListGuild = require('../../Structures/Schemas/BlacklistGuild')
@@ -94,7 +95,7 @@ module.exports = {
                                 '<:outage:1265561329528471613> | 發生未知錯誤，請協助回報!'
                             )
                     ],
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 })
             } catch {}
         }
@@ -112,14 +113,14 @@ async function handleSlashCommand(interaction, client) {
     if (!command) {
         return await interaction.reply({
             content: `<:warning:1265562532857380936> | 這項指令過期或不存在了!`,
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 
     if (command.developer && interaction.user.id !== '538639229220028416') {
         return await interaction.reply({
             content: `<:warning:1265562532857380936> | 這項指令僅限於開發人員使用!`,
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 
@@ -131,7 +132,7 @@ async function handleSlashCommand(interaction, client) {
         if (!subCommandFile) {
             return await interaction.reply({
                 content: '<:warning:1265562532857380936> | 這項指令過期或不存在了!',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
         await subCommandFile.execute(interaction, client)
@@ -160,7 +161,7 @@ async function handleButton(interaction, client) {
     if (!Button) {
         return await interaction.reply({
             content: '<:warning:1265562532857380936> | 這個按鈕不存在或過期了!',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 
@@ -171,7 +172,7 @@ async function handleButton(interaction, client) {
                     .setColor('Red')
                     .setDescription('<:warning:1265562532857380936> | 你沒有權限使用!')
             ],
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 
@@ -194,7 +195,7 @@ async function handleModal(interaction, client) {
                     .setColor('Red')
                     .setDescription('<:outage:1265561329528471613> | 找不到該Modal')
             ],
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 
@@ -205,7 +206,7 @@ async function handleModal(interaction, client) {
                     .setColor('Red')
                     .setDescription('<:warning:1265562532857380936> | 你沒有權限使用!')
             ],
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 
@@ -218,7 +219,7 @@ async function handleModal(interaction, client) {
                     .setColor('Blue')
                     .setDescription('<:warning:1265562532857380936> | 這項Modal僅限於開發人員使用!')
             ],
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 
@@ -241,7 +242,7 @@ async function handleSelectMenu(interaction, client) {
                     .setColor('Red')
                     .setDescription('<:outage:1265561329528471613> | 找不到該下拉選單')
             ],
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 
@@ -263,7 +264,7 @@ async function handleContextMenu(interaction, client) {
                     .setColor('Red')
                     .setDescription('<:outage:1265561329528471613> | 找不到該右鍵選單')
             ],
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 
@@ -274,7 +275,7 @@ async function handleContextMenu(interaction, client) {
                     .setColor('Red')
                     .setDescription('<:warning:1265562532857380936> | 你沒有權限使用!')
             ],
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 

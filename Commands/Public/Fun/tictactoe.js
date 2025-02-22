@@ -1,5 +1,5 @@
 const { TicTacToe } = require('discord-gamecord')
-const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js')
+const { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } = require('discord.js')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -28,7 +28,7 @@ module.exports = {
         if (interaction.user.id === interaction.options.getUser('user').id)
             return await interaction.reply({
                 content: '<:warning:1265562532857380936> | 你不能跟自己玩圈圈叉叉!',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
 
         const Game = new TicTacToe({

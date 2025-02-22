@@ -5,7 +5,8 @@ const {
     ActionRowBuilder,
     StringSelectMenuBuilder,
     ChatInputCommandInteraction,
-    Client
+    Client,
+    MessageFlags
 } = require('discord.js')
 
 module.exports = {
@@ -39,7 +40,7 @@ module.exports = {
         if (fetchBan.size === 0)
             return await interaction.reply({
                 embeds: [noBanEmbed],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
 
         const memberList = []
@@ -67,7 +68,7 @@ module.exports = {
         await interaction.reply({
             embeds: [choicesEmbed],
             components: [selectMenu],
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 }

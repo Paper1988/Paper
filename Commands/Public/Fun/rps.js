@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js')
+const { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } = require('discord.js')
 const { RockPaperScissors } = require('discord-gamecord')
 
 module.exports = {
@@ -29,7 +29,7 @@ module.exports = {
         if (interaction.user.id === opponent.id)
             return await interaction.reply({
                 content: '<:warning:1265562532857380936> | 你不能跟自己玩剪刀石頭布!',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
 
         const Game = new RockPaperScissors({

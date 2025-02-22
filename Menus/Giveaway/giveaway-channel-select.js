@@ -1,4 +1,10 @@
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js')
+const {
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle,
+    ActionRowBuilder,
+    MessageFlags
+} = require('discord.js')
 
 module.exports = {
     id: 'giveaway-channel-select',
@@ -9,14 +15,14 @@ module.exports = {
         if (!channel) {
             return interaction.reply({
                 content: '<:warning:1265562532857380936> | 找不到指定的頻道！',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
 
         if (!channel.permissionsFor(interaction.member).has('SendMessages')) {
             return interaction.reply({
                 content: '<:warning:1265562532857380936> | 你沒有權限在該頻道發送訊息！',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
 

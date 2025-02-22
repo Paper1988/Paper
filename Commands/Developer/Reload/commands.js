@@ -1,4 +1,4 @@
-const { ChatInputCommandInteraction, Client } = require('discord.js')
+const { ChatInputCommandInteraction, Client, MessageFlags } = require('discord.js')
 const { loadCommands } = require('../../../Structures/Handlers/commandHandler.js')
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
         loadCommands(client)
         await interaction.reply({
             content: '<:correct:1265560254708711467> | 成功載入Commands!',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 }

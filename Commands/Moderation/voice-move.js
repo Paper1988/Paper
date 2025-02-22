@@ -2,7 +2,8 @@ const {
     ChatInputCommandInteraction,
     SlashCommandBuilder,
     PermissionFlagsBits,
-    ChannelType
+    ChannelType,
+    MessageFlags
 } = require('discord.js')
 
 module.exports = {
@@ -50,12 +51,12 @@ module.exports = {
         if (!voiceChannel)
             return await interaction.reply({
                 content: '<:warning:1265562532857380936> | 您需要在語音頻道中才能移動成員!',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         if (newChannel === voiceChannel)
             return await interaction.reply({
                 content: '<:warning:1265562532857380936> | 您不能將成員移動到同一個頻道!',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
 
         if (!target) {
@@ -64,7 +65,7 @@ module.exports = {
             })
             return await interaction.reply({
                 content: `<:moveaudience:1265561080386555978> | 成功將所有成員移動到 ${newChannel}`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         } else {
             const members = voiceChannel.members.map((m) => m.id)
@@ -72,12 +73,12 @@ module.exports = {
                 await target.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`)
                 return await interaction.reply({
                     content: `<:moveaudience:1265561080386555978> | 成功將成員 ${target} 移動到 ${newChannel}`,
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 })
             } else {
                 return await interaction.reply({
                     content: '<:warning:1265562532857380936> | 該成員不在語音頻道中!',
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 })
             }
         }

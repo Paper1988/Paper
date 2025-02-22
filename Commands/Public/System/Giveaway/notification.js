@@ -3,7 +3,8 @@ const {
     ButtonBuilder,
     ButtonStyle,
     ActionRowBuilder,
-    ChatInputCommandInteraction
+    ChatInputCommandInteraction,
+    MessageFlags
 } = require('discord.js')
 const GiveawayNotification = require('../../../../Structures/Schemas/GiveawayNotification')
 
@@ -64,7 +65,7 @@ module.exports = {
         await interaction.reply({
             embeds: [settingsEmbed],
             components: [buttons],
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 }
