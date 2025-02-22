@@ -1,4 +1,4 @@
-const { EmbedBuilder, ChatInputCommandInteraction, Client } = require('discord.js')
+const { EmbedBuilder, ChatInputCommandInteraction, Client, MessageFlags } = require('discord.js')
 const MusicDB = require('../../../../Structures/Schemas/MusicDB')
 const { updateMusicPlayerStatus, clearPlayer } = require('../../../../Systems/Music')
 const { Events } = require('distube')
@@ -16,12 +16,12 @@ module.exports = {
         if (!VoiceChannel)
             return interaction.reply({
                 content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂指令!',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
             return interaction.reply({
                 content: `<:warning:1265562532857380936> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
 
         const queue = await client.distube.getQueue(VoiceChannel)

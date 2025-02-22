@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require('discord.js')
+const { EmbedBuilder, MessageFlags } = require('discord.js')
 const Giveaway = require('../../Structures/Schemas/Giveaway')
 const GiveawayStats = require('../../Structures/Schemas/GiveawayStats')
 
@@ -120,7 +120,7 @@ module.exports = {
             await interaction.message.edit({ embeds: [embed] })
             return interaction.reply({
                 content: '<:join:1265560607797678132> | 你已成功參加抽獎！',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
     }

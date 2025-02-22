@@ -1,5 +1,5 @@
 const { YouTubePlugin } = require('@distube/youtube')
-const { ChatInputCommandInteraction, Client, EmbedBuilder } = require('discord.js')
+const { ChatInputCommandInteraction, Client, EmbedBuilder, MessageFlags } = require('discord.js')
 
 module.exports = {
     subCommand: 'music.play',
@@ -24,13 +24,13 @@ module.exports = {
         if (!VoiceChannel)
             return await interaction.editReply({
                 content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂指令!',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
 
         if (client.voice.channelId && VoiceChannel.id !== client.voice.channelId)
             return await interaction.editReply({
                 content: `<:warning:1265562532857380936> | 我已經在語音頻道 - <#${client.voice.channelId}> 裡播放音樂了`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
 
         if (!VoiceChannel.joinable) {
@@ -44,7 +44,7 @@ module.exports = {
                         )
                         .setColor('Red')
                 ],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
 

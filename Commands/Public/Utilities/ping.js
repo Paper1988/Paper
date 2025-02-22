@@ -1,4 +1,9 @@
-const { ChatInputCommandInteraction, SlashCommandBuilder, Client } = require('discord.js')
+const {
+    ChatInputCommandInteraction,
+    SlashCommandBuilder,
+    Client,
+    MessageFlags
+} = require('discord.js')
 
 module.exports = {
     data: new SlashCommandBuilder().setName('ping').setDescription('Pong!'),
@@ -10,12 +15,12 @@ module.exports = {
     async execute(interaction, client) {
         const msg = await interaction.reply({
             content: '正在計算延遲....', //設定訊息的內容
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
         const ping = msg.createdTimestamp - interaction.createdTimestamp
         await interaction.editReply({
             content: `🏓Pong!\nAPI延遲: \`${client.ws.ping}ms\`\n機器人延遲: \`${ping}ms\``,
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 }

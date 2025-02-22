@@ -1,5 +1,10 @@
 const translate = require(`@iamtraction/google-translate`)
-const { EmbedBuilder, ChatInputCommandInteraction, SlashCommandBuilder } = require('discord.js')
+const {
+    EmbedBuilder,
+    ChatInputCommandInteraction,
+    SlashCommandBuilder,
+    MessageFlags
+} = require('discord.js')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -43,7 +48,7 @@ module.exports = {
 
         await interaction.reply({
             content: '<a:discord1792loading:1212016238839070791> | 正在翻譯你的訊息...',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
 
         await translate(text, { to: `${langName}` })
@@ -74,7 +79,7 @@ module.exports = {
             .catch((err) => {
                 interaction.editReply({
                     content: `<:warning:1265562532857380936> | 發生錯誤: \`${err.message}\`\n請協助回報!`,
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 })
             })
     }

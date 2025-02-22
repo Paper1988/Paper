@@ -1,4 +1,4 @@
-const { AttachmentBuilder } = require('discord.js')
+const { AttachmentBuilder, MessageFlags } = require('discord.js')
 
 module.exports = {
     id: 'guildlist',
@@ -15,6 +15,6 @@ module.exports = {
             name: 'servers.txt'
         })
 
-        await interaction.reply({ files: [output], ephemeral: true })
+        await interaction.reply({ files: [output], flags: MessageFlags.Ephemeral })
     }
 }

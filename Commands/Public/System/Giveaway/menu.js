@@ -5,6 +5,7 @@ const {
     ButtonStyle,
     PermissionsBitField,
     ChatInputCommandInteraction,
+    MessageFlags
 } = require('discord.js')
 
 module.exports = {
@@ -17,7 +18,7 @@ module.exports = {
             return interaction.reply({
                 content:
                     '<:warning:1265562532857380936> | 你需要管理伺服器的權限才能使用抽獎系統！',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
 

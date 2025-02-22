@@ -2,7 +2,8 @@ const {
     ChatInputCommandInteraction,
     EmbedBuilder,
     SlashCommandBuilder,
-    PermissionFlagsBits
+    PermissionFlagsBits,
+    MessageFlags
 } = require('discord.js')
 
 module.exports = {
@@ -37,7 +38,7 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
-        await interaction.deferReply({ ephemeral: true })
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral })
         const { options } = interaction
         const role = options.getRole('role')
         const target = options.getMember('target') || interaction.member
@@ -48,7 +49,7 @@ module.exports = {
 
         if (!role.editable || role.position === 0) {
             embed.setDescription(`<:warning:1265562532857380936> | 我無法編輯身分組: **${role}** !`)
-            return await interaction.editReply({ embeds: [embed], ephemeral: true })
+            return await interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral })
         }
 
         embed.setDescription(

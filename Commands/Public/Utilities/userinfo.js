@@ -2,7 +2,8 @@ const {
     ChatInputCommandInteraction,
     EmbedBuilder,
     SlashCommandBuilder,
-    AttachmentBuilder
+    AttachmentBuilder,
+    MessageFlags
 } = require('discord.js')
 
 const { profileImage } = require('discord-arts')
@@ -58,7 +59,7 @@ module.exports = {
     async execute(interaction) {
         await interaction.reply({
             content: '<a:discord1792loading:1212016238839070791> | 載入中......',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
 
         const member = interaction.options.getMember('member') || interaction.member
@@ -71,7 +72,7 @@ module.exports = {
                         .setColor('Red')
                         .setDescription('<:warning:1265562532857380936> | 機器人無法使用此功能!')
                 ],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
 
         try {
@@ -156,7 +157,7 @@ module.exports = {
             return await interaction.editReply({
                 content: '',
                 embeds: [Embed],
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
                 files: [imageAttachment]
             })
         } catch (err) {

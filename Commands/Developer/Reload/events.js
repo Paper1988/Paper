@@ -1,4 +1,4 @@
-const { ChatInputCommandInteraction, Client } = require('discord.js')
+const { ChatInputCommandInteraction, Client, MessageFlags } = require('discord.js')
 const { loadEvents } = require('../../../Structures/Handlers/eventHandler')
 
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
         loadEvents(client)
         await interaction.reply({
             content: '<:correct:1265560254708711467> | 成功載入Events!',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 }

@@ -1,10 +1,10 @@
-const { EmbedBuilder } = require('discord.js')
+const { EmbedBuilder, MessageFlags } = require('discord.js')
 const { ApexChat } = require('apexify.js')
 
 module.exports = {
     subCommand: 'ai-service.chat-gpt',
     async execute(interaction) {
-        await interaction.deferReply({ ephemeral: true })
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 
         const prompt = interaction.options.getString('prompt')
 

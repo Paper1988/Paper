@@ -1,7 +1,7 @@
 const {
     SlashCommandBuilder,
     EmbedBuilder,
-    AttachmentBuilder,
+    MessageFlags,
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
@@ -54,7 +54,7 @@ module.exports = {
         await interaction.reply({
             embeds: [embed],
             components: [button],
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
     }
 }

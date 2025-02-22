@@ -2,7 +2,8 @@ const {
     ContextMenuCommandBuilder,
     ApplicationCommandType,
     EmbedBuilder,
-    ContextMenuCommandInteraction
+    ContextMenuCommandInteraction,
+    MessageFlags
 } = require('discord.js')
 const translate = require(`@iamtraction/google-translate`)
 
@@ -26,14 +27,14 @@ module.exports = {
         if (!text) {
             return interaction.reply({
                 content: '<:warning:1265562532857380936> | 無法翻譯空白訊息!',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
 
         await interaction.reply({
             content:
                 '<a:discord1792loading:1212016238839070791> | 正在翻譯你的訊息至**繁體中文**...',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
 
         await translate(text, { to: `zh-tw` })
@@ -67,7 +68,7 @@ module.exports = {
             .catch(async (err) => {
                 await interaction.editReply({
                     content: `<:warning:1265562532857380936> | 發生錯誤: \`${err.message}\`\n-# 請協助回報!`,
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 })
             })
     }

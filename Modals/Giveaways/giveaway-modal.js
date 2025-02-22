@@ -4,7 +4,8 @@ const {
     ButtonBuilder,
     ButtonStyle,
     Client,
-    ModalSubmitInteraction
+    ModalSubmitInteraction,
+    MessageFlags
 } = require('discord.js')
 const GiveawayStats = require('../../Structures/Schemas/GiveawayStats')
 
@@ -23,7 +24,7 @@ module.exports = {
         if (!channel) {
             return interaction.editReply({
                 content: '<:warning:1265562532857380936> | 找不到指定的頻道！',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
 
@@ -60,14 +61,14 @@ module.exports = {
         if (isNaN(duration) || duration < 1) {
             return interaction.editReply({
                 content: '<:warning:1265562532857380936> | 持續時間必須是有效的數字且大於0！',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
 
         if (isNaN(winners) || winners < 1) {
             return interaction.editReply({
                 content: '<:warning:1265562532857380936> | 得獎人數必須是有效的數字且大於0！',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
 
@@ -188,13 +189,13 @@ module.exports = {
 
             await interaction.editReply({
                 content: `<:correct:1265560254708711467> | 抽獎活動已在 ${channel} 創建成功！`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         } catch (error) {
             console.error('創建抽獎時發生錯誤:', error)
             await interaction.editReply({
                 content: '<:warning:1265562532857380936> | 創建抽獎時發生錯誤！',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
     }

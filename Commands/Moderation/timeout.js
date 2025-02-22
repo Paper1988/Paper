@@ -2,7 +2,8 @@ const {
     SlashCommandBuilder,
     PermissionFlagsBits,
     ChatInputCommandInteraction,
-    EmbedBuilder
+    EmbedBuilder,
+    MessageFlags
 } = require('discord.js')
 const ms = require('ms')
 
@@ -50,7 +51,7 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
-        await interaction.deferReply({ ephemeral: true })
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral })
         const { options, member } = interaction
 
         const user = options.getMember('user')
@@ -66,7 +67,7 @@ module.exports = {
         if (!user)
             return await interaction.reply({
                 embeds: [errorsEmbed.setDescription('該名成員很可能已經離開伺服器了')],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
 
         if (!ms(duration) || ms(duration) > ms('28d'))
@@ -81,13 +82,13 @@ module.exports = {
         if (errorsArray.length)
             return interaction.reply({
                 embeds: [errorsEmbed.setDescription(errorsArray.join('\n'))],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
 
         await user.timeout(ms(duration), reason).catch(async () => {
             return await interaction.reply({
                 embeds: [errorsEmbed.setDescription('一個不常見的錯誤： `時間不能小於0`!')],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         })
 

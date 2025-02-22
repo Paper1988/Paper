@@ -1,5 +1,5 @@
 const BlackListUser = require('../../../Structures/Schemas/BlacklistUser')
-const { CommandInteraction, Client } = require('discord.js')
+const { CommandInteraction, Client, MessageFlags } = require('discord.js')
 
 module.exports = {
     subCommand: 'blacklist.user',
@@ -9,7 +9,7 @@ module.exports = {
      * @param {Client} client
      */
     async execute(interaction, client) {
-        await interaction.deferReply({ ephemeral: true })
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral })
         const { options } = interaction
         const ID = options.getString('user-id')
         const reason = options.getString('reason') || '無提供'
