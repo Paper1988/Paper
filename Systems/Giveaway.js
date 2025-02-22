@@ -1,6 +1,6 @@
-const giveawayModel = require('../Structures/Schemas/Giveaway')
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js')
 const { sendGiveawayNotification } = require('../Functions/sendGiveawayNotification')
+const giveawayModel = require('../Structures/Schemas/Giveaway')
 const GiveawayStats = require('../Structures/Schemas/GiveawayStats')
 const GiveawayHistory = require('../Structures/Schemas/GiveawayHistory')
 
