@@ -28,7 +28,9 @@ module.exports = {
             .connect(client.config.Database, {
                 dbName: 'Js'
             })
-            .then(() => console.log('>>> ✅ 成功連結到 MongoDB!'))
+            .then(() =>
+                console.log(`>>> ✅ 成功連結到 MongoDB ${mongoose.connection.db.databaseName}!`)
+            )
 
         const Embed = new EmbedBuilder()
             .setColor('Green')
