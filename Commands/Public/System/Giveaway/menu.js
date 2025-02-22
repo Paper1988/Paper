@@ -5,7 +5,6 @@ const {
     ButtonStyle,
     PermissionsBitField,
     ChatInputCommandInteraction,
-    ChannelType
 } = require('discord.js')
 
 module.exports = {
