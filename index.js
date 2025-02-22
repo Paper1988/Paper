@@ -1,5 +1,4 @@
 const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js')
-import config from './../../next-dashboard-client/tailwind.config'
 const { Guilds, GuildMembers, GuildMessages, GuildMessageReactions, GuildVoiceStates } =
     GatewayIntentBits
 const { User, Message, GuildMember, ThreadMember } = Partials
