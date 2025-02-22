@@ -11,7 +11,6 @@ const Giveaway = require('../../Structures/Schemas/Giveaway')
 const GiveawayStats = require('../../Structures/Schemas/GiveawayStats')
 const GiveawayHistory = require('../../Structures/Schemas/GiveawayHistory')
 
-
 module.exports = {
     name: 'ready',
     once: true,
@@ -26,7 +25,9 @@ module.exports = {
 
         mongoose.set('strictQuery', false)
         await mongoose
-            .connect(client.config.Database)
+            .connect(client.config.Database, {
+                dbName: 'Js'
+            })
             .then(() => console.log('>>> ✅ 成功連結到 MongoDB!'))
 
         const Embed = new EmbedBuilder()
