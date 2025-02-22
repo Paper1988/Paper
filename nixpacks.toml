@@ -4,6 +4,3 @@
 [variables]
     NIXPACKS_NODE_VERSION = "22"
     NIXPACKS_PYTHON_VERSION = "3.13"
-
-[phases.build]
-cmds = ["npm config set python /usr/bin/python3"]
