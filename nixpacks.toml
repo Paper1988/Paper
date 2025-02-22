@@ -4,3 +4,4 @@
 [variables]
     NIXPACKS_NODE_VERSION = "22"
     NIXPACKS_PYTHON_VERSION = "3.13"
+    PYTHON = "./Python313/python.exe"
