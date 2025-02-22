@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require('discord.js')
 const Giveaway = require('../../Structures/Schemas/Giveaway')
-const { sendGiveawayNotification } = require('../../Systems/sendGiveawayNotification')
+const { sendGiveawayNotification } = require('../../Functions/sendGiveawayNotification')
 
 module.exports = {
     id: 'giveaway-reroll',
