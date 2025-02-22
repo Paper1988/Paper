@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } = require('discord.js')
+const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder, MessageFlags } = require('discord.js')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -23,6 +23,6 @@ module.exports = {
                 value: 'https://genius.com'
             }
         )
-        await interaction.reply({ embeds: [embed], ephemeral: true })
+        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral })
     }
 }

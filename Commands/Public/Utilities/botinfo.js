@@ -5,11 +5,13 @@ const {
     ChannelType,
     UserFlags,
     version,
-    SlashCommandBuilder
+    SlashCommandBuilder,
+    MessageFlags
 } = require('discord.js')
 
 const { connection } = require('mongoose')
 const os = require('os')
+
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -24,7 +26,7 @@ module.exports = {
      * @param {Client} client
      */
     async execute(interaction, client) {
-        await interaction.deferReply({ ephemeral: true })
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral })
         const formatter = new Intl.ListFormat('en-GB', {
             style: 'long',
             type: 'conjunction'
@@ -117,6 +119,6 @@ module.exports = {
                     inline: true
                 }
             )
-        await interaction.editReply({ embeds: [embed], ephemeral: true })
+        await interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral  })
     }
 }
