@@ -1,14 +1,9 @@
 [phases.setup]
     nixPkgs = ["...", "ffmpeg", "python3"]
 
-[providers]
-    ffmpeg = "nixpkgs.ffmpeg"
-    python = "nixpkgs.python"
-
 [variables]
     NIXPACKS_NODE_VERSION = "22"
     NIXPACKS_PYTHON_VERSION = "3.13"
-    PYTHON = "/Python313/python3"
 
 [phases.build]
-cmds = ["npm config set python /Python313/python3"]
+cmds = ["npm config set python /usr/bin/python3"]
