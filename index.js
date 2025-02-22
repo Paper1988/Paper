@@ -1,4 +1,5 @@
 const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js')
+import config from './../../next-dashboard-client/tailwind.config'
 const { Guilds, GuildMembers, GuildMessages, GuildMessageReactions, GuildVoiceStates } =
     GatewayIntentBits
 const { User, Message, GuildMember, ThreadMember } = Partials
@@ -22,7 +23,6 @@ client.contextMenus = new Collection()
 
 require(`./Systems/Giveaway`)(client)
 /**************************************************/
-
 const { DisTube } = require('distube')
 const { SpotifyPlugin } = require('@distube/spotify')
 const { SoundCloudPlugin } = require('@distube/soundcloud')
@@ -31,7 +31,6 @@ const { YouTubePlugin } = require('@distube/youtube')
 const { DeezerPlugin } = require('@distube/deezer')
 const { AppleMusicPlugin } = require('distube-apple-music')
 const { TidalPlugin } = require('distube-tidal')
-
 const cookieManager = require('./Structures/youtubeCookies.js')
 
 // 初始化時檢查 cookies
@@ -90,8 +89,12 @@ client.distube = new DisTube(client, {
 
 /**************************************************/
 const Anticrash = require('discord.js-anticrash')
+const config = {
+    webhookUrl:
+        'https://discord.com/api/webhooks/967768559688249344/dp6yrq5Jw4boYyZiS6NBhS3hGKIP_lTL7uP6DDYNr-XrJL6T5Gy0_smg5lcoZsvAu5EB'
+}
 
-Anticrash(client)
+Anticrash(client, config)
 client.setMaxListeners(0)
 
 loadEvents(client)
