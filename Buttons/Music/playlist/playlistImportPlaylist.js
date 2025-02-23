@@ -11,35 +11,43 @@ module.exports = {
 
             // 如果是取消操作
             if (action === 'cancel') {
-                return await interaction.update({
-                    content: `${emojis.correct} | 已取消匯入播放清單`,
-                    components: []
-                })
+                return await interaction
+                    .update({
+                        content: `${emojis.correct} | 已取消匯入播放清單`,
+                        components: []
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
             // 獲取原始播放清單
             const sourcePlaylist = await Playlist.findById(playlistId)
             if (!sourcePlaylist) {
-                return await interaction.reply({
-                    content: `${emojis.warning} | 找不到指定的播放清單`,
-                    flags: MessageFlags.Ephemeral
-                })
+                return await interaction
+                    .reply({
+                        content: `${emojis.warning} | 找不到指定的播放清單`,
+                        flags: MessageFlags.Ephemeral
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
             // 檢查是否為播放清單主人
             if (sourcePlaylist.userId === interaction.user.id) {
-                return await interaction.reply({
-                    content: `${emojis.warning} | 這是你自己的播放清單`,
-                    flags: MessageFlags.Ephemeral
-                })
+                return await interaction
+                    .reply({
+                        content: `${emojis.warning} | 這是你自己的播放清單`,
+                        flags: MessageFlags.Ephemeral
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
             // 檢查是否為私人播放清單
             if (sourcePlaylist.isPrivate && sourcePlaylist.userId !== interaction.user.id) {
-                return await interaction.reply({
-                    content: `${emojis.warning} | 這是私人播放清單`,
-                    flags: MessageFlags.Ephemeral
-                })
+                return await interaction
+                    .reply({
+                        content: `${emojis.warning} | 這是私人播放清單`,
+                        flags: MessageFlags.Ephemeral
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
             // 檢查用戶是否已有相同名稱的播放清單
@@ -97,10 +105,12 @@ module.exports = {
             })
         } catch (error) {
             console.error('匯入播放清單時發生錯誤:', error)
-            await interaction.reply({
-                content: `${emojis.outage} | 匯入播放清單時發生錯誤`,
-                flags: MessageFlags.Ephemeral
-            })
+            await interaction
+                .reply({
+                    content: `${emojis.outage} | 匯入播放清單時發生錯誤`,
+                    flags: MessageFlags.Ephemeral
+                })
+                .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
         }
     }
 }

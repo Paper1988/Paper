@@ -15,10 +15,12 @@ module.exports = {
 
             // 檢查用戶是否在語音頻道
             if (!interaction.member.voice.channel) {
-                return await interaction.reply({
-                    content: `${emojis.warning} | 請先加入語音頻道`,
-                    flags: MessageFlags.Ephemeral
-                })
+                return await interaction
+                    .reply({
+                        content: `${emojis.warning} | 請先加入語音頻道`,
+                        flags: MessageFlags.Ephemeral
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
             // 檢查機器人權限
@@ -26,10 +28,12 @@ module.exports = {
                 interaction.client.user
             )
             if (!permissions.has('Connect') || !permissions.has('Speak')) {
-                return await interaction.reply({
-                    content: `${emojis.warning} | 我沒有權限加入或在該語音頻道中說話`,
-                    flags: MessageFlags.Ephemeral
-                })
+                return await interaction
+                    .reply({
+                        content: `${emojis.warning} | 我沒有權限加入或在該語音頻道中說話`,
+                        flags: MessageFlags.Ephemeral
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
             // 獲取播放清單
@@ -39,10 +43,12 @@ module.exports = {
             })
 
             if (!playlist) {
-                return await interaction.reply({
-                    content: `${emojis.warning} | 找不到指定的播放清單`,
-                    flags: MessageFlags.Ephemeral
-                })
+                return await interaction
+                    .reply({
+                        content: `${emojis.warning} | 找不到指定的播放清單`,
+                        flags: MessageFlags.Ephemeral
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
             // 檢查是否為私人播放清單
@@ -55,10 +61,12 @@ module.exports = {
 
             // 檢查播放清單是否為空
             if (playlist.songs.length === 0) {
-                return await interaction.reply({
-                    content: `${emojis.warning} | 播放清單是空的`,
-                    flags: MessageFlags.Ephemeral
-                })
+                return await interaction
+                    .reply({
+                        content: `${emojis.warning} | 播放清單是空的`,
+                        flags: MessageFlags.Ephemeral
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
             // 播放清單中的所有歌曲
@@ -71,23 +79,7 @@ module.exports = {
             // 如果已有播放佇列，則添加到佇列中
             if (queue) {
                 // 將播放清單歌曲轉換為 DisTube 可接受的格式
-                const songs = playlist.songs.map((song) => ({
-                    name: song.title,
-                    url: song.url,
-                    duration: song.duration,
-                    thumbnail: song.thumbnail,
-                    source: 'youtube', // 或根據 URL 判斷來源
-                    formats: [],
-                    views: 0,
-                    likes: 0,
-                    dislikes: 0,
-                    uploader: {
-                        name: song.uploader ? song.uploader.name : 'Unknown',
-                        url: song.uploader ? song.uploader.url : null
-                    },
-                    age_restricted: false,
-                    member: interaction.member
-                }))
+                const songs = playlist.songs
 
                 await interaction.client.distube.play(songs)
             } else {
@@ -105,23 +97,7 @@ module.exports = {
                 // 添加剩餘的歌曲
                 if (playlist.songs.length > 1) {
                     const queue = interaction.client.distube.getQueue(interaction.guildId)
-                    const remainingSongs = playlist.songs.slice(1).map((song) => ({
-                        name: song.title,
-                        url: song.url,
-                        duration: song.duration,
-                        thumbnail: song.thumbnail,
-                        source: 'youtube',
-                        formats: [],
-                        views: 0,
-                        likes: 0,
-                        dislikes: 0,
-                        uploader: {
-                            name: 'Unknown',
-                            url: null
-                        },
-                        age_restricted: false,
-                        member: interaction.member
-                    }))
+                    const remainingSongs = playlist.songs.slice(1)
                     await interaction.client.distube.play(remainingSongs)
                 }
             }
@@ -137,16 +113,20 @@ module.exports = {
             console.error('播放播放清單時發生錯誤:', error)
             // 如果是播放源錯誤，給出更具體的提示
             if (error.message?.includes('playFromSource')) {
-                return await interaction.editReply({
-                    content: `${emojis.outage} | 無法播放歌曲，可能是播放清單中的歌曲連結已失效`,
-                    flags: MessageFlags.Ephemeral
-                })
+                return await interaction
+                    .editReply({
+                        content: `${emojis.outage} | 無法播放歌曲，可能是播放清單中的歌曲連結已失效`,
+                        flags: MessageFlags.Ephemeral
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
-            await interaction.editReply({
-                content: `${emojis.outage} | 播放播放清單時發生錯誤`,
-                flags: MessageFlags.Ephemeral
-            })
+            await interaction
+                .editReply({
+                    content: `${emojis.outage} | 播放播放清單時發生錯誤`,
+                    flags: MessageFlags.Ephemeral
+                })
+                .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
         }
     }
 }

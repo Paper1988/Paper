@@ -22,17 +22,21 @@ module.exports = {
             })
 
             if (!playlist) {
-                return await interaction.reply({
-                    content: `${emojis.warning} | 找不到指定的播放清單`,
-                    flags: MessageFlags.Ephemeral
-                })
+                return await interaction
+                    .reply({
+                        content: `${emojis.warning} | 找不到指定的播放清單`,
+                        flags: MessageFlags.Ephemeral
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
             if (playlist.isPrivate && playlist.userId !== interaction.user.id) {
-                return await interaction.reply({
-                    content: `${emojis.warning} | 這是私人播放清單`,
-                    flags: MessageFlags.Ephemeral
-                })
+                return await interaction
+                    .reply({
+                        content: `${emojis.warning} | 這是私人播放清單`,
+                        flags: MessageFlags.Ephemeral
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
             const totalPages = Math.ceil(playlist.songs.length / songsPerPage)
@@ -89,10 +93,12 @@ module.exports = {
             })
         } catch (error) {
             console.error('處理播放清單分頁時發生錯誤:', error)
-            await interaction.reply({
-                content: `${emojis.outage} | 處理分頁時發生錯誤`,
-                flags: MessageFlags.Ephemeral
-            })
+            await interaction
+                .reply({
+                    content: `${emojis.outage} | 處理分頁時發生錯誤`,
+                    flags: MessageFlags.Ephemeral
+                })
+                .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
         }
     }
 }
