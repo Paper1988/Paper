@@ -325,7 +325,7 @@ const generateMusicPlayerStatus = (queue, song, completed = false) => {
                     text: `在 ${queue.voiceChannel.name} 中播放`
                 })
         ],
-        components: generateMusicStatusButtons(queue, song)
+        components: completed ? [] : generateMusicStatusButtons(queue, song)
     }
 }
 
