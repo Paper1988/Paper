@@ -7,9 +7,16 @@ module.exports = {
         .setNameLocalization('ja', '代わりに言って')
         .setDescription('Let the bot say something for you')
         .setDescriptionLocalization('zh-TW', '讓機器人代替你說話')
-        .setDescriptionLocalization('ja', '代わりに話す')
+        .setDescriptionLocalization('ja', '代わりに話してくれる')
         .addStringOption((option) =>
-            option.setName('text').setDescription('請輸入文字').setRequired(true)
+            option
+                .setName('text')
+                .setNameLocalization('zh-TW', '文字')
+                .setNameLocalization('ja', 'テキスト')
+                .setDescription('Please provide some text')
+                .setDescriptionLocalization('zh-TW', '請輸入文字')
+                .setDescriptionLocalization('ja', '文字を入力してください')
+                .setRequired(true)
         ),
     /**
      * @param {ChatInputCommandInteraction} interaction

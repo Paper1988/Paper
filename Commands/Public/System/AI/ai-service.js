@@ -2,9 +2,9 @@ const { SlashCommandBuilder } = require('discord.js')
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('ai-service')
-        .setNameLocalization('zh-TW', 'ai服務')
-        .setNameLocalization('ja', 'aiサービス')
+        .setName('ai')
+        .setNameLocalization('zh-TW', 'ai')
+        .setNameLocalization('ja', 'ai')
         .setDescription('Use various AI models')
         .setDescriptionLocalization('zh-TW', '使用各類AI模型')
         .setDescriptionLocalization('ja', 'AIモデルを使用します')

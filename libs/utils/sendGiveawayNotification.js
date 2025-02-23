@@ -1,4 +1,4 @@
-const GiveawayNotification = require('../Structures/Schemas/GiveawayNotification')
+const GiveawayNotification = require('../../Structures/Schemas/GiveawayNotification')
 
 async function sendGiveawayNotification(client, type, giveaway, userId) {
     const userSettings = await GiveawayNotification.findOne({
