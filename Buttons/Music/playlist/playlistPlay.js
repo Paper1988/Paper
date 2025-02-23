@@ -1,6 +1,7 @@
 const { MessageFlags, ButtonInteraction } = require('discord.js')
 const Playlist = require('../../../Structures/Schemas/Playlist')
 const { emojis } = require('../../../libs/emoji/emoji')
+const { YouTubePlugin } = require('@distube/youtube')
 
 module.exports = {
     id: 'playlist-play',
@@ -30,7 +31,15 @@ module.exports = {
             if (!permissions.has('Connect') || !permissions.has('Speak')) {
                 return await interaction
                     .reply({
-                        content: `${emojis.warning} | 我沒有權限加入或在該語音頻道中說話`,
+                        content: '',
+                        embeds: [
+                            new EmbedBuilder()
+                                .setTitle('拒絕請求')
+                                .setDescription(
+                                    `${emojis.warning} | 我沒有權限進入 <#${VoiceChannel.id}>!`
+                                )
+                                .setColor('Red')
+                        ],
                         flags: MessageFlags.Ephemeral
                     })
                     .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
@@ -69,6 +78,8 @@ module.exports = {
                     .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
+            const yt = new YouTubePlugin()
+
             // 播放清單中的所有歌曲
             const queue = interaction.client.distube.getQueue(interaction.guildId)
 
@@ -79,7 +90,7 @@ module.exports = {
             // 如果已有播放佇列，則添加到佇列中
             if (queue) {
                 // 將播放清單歌曲轉換為 DisTube 可接受的格式
-                const songs = playlist.songs.map((song) => song.title)
+                const songs = playlist.songs.map(async (song) => await yt.search(song))
 
                 // 將每首歌曲逐一添加到佇列
                 for (const song of songs) {
@@ -89,7 +100,7 @@ module.exports = {
                 // 如果沒有佇列，則創建新的佇列
                 await interaction.client.distube.play(
                     interaction.member.voice.channel,
-                    playlist.songs[0].title, // 第一首歌直接用 URL
+                    playlist.songs[0].title,
                     {
                         member: interaction.member,
                         textChannel: interaction.channel,
@@ -100,7 +111,9 @@ module.exports = {
                 // 添加剩餘的歌曲
                 if (playlist.songs.length > 1) {
                     const queue = interaction.client.distube.getQueue(interaction.guildId)
-                    const remainingSongs = playlist.songs.slice(1).map((song) => song.title)
+                    const remainingSongs = playlist.songs
+                        .slice(1)
+                        .map(async (song) => await yt.search(song))
 
                     // 將剩餘的歌曲逐一添加到佇列
                     for (const song of remainingSongs) {
@@ -113,9 +126,11 @@ module.exports = {
             playlist.plays++
             await playlist.save()
 
-            await interaction.editReply({
-                content: `${emojis.correct} | 已將播放清單 **${playlistName}** 中的 ${playlist.songs.length} 首歌曲加入播放佇列`
-            })
+            await interaction
+                .editReply({
+                    content: `${emojis.correct} | 已將播放清單 **${playlistName}** 中的 ${playlist.songs.length} 首歌曲加入播放佇列`
+                })
+                .then(() => setTimeout(() => interaction.deleteReply(), 10 * 1000))
         } catch (error) {
             console.error('播放播放清單時發生錯誤:', error)
             // 如果是播放源錯誤，給出更具體的提示
