@@ -90,7 +90,9 @@ module.exports = {
             // 如果已有播放佇列，則添加到佇列中
             if (queue) {
                 // 將播放清單歌曲轉換為 DisTube 可接受的格式
-                const songs = playlist.songs.map(async (song) => await yt.search(song.title))
+                const songs = playlist.songs.map(
+                    async (song) => await yt.search(song.title.toString())
+                )
 
                 // 將每首歌曲逐一添加到佇列
                 for (const song of songs) {
@@ -113,7 +115,7 @@ module.exports = {
                     const queue = interaction.client.distube.getQueue(interaction.guildId)
                     const remainingSongs = playlist.songs
                         .slice(1)
-                        .map(async (song) => await yt.search(song.title))
+                        .map(async (song) => await yt.search(song.title.toString()))
 
                     // 將剩餘的歌曲逐一添加到佇列
                     for (const song of remainingSongs) {
