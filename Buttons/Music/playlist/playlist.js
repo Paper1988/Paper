@@ -23,10 +23,12 @@ module.exports = {
         const currentSong = queue.songs[0]
 
         if (!queue || !currentSong) {
-            return await interaction.reply({
-                content: `${emojis.warning} | 目前沒有正在播放的歌曲`,
-                flags: MessageFlags.Ephemeral
-            })
+            return await interaction
+                .reply({
+                    content: `${emojis.warning} | 目前沒有正在播放的歌曲`,
+                    flags: MessageFlags.Ephemeral
+                })
+                .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
         }
 
         try {
@@ -72,18 +74,22 @@ module.exports = {
                     const playlist = await Playlist.findById(playlistId)
 
                     if (!playlist) {
-                        return await interaction.reply({
-                            content: `${emojis.warning} | 找不到指定的播放清單`,
-                            flags: MessageFlags.Ephemeral
-                        })
+                        return await interaction
+                            .reply({
+                                content: `${emojis.warning} | 找不到指定的播放清單`,
+                                flags: MessageFlags.Ephemeral
+                            })
+                            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
                     }
 
                     // 檢查歌曲是否已在播放清單中
                     if (playlist.songs.some((song) => song.url === currentSong.url)) {
-                        return await interaction.reply({
-                            content: `${emojis.warning} | 這首歌已經在播放清單中了`,
-                            flags: MessageFlags.Ephemeral
-                        })
+                        return await interaction
+                            .reply({
+                                content: `${emojis.warning} | 這首歌已經在播放清單中了`,
+                                flags: MessageFlags.Ephemeral
+                            })
+                            .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
                     }
 
                     // 添加歌曲到播放清單
@@ -109,10 +115,12 @@ module.exports = {
             }
         } catch (error) {
             console.error('處理播放清單按鈕時發生錯誤:', error)
-            await interaction.reply({
-                content: `${emojis.outage} | 處理播放清單時發生錯誤`,
-                flags: MessageFlags.Ephemeral
-            })
+            await interaction
+                .reply({
+                    content: `${emojis.outage} | 處理播放清單時發生錯誤`,
+                    flags: MessageFlags.Ephemeral
+                })
+                .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
         }
     }
 }

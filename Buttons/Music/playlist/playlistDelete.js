@@ -8,10 +8,12 @@ module.exports = {
 
         try {
             if (action === 'cancel') {
-                return await interaction.update({
-                    content: `${emojis.correct} | 已取消刪除播放清單`,
-                    components: []
-                })
+                return await interaction
+                    .update({
+                        content: `${emojis.correct} | 已取消刪除播放清單`,
+                        components: []
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
             const playlist = await Playlist.findOne({
@@ -20,10 +22,12 @@ module.exports = {
             })
 
             if (!playlist) {
-                return await interaction.update({
-                    content: `${emojis.warning} | 找不到指定的播放清單`,
-                    components: []
-                })
+                return await interaction
+                    .update({
+                        content: `${emojis.warning} | 找不到指定的播放清單`,
+                        components: []
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
             await playlist.deleteOne()
@@ -34,10 +38,12 @@ module.exports = {
             })
         } catch (error) {
             console.error('處理播放清單刪除按鈕時發生錯誤:', error)
-            await interaction.update({
-                content: `${emojis.outage} | 處理播放清單刪除時發生錯誤`,
-                components: []
-            })
+            await interaction
+                .update({
+                    content: `${emojis.outage} | 處理播放清單刪除時發生錯誤`,
+                    components: []
+                })
+                .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
         }
     }
 }
