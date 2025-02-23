@@ -82,8 +82,8 @@ module.exports = {
                     likes: 0,
                     dislikes: 0,
                     uploader: {
-                        name: song.uploader.name,
-                        url: song.uploader.url
+                        name: song.uploader ? song.uploader.name : 'Unknown',
+                        url: song.uploader ? song.uploader.url : null
                     },
                     age_restricted: false,
                     member: interaction.member
@@ -143,7 +143,7 @@ module.exports = {
                 })
             }
 
-            await interaction.reply({
+            await interaction.editReply({
                 content: `${emojis.outage} | 播放播放清單時發生錯誤`,
                 flags: MessageFlags.Ephemeral
             })
