@@ -238,7 +238,7 @@ const generateMusicPlayerStatus = (queue, song, completed = false) => {
                         song.stream?.playFromSource
                             ? secondsToDuration(songDuration)
                             : secondsToDuration(queue.currentTime)
-                    }\``
+                    } \``
                 )
                 .setAuthor({
                     name: `${song.user.displayName}`,
