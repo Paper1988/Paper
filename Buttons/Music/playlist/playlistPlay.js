@@ -1,7 +1,6 @@
 const { MessageFlags, ButtonInteraction } = require('discord.js')
 const Playlist = require('../../../Structures/Schemas/Playlist')
 const { emojis } = require('../../../libs/emoji/emoji')
-const { Song } = require('distube')
 
 module.exports = {
     id: 'playlist-play',
@@ -80,24 +79,7 @@ module.exports = {
             // 如果已有播放佇列，則添加到佇列中
             if (queue) {
                 // 將播放清單歌曲轉換為 DisTube 可接受的格式
-                const songs = playlist.songs.map(
-                    (song) =>
-                        new Song(
-                            {
-                                name: song.title,
-                                url: song.url,
-                                duration: song.duration,
-                                thumbnail: song.thumbnail,
-                                source: 'youtube', // 或根據 URL 判斷來源
-                                uploader: {
-                                    name: song.uploader ? song.uploader.name : '無',
-                                    url: song.uploader ? song.uploader.url : null
-                                },
-                                ageRestricted: false
-                            },
-                            { member: interaction.member }
-                        )
-                )
+                const songs = playlist.songs.map((song) => song.title)
 
                 // 將每首歌曲逐一添加到佇列
                 for (const song of songs) {
@@ -107,7 +89,7 @@ module.exports = {
                 // 如果沒有佇列，則創建新的佇列
                 await interaction.client.distube.play(
                     interaction.member.voice.channel,
-                    playlist.songs[0].url, // 第一首歌直接用 URL
+                    playlist.songs[0].title, // 第一首歌直接用 URL
                     {
                         member: interaction.member,
                         textChannel: interaction.channel,
@@ -117,24 +99,8 @@ module.exports = {
 
                 // 添加剩餘的歌曲
                 if (playlist.songs.length > 1) {
-                    const remainingSongs = playlist.songs.slice(1).map(
-                        (song) =>
-                            new Song(
-                                {
-                                    name: song.title,
-                                    url: song.url,
-                                    duration: song.duration,
-                                    thumbnail: song.thumbnail,
-                                    source: 'youtube', // 或根據 URL 判斷來源
-                                    uploader: {
-                                        name: song.uploader ? song.uploader.name : '無',
-                                        url: song.uploader ? song.uploader.url : null
-                                    },
-                                    ageRestricted: false
-                                },
-                                { member: interaction.member }
-                            )
-                    )
+                    const queue = interaction.client.distube.getQueue(interaction.guildId)
+                    const remainingSongs = playlist.songs.slice(1).map((song) => song.title)
 
                     // 將剩餘的歌曲逐一添加到佇列
                     for (const song of remainingSongs) {
