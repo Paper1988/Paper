@@ -63,24 +63,12 @@ client.distube = new DisTube(client, {
                 topTracksCountry: 'TW'
             }
         }),
-        new SoundCloudPlugin({
-            clientId: client.config.SoundCloudClientId,
-            oauthToken: client.config.SoundCloudOAuthToken
-        }),
+        new SoundCloudPlugin(),
         new DirectLinkPlugin(),
         new TidalPlugin(),
         new DeezerPlugin(),
         new AppleMusicPlugin(),
         new YouTubePlugin({
-            ytdlOptions: {
-                playerClients: ['IOS', 'WEB_CREATOR', 'ANDROID', 'WEB'],
-                requestOptions: {
-                    headers: {
-                        'User-Agent':
-                            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-                    }
-                }
-            },
             cookies: cookieManager.getCookies()
         })
     ]

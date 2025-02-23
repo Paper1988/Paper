@@ -6,7 +6,7 @@ module.exports = {
         .setNameLocalization('zh-TW', 'gif')
         .setNameLocalization('ja', 'gif')
         .setDescription('Randomly generate a gif')
-        .setDescriptionLocalization('zh-TW', '隨機產生一張gif動圖')
+        .setDescriptionLocalization('zh-TW', '隨機產生gif動圖')
         .setDescriptionLocalization('ja', 'ランダムにgifを生成します')
         .addSubcommand((sub) =>
             sub
@@ -14,7 +14,7 @@ module.exports = {
                 .setNameLocalization('zh-TW', '咬')
                 .setNameLocalization('ja', '噛む')
                 .setDescription('Bite someone!')
-                .setDescriptionLocalization('zh-TW', '咬某人一口!')
+                .setDescriptionLocalization('zh-TW', '咬一口某人!')
                 .setDescriptionLocalization('ja', '噛む!')
                 .addUserOption((option) =>
                     option
@@ -39,6 +39,8 @@ module.exports = {
         .addSubcommand((sub) =>
             sub
                 .setName('hug')
+                .setNameLocalization('zh-TW', '擁抱')
+                .setNameLocalization('ja', '抱擁')
                 .setDescription('Hug someone!')
                 .setDescriptionLocalization('zh-TW', '擁抱某人!')
                 .setDescriptionLocalization('ja', '抱きしめる!')
@@ -56,8 +58,10 @@ module.exports = {
         .addSubcommand((sub) =>
             sub
                 .setName('kill')
+                .setNameLocalization('zh-TW', '殺')
+                .setNameLocalization('ja', '殺す')
                 .setDescription('Kill someone!')
-                .setDescriptionLocalization('zh-TW', '殺掉某人!')
+                .setDescriptionLocalization('zh-TW', '殺了某人!')
                 .setDescriptionLocalization('ja', '殺られる!')
                 .addUserOption((option) =>
                     option
@@ -73,6 +77,8 @@ module.exports = {
         .addSubcommand((sub) =>
             sub
                 .setName('kiss')
+                .setNameLocalization('zh-TW', '親吻')
+                .setNameLocalization('ja', 'キスする')
                 .setDescription('Kiss someone!')
                 .setDescriptionLocalization('zh-TW', '親吻某人!')
                 .setDescriptionLocalization('ja', 'キスする!')

@@ -11,7 +11,7 @@ module.exports = {
     data: new ContextMenuCommandBuilder()
         .setName('translate')
         .setNameLocalization('zh-TW', '翻譯')
-        .setNameLocalization('ja', '翻訳')
+        .setNameLocalization('ja', '翻訳する')
         .setType(ApplicationCommandType.Message)
         .setContexts(0, 1, 2)
         .setIntegrationTypes(0, 1),
@@ -32,8 +32,7 @@ module.exports = {
         }
 
         await interaction.reply({
-            content:
-                '<a:discord1792loading:1212016238839070791> | 正在翻譯你的訊息至**繁體中文**...',
+            content: '<a:discord_loading:1342772648282689546> | 正在翻譯你的訊息至**繁體中文**...',
             flags: MessageFlags.Ephemeral
         })
 
@@ -62,7 +61,8 @@ module.exports = {
                     )
                 await interaction.editReply({
                     content: '',
-                    embeds: [successEmbed]
+                    embeds: [successEmbed],
+                    flags: MessageFlags.Ephemeral
                 })
             })
             .catch(async (err) => {

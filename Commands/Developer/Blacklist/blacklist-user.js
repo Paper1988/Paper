@@ -30,7 +30,7 @@ module.exports = {
                 content: `<:correct:1265560254708711467> | 成功添加 **${User} | ${User.id} | ${User.username}** 至用戶黑名單 , 原因: ${reason}`
             })
         } else {
-            await Data.delete()
+            await Data.deleteOne()
             interaction.editReply({
                 content: `<:correct:1265560254708711467> | 成功從用戶黑名單中移除 **${User} | ${User.id} | ${User.username}**`
             })

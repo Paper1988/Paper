@@ -4,15 +4,12 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('anti-alt')
         .setNameLocalization('zh-TW', '反小號')
-        .setNameLocalization('ja', '反小號')
+        .setNameLocalization('ja', 'アンチサブ垢')
         .setDescription(
             'Setup the system to automatically kick small accounts (accounts less than 7 days old)'
         )
         .setDescriptionLocalization('zh-TW', '設定伺服器自動踢出小號(即未滿7日之帳號)系統')
-        .setDescriptionLocalization(
-            'ja',
-            'サーバーの小さいアカウント(7日未満のアカウント)を自動的にキックするシステムを設定'
-        )
+        .setDescriptionLocalization('ja', '7日未満のサブアカウントを自動でキックするシステムを設定')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
         .addSubcommand((sub) =>
             sub
@@ -21,7 +18,7 @@ module.exports = {
                 .setNameLocalization('ja', '設定')
                 .setDescription('Setup the logging channel')
                 .setDescriptionLocalization('zh-TW', '設定日誌頻道')
-                .setDescriptionLocalization('ja', 'ログチャンネルを設定')
+                .setDescriptionLocalization('ja', 'ログ用のチャンネルを設定')
                 .addChannelOption((options) =>
                     options
                         .setName('channel')
