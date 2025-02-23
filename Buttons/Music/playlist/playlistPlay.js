@@ -1,6 +1,7 @@
 const { MessageFlags, ButtonInteraction } = require('discord.js')
 const Playlist = require('../../../Structures/Schemas/Playlist')
 const { emojis } = require('../../../libs/emoji/emoji')
+const { Song, SongInfo } = require('distube')
 
 module.exports = {
     id: 'playlist-play',
@@ -78,8 +79,22 @@ module.exports = {
 
             // 如果已有播放佇列，則添加到佇列中
             if (queue) {
-                // 將播放清單歌曲轉換為 DisTube 可接受的格式
-                const songs = playlist.songs
+                const songs = playlist.songs.map(
+                    (song) =>
+                        new Song({
+                            name: song.title,
+                            url: song.url,
+                            duration: song.duration,
+                            thumbnail: song.thumbnail,
+                            source: 'youtube', // 或根據 URL 判斷來源
+                            uploader: {
+                                name: song.uploader ? song.uploader.name : 'Unknown',
+                                url: song.uploader ? song.uploader.url : null
+                            },
+                            age_restricted: false,
+                            member: interaction.member
+                        })
+                )
 
                 await interaction.client.distube.play(interaction.member.voice.channel, songs, {
                     member: interaction.member,
@@ -100,7 +115,23 @@ module.exports = {
 
                 // 添加剩餘的歌曲
                 if (playlist.songs.length > 1) {
-                    const remainingSongs = playlist.songs.slice(1)
+                    const remainingSongs = playlist.songs.slice(1).map(
+                        (song) =>
+                            new Song({
+                                name: song.title,
+                                url: song.url,
+                                duration: song.duration,
+                                thumbnail: song.thumbnail,
+                                source: 'youtube',
+                                uploader: {
+                                    name: song.uploader ? song.uploader.name : 'Unknown',
+                                    url: song.uploader ? song.uploader.url : null
+                                },
+                                age_restricted: false,
+                                member: interaction.member
+                            })
+                    )
+
                     await interaction.client.distube.play(
                         interaction.member.voice.channel,
                         remainingSongs,
