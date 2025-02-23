@@ -99,16 +99,13 @@ module.exports = {
                     await queue.addToQueue(song) // 將每首歌曲添加到佇列
                 }
             } else {
+                const firstSong = await yt.search(song.title.toString())
                 // 如果沒有佇列，則創建新的佇列
-                await interaction.client.distube.play(
-                    interaction.member.voice.channel,
-                    playlist.songs[0].title,
-                    {
-                        member: interaction.member,
-                        textChannel: interaction.channel,
-                        metadata: { interaction }
-                    }
-                )
+                await interaction.client.distube.play(interaction.member.voice.channel, firstSong, {
+                    member: interaction.member,
+                    textChannel: interaction.channel,
+                    metadata: { interaction }
+                })
 
                 // 添加剩餘的歌曲
                 if (playlist.songs.length > 1) {
