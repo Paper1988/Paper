@@ -81,7 +81,11 @@ module.exports = {
                 // 將播放清單歌曲轉換為 DisTube 可接受的格式
                 const songs = playlist.songs
 
-                await interaction.client.distube.play(songs)
+                await interaction.client.distube.play(interaction.member.voice.channel, songs, {
+                    member: interaction.member,
+                    textChannel: interaction.channel,
+                    metadata: { interaction }
+                })
             } else {
                 // 如果沒有佇列，則創建新的佇列
                 await interaction.client.distube.play(
@@ -96,9 +100,16 @@ module.exports = {
 
                 // 添加剩餘的歌曲
                 if (playlist.songs.length > 1) {
-                    const queue = interaction.client.distube.getQueue(interaction.guildId)
                     const remainingSongs = playlist.songs.slice(1)
-                    await interaction.client.distube.play(remainingSongs)
+                    await interaction.client.distube.play(
+                        interaction.member.voice.channel,
+                        remainingSongs,
+                        {
+                            member: interaction.member,
+                            textChannel: interaction.channel,
+                            metadata: { interaction }
+                        }
+                    )
                 }
             }
 
