@@ -89,7 +89,7 @@ module.exports = {
                     member: interaction.member
                 }))
 
-                await queue.addToQueue(songs)
+                await interaction.client.distube.play(songs)
             } else {
                 // 如果沒有佇列，則創建新的佇列
                 await interaction.client.distube.play(
@@ -122,7 +122,7 @@ module.exports = {
                         age_restricted: false,
                         member: interaction.member
                     }))
-                    await queue.addToQueue(remainingSongs)
+                    await interaction.client.distube.play(remainingSongs)
                 }
             }
 
