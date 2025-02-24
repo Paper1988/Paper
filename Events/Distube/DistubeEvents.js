@@ -15,7 +15,7 @@ client.distube
         try {
             if (!song || !queue) return
 
-            const status = generateMusicPlayerStatus(queue, song)
+            const status = updateMusicPlayerStatus(queue)
             if (queue.textChannel) {
                 queue.textChannel.send(status).then((msg) => {
                     queue.musicControllerMsgId = msg.id
@@ -25,7 +25,13 @@ client.distube
             console.error('播放歌曲時發生錯誤:', error)
             if (queue?.textChannel) {
                 queue.textChannel.send({
-                    content: `${emojis.outage} | 播放歌曲時發生錯誤`,
+                    embeds: [
+                        new EmbedBuilder()
+                            .setColor('Red')
+                            .setDescription(
+                                `${emojis.outage} | 播放播放清單時發生錯誤，請協助回報！`
+                            )
+                    ],
                     flags: MessageFlags.Ephemeral
                 })
             }
@@ -82,7 +88,7 @@ client.distube
                     new EmbedBuilder()
                         .setColor('Red')
                         .setTitle(`${emojis.outage} | 發生錯誤:`)
-                        .setDescription(errorMessage)
+                        .setDescription(`\`\`\`${errorMessage}\`\`\``)
                         .setFooter({ text: `請使用 /report 協助回報!` })
                 ]
             })
