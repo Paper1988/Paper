@@ -1,7 +1,6 @@
 const { MessageFlags, ButtonInteraction } = require('discord.js')
 const Playlist = require('../../../Structures/Schemas/Playlist')
 const { emojis } = require('../../../libs/emoji/emoji')
-const { Song } = require('distube')
 
 module.exports = {
     id: 'playlist-play',
@@ -83,43 +82,23 @@ module.exports = {
                 const songs = playlist.songs.map(async (song) => song.url)
 
                 for (const song of songs) {
-                    console.log(song)
-                    await queue.addToQueue(
-                        new Song(
-                            {
-                                url: song.url
-                            },
-                            { member: interaction.member }
-                        )
-                    )
+                    await interaction.client.distube.play(interaction.member.voice.channel, song, {
+                        member: interaction.member,
+                        metadata: { interaction }
+                    })
                 }
             } else {
+                const NewPlaylist = await interaction.client.distube.createCustomPlaylist(
+                    playlist.songs.map((song) => song.url)
+                )
                 await interaction.client.distube.play(
                     interaction.member.voice.channel,
-                    playlist.songs[0].url,
+                    NewPlaylist,
                     {
                         member: interaction.member,
-                        textChannel: interaction.channel,
                         metadata: { interaction }
                     }
                 )
-
-                if (playlist.songs.length > 1) {
-                    const queue = interaction.client.distube.getQueue(interaction.guildId)
-                    const remainingSongs = playlist.songs.slice(1).map(async (song) => song.url)
-
-                    for (const song of remainingSongs) {
-                        console.log(song)
-                        await queue.addToQueue(
-                            new Song(
-                                {
-                                    url: song.url
-                                },
-                                { member: interaction.member }
-                            )
-                        )
-                    }
-                }
             }
 
             playlist.plays++
