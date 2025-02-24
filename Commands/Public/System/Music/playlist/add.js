@@ -92,7 +92,7 @@ module.exports = {
             }
 
             const selectMenu = new StringSelectMenuBuilder()
-                .setCustomId(`playlist:add:${playlist.userId}:${playlist.name}`)
+                .setCustomId(`playlist-add:${playlist.userId}:${playlist.name}`)
                 .setPlaceholder('選擇歌曲')
 
             results.forEach((song) => {
