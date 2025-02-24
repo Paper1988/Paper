@@ -1,7 +1,6 @@
 const { MessageFlags, ButtonInteraction } = require('discord.js')
 const Playlist = require('../../../Structures/Schemas/Playlist')
 const { emojis } = require('../../../libs/emoji/emoji')
-const { YouTubePlugin } = require('@distube/youtube')
 
 module.exports = {
     id: 'playlist-play',
@@ -78,8 +77,6 @@ module.exports = {
                     .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
-            const yt = new YouTubePlugin()
-
             // 播放清單中的所有歌曲
             const queue = interaction.client.distube.getQueue(interaction.guildId)
 
@@ -90,31 +87,28 @@ module.exports = {
             // 如果已有播放佇列，則添加到佇列中
             if (queue) {
                 // 將播放清單歌曲轉換為 DisTube 可接受的格式
-                const songs = playlist.songs.map(
-                    async (song) => await yt.search(song.title.toString())
-                )
+                const songs = playlist.songs.map(async (song) => song.url)
 
                 // 將每首歌曲逐一添加到佇列
                 for (const song of songs) {
                     await queue.addToQueue(song) // 將每首歌曲添加到佇列
                 }
             } else {
-                const results = await yt.search(playlist.songs[0].title.toString())
-                const firstSong = results[0]
-
                 // 如果沒有佇列，則創建新的佇列
-                await interaction.client.distube.play(interaction.member.voice.channel, firstSong, {
-                    member: interaction.member,
-                    textChannel: interaction.channel,
-                    metadata: { interaction }
-                })
+                await interaction.client.distube.play(
+                    interaction.member.voice.channel,
+                    playlist.songs[0].url,
+                    {
+                        member: interaction.member,
+                        textChannel: interaction.channel,
+                        metadata: { interaction }
+                    }
+                )
 
                 // 添加剩餘的歌曲
                 if (playlist.songs.length > 1) {
                     const queue = interaction.client.distube.getQueue(interaction.guildId)
-                    const remainingSongs = playlist.songs
-                        .slice(1)
-                        .map(async (song) => await yt.search(song.title.toString()))
+                    const remainingSongs = playlist.songs.slice(1).map(async (song) => song.url)
 
                     // 將剩餘的歌曲逐一添加到佇列
                     for (const song of remainingSongs) {
