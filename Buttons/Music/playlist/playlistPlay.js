@@ -72,34 +72,19 @@ module.exports = {
                     .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
             }
 
-            const queue = interaction.client.distube.getQueue(interaction.guildId)
-
             await interaction.reply({
                 content: `${emojis.discord_loading} | 正在載入播放清單 **${playlistName}** 中的 ${playlist.songs.length} 首歌曲...`
             })
 
-            if (queue) {
-                const songs = playlist.songs.map(async (song) => song.url)
+            const NewPlaylist = await interaction.client.distube.createCustomPlaylist(
+                playlist.songs.map((song) => song.url)
+            )
 
-                for (const song of songs) {
-                    await interaction.client.distube.play(interaction.member.voice.channel, song, {
-                        member: interaction.member,
-                        metadata: { interaction }
-                    })
-                }
-            } else {
-                const NewPlaylist = await interaction.client.distube.createCustomPlaylist(
-                    playlist.songs.map((song) => song.url)
-                )
-                await interaction.client.distube.play(
-                    interaction.member.voice.channel,
-                    NewPlaylist,
-                    {
-                        member: interaction.member,
-                        metadata: { interaction }
-                    }
-                )
-            }
+            await interaction.client.distube.play(interaction.member.voice.channel, NewPlaylist, {
+                member: interaction.member,
+                textChannel: interaction.channel,
+                metadata: { interaction }
+            })
 
             playlist.plays++
             await playlist.save()
