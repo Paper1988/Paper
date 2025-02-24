@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js')
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js')
 const { Queue, Song } = require('distube')
+const { emojis } = require('../libs/emoji/emoji')
 
 const secondsToDuration = (seconds) => {
     const secondsInNum = parseInt(seconds, 10) // don't forget the second param
