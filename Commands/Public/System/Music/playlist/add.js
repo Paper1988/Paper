@@ -5,7 +5,8 @@ const {
     ButtonBuilder,
     ButtonStyle,
     ChatInputCommandInteraction,
-    AutocompleteInteraction
+    AutocompleteInteraction,
+    StringSelectMenuBuilder
 } = require('discord.js')
 const { emojis } = require('../../../../../libs/emoji/emoji')
 const { YouTubePlugin } = require('@distube/youtube')
@@ -90,20 +91,24 @@ module.exports = {
                 })
             }
 
-            // 建立選擇歌曲的按鈕
-            const buttons = results.map((song, index) =>
-                new ButtonBuilder()
-                    .setCustomId(`playlist:add:${playlist._id}:${song.url}`)
-                    .setLabel(`${index + 1}. ${song.name}`)
-                    .setStyle(ButtonStyle.Primary)
-            )
+            // 建立選擇歌曲的選擇菜單
+            const selectMenu = new StringSelectMenuBuilder()
+                .setCustomId(`playlist:add:${playlist._id}`)
+                .setPlaceholder('選擇要添加的歌曲')
 
-            const row = new ActionRowBuilder().addComponents(buttons)
+            results.forEach((song) => {
+                selectMenu.addOptions({
+                    label: song.name,
+                    value: song.url // 使用歌曲的 URL 作為值
+                })
+            })
 
+            const row = new ActionRowBuilder().addComponents(selectMenu)
+
+            // 發送消息，包含選擇菜單
             await interaction.reply({
-                content: `找到以下歌曲，請選擇要加入播放清單的歌曲：`,
-                components: [row],
-                flags: MessageFlags.Ephemeral
+                content: '請選擇要添加的歌曲:',
+                components: [row]
             })
         } catch (error) {
             console.error('搜尋歌曲時發生錯誤:', error)

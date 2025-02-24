@@ -168,7 +168,13 @@ const updateMusicPlayerStatus = async (queue, completed) => {
     if (!queue.musicControllerMsgId) return
 
     const msg = queue?.textChannel?.messages.cache.get(queue.musicControllerMsgId)
-    if (!msg) return
+    if (!msg) {
+        if (queue.textChannel) {
+            queue.textChannel.send(generateMusicPlayerStatus(queue, queue.songs[0])).then((msg) => {
+                queue.musicControllerMsgId = msg.id
+            })
+        }
+    }
 
     const song = queue.songs[0]
     if (!song) {

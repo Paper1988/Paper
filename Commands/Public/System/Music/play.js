@@ -81,48 +81,19 @@ module.exports = {
                     })
                 }
 
-                const queue = client.distube.getQueue(interaction.guildId)
+                const NewPlaylist = await interaction.client.distube.createCustomPlaylist(
+                    playlist.songs.map((song) => song.url)
+                )
 
-                // 如果已有播放佇列，則添加到佇列中
-                if (queue) {
-                    const songs = playlist.songs.map((song) => ({
-                        name: song.title,
-                        url: song.url,
-                        duration: song.duration,
-                        thumbnail: song.thumbnail,
-                        uploader: {
-                            name: song.uploader?.name || 'Unknown',
-                            url: song.uploader?.url || null
-                        },
-                        member: interaction.member
-                    }))
-
-                    await queue.addToQueue(songs)
-                } else {
-                    // 如果沒有佇列，則創建新的佇列
-                    await client.distube.play(VoiceChannel, playlist.songs[0].url, {
-                        member: member,
-                        textChannel: channel,
+                await interaction.client.distube.play(
+                    interaction.member.voice.channel,
+                    NewPlaylist,
+                    {
+                        member: interaction.member,
+                        textChannel: interaction.channel,
                         metadata: { interaction }
-                    })
-
-                    // 添加剩餘的歌曲
-                    if (playlist.songs.length > 1) {
-                        const queue = client.distube.getQueue(interaction.guildId)
-                        const remainingSongs = playlist.songs.slice(1).map((song) => ({
-                            name: song.title,
-                            url: song.url,
-                            duration: song.duration,
-                            thumbnail: song.thumbnail,
-                            uploader: {
-                                name: song.uploader?.name || 'Unknown',
-                                url: song.uploader?.url || null
-                            },
-                            member: interaction.member
-                        }))
-                        await queue.addToQueue(remainingSongs)
                     }
-                }
+                )
 
                 // 更新播放次數
                 playlist.plays++
@@ -141,6 +112,13 @@ module.exports = {
                 }
                 await interaction.editReply({
                     content: `${emojis.outage} | 播放播放清單時發生錯誤`,
+                    embeds: [
+                        new EmbedBuilder()
+                            .setColor('Red')
+                            .setDescription(
+                                `${emojis.outage} | 播放播放清單時發生錯誤，請協助回報！`
+                            )
+                    ],
                     flags: MessageFlags.Ephemeral
                 })
             }
