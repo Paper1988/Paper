@@ -91,23 +91,21 @@ module.exports = {
                 })
             }
 
-            // 建立選擇歌曲的選擇菜單
             const selectMenu = new StringSelectMenuBuilder()
-                .setCustomId(`playlist:add:${playlist._id}`)
-                .setPlaceholder('選擇要添加的歌曲')
+                .setCustomId(`playlist:add:${playlist.userId}:${playlist.name}`)
+                .setPlaceholder('選擇歌曲')
 
             results.forEach((song) => {
                 selectMenu.addOptions({
                     label: song.name,
-                    value: song.url // 使用歌曲的 URL 作為值
+                    value: song.url
                 })
             })
 
             const row = new ActionRowBuilder().addComponents(selectMenu)
 
-            // 發送消息，包含選擇菜單
             await interaction.reply({
-                content: '請選擇要添加的歌曲:',
+                content: '請選擇要添加的歌曲：',
                 components: [row]
             })
         } catch (error) {
