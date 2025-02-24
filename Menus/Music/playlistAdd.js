@@ -1,7 +1,9 @@
 const { StringSelectMenuInteraction } = require('discord.js')
+const Playlist = require('../../Structures/Schemas/Playlist')
+const { YouTubePlugin } = require('@distube/youtube')
 
 module.exports = {
-    id: 'playlist-select',
+    id: 'playlist-add',
     /**
      *
      * @param {StringSelectMenuInteraction} interaction
@@ -9,18 +11,30 @@ module.exports = {
      */
     async execute(interaction) {
         if (!interaction.isStringSelectMenu()) return
+        const [_, userId, playlistName] = interaction.customId.split(':')
+        const selectedSongUrl = interaction.values[0]
 
-        const selectedSongUrl = interaction.values[0] // 獲取選擇的歌曲 URL
+        // 獲取歌曲的詳細信息
+        const yt = new YouTubePlugin()
+        const songDetails = await yt.searchSong(selectedSongUrl) // 獲取歌曲的詳細信息
 
-        // 播放選擇的歌曲
-        await interaction.client.distube.play(interaction.member.voice.channel, selectedSongUrl, {
-            member: interaction.member,
-            textChannel: interaction.channel,
-            metadata: { interaction }
+        const playlist = await Playlist.findOne({
+            userId,
+            name: playlistName
         })
 
+        // 將歌曲的詳細信息添加到播放清單
+        playlist.songs.push({
+            title: songDetails.name,
+            url: songDetails.url,
+            duration: songDetails.duration,
+            thumbnail: songDetails.thumbnail,
+            addedAt: new Date()
+        })
+        await playlist.save()
+
         await interaction.reply({
-            content: `開始播放選擇的歌曲: ${selectedSongUrl}`,
+            content: `歌曲已成功加入播放清單`,
             ephemeral: true
         })
     }
