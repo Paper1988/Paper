@@ -14,9 +14,8 @@ module.exports = {
         const [_, userId, playlistName] = interaction.customId.split(':')
         const selectedSongUrl = interaction.values[0]
 
-        // 獲取歌曲的詳細信息
         const yt = new YouTubePlugin()
-        const songDetails = await yt.searchSong(selectedSongUrl) // 獲取歌曲的詳細信息
+        const songDetails = await yt.searchSong(selectedSongUrl)
 
         const playlist = await Playlist.findOne({
             userId,
