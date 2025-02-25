@@ -188,7 +188,9 @@ async function handleButton(interaction, client) {
  * @param {Client} client
  */
 async function handleModal(interaction, client) {
-    const CustomId = interaction.customId.split('/')
+    const CustomId = interaction.customId.includes('/')
+        ? interaction.customId.split('/')
+        : interaction.customId.split(':')
     const Modal = await client.modals.get(CustomId[0])
 
     if (!Modal) {
@@ -235,7 +237,9 @@ async function handleModal(interaction, client) {
  * @param {Client} client
  */
 async function handleSelectMenu(interaction, client) {
-    const CustomId = interaction.customId.split('/')
+    const CustomId = interaction.customId.includes('/')
+        ? interaction.customId.split('/')
+        : interaction.customId.split(':')
     const Menu = await client.selectMenus.get(CustomId[0])
 
     if (!Menu) {
