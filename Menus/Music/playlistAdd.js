@@ -1,4 +1,4 @@
-const { StringSelectMenuInteraction } = require('discord.js')
+const { StringSelectMenuInteraction, MessageFlags } = require('discord.js')
 const Playlist = require('../../Structures/Schemas/Playlist')
 const { YouTubePlugin } = require('@distube/youtube')
 
@@ -33,8 +33,8 @@ module.exports = {
         await playlist.save()
 
         await interaction.reply({
-            content: `歌曲已成功加入播放清單`,
-            ephemeral: true
+            content: `**${songDetails.name}** 已成功加入播放清單`,
+            flags: MessageFlags.Ephemeral
         })
     }
 }
