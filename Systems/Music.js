@@ -162,19 +162,12 @@ const generateProgressBar = (length, totalLength, barLength = 22) => {
  * @returns
  */
 const updateMusicPlayerStatus = async (queue, completed) => {
-    // 檢查必要參數
     if (!queue?.textChannel) return
 
     if (!queue.musicControllerMsgId) return
 
     const msg = queue?.textChannel?.messages.cache.get(queue.musicControllerMsgId)
-    if (!msg) {
-        if (queue.textChannel) {
-            queue.textChannel.send(generateMusicPlayerStatus(queue, queue.songs[0])).then((msg) => {
-                queue.musicControllerMsgId = msg.id
-            })
-        }
-    }
+    if (!msg) return
 
     const song = queue.songs[0]
     if (!song) {

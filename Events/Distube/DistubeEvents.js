@@ -17,23 +17,23 @@ client.distube
 
             const status = generateMusicPlayerStatus(queue, song)
             if (queue.textChannel) {
-                queue.textChannel.send(status).then((msg) => {
-                    queue.musicControllerMsgId = msg.id
-                })
+                const msg = await queue.textChannel.send(status)
+                queue.musicControllerMsgId = msg.id
             }
         } catch (error) {
             console.error('播放歌曲時發生錯誤:', error)
             if (queue?.textChannel) {
-                queue.textChannel.send({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setColor('Red')
-                            .setDescription(
-                                `${emojis.outage} | 播放播放清單時發生錯誤，請協助回報！`
-                            )
-                    ],
-                    flags: MessageFlags.Ephemeral
-                })
+                queue.textChannel
+                    .send({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setColor('Red')
+                                .setDescription(
+                                    `${emojis.outage} | 播放播放清單時發生錯誤，請協助回報！`
+                                )
+                        ]
+                    })
+                    .then((msg) => deleteMessageAfter(msg))
             }
         }
     })
@@ -150,7 +150,12 @@ client.distube
             clearPlayer(queue)
             if (queue?.textChannel) {
                 queue.textChannel.send({
-                    content: `${emojis.outage} | 播放已結束`
+                    content: ``,
+                    embeds: [
+                        new EmbedBuilder()
+                            .setColor('Red')
+                            .setDescription(`${emojis.outage} | 播放已結束！`)
+                    ]
                 })
             }
         }
@@ -158,6 +163,19 @@ client.distube
     .on(Events.NO_RELATED, (queue) =>
         queue.textChannel.send(`${emojis.warning} | 找不到任何相關歌曲!`)
     )
-    .on(Events.DEBUG, (msg) => console.log(msg))
+    .on(Events.DEBUG, async (msg) => {
+        const channel = client.channels.cache.get('channel_id')
+        if (!channel) return
+        await client
+            .fetchWebhook(
+                '1344304470615654430',
+                '***REMOVED***'
+            )
+            .then((webhook) =>
+                webhook.send({
+                    embeds: [new EmbedBuilder().setDescription(`\`\`\`\n${msg}\`\`\``)]
+                })
+            )
+    })
     .on(Events.FFMPEG_DEBUG, (msg) => console.log(msg))
     .on(Events.DISCONNECT, (queue) => clearPlayer(queue))
