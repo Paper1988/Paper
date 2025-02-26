@@ -15,7 +15,7 @@ client.distube
         try {
             if (!song || !queue) return
 
-            const status = updateMusicPlayerStatus(queue)
+            const status = generateMusicPlayerStatus(queue)
             if (queue.textChannel) {
                 queue.textChannel.send(status).then((msg) => {
                     queue.musicControllerMsgId = msg.id
