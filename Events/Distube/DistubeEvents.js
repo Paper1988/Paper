@@ -149,8 +149,6 @@ client.distube
         queue.textChannel.send(`${emojis.warning} | 找不到任何相關歌曲!`)
     )
     .on(Events.DEBUG, async (msg) => {
-        const channel = client.channels.cache.get('1268941820533149812')
-        if (!channel) return
         await client
             .fetchWebhook(
                 '1344304470615654430',
@@ -158,7 +156,7 @@ client.distube
             )
             .then((webhook) =>
                 webhook.send({
-                    embeds: [new EmbedBuilder().setDescription(`\`\`\`\n${msg}\`\`\``)]
+                    embeds: [new EmbedBuilder().setDescription(`\`\`\`\n${msg}\n\`\`\``)]
                 })
             )
     })
