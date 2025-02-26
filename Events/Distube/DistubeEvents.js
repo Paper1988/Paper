@@ -104,16 +104,11 @@ client.distube
                         .setDescription(`${emojis.musicstop} | 清單播放完畢！`)
                 ]
             })
-            .then((msg) => deleteMessageAfter(msg, 30 * 1000))
+            .then((msg) => deleteMessageAfter(msg))
     })
     .on(Events.INIT_QUEUE, async (queue) => {
         clearPlayer(queue)
         let Data = await DB.findOne({ GuildID: queue.id })
-            .exec()
-            .catch((err) => {
-                console.error('資料庫查詢錯誤: ', err)
-                return null // 確保即使查詢失敗也能繼續執行
-            })
         if (!Data) {
             Data = new DB({
                 GuildID: queue.id,
@@ -138,8 +133,8 @@ client.distube
         try {
             if (queue.repeatMode === RepeatMode.DISABLED) {
                 await updateMusicPlayerStatus(queue, true)
-                clearPlayer(queue)
-            } else if (queue.repeatMode === RepeatMode.SONG)
+            }
+            if (queue.repeatMode === RepeatMode.SONG)
                 return await updateMusicPlayerStatus(queue, false)
 
             if (queue.repeatMode === RepeatMode.QUEUE && (queue.songs[1] || queue.autoplay))
@@ -148,23 +143,13 @@ client.distube
         } catch (error) {
             console.error('處理歌曲結束時發生錯誤:', error)
             clearPlayer(queue)
-            if (queue?.textChannel) {
-                queue.textChannel.send({
-                    content: ``,
-                    embeds: [
-                        new EmbedBuilder()
-                            .setColor('Red')
-                            .setDescription(`${emojis.outage} | 播放已結束！`)
-                    ]
-                })
-            }
         }
     })
     .on(Events.NO_RELATED, (queue) =>
         queue.textChannel.send(`${emojis.warning} | 找不到任何相關歌曲!`)
     )
     .on(Events.DEBUG, async (msg) => {
-        const channel = client.channels.cache.get('channel_id')
+        const channel = client.channels.cache.get('1268941820533149812')
         if (!channel) return
         await client
             .fetchWebhook(
