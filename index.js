@@ -40,6 +40,24 @@ if (!cookieStatus.isValid) {
     console.warn('YouTube cookies are invalid or missing!')
 }
 
+const prism = require('prism-media')
+const ffmpeg = new prism.FFmpeg({
+    args: [
+        '-analyzeduration',
+        '0',
+        '-loglevel',
+        '0',
+        '-i',
+        'input.mp3',
+        '-f',
+        's16le',
+        '-ar',
+        '48000',
+        '-ac',
+        '2'
+    ]
+})
+
 client.distube = new DisTube(client, {
     customFilters: {
         // https://distube.js.org/types/DisTubeOptions.html
@@ -56,6 +74,7 @@ client.distube = new DisTube(client, {
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: false,
     nsfw: true,
+    ffmpeg: ffmpeg,
     plugins: [
         new SpotifyPlugin({
             api: {

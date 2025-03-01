@@ -66,6 +66,16 @@ module.exports = {
                 }
             }
         }, 30000) // 每30秒檢查一次
+
+        setInterval(
+            () => {
+                if (global.gc) {
+                    global.gc()
+                    console.log('✅ 已執行垃圾回收')
+                }
+            },
+            24 * 60 * 60 * 1000
+        )
     }
 }
 

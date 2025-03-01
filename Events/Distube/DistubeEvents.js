@@ -1,5 +1,5 @@
 const client = require('../../index.js')
-const { EmbedBuilder, MessageFlags } = require('discord.js')
+const { EmbedBuilder } = require('discord.js')
 const { Events, RepeatMode } = require('distube')
 const DB = require('../../Structures/Schemas/MusicDB.js')
 const {
