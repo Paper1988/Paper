@@ -58,9 +58,7 @@ module.exports = {
                     })
                     .setColor('Gold')
 
-                await interaction
-                    .editReply({ embeds: [Embed] })
-                    .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
+                await interaction.editReply({ embeds: [Embed] })
             })
             .catch(async () => {
                 await interaction
@@ -72,7 +70,7 @@ module.exports = {
                                     `<:loadingerror:1268935312751595622> | 找不到 \`${queue.songs[0].name}\` 的歌詞!`
                                 )
                                 .setFooter({
-                                    text: '資料來源: Genius Lyrics',
+                                    text: '歌詞資料來源: Genius Lyrics',
                                     iconURL:
                                         'https://cdn.discordapp.com/attachments/1202111758764867645/1268911286977298502/unnamed.png?ex=66ae253a&is=66acd3ba&hm=89779e3dd1db9793fa3ea864cff4d22fb6d06997b6c0cc0a5cbdb24f710c5ab5&'
                                 })
