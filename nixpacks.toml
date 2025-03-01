@@ -1,5 +1,5 @@
 [phases.setup]
-    nixPkgs = ["...", "python3"]
+    nixPkgs = ["...", "ffmpeg", "python3"]
 
 [variables]
     NIXPACKS_NODE_VERSION = "20.18.1"
