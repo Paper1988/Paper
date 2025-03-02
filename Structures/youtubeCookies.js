@@ -60,7 +60,7 @@ module.exports = {
         try {
             if (fs.existsSync(cookieFile)) {
                 const cookieData = JSON.parse(fs.readFileSync(cookieFile, 'utf8'))
-                const now = Date.now() / 1000 // 轉換為秒
+                const now = Date.now() // 直接使用毫秒
 
                 // 檢查必要的 cookies 是否存在且未過期
                 const loginCookie = cookieData.cookies.find((c) => c.name === 'LOGIN_INFO')
@@ -85,7 +85,7 @@ module.exports = {
                 }
 
                 // 檢查是否快要過期（5天內）
-                const fiveDaysFromNow = now + 5 * 24 * 60 * 60
+                const fiveDaysFromNow = now + 5 * 24 * 60 * 60 * 1000 // 5天的毫秒數
                 if (
                     loginCookie.expirationDate < fiveDaysFromNow ||
                     visitorCookie.expirationDate < fiveDaysFromNow
@@ -117,10 +117,10 @@ module.exports = {
                     hasCookies: cookieData.cookies.length > 0,
                     lastUpdate: cookieData.lastUpdate,
                     loginCookieExpires: loginCookie
-                        ? new Date(loginCookie.expirationDate * 1000).toISOString()
+                        ? new Date(loginCookie.expirationDate).toISOString() // 使用毫秒格式
                         : null,
                     visitorCookieExpires: visitorCookie
-                        ? new Date(visitorCookie.expirationDate * 1000).toISOString()
+                        ? new Date(visitorCookie.expirationDate).toISOString() // 使用毫秒格式
                         : null,
                     isValid: this.checkExpiration()
                 }

@@ -1,4 +1,9 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder, MessageFlags } = require('discord.js')
+const {
+    SlashCommandBuilder,
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    MessageFlags
+} = require('discord.js')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -7,7 +12,7 @@ module.exports = {
         .setNameLocalization('ja', 'クレジット')
         .setDescription('檢視版權資訊')
         .setDescriptionLocalization('zh-TW', '檢視版權資訊')
-        .setDescriptionLocalization('ja', 'クレジットを表示'),
+        .setDescriptionLocalization('ja', '著作権情報を表示'),
     /**
      *
      * @param {ChatInputCommandInteraction} interaction

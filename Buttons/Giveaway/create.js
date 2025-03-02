@@ -13,7 +13,7 @@ module.exports = {
         )
 
         await interaction.reply({
-            content: '<:correct_859388130411282442:1201843648229294121> | 請選擇要創建抽獎的頻道：',
+            content: `<:question:1265561586693701703> | 請選擇要創建抽獎的頻道：`,
             components: [row]
         })
     }

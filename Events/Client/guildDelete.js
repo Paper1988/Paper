@@ -1,4 +1,5 @@
 const { Guild } = require('discord.js')
+const mongoose = require('mongoose')
 
 module.exports = {
     name: 'guildDelete',
@@ -15,26 +16,24 @@ module.exports = {
         const GiveawayStats = require('../../Structures/Schemas/GiveawayStats')
         const GiveawayNotification = require('../../Structures/Schemas/GiveawayNotification')
 
-        await MusicDB.deleteOne({ GuildID: guild.id })
-            .exec()
-            .catch(() => {})
-        await AntiAlt.deleteOne({ GuildID: guild.id })
-            .exec()
-            .catch(() => {})
-        await AFKSystem.deleteOne({ GuildID: guild.id })
-            .exec()
-            .catch(() => {})
-        await GiveawayDB.deleteOne({ guildId: guild.id })
-            .exec()
-            .catch(() => {})
-        await GiveawayHistory.deleteOne({ guildId: guild.id })
-            .exec()
-            .catch(() => {})
-        await GiveawayStats.deleteOne({ guildId: guild.id })
-            .exec()
-            .catch(() => {})
-        await GiveawayNotification.deleteOne({ guildId: guild.id })
-            .exec()
-            .catch(() => {})
+        const deleteRecords = async (model) => {
+            await model.deleteMany({ GuildID: guild.id }).then((count) => {
+                console.log(
+                    `[event.guildDelete] 成功從資料庫 ${mongoose.connection.db.databaseName} 刪除 ${count.deletedCount} 筆資料!`
+                )
+            })
+        }
+
+        await Promise.all([
+            deleteRecords(MusicDB),
+            deleteRecords(AntiAlt),
+            deleteRecords(AFKSystem),
+            deleteRecords(GiveawayDB),
+            deleteRecords(GiveawayHistory),
+            deleteRecords(GiveawayStats),
+            deleteRecords(GiveawayNotification)
+        ]).catch((err) => {
+            console.error('[event.guildDelete] 刪除資料庫資料時發生錯誤:', err)
+        })
     }
 }

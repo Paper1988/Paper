@@ -85,7 +85,7 @@ module.exports = {
                 return await handleAutocomplete(interaction, client)
             }
         } catch (error) {
-            console.error(`[Interaction Error]: ${error}`)
+            console.error(`[Interaction Error]: ${error.stack || error}`)
             try {
                 await interaction.channel.send({
                     embeds: [
@@ -155,7 +155,10 @@ async function handleButton(interaction, client) {
     if (interaction.customId.startsWith('unban')) return
     if (interaction.customId.startsWith('TicTacToe_')) return
 
-    const buttonCustomId = interaction.customId.split('/')
+    const buttonCustomId = interaction.customId.includes('/')
+        ? interaction.customId.split('/')
+        : interaction.customId.split(':')
+
     const Button = await client.buttons.get(buttonCustomId[0])
 
     if (!Button) {
@@ -176,7 +179,7 @@ async function handleButton(interaction, client) {
         })
     }
 
-    await Button.execute(interaction, client, buttonCustomId.slice(1, -1))
+    await Button.execute(interaction, client)
 }
 
 /**
@@ -185,7 +188,9 @@ async function handleButton(interaction, client) {
  * @param {Client} client
  */
 async function handleModal(interaction, client) {
-    const CustomId = interaction.customId.split('/')
+    const CustomId = interaction.customId.includes('/')
+        ? interaction.customId.split('/')
+        : interaction.customId.split(':')
     const Modal = await client.modals.get(CustomId[0])
 
     if (!Modal) {
@@ -232,7 +237,9 @@ async function handleModal(interaction, client) {
  * @param {Client} client
  */
 async function handleSelectMenu(interaction, client) {
-    const CustomId = interaction.customId.split('/')
+    const CustomId = interaction.customId.includes('/')
+        ? interaction.customId.split('/')
+        : interaction.customId.split(':')
     const Menu = await client.selectMenus.get(CustomId[0])
 
     if (!Menu) {
@@ -300,7 +307,8 @@ async function handleAutocomplete(interaction, client) {
         } catch (error) {
             console.log('[Autocomplete] ' + error)
         }
-    } else {
+    } else if (!command.autocomplete) {
         console.warn(`[Autocomplete] 指令 ${interaction.commandName} 沒有實現 autocomplete 方法。`)
+        return
     }
 }
