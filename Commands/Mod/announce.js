@@ -12,7 +12,7 @@ module.exports = {
         .setNameLocalization('ja', 'アナウンス')
         .setDescription('Make an embed message announcement!')
         .setDescriptionLocalization('zh-TW', '製作一個嵌入式訊息公告!')
-        .setDescriptionLocalization('ja', '埋入式メッセージのアナウンスを作成!')
+        .setDescriptionLocalization('ja', '埋め込みメッセージのアナウンスを作成！')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
         .addStringOption((option) =>
             option
@@ -20,8 +20,8 @@ module.exports = {
                 .setNameLocalization('zh-TW', '標題')
                 .setNameLocalization('ja', 'タイトル')
                 .setDescription('Please enter your announcement title!')
-                .setDescriptionLocalization('zh-TW', '請輸入您的公告標題!')
-                .setDescriptionLocalization('ja', 'あなたのアナウンスタイトルを入力してください!')
+                .setDescriptionLocalization('zh-TW', '請輸入公告標題!')
+                .setDescriptionLocalization('ja', 'アナウンスのタイトルを入力してください！')
                 .setRequired(true)
         )
         .addStringOption((option) =>
@@ -30,10 +30,10 @@ module.exports = {
                 .setNameLocalization('zh-TW', '訊息')
                 .setNameLocalization('ja', 'メッセージ')
                 .setDescription('Please enter your announcement message! (Use \\n to break lines)')
-                .setDescriptionLocalization('zh-TW', '請輸入您的公告訊息(輸入\\n來換行)')
+                .setDescriptionLocalization('zh-TW', '請輸入您的公告訊息！（輸入 \\n 來換行）')
                 .setDescriptionLocalization(
                     'ja',
-                    'あなたがアナウンスするメッセージを入力してください(\\nを使用して改行)'
+                    'アナウンスするメッセージを入力してください！（\\n を使用して改行できます）'
                 )
                 .setRequired(true)
         )
@@ -47,9 +47,12 @@ module.exports = {
                 )
                 .setDescriptionLocalization(
                     'zh-TW',
-                    '自定義您的嵌入顏色 (請使用六進位制色碼，例如: #00ff00)'
+                    '自訂訊息顏色（請使用十六進位色碼，例如：#00ff00）'
                 )
-                .setDescriptionLocalization('ja', 'あなたの埋入カラーをカスタマイズ! (例: #00ff00)')
+                .setDescriptionLocalization(
+                    'ja',
+                    '埋め込みメッセージの色をカスタマイズ！（例: #00ff00）'
+                )
                 .setRequired(false)
         )
         .addStringOption((option) =>
@@ -58,8 +61,8 @@ module.exports = {
                 .setNameLocalization('zh-TW', '頁腳')
                 .setNameLocalization('ja', 'フッター')
                 .setDescription('Please provide a footer for your embed message')
-                .setDescriptionLocalization('zh-TW', '為您的公告添加頁腳')
-                .setDescriptionLocalization('ja', 'あなたのアナウンスにフッターを追加!')
+                .setDescriptionLocalization('zh-TW', '為公告添加頁腳')
+                .setDescriptionLocalization('ja', '埋め込みメッセージにフッターを追加！')
                 .setRequired(false)
         )
         .addBooleanOption((option) =>
@@ -69,7 +72,7 @@ module.exports = {
                 .setNameLocalization('ja', 'タイムスタンプ')
                 .setDescription('Whether to add a timestamp to your embed message?')
                 .setDescriptionLocalization('zh-TW', '是否啟用時間戳?')
-                .setDescriptionLocalization('ja', 'タイムスタンプを有効にするか?')
+                .setDescriptionLocalization('ja', 'タイムスタンプを追加しますか？')
                 .setRequired(false)
         )
         .addStringOption((option) =>
@@ -79,7 +82,7 @@ module.exports = {
                 .setNameLocalization('ja', 'ピン')
                 .setDescription('The ping option for your embed message')
                 .setDescriptionLocalization('zh-TW', '對您的公告消息的附加標註')
-                .setDescriptionLocalization('ja', 'あなたのアナウンスメッセージの追加標註')
+                .setDescriptionLocalization('ja', 'アナウンスメッセージのピンオプション')
                 .setRequired(false)
                 .addChoices(
                     { name: '@everyone', value: '@everyone' },
@@ -112,7 +115,12 @@ module.exports = {
             try {
                 embed.setColor(color[0].toUpperCase())
             } catch {
-                return await interaction.reply('無效的色碼格式! 請使用六進位制色碼!')
+                if (!/^#([0-9A-Fa-f]{6})$/.test(colorInput)) {
+                    return interaction.reply({
+                        content: '請輸入有效的顏色代碼，例如 #00ff00',
+                        ephemeral: true
+                    })
+                }
             }
         if (footer) embed.setFooter({ text: footer })
         if (timestamp) embed.setTimestamp()

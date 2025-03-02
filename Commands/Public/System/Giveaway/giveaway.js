@@ -4,10 +4,10 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('giveaway')
         .setNameLocalization('zh-TW', '抽獎系統')
-        .setNameLocalization('ja', '抽獎システム')
+        .setNameLocalization('ja', '抽選システム')
         .setDescription('The main menu of the giveaway system')
         .setDescriptionLocalization('zh-TW', '抽獎系統主選單')
-        .setDescriptionLocalization('ja', '抽獎システムメインメニュー')
+        .setDescriptionLocalization('ja', '抽選システムメインメニュー')
         .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
         .addSubcommand((subcommand) =>
             subcommand
@@ -25,6 +25,6 @@ module.exports = {
                 .setNameLocalization('ja', '通知')
                 .setDescription('Set up giveaway notifications')
                 .setDescriptionLocalization('zh-TW', '設定抽獎通知')
-                .setDescriptionLocalization('ja', '抽獎通知を設定する')
+                .setDescriptionLocalization('ja', '抽選通知を設定する')
         )
 }
