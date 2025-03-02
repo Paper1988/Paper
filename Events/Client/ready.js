@@ -1,18 +1,18 @@
-const { Client, EmbedBuilder } = require('discord.js')
+const { Client, EmbedBuilder, Events } = require('discord.js')
 const mongoose = require('mongoose')
 
 const { loadCommands } = require('../../Structures/Handlers/commandHandler.js')
 const { loadButtons } = require('../../Structures/Handlers/buttonHandler.js')
 const { loadModals } = require('../../Structures/Handlers/modalHandler.js')
 const { loadMenus } = require('../../Structures/Handlers/menuHandler.js')
-const { updatePresence } = require('../../Systems/updatePresence.js')
+const { updatePresence } = require('../../libs/utils/updatePresence.js')
 
 const Giveaway = require('../../Structures/Schemas/Giveaway')
 const GiveawayStats = require('../../Structures/Schemas/GiveawayStats')
 const GiveawayHistory = require('../../Structures/Schemas/GiveawayHistory')
 
 module.exports = {
-    name: 'ready',
+    name: Events.ClientReady,
     once: true,
     /**
      * @param {Client} client
@@ -66,6 +66,16 @@ module.exports = {
                 }
             }
         }, 30000) // 每30秒檢查一次
+
+        setInterval(
+            () => {
+                if (global.gc) {
+                    global.gc()
+                    console.log('✅ 已執行垃圾回收')
+                }
+            },
+            24 * 60 * 60 * 1000
+        )
     }
 }
 

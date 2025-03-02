@@ -17,7 +17,11 @@ module.exports = {
         .addStringOption((option) =>
             option
                 .setName('language')
-                .setDescription('你想要翻成的語言')
+                .setNameLocalization('zh-TW', '語言')
+                .setNameLocalization('ja', '言語')
+                .setDescription('The language you want to translate to')
+                .setDescriptionLocalization('zh-TW', '你想要翻成的語言')
+                .setDescriptionLocalization('ja', '翻訳したい言語')
                 .addChoices(
                     { name: 'العربية(阿拉伯文)', value: 'ar' },
                     { name: 'Nederlands(荷蘭文)', value: 'nl' },
@@ -37,7 +41,14 @@ module.exports = {
                 .setRequired(true)
         )
         .addStringOption((option) =>
-            option.setName('message').setDescription('要翻譯的訊息').setRequired(true)
+            option
+                .setName('message')
+                .setNameLocalization('zh-TW', '訊息')
+                .setNameLocalization('ja', 'メッセージ')
+                .setDescription('The message you want to translate')
+                .setDescriptionLocalization('zh-TW', '要翻譯的訊息')
+                .setDescriptionLocalization('ja', '翻訳するテキスト')
+                .setRequired(true)
         ),
     /**
      * @param {ChatInputCommandInteraction} interaction
@@ -47,7 +58,7 @@ module.exports = {
         const text = interaction.options.getString(`message`)
 
         await interaction.reply({
-            content: '<a:discord1792loading:1212016238839070791> | 正在翻譯你的訊息...',
+            content: '<a:discord_loading:1342772648282689546> | 正在翻譯你的訊息...',
             flags: MessageFlags.Ephemeral
         })
 

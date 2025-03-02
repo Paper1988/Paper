@@ -77,7 +77,7 @@ module.exports = {
                 .setURL('https://ko-fi.com/paper1988')
         )
 
-        const publicEm = new EmbedBuilder()
+        const public = new EmbedBuilder()
             .setTitle('🔧一般 General')
             .setColor('Green')
             .setDescription(
@@ -102,7 +102,7 @@ module.exports = {
             .setFooter({ text: '<>內為必填內容，[]內為選填內容' })
             .setTimestamp()
 
-        const modEm = new EmbedBuilder()
+        const mod = new EmbedBuilder()
             .setTitle('🔒管理 Moderation')
             .setColor('Red')
             .setDescription(
@@ -124,7 +124,7 @@ module.exports = {
             .setFooter({ text: '<>內為必填內容，[]內為選填內容' })
             .setTimestamp()
 
-        const musicEm = new EmbedBuilder()
+        const music = new EmbedBuilder()
             .setTitle('🎶音樂 Music')
             .setColor('Purple')
             .setDescription(
@@ -149,22 +149,41 @@ module.exports = {
             .setFooter({ text: '<>內為必填內容，[]內為選填內容' })
             .setTimestamp()
 
-        const musicInfoEm = new EmbedBuilder()
+        const playlist = new EmbedBuilder()
+            .setTitle('🎶音樂 Music - 播放清單 Playlist')
+            .setColor('Purple')
+            .setDescription(
+                `
+                > </playlist-add> <播放清單名稱> [私人?] 創建一個新的播放清單
+                > </playlist-create> <播放清單名稱> [私人?] 創建一個新的播放清單
+                > </playlist-delete> <播放清單名稱> 刪除一個播放清單
+                > </playlist-edit> <播放清單名稱> [新播放清單名稱] [新的清單敘述] [私人?] 編輯播放清單
+                > </playlist-export> <播放清單名稱> 匯出播放清單
+                > </playlist-import> <檔案> [新播放清單名稱] 匯入播放清單
+                > </playlist-list> [播放清單名稱] 顯示所有播放清單或查看清單資訊
+                > </playlist-remove> <播放清單名稱> <歌曲在清單中的位置(數字)> 移除播放清單中的一首歌
+                > </playlist-share> <播放清單名稱> [私人?] 分享播放清單
+                `
+            )
+            .setFooter({ text: '<>內為必填內容，[]內為選填內容' })
+            .setTimestamp()
+
+        const musicInfo = new EmbedBuilder()
             .setColor('Orange')
             .setDescription(
                 '`遇到音樂中斷?` -> 可能是以下原因:\n- 機器人重啟\n- 我們正在進行一些修復或更新\n- 網路不穩'
             )
             .setFooter({ text: '造成不便，敬請見諒!' })
 
-        const giveEm = new EmbedBuilder()
+        const giveaway = new EmbedBuilder()
             .setTitle('🎁抽獎 Giveaway')
             .setColor('Gold')
             .setDescription(
                 `
                 > </giveaway menu:1131066239050063986> 開啟抽獎系統的選單
                 > <:text2:1264894818224574505> 開始抽獎
-                >   <:text2:1264894818224574505> |選單| 選擇抽獎活動開始的頻道
-                >   <:text1:1265167336109899786> |表單| 獎品名稱、數量、時間、備註、限制條件(身分組、加入天數、帳號年齡等)
+                > \t<:text2:1264894818224574505> |選單| 選擇抽獎活動開始的頻道
+                > \t<:text1:1265167336109899786> |表單| 獎品名稱、數量、時間、備註、限制條件(身分組、加入天數、帳號年齡等)
                 > <:text2:1264894818224574505> 查看列表 查看正在進行中的抽獎活動
                 > <:text2:1264894818224574505> 統計資訊 查看此伺服器中所有抽獎活動的統計資訊
                 > <:text1:1265167336109899786> 結束抽獎活動
@@ -174,7 +193,14 @@ module.exports = {
             .setFooter({ text: '<>內為必填內容，[]內為選填內容' })
             .setTimestamp()
 
-        const funEm = new EmbedBuilder()
+        const giveawayInfo = new EmbedBuilder()
+            .setColor('Orange')
+            .setDescription(
+                '# 請注意:\n### 抽獎活動開始後一個月，未結束的抽獎活動的**__所有資料__**將會被刪除。'
+            )
+            .setFooter({ text: '造成不便，敬請見諒!' })
+
+        const fun = new EmbedBuilder()
             .setTitle('🎭娛樂 Fun')
             .setColor('Orange')
             .setDescription(
@@ -183,10 +209,10 @@ module.exports = {
                 > </gif bite:1265526894007291914> 咬某人
                 > <:text2:1264894818224574505> </gif dance:1265526894007291914> 跳舞
                 > <:text2:1264894818224574505> </gif hug:1265526894007291914> 擁抱某人
-                > <:text2:1264894818224574505> </gif kill:1265526894007291914> 殺掉某
+                > <:text2:1264894818224574505> </gif kill:1265526894007291914> 殺掉某人
                 > <:text2:1264894818224574505> </gif kiss:1265526894007291914> 親吻某人
                 > <:text2:1264894818224574505> </gif pat:1265526894007291914> 摸摸某人
-                > <:text1:1265167336109899786> </gif punch:1265526894007291914> 揍打某人
+                > <:text1:1265167336109899786> </gif punch:1265526894007291914> 毆打某人
                 > </rock-paper-scissors:1202944172160720968> 邀請某人遊玩剪刀石頭布
                 `
             )
@@ -199,40 +225,40 @@ module.exports = {
             case 'General':
                 {
                     await interaction.update({
-                        embeds: [publicEm],
-                        components: [helpMenu, inviteAndSupport, back, koFi]
+                        embeds: [public],
+                        components: [helpMenu, inviteAndSupport, koFi, back]
                     })
                 }
                 break
             case 'Moderation':
                 {
                     await interaction.update({
-                        embeds: [modEm],
-                        components: [helpMenu, inviteAndSupport, back, koFi]
+                        embeds: [mod],
+                        components: [helpMenu, inviteAndSupport, koFi, back]
                     })
                 }
                 break
             case 'Music':
                 {
                     await interaction.update({
-                        embeds: [musicInfoEm, musicEm],
-                        components: [helpMenu, inviteAndSupport, back, koFi]
+                        embeds: [musicInfo, music],
+                        components: [helpMenu, inviteAndSupport, koFi, back]
                     })
                 }
                 break
             case 'Giveaway':
                 {
                     await interaction.update({
-                        embeds: [giveEm],
-                        components: [helpMenu, inviteAndSupport, back, koFi]
+                        embeds: [giveawayInfo, giveaway],
+                        components: [helpMenu, inviteAndSupport, koFi, back]
                     })
                 }
                 break
             case 'Fun':
                 {
                     await interaction.update({
-                        embeds: [funEm],
-                        components: [helpMenu, inviteAndSupport, back, koFi]
+                        embeds: [fun],
+                        components: [helpMenu, inviteAndSupport, koFi, back]
                     })
                 }
                 break

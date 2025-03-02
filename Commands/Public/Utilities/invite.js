@@ -9,7 +9,13 @@ const {
 } = require('discord.js')
 
 module.exports = {
-    data: new SlashCommandBuilder().setName('invite').setDescription('邀請我加入你的伺服器!'),
+    data: new SlashCommandBuilder()
+        .setName('invite')
+        .setNameLocalization('zh-TW', '邀請我')
+        .setNameLocalization('ja', '招待')
+        .setDescription('Invite me!')
+        .setDescriptionLocalization('zh-TW', '邀請我加入你的伺服器!')
+        .setDescriptionLocalization('ja', '私をあなたのサーバーに招待してください！'),
     /**
      * @param {ChatInputCommandInteraction} interaction
      * @param {Client} client

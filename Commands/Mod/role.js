@@ -8,7 +8,9 @@ const {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('role-editor')
+        .setName('role')
+        .setNameLocalization('zh-TW', '身分組管理')
+        .setNameLocalization('ja', '役割エディター')
         .setDescription('Manage user roles')
         .setDescriptionLocalization('zh-TW', '管理用戶身分組')
         .setDescriptionLocalization('ja', 'ユーザーの役割を管理')
@@ -33,7 +35,6 @@ module.exports = {
                 .setDescriptionLocalization('ja', '管理するユーザーを提供してください')
                 .setRequired(false)
         ),
-    usage: '/role (role, user)',
     /**
      * @param {ChatInputCommandInteraction} interaction
      */

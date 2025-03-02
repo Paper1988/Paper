@@ -1,6 +1,10 @@
-const { SlashCommandBuilder, AutocompleteInteraction } = require('discord.js')
+const { SlashCommandBuilder, AutocompleteInteraction, Collection } = require('discord.js')
 const { defaultFilters } = require('distube')
 const { YouTubePlugin } = require('@distube/youtube')
+
+// 在檔案開頭添加快取相關的常數
+const CACHE_DURATION = 30 * 60 * 1000 // 快取時間30分鐘
+const trendingCache = new Collection()
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -154,7 +158,7 @@ module.exports = {
             sub
                 .setName('settings')
                 .setNameLocalization('zh-TW', '選項')
-                .setNameLocalization('ja', '選項')
+                .setNameLocalization('ja', 'オプション')
                 .setDescription('The options of the song')
                 .setDescriptionLocalization('zh-TW', '⚙歌曲設定')
                 .setDescriptionLocalization('ja', '⚙曲の設定')
@@ -185,44 +189,119 @@ module.exports = {
                 .setDescriptionLocalization('zh-TW', '退出語音頻道')
                 .setDescriptionLocalization('ja', 'ボイスチャンネルを離れる')
         ),
-    usage: '/music (play, volume, settings, seek, filters, jump)',
     /**
      *
      * @param {AutocompleteInteraction} interaction
      * @returns
      */
     async autocomplete(interaction) {
-        // 檢查是否為 "play" 子指令的自動完成
         const yt = new YouTubePlugin()
         const value = interaction.options.getFocused().toString().trim()
 
-        // 確保搜索字符串不是空的
-        if (!value || value.startsWith('https://' || 'http://')) {
-            // 如果是空的，可以選擇回應一些預設選項或不回應
-            return await interaction.respond([]) // 不回應任何選項
-        }
+        try {
+            // 如果用戶還沒輸入任何內容，顯示熱門歌曲
+            if (!value) {
+                const userLocale = interaction.locale || 'zh-TW'
+                let regionCode = 'TW' // 預設美國
 
-        let choices = []
-        // 假設有一個搜索功能可以返回歌曲列表
-        await yt
-            .search(value, { limit: 10 })
-            .then((results) => {
-                choices = results.map((song, id) => ({
-                    name: `${song.name}`,
-                    value: `${song.name}`
+                const regionMap = {
+                    'zh-TW': 'TW',
+                    'zh-CN': 'CN',
+                    ja: 'JP',
+                    ko: 'KR',
+                    'en-US': 'US',
+                    'en-GB': 'GB'
+                }
+
+                regionCode = regionMap[userLocale] || regionCode
+
+                // 檢查快取
+                const cacheKey = `trending_${regionCode}`
+                const cachedResults = trendingCache.get(cacheKey)
+
+                if (cachedResults && Date.now() - cachedResults.timestamp < CACHE_DURATION) {
+                    return await interaction.respond(cachedResults.choices)
+                }
+
+                // 如果沒有快取或快取過期，重新獲取
+                let trendingResults
+                switch (regionCode) {
+                    case 'TW':
+                        trendingResults = await yt.search('台灣流行音樂 最新', { limit: 10 })
+                        break
+                    case 'JP':
+                        trendingResults = await yt.search('日本流行音楽 最新', { limit: 10 })
+                        break
+                    case 'KR':
+                        trendingResults = await yt.search('한국 인기 음악', { limit: 10 })
+                        break
+                    case 'CN':
+                        trendingResults = await yt.search('中国流行音乐 最新', { limit: 10 })
+                        break
+                    default:
+                        trendingResults = await yt.search('popular music trending', { limit: 10 })
+                }
+
+                const trendingChoices = trendingResults.map((song) => ({
+                    name: `🔥 ${song.name.slice(0, 30)}`, // 限制長度，避免超出Discord限制
+                    value: song.name
                 }))
-            })
-            .catch(() => {
-                // 處理錯誤，例如通過回應一些預設選項或顯示錯誤信息
-                return interaction.respond([])
-            })
 
-        // 篩選出包含用戶輸入值的選項
-        const filtered = choices
-            .filter((choice) => choice.name.toLowerCase().includes(value.toLowerCase()))
-            .slice(0, 10)
+                // 儲存到快取
+                trendingCache.set(cacheKey, {
+                    choices: trendingChoices,
+                    timestamp: Date.now()
+                })
 
-        // 回應用戶輸入，提供選項列表
-        return await interaction.respond(filtered)
+                return await interaction.respond(trendingChoices)
+            }
+
+            // 如果是URL，不提供建議
+            if (value.startsWith('https://') || value.startsWith('http://')) {
+                return await interaction.respond([])
+            }
+
+            // 一般搜尋
+            let choices = []
+            try {
+                // 對搜尋詞進行處理
+                const searchTerm = value
+                    .replace(/\s+/g, ' ') // 將多個空格轉換為單個空格
+                    .trim()
+
+                const results = await yt.search(searchTerm, {
+                    limit: 10,
+                    type: 'video'
+                })
+
+                choices = results.map((song) => ({
+                    name: `${song.name}`.slice(0, 90),
+                    value: song.name // 保留完整名稱作為值
+                }))
+            } catch (searchError) {
+                console.error('搜尋時發生錯誤:', searchError)
+                return await interaction.respond([])
+            }
+
+            // 改進搜尋結果過濾邏輯
+            const filtered = choices
+                .filter((choice) => {
+                    const searchLower = value.toLowerCase()
+                    const titleLower = choice.name.toLowerCase()
+
+                    // 檢查完整字串匹配
+                    if (titleLower.includes(searchLower)) return true
+
+                    // 檢查所有關鍵字是否都匹配
+                    const searchTerms = searchLower.split(/\s+/)
+                    return searchTerms.every((term) => titleLower.includes(term))
+                })
+                .slice(0, 10)
+
+            return await interaction.respond(filtered)
+        } catch (error) {
+            console.error('音樂搜尋時發生錯誤:', error)
+            return await interaction.respond([])
+        }
     }
 }

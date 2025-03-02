@@ -30,6 +30,7 @@ const { YouTubePlugin } = require('@distube/youtube')
 const { DeezerPlugin } = require('@distube/deezer')
 const { AppleMusicPlugin } = require('distube-apple-music')
 const { TidalPlugin } = require('distube-tidal')
+const { BandlabPlugin } = require('@distube/bandlab')
 const cookieManager = require('./Structures/youtubeCookies.js')
 
 // 初始化時檢查 cookies
@@ -38,6 +39,24 @@ const cookieStatus = cookieManager.getStatus()
 if (!cookieStatus.isValid) {
     console.warn('YouTube cookies are invalid or missing!')
 }
+
+const prism = require('prism-media')
+const ffmpeg = new prism.FFmpeg({
+    args: [
+        '-analyzeduration',
+        '0',
+        '-loglevel',
+        '0',
+        '-i',
+        'input.mp3',
+        '-f',
+        's16le',
+        '-ar',
+        '48000',
+        '-ac',
+        '2'
+    ]
+})
 
 client.distube = new DisTube(client, {
     customFilters: {
@@ -55,6 +74,7 @@ client.distube = new DisTube(client, {
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: false,
     nsfw: true,
+    ffmpeg: ffmpeg,
     plugins: [
         new SpotifyPlugin({
             api: {
@@ -63,26 +83,15 @@ client.distube = new DisTube(client, {
                 topTracksCountry: 'TW'
             }
         }),
-        new SoundCloudPlugin({
-            clientId: client.config.SoundCloudClientId,
-            oauthToken: client.config.SoundCloudOAuthToken
-        }),
+        new SoundCloudPlugin(),
         new DirectLinkPlugin(),
         new TidalPlugin(),
         new DeezerPlugin(),
         new AppleMusicPlugin(),
         new YouTubePlugin({
-            ytdlOptions: {
-                playerClients: ['IOS', 'WEB_CREATOR', 'ANDROID', 'WEB'],
-                requestOptions: {
-                    headers: {
-                        'User-Agent':
-                            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-                    }
-                }
-            },
             cookies: cookieManager.getCookies()
-        })
+        }),
+        new BandlabPlugin()
     ]
 })
 

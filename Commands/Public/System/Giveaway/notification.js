@@ -44,22 +44,22 @@ module.exports = {
                 .setCustomId('notify-start')
                 .setLabel('開始通知')
                 .setStyle(userSettings.notifyStart ? ButtonStyle.Success : ButtonStyle.Secondary)
-                .setEmoji('🎉'),
+                .setEmoji('<:correct:1265560254708711467>'),
             new ButtonBuilder()
                 .setCustomId('notify-end')
                 .setLabel('結束通知')
                 .setStyle(userSettings.notifyEnd ? ButtonStyle.Success : ButtonStyle.Secondary)
-                .setEmoji('🏁'),
+                .setEmoji('<:stop:1265562532857380936>'),
             new ButtonBuilder()
                 .setCustomId('notify-win')
                 .setLabel('中獎通知')
                 .setStyle(userSettings.notifyWin ? ButtonStyle.Success : ButtonStyle.Secondary)
-                .setEmoji('🎯'),
+                .setEmoji('<:mail:1320298639293415434>'),
             new ButtonBuilder()
                 .setCustomId('notify-reminder')
                 .setLabel('提醒通知')
                 .setStyle(userSettings.notifyReminder ? ButtonStyle.Success : ButtonStyle.Secondary)
-                .setEmoji('⏰')
+                .setEmoji('<:reminder:1265561686358753280>')
         )
 
         await interaction.reply({

@@ -3,10 +3,10 @@ const { SlashCommandBuilder } = require('discord.js')
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('afk')
-        .setNameLocalization('zh-TW', 'afk')
+        .setNameLocalization('zh-TW', '掛機')
         .setNameLocalization('ja', 'afk')
         .setDescription('AFK system')
-        .setDescriptionLocalization('zh-TW', '一個afk系統')
+        .setDescriptionLocalization('zh-TW', 'afk系統')
         .setDescriptionLocalization('ja', 'afkシステム')
         .addSubcommand((sub) =>
             sub
@@ -34,7 +34,7 @@ module.exports = {
                 .setNameLocalization('ja', '戻る')
                 .setDescription('Exit the AFK status')
                 .setDescriptionLocalization('zh-TW', '退出afk狀態')
-                .setDescriptionLocalization('ja', 'afk状態を退出します')
+                .setDescriptionLocalization('ja', 'afk状態を解除します')
         ),
     usage: '/afk (set, return)'
 }
