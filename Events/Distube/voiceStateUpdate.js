@@ -26,7 +26,7 @@ const setEmptyChannelTimer = (queue) => {
                         new EmbedBuilder()
                             .setColor('Red')
                             .setDescription(
-                                `${emojis.musicstop} | 由於語音頻道已空超過1分鐘，已自動停止播放\n-# • 加入語音頻道來維持播放`
+                                `${emojis.musicstop} | 由於語音頻道已空超過1分鐘，已自動停止播放`
                             )
                     ]
                 })
@@ -59,7 +59,7 @@ module.exports = {
                         new EmbedBuilder()
                             .setColor('Red')
                             .setDescription(
-                                `${emojis.warning} | 語音頻道已空，1分鐘後將自動停止播放`
+                                `${emojis.warning} | 語音頻道已空，1分鐘後將自動停止播放\n-# • 加入語音頻道來維持播放`
                             )
                     ]
                 })
