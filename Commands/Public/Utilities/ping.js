@@ -6,7 +6,13 @@ const {
 } = require('discord.js')
 
 module.exports = {
-    data: new SlashCommandBuilder().setName('ping').setDescription('Pong!'),
+    data: new SlashCommandBuilder()
+        .setName('ping')
+        .setNameLocalization('zh-TW', 'ping')
+        .setNameLocalization('ja', 'ピング')
+        .setDescription('Pong!')
+        .setDescriptionLocalization('zh-TW', '砰！')
+        .setDescriptionLocalization('ja', 'ポン！'),
     usage: '/ping',
     /**
      * @param {ChatInputCommandInteraction} interaction

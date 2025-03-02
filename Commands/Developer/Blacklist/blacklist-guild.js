@@ -30,7 +30,7 @@ module.exports = {
                 content: `<:correct:1265560254708711467> | 成功添加 **${Guild.name} || ${Guild.id}** 至伺服器黑名單 , 原因: ${reason}`
             })
         } else {
-            await Data.delete()
+            await Data.deleteOne()
             interaction.editReply({
                 content: `<:correct:1265560254708711467> | 成功從伺服器黑名單中移除 **${Guild.name} || ${Guild.id}**`
             })

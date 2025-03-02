@@ -1,8 +1,9 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js')
-const { sendGiveawayNotification } = require('../Functions/sendGiveawayNotification')
+const { sendGiveawayNotification } = require('../libs/utils/sendGiveawayNotification')
 const giveawayModel = require('../Structures/Schemas/Giveaway')
 const GiveawayStats = require('../Structures/Schemas/GiveawayStats')
 const GiveawayHistory = require('../Structures/Schemas/GiveawayHistory')
+const GiveawayNotification = require('../Structures/Schemas/GiveawayNotification')
 
 module.exports = (client) => {
     class GiveawayManagerWithOwnDatabase {
@@ -10,6 +11,8 @@ module.exports = (client) => {
             this.client = client
             this.giveaways = new Map()
             this.init()
+            // 每24小時執行一次清理
+            this.startCleanupInterval()
         }
 
         async init() {
@@ -20,10 +23,16 @@ module.exports = (client) => {
                     this.scheduleEnd(giveaway.messageId, giveaway.endAt - Date.now())
                 }
             }
+
+            // 初始化時也執行一次清理
+            await this.cleanupOldGiveaways()
         }
 
         scheduleEnd(messageId, delay) {
-            setTimeout(() => this.end(messageId), delay)
+            if (delay <= 0) {
+                return this.end(messageId)
+            }
+            setTimeout(() => this.end(messageId), Math.min(delay, 2 ** 31 - 1)) // 確保不超過 2147483647ms
         }
 
         async saveGiveaway(messageId, giveawayData) {
@@ -33,7 +42,18 @@ module.exports = (client) => {
             // 建議改為只發送給有開啟通知的用戶
             const guild = await this.client.guilds.fetch(giveawayData.guildId)
             const members = await guild.members.fetch()
-            for (const [userId, member] of members) {
+
+            // 將所有非機器人用戶創建至通知的資料庫
+            const nonBotMembers = members.filter((member) => !member.user.bot)
+            for (const [userId, member] of nonBotMembers) {
+                new GiveawayNotification({
+                    guildId: guild.id,
+                    userId: userId
+                })
+            }
+
+            // 發送通知給參加者
+            for (const [userId, member] of nonBotMembers) {
                 await sendGiveawayNotification(this.client, 'start', giveawayData, userId)
             }
 
@@ -172,6 +192,49 @@ module.exports = (client) => {
             await giveaway.save()
 
             return winners
+        }
+
+        async cleanupOldGiveaways() {
+            try {
+                const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+
+                const giveawaysToDelete = await giveawayModel.find({
+                    createdAt: { $lt: thirtyDaysAgo },
+                    ended: true // 只刪除已結束的抽獎
+                })
+
+                // 記錄要刪除的資料
+                console.log('準備清理以下抽獎資料:')
+                giveawaysToDelete.forEach((giveaway) => {
+                    console.log(
+                        `- 抽獎ID: ${giveaway.messageId}, 獎品: ${giveaway.prize}, 創建時間: ${giveaway.createdAt}`
+                    )
+                })
+
+                // 執行刪除
+                const deletedGiveaways = await giveawayModel.deleteMany({
+                    _id: { $in: giveawaysToDelete.map((g) => g._id) }
+                })
+
+                console.log(`已清理 ${deletedGiveaways.deletedCount} 個已結束的舊抽獎資料`)
+
+                // 如果刪除數量與預期不符，記錄警告
+                if (deletedGiveaways.deletedCount !== giveawaysToDelete.length) {
+                    console.warn('警告：清理的資料數量與預期不符，請檢查資料庫')
+                }
+            } catch (error) {
+                console.error('清理舊抽獎資料時發生錯誤:', error)
+            }
+        }
+
+        startCleanupInterval() {
+            // 每24小時執行一次
+            this.cleanupInterval = setInterval(
+                () => this.cleanupOldGiveaways(),
+                24 * 60 * 60 * 1000
+            )
+            process.on('SIGINT', () => clearInterval(this.cleanupInterval))
+            client.on('destroy', () => clearInterval(this.cleanupInterval))
         }
     }
 

@@ -11,9 +11,20 @@ const {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('mcstats')
-        .setDescription('顯示一個Minecraft伺服器的資訊')
+        .setNameLocalization('zh-TW', '伺服器資訊')
+        .setNameLocalization('ja', 'マインクラフトサーバー情報')
+        .setDescription('display a Minecraft server information')
+        .setDescriptionLocalization('zh-TW', '顯示Minecraft伺服器的資訊')
+        .setDescriptionLocalization('ja', 'Minecraftサーバーの情報を表示')
         .addStringOption((option) =>
-            option.setName('server-ip').setDescription('伺服器的IP').setRequired(true)
+            option
+                .setName('server-ip')
+                .setNameLocalization('zh-TW', '伺服器ip')
+                .setNameLocalization('ja', 'サーバーip')
+                .setDescription('Ip address of the server')
+                .setDescriptionLocalization('zh-TW', '伺服器的ip')
+                .setDescriptionLocalization('ja', 'サーバーのip')
+                .setRequired(true)
         ),
     /**
      *

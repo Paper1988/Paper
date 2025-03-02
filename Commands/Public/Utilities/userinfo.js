@@ -50,7 +50,14 @@ module.exports = {
         .setDescriptionLocalization('zh-TW', '取得指定用戶的資訊')
         .setDescriptionLocalization('ja', '指定されたユーザーの情報を取得します')
         .addUserOption((option) =>
-            option.setName('member').setDescription('選擇一個用戶').setRequired(false)
+            option
+                .setName('member')
+                .setNameLocalization('zh-TW', '用戶')
+                .setNameLocalization('ja', 'ユーザー')
+                .setDescription('Choose a user')
+                .setDescriptionLocalization('zh-TW', '選擇一個用戶')
+                .setDescriptionLocalization('ja', 'ユーザーを選択')
+                .setRequired(false)
         ),
     usage: '/userinfo {user}',
     /**

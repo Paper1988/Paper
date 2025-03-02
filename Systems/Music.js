@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js')
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js')
 const { Queue, Song } = require('distube')
+const { emojis } = require('../libs/emoji/emoji')
 
 const secondsToDuration = (seconds) => {
     const secondsInNum = parseInt(seconds, 10) // don't forget the second param
@@ -29,7 +30,7 @@ const secondsToDuration = (seconds) => {
  * @param {Queue} queue
  * @returns
  */
-const generateMusicStatusButtons = (queue) => {
+const generateMusicStatusButtons = (queue, song) => {
     const row1 = new ActionRowBuilder().addComponents([
         new ButtonBuilder()
             .setCustomId(`autoplay`)
@@ -96,6 +97,10 @@ const generateMusicStatusButtons = (queue) => {
         new ButtonBuilder()
             .setCustomId('lyrics')
             .setEmoji('<:list:1265560873876062340>')
+            .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+            .setCustomId(`playlist:save`)
+            .setEmoji('<:download:1320298270739791973>')
             .setStyle(ButtonStyle.Secondary)
     ])
 
@@ -157,13 +162,19 @@ const generateProgressBar = (length, totalLength, barLength = 22) => {
  * @returns
  */
 const updateMusicPlayerStatus = async (queue, completed) => {
+    if (!queue?.textChannel) return
+
     if (!queue.musicControllerMsgId) return
 
     const msg = queue?.textChannel?.messages.cache.get(queue.musicControllerMsgId)
     if (!msg) return
 
     const song = queue.songs[0]
-    if (!song) return
+    if (!song) {
+        // 如果沒有歌曲，清除播放器
+        clearPlayer(queue)
+        return
+    }
 
     if (completed) resetPlayer(queue)
     await msg.edit(generateMusicPlayerStatus(queue, song, completed))
@@ -192,12 +203,27 @@ const resetPlayer = (queue) => {
  * @param {Song} song
  */
 const generateMusicPlayerStatus = (queue, song, completed = false) => {
+    // 檢查必要的屬性是否存在
+    if (!song?.name || !queue) {
+        console.error('Missing required properties:', { song: !!song, queue: !!queue })
+        return {
+            embeds: [
+                new EmbedBuilder()
+                    .setColor('Red')
+                    .setDescription(`${emojis.outage} | 無法獲取歌曲資訊`)
+            ],
+            components: []
+        }
+    }
+
+    // 獲取歌曲時長，如果不存在則設為 0
+    const songDuration = song.duration || 0
+
     const previousSongsLength = queue.previousSongs.reduce((store, curr) => {
         const duration = curr.stream.playFromSource ? curr.duration : curr.stream.song.duration
 
         return store + duration
     }, 0)
-    const songDuration = song.stream.playFromSource ? song.duration : song.stream.song.duration
 
     let queuePlayedLength = previousSongsLength + queue.currentTime
     if (completed) queuePlayedLength += songDuration
@@ -209,9 +235,9 @@ const generateMusicPlayerStatus = (queue, song, completed = false) => {
                 .setColor(queue.paused ? 'Orange' : 'Green')
                 .setDescription(
                     `<:music:1265561113039208512> | [${song.name}](${song.url}) - \` ${
-                        song.stream.playFromSource
-                            ? song.formattedDuration
-                            : song.stream.song?.formattedDuration
+                        song.stream?.playFromSource
+                            ? secondsToDuration(songDuration)
+                            : secondsToDuration(queue.currentTime)
                     } \``
                 )
                 .setAuthor({
@@ -227,7 +253,9 @@ const generateMusicPlayerStatus = (queue, song, completed = false) => {
                     {
                         name: '<:spark:1265561903195750471>過濾器',
                         value: `${
-                            queue.filters.names.join(', ') || '<:xmark:1265562550947545089>'
+                            queue.filters.names.length > 0
+                                ? queue.filters.names.join(', ')
+                                : '<:xmark:1265562550947545089>'
                         }`,
                         inline: true
                     },
@@ -254,8 +282,8 @@ const generateMusicPlayerStatus = (queue, song, completed = false) => {
                     {
                         name: '<:clock:1265560238137016372>進度',
                         value: `${
-                            song.isLive
-                                ? `${songDuration}`
+                            song.isLive || !songDuration
+                                ? '🔴 直播中'
                                 : completed
                                   ? `\`${secondsToDuration(songDuration)}\` - \`${secondsToDuration(songDuration)}\``
                                   : `\`${secondsToDuration(queue.currentTime)}\` - \`${secondsToDuration(songDuration)}\``
@@ -297,8 +325,12 @@ const generateMusicPlayerStatus = (queue, song, completed = false) => {
                     text: `在 ${queue.voiceChannel.name} 中播放`
                 })
         ],
-        components: completed ? [] : generateMusicStatusButtons(queue)
+        components: completed ? [] : generateMusicStatusButtons(queue, song)
     }
+}
+
+const deleteMessageAfter = (msg, time = 15 * 1000) => {
+    setTimeout(() => msg.delete(), time)
 }
 
 module.exports = {
@@ -307,5 +339,6 @@ module.exports = {
     resetPlayer,
     generateProgressBar,
     generateMusicPlayerStatus,
-    generateMusicStatusButtons
+    generateMusicStatusButtons,
+    deleteMessageAfter
 }
