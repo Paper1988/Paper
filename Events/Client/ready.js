@@ -11,6 +11,8 @@ const Giveaway = require('../../Structures/Schemas/Giveaway')
 const GiveawayStats = require('../../Structures/Schemas/GiveawayStats')
 const GiveawayHistory = require('../../Structures/Schemas/GiveawayHistory')
 
+const { checkAndNotify } = require('../../libs/utils/checkCookies.js')
+
 module.exports = {
     name: Events.ClientReady,
     once: true,
@@ -44,6 +46,8 @@ module.exports = {
             )
             .then((webhook) => webhook.send({ embeds: [Embed] }))
 
+        await checkAndNotify(client) //檢查 Cookie 狀態，寫入 Log，並通知用戶
+
         setInterval(async () => await updatePresence(client), 10 * 1000)
 
         setInterval(async () => {
@@ -65,16 +69,18 @@ module.exports = {
                     console.error('Error ending giveaway:', error)
                 }
             }
-        }, 30000) // 每30秒檢查一次
+        }, 30 * 1000) // 每30秒檢查一次
 
         setInterval(
-            () => {
+            async () => {
+                await checkAndNotify(client) //檢查 Cookie 狀態，寫入 Log，並通知用戶
+
                 if (global.gc) {
                     global.gc()
                     console.log('✅ 已執行垃圾回收')
                 }
             },
-            24 * 60 * 60 * 1000
+            24 * 60 * 60 * 1000 // 每24小時執行一次
         )
     }
 }

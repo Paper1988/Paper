@@ -31,7 +31,7 @@ const { DeezerPlugin } = require('@distube/deezer')
 const { AppleMusicPlugin } = require('distube-apple-music')
 const { TidalPlugin } = require('distube-tidal')
 const { BandlabPlugin } = require('@distube/bandlab')
-const cookieManager = require('./Structures/youtubeCookies.js')
+const cookieManager = require('./libs/utils/youtubeCookies.js')
 
 // 初始化時檢查 cookies
 cookieManager.formatExistingFile()
