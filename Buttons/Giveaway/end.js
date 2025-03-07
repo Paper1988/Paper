@@ -9,11 +9,11 @@ const {
 module.exports = {
     id: 'giveaway-end',
     async execute(interaction) {
-        const endEmbed = new EmbedBuilder()
+        /* const endEmbed = new EmbedBuilder()
             .setColor('Red')
             .setTitle('<:stop:1265562218498363422> | 結束抽獎')
             .setDescription('請輸入要結束的抽獎 ID')
-            .setTimestamp()
+            .setTimestamp() */
 
         const modal = new ModalBuilder().setCustomId('end-giveaway-modal').setTitle('結束抽獎')
 

@@ -18,7 +18,7 @@ module.exports = {
         if (giveaways.length === 0) {
             return interaction.reply({
                 content: '<:warning:1265562532857380936> | 目前沒有進行中的抽獎活動！',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
 

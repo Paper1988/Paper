@@ -12,6 +12,7 @@ const {
 const { connection } = require('mongoose')
 const os = require('os')
 
+const pidusage = require('pidusage')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -44,6 +45,16 @@ module.exports = {
 
         const getChannelTypeSize = (type) =>
             client.channels.cache.filter((channel) => type.includes(channel.type)).size
+
+        let memoryUsageMB
+        pidusage(process.pid, (err, stats) => {
+            if (err) {
+                console.error('Error fetching memory usage:', err)
+                return
+            }
+
+            memoryUsageMB = stats.memory / (1024 * 1024) // 轉換成 MB
+        })
 
         const embed = new EmbedBuilder()
             .setColor(interaction.guild.members.me.roles.highest.hexColor)
@@ -84,11 +95,7 @@ module.exports = {
                         )}:R>`,
                         `<:internet:1265560594321375333> **Ping** \`${client.ws.ping}ms\``,
                         `<:dollar:1265560329040039979> **CPU型號** \`${os.cpus()[0].model}\``,
-                        `<:bulb:1265560195178958941> **RAM使用率** \`${(
-                            process.memoryUsage().heapUsed /
-                            1024 /
-                            1024
-                        ).toFixed(2)}%\``,
+                        `<:bulb:1265560195178958941> **RAM使用率** \`${memoryUsageMB.toFixed(2)}%\``,
                         `<:library:1265560754241929289> **資料庫連線** ${status[connection.readyState]}`,
                         `<:nodejs:1265561229624213636> **Node.js** \`${process.version}\``,
                         `<:djs:1265560315928772619> **Discord.js** \`${version}\``,
@@ -119,6 +126,6 @@ module.exports = {
                     inline: true
                 }
             )
-        await interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral  })
+        await interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral })
     }
 }

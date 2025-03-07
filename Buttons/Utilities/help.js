@@ -8,7 +8,7 @@ const {
 } = require('discord.js')
 
 module.exports = {
-    id: 'help:back',
+    id: 'helpBack',
     /**
      * @param {ButtonInteraction} interaction
      */

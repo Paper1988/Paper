@@ -19,7 +19,7 @@ const setEmptyChannelTimer = (queue) => {
     }
 
     const timer = setTimeout(async () => {
-        if (queue && isChannelEmpty(queue.voiceChannel)) {
+        if (isChannelEmpty(queue.voiceChannel)) {
             await queue.textChannel
                 .send({
                     embeds: [

@@ -51,7 +51,7 @@ module.exports = {
         )
         const back = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
-                .setCustomId('help:back')
+                .setCustomId('helpBack')
                 .setLabel('返回')
                 .setStyle(ButtonStyle.Primary)
         )
