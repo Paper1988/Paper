@@ -27,8 +27,7 @@ module.exports = {
      * @param {Client} client
      */
     async execute(interaction, client) {
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral })
-        const formatter = new Intl.ListFormat('en-GB', {
+        const formatter = new Intl.ListFormat('zh-TW', {
             style: 'long',
             type: 'conjunction'
         })
@@ -95,7 +94,7 @@ module.exports = {
                         )}:R>`,
                         `<:internet:1265560594321375333> **Ping** \`${client.ws.ping}ms\``,
                         `<:dollar:1265560329040039979> **CPU型號** \`${os.cpus()[0].model}\``,
-                        `<:bulb:1265560195178958941> **RAM使用率** \`${memoryUsageMB.toFixed(2)}%\``,
+                        `<:bulb:1265560195178958941> **RAM使用率** \`${memoryUsageMB}%\``,
                         `<:library:1265560754241929289> **資料庫連線** ${status[connection.readyState]}`,
                         `<:nodejs:1265561229624213636> **Node.js** \`${process.version}\``,
                         `<:djs:1265560315928772619> **Discord.js** \`${version}\``,
@@ -126,6 +125,6 @@ module.exports = {
                     inline: true
                 }
             )
-        await interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral })
+        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral })
     }
 }

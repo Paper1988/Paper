@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const cookieFile = path.join(__dirname, 'cookies.json')
+const cookieFile = path.join('Structures/', 'cookies.json')
 
 module.exports = {
     getCookies() {
@@ -44,7 +44,7 @@ module.exports = {
                 if (!cookieData.lastUpdate) {
                     cookieData.lastUpdate = new Date().toISOString()
                 }
-                fs.writeFileSync(cookieFile, JSON.stringify(cookieData, null, 2))
+                fs.writeFileSync(cookieFile, JSON.stringify(cookieData, null, 4))
             } else {
                 // 如果文件不存在，創建一個新的
                 this.saveCookies('')
@@ -63,17 +63,24 @@ module.exports = {
                 const now = Date.now() // 直接使用毫秒
 
                 // 檢查必要的 cookies 是否存在且未過期
+                const requiredCookies = ['LOGIN_INFO', 'VISITOR_INFO1_LIVE']
+                const missingCookies = requiredCookies.filter(
+                    (cookieName) => !cookieData.cookies.some((c) => c.name === cookieName)
+                )
+
+                if (missingCookies.length > 0) {
+                    console.warn(
+                        `Warning: Required YouTube cookies are missing: ${missingCookies.join(', ')}`
+                    )
+                    return false
+                }
+
+                // 檢查是否有任何必要的 cookie 已過期
                 const loginCookie = cookieData.cookies.find((c) => c.name === 'LOGIN_INFO')
                 const visitorCookie = cookieData.cookies.find(
                     (c) => c.name === 'VISITOR_INFO1_LIVE'
                 )
 
-                if (!loginCookie || !visitorCookie) {
-                    console.warn('Warning: Required YouTube cookies are missing')
-                    return false
-                }
-
-                // 檢查是否有任何必要的 cookie 已過期
                 if (loginCookie.expirationDate && loginCookie.expirationDate < now) {
                     console.warn('Warning: LOGIN_INFO cookie has expired')
                     return false
@@ -94,12 +101,12 @@ module.exports = {
                     return true
                 }
 
-                return true
+                return true // 所有必要的 cookies 存在且有效
             }
-            return false
+            return false // cookieFile 不存在
         } catch (error) {
             console.error('Error checking cookie expiration:', error)
-            return false
+            return false // 發生錯誤
         }
     },
 
@@ -141,6 +148,16 @@ module.exports = {
                 visitorCookieExpires: null,
                 isValid: false
             }
+        }
+    },
+
+    async notifyExpiration(client, status) {
+        const user = await client.users.fetch('538639229220028416')
+
+        if (!status.isValid) {
+            await user.send('⚠️ **你的 YouTube Cookies 已過期！** 請更新 Cookies。')
+        } else if (new Date(status.loginCookieExpires) - Date.now() < 5 * 24 * 60 * 60 * 1000) {
+            await user.send('⏳ **你的 YouTube Cookies 即將在 5 天內過期！** 請盡快更新。')
         }
     }
 }
