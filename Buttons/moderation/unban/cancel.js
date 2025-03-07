@@ -1,7 +1,7 @@
 const { EmbedBuilder, ButtonInteraction } = require('discord.js')
 
 module.exports = {
-    id: 'unban:cancel',
+    id: 'unbanCancel',
     /**
      *
      * @param {ButtonInteraction} interaction

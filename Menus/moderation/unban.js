@@ -30,12 +30,12 @@ module.exports = {
 
             const buttons = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
-                    .setCustomId(`unban:confirm/${member.id}`)
+                    .setCustomId(`unbanConfirm/${member.id}`)
                     .setLabel('確認')
                     .setEmoji('<:correct_859388130411282442:1201843648229294121>')
                     .setStyle(ButtonStyle.Danger),
                 new ButtonBuilder()
-                    .setCustomId('unban:cancel')
+                    .setCustomId('unbanCancel')
                     .setLabel('取消')
                     .setEmoji('<:xmark_988409378161954866:1201844342029815848>')
                     .setStyle(ButtonStyle.Secondary)

@@ -13,7 +13,7 @@ module.exports = {
         if (!giveaway) {
             return interaction.reply({
                 content: '<:timeout:1265562396412608623> | 這個抽獎活動已經結束或不存在！',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
 
@@ -64,7 +64,7 @@ module.exports = {
         if (errors.length > 0) {
             return interaction.reply({
                 content: `<:outage:1265561329528471613> | 無法參加抽獎：\n${errors.join('\n')}`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
 
@@ -89,7 +89,7 @@ module.exports = {
             await interaction.message.edit({ embeds: [embed] })
             return interaction.reply({
                 content: '<:leave:1265560726240497684> | 你已退出這個抽獎活動',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         } else {
             // 參加抽獎
