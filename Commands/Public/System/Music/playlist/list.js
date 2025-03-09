@@ -44,7 +44,7 @@ module.exports = {
 
         const filtered = playlists
             .map((p) => ({
-                name: `${p.name}${p.userId === interaction.user.id ? ' (我的)' : ''}${p.isPrivate ? ' <:lock:1342806678072197141>' : ''}`,
+                name: `${p.name}${p.userId === interaction.user.id ? ' (我的)' : ''}${p.isPrivate ? ' 🔒' : ''}`,
                 value: `${p.userId}:${p.name}`
             }))
             .filter((p) => p.name.toLowerCase().includes(focusedValue.toLowerCase()))

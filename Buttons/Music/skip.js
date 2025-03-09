@@ -1,5 +1,5 @@
-const { Events } = require('distube')
 const { emojis } = require('../../libs/emoji/emoji')
+const { updateMusicPlayerStatus } = require('../../Systems/Music')
 
 module.exports = {
     id: 'skip',
@@ -37,7 +37,7 @@ module.exports = {
                 .then((msg) => setTimeout(() => msg.delete(), 10 * 1000))
 
         await queue.skip(VoiceChannel)
-        await queue.emit(Events.FINISH_SONG, queue)
+        await updateMusicPlayerStatus(queue, true)
 
         return await interaction
             .editReply({

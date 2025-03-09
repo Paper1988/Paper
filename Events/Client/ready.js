@@ -46,8 +46,6 @@ module.exports = {
             )
             .then((webhook) => webhook.send({ embeds: [Embed] }))
 
-        await checkAndNotify(client) //檢查 Cookie 狀態，寫入 Log，並通知用戶
-
         setInterval(async () => await updatePresence(client), 10 * 1000)
 
         setInterval(async () => {
