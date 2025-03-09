@@ -11,8 +11,8 @@ module.exports = {
         .setNameLocalization('zh-TW', 'ping')
         .setNameLocalization('ja', 'ピング')
         .setDescription('Pong!')
-        .setDescriptionLocalization('zh-TW', '砰！')
-        .setDescriptionLocalization('ja', 'ポン！'),
+        .setDescriptionLocalization('zh-TW', 'pong!')
+        .setDescriptionLocalization('ja', 'pong!'),
     usage: '/ping',
     /**
      * @param {ChatInputCommandInteraction} interaction
