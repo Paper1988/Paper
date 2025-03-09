@@ -28,7 +28,6 @@
         "@distube/ytdl-core": "^4.16.4",
         "@distube/ytsr": "^2.0.4",
         "@iamtraction/google-translate": "^2.0.1",
-        "apexify.js": "^4.9.0",
         "ascii-table": "^0.0.9",
         "axios": "^1.7.9",
         "connect-mongo": "^5.1.0",
