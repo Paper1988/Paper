@@ -1,0 +1,17 @@
+{
+    "$schema": "https://schema.railpack.com",
+    "steps": [
+        {
+            "name": "install",
+            "commands": ["npm install"]
+        },
+        {
+            "name": "build",
+            "inputs": [{ "step": "install" }],
+            "commands": ["...", "ffmpeg"]
+        }
+    ],
+    "deploy": {
+        "startCommand": "node ."
+    }
+}
