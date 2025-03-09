@@ -45,6 +45,7 @@
         "express-session": "^1.18.0",
         "genius-lyrics": "^4.4.7",
         "glob": "^9.3.4",
+        "hnswlib-node": "^3.0.0",
         "husky": "^9.0.11",
         "i18n": "^0.15.1",
         "i18next": "^24.2.2",
