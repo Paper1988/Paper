@@ -53,11 +53,18 @@ client.distube
     .on(Events.ADD_LIST, (queue, playlist) => {
         const { embeds } = generateMusicPlayerStatus(queue, playlist.songs[0])
         embeds[0].data.fields = null
+
+        let name
+
+        playlist.url
+            ? (name = `[${playlist.name}](${playlist.url})`)
+            : (name = `**${playlist.name}**`)
+
         queue.textChannel
             .send({
                 embeds: [
                     embeds[0].setDescription(
-                        `${emojis.plus} | 加入 [${playlist.name}](${playlist.url}) 播放清單 (\`${playlist.songs.length}\`首歌) 到清單中`
+                        `${emojis.plus} | 加入 ${name} 播放清單 (\`${playlist.songs.length}\`首歌) 到清單中`
                     )
                 ]
             })
