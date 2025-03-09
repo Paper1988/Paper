@@ -1,5 +1,5 @@
-const { EmbedBuilder, ChatInputCommandInteraction } = require('discord.js')
-const { ApexImagine } = require('apexify.js')
+const { EmbedBuilder, ChatInputCommandInteraction, MessageFlags } = require('discord.js')
+/* const { ApexImagine } = require('apexify.js') */
 
 module.exports = {
     subCommand: 'ai.prodia',
@@ -13,7 +13,11 @@ module.exports = {
         const prompt = interaction.options.getString('prompt')
         const negative_prompt = interaction.options.getString('negative_prompt') || ''
         const number = interaction.options.getInteger('number') || 2
-        // const style = interaction.options.getString('style')
+
+        return interaction.editReply({
+            content: '這個指令正在修復中，無法使用。',
+            flags: MessageFlags.Ephemeral
+        })
 
         const embed = new EmbedBuilder()
             .setColor('Aqua')

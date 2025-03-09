@@ -45,26 +45,6 @@ module.exports = {
                         .setDescriptionLocalization('ja', 'プロンプトを提供してください')
                         .setRequired(true)
                 )
-                /* .addStringOption((options) =>
-                    options
-                        .setName('style')
-                        .setDescription('請選擇圖片風格')
-                        .setRequired(true)
-                        .setChoices([
-                            { name: '3D模特', value: '3d-model' },
-                            { name: '類比電影', value: 'analog-film' },
-                            { name: '動漫', value: 'anime' },
-                            { name: '劇院', value: 'cinematic' },
-                            { name: '漫畫', value: 'comic-book' },
-                            { name: '數位', value: 'digital-art' },
-                            { name: '增強', value: 'enhance' },
-                            { name: '奇幻', value: 'fantasy-art' },
-                            { name: '線條', value: 'line-art' },
-                            { name: '霓虹龐克', value: 'neon-punk' },
-                            { name: '攝影', value: 'photographic' },
-                            { name: '像素', value: 'pixel-art' }
-                        ])
-                ) */
                 .addStringOption((options) =>
                     options
                         .setName('negative-prompt')

@@ -152,12 +152,15 @@ module.exports = {
     },
 
     async notifyExpiration(client, status) {
-        const user = await client.users.fetch('538639229220028416')
+        const webhook = await client.fetchWebhook(
+            '1348200943795179520',
+            'CP_C1vdKJs-ewK8mZTL9eQEZBZdn3lyDW0P6v_Umu80azVg-3QgA5ta-V24U6Bn7oJ9g'
+        )
 
         if (!status.isValid) {
-            await user.send('⚠️ **你的 YouTube Cookies 已過期！** 請更新 Cookies。')
+            await webhook.send('⚠️ **你的 YouTube Cookies 已過期！** 請更新 Cookies。')
         } else if (new Date(status.loginCookieExpires) - Date.now() < 5 * 24 * 60 * 60 * 1000) {
-            await user.send('⏳ **你的 YouTube Cookies 即將在 5 天內過期！** 請盡快更新。')
+            await webhook.send('⏳ **你的 YouTube Cookies 即將在 5 天內過期！** 請盡快更新。')
         }
     }
 }

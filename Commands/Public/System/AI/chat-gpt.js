@@ -1,5 +1,5 @@
 const { EmbedBuilder, MessageFlags } = require('discord.js')
-const { ApexChat } = require('apexify.js')
+/* const { ApexChat } = require('apexify.js') */
 
 module.exports = {
     subCommand: 'ai.chat-gpt',
@@ -7,6 +7,11 @@ module.exports = {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 
         const prompt = interaction.options.getString('prompt')
+
+        return interaction.editReply({
+            content: '這個指令正在修復中，無法使用。',
+            flags: MessageFlags.Ephemeral
+        })
 
         const embed = new EmbedBuilder()
             .setColor('Aqua')
