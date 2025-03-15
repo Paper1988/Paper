@@ -85,7 +85,6 @@ client.distube = new DisTube(client, {
             cookies: cookieManager.getCookies()
         }),
         new SpotifyPlugin({
-            emitEventsAfterFetching: true,
             api: {
                 clientId: client.config.SpotifyClientId,
                 clientSecret: client.config.SpotifyClientSecret,
