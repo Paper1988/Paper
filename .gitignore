@@ -135,3 +135,5 @@ node_modules
 replit.nix
 
 /.upm
+
+package-lock.json

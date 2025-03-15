@@ -145,7 +145,8 @@ module.exports = {
                     textChannel: channel,
                     member: member,
                     position,
-                    skip
+                    skip,
+                    metadata: interaction
                 })
                 .then(() => interaction.deleteReply())
                 .catch((err) =>
