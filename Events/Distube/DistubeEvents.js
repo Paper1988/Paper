@@ -79,7 +79,7 @@ client.distube
         // 處理特定錯誤類型
         if (e.errorCode === 'SOUNDCLOUD_PLUGIN_NO_RESULT' && song?.source === 'spotify') {
             errorMessage =
-                `${emojis.warning} | 無法在 SoundCloud 上找到歌曲：**${song.name}**\n` +
+                `無法在 SoundCloud 上找到歌曲：**${song.name}**\n` +
                 `這首歌是從 Spotify 取得的資訊，但在 SoundCloud 上找不到對應的歌曲。\n` +
                 `建議：\n` +
                 `1. 嘗試使用歌曲名稱直接搜尋\n` +
