@@ -89,6 +89,14 @@ client.distube = new DisTube(client, {
         new DeezerPlugin(),
         new AppleMusicPlugin(),
         new YouTubePlugin({
+            ytdlOptions: {
+                lang: 'zh',
+                requestOptions: {
+                    dispatcher: {}
+                },
+                playerClients: ['WEB_EMBEDDED', 'IOS', 'ANDROID', 'TV', 'WEB'],
+                agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            },
             cookies: cookieManager.getCookies()
         }),
         new BandlabPlugin()
