@@ -22,7 +22,7 @@ client.contextMenus = new Collection()
 
 require(`./Systems/Giveaway`)(client)
 /**************************************************/
-const { ytdlPatch } = require('./libs/utils/ytdl-patch.js')
+const ytdlPatch = require('./libs/utils/ytdl-patch.js')
 
 ytdlPatch()
 

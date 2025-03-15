@@ -25,8 +25,8 @@ const ytdlPatch = async () => {
     // https://github.com/distubejs/ytdl-core/pull/163
     const patchBaseUrl =
         'https://raw.githubusercontent.com/ToddyTheNoobDud/ytdl-core-stuff/37acb1c7ca203bb33c1219bffe5fb2b820b52f69/'
-    const buggedInfo = './node_modules/@distube/ytdl-core/lib/info.js'
-    const buggedUtils = './node_modules/@distube/ytdl-core/lib/utils.js'
+    const buggedInfo = '../../node_modules/@distube/ytdl-core/lib/info.js'
+    const buggedUtils = '../../node_modules/@distube/ytdl-core/lib/utils.js'
     const buggedYoutubeIndex = './node_modules/@distube/youtube/dist/index.js'
     await patchFile(buggedInfo, patchBaseUrl + 'lib/info.js')
     await patchFile(buggedUtils, patchBaseUrl + 'lib/utils.js')
