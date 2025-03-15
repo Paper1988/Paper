@@ -138,10 +138,10 @@ module.exports = {
                 })
                 .then(() => interaction.deleteReply())
         } else {
-            const results = await yt.searchSong(search)
+            const result = await yt.searchSong(search)
 
             client.distube
-                .play(VoiceChannel, results[0], {
+                .play(VoiceChannel, result, {
                     textChannel: channel,
                     member: member,
                     position,
