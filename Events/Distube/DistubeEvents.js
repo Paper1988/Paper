@@ -96,7 +96,7 @@ client.distube
                         .setColor('Red')
                         .setTitle(`${emojis.outage} | 發生錯誤:`)
                         .setDescription(`\`\`\`${errorMessage}\`\`\``)
-                        .setFooter({ text: `請使用 /report 協助回報!` })
+                        .setFooter({ text: `請使用 /feedback 協助回報!` })
                 ]
             })
             .then((msg) => deleteMessageAfter(msg, 30 * 1000))

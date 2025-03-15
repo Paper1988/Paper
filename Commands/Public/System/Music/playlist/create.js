@@ -48,7 +48,7 @@ module.exports = {
     async execute(interaction) {
         const name = interaction.options.getString('name')
         const description = interaction.options.getString('description')
-        const isPrivate = interaction.options.getBoolean('private') ?? false
+        const isPrivate = interaction.options.getBoolean('private') ?? true
 
         try {
             const existingPlaylist = await Playlist.findOne({

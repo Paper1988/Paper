@@ -88,11 +88,11 @@ module.exports = {
                 > <:text1:1265167336109899786> </ai-service prodia:1296259212745113653> <提示> [負向提示] [數量] 使用由Prodia驅動的圖像生成器
                 > </botinfo:1131066238915842060> 顯示有關Paper的資訊
                 > </credits:1202478482316329031> 檢視版權資訊
+                > </feedback:1158752288928710706> <Bug | 建議 | 其他> <文字敘述> [造成bug的指令] [圖片] 請盡可能使用最詳細的敘述來回報bug或提供建議給我們
                 > </help:1131066238915842059> 顯示所有指令的使用方法及用途
                 > </invite:1131066238915842058> 顯示Paper的邀請指令
                 > </mcstats:1202453198078738525> 顯示一個Minecraft伺服器的資訊
                 > </ping:1131066238777426001> 查看機器人延遲
-                > </report:1158752288928710706> <Bug | 建議 | 其他> <文字敘述> [造成bug的指令] [圖片] 請盡你可能使用最詳盡的文字來回報bug或提供建議給我們
                 > </serverinfo:1131066238777426000> 顯示伺服器的各類資訊
                 > </say:1203269049610539089> <內容> 讓機器人代替你發言
                 > </translate:1131066238915842062> <語言> <文字> 翻譯各國語言(如想有更多語言的需求，請使用</report:1158752288928710706>來建議)
@@ -129,7 +129,7 @@ module.exports = {
             .setColor('Purple')
             .setDescription(
                 `
-                支援 Spotify、SoundCloud、Apple Music、Tidal、Deezer等網站。
+                支援 Spotify、SoundCloud、Apple Music、Tidal、Deezer、Bandlab等網站。
                 > </music play:1131066239050063988> <搜尋文字> [跳過?] [歌曲插入位置] 提供連結或關鍵字來播放音樂
                 > </music seek:1131066239050063988> <秒數> 調整當前歌曲播放時間
                 > </music settings:1131066239050063988> <選項(↓列在下方↓)> 音樂設定
@@ -241,7 +241,7 @@ module.exports = {
             case 'Music':
                 {
                     await interaction.update({
-                        embeds: [musicInfo, music],
+                        embeds: [musicInfo, music, playlist],
                         components: [helpMenu, inviteAndSupport, koFi, back]
                     })
                 }

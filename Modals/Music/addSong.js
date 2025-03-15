@@ -11,7 +11,7 @@ module.exports = {
     /**
      * @param {ModalSubmitInteraction} interaction
      */
-    async execute(interaction, client) {
+    async execute(interaction) {
         const songName = interaction.fields.getTextInputValue('songName')
 
         const select = new StringSelectMenuBuilder()

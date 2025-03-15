@@ -227,23 +227,23 @@ module.exports = {
                 let trendingResults
                 switch (regionCode) {
                     case 'TW':
-                        trendingResults = await yt.search('台灣流行音樂 最新', { limit: 10 })
+                        trendingResults = await yt.search('台灣流行音樂 最新', { limit: 15 })
                         break
                     case 'JP':
-                        trendingResults = await yt.search('日本流行音楽 最新', { limit: 10 })
+                        trendingResults = await yt.search('日本流行音楽 最新', { limit: 15 })
                         break
                     case 'KR':
-                        trendingResults = await yt.search('한국 인기 음악', { limit: 10 })
+                        trendingResults = await yt.search('한국 인기 음악', { limit: 15 })
                         break
                     case 'CN':
-                        trendingResults = await yt.search('中国流行音乐 最新', { limit: 10 })
+                        trendingResults = await yt.search('中国流行音乐 最新', { limit: 15 })
                         break
                     default:
-                        trendingResults = await yt.search('popular music trending', { limit: 10 })
+                        trendingResults = await yt.search('popular music trending', { limit: 15 })
                 }
 
                 const trendingChoices = trendingResults.map((song) => ({
-                    name: `🔥 ${song.name.slice(0, 30)}`, // 限制長度，避免超出Discord限制
+                    name: `🔥 ${song.name.slice(0, 50)}`, // 限制長度，避免超出Discord限制
                     value: song.url
                 }))
 
@@ -270,7 +270,7 @@ module.exports = {
                     .trim()
 
                 const results = await yt.search(searchTerm, {
-                    limit: 10,
+                    limit: 15,
                     type: 'video'
                 })
 
@@ -296,7 +296,7 @@ module.exports = {
                     const searchTerms = searchLower.split(/\s+/)
                     return searchTerms.every((term) => titleLower.includes(term))
                 })
-                .slice(0, 10)
+                .slice(0, 15)
 
             return await interaction.respond(filtered)
         } catch (error) {

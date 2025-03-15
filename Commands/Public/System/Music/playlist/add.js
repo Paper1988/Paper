@@ -78,7 +78,6 @@ module.exports = {
                 })
             }
 
-            // 使用 YouTubePlugin 進行搜尋
             const yt = new YouTubePlugin()
             const results = await yt.search(searchQuery)
 

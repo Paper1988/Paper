@@ -3,11 +3,19 @@ const {
     TextInputBuilder,
     TextInputStyle,
     ActionRowBuilder,
-    MessageFlags
+    MessageFlags,
+    ChannelSelectMenuComponent,
+    Client
 } = require('discord.js')
 
 module.exports = {
     id: 'giveaway-channel-select',
+    /**
+     *
+     * @param {ChannelSelectMenuComponent} interaction
+     * @param {Client} client
+     * @returns
+     */
     async execute(interaction, client) {
         const selectedChannelId = interaction.values[0]
         const channel = await client.channels.fetch(selectedChannelId)

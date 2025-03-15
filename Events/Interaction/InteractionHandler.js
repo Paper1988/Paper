@@ -17,6 +17,7 @@ const {
 
 const BlackListGuild = require('../../Structures/Schemas/BlacklistGuild')
 const BlackListUser = require('../../Structures/Schemas/BlacklistUser')
+const { deleteMessageAfter } = require('../../Systems/Music')
 
 module.exports = {
     name: 'interactionCreate',
@@ -86,18 +87,33 @@ module.exports = {
             }
         } catch (error) {
             console.error(`[Interaction Error]: ${error.stack || error}`)
-            try {
-                await interaction.channel.send({
+            if (String(error).includes('DiscordAPIError[10062]: Unknown interaction')) {
+                await interaction.user.send({
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
+                            .setTitle('發生錯誤')
                             .setDescription(
-                                '<:outage:1265561329528471613> | 發生未知錯誤，請協助回報!'
+                                '<:outage:1265561329528471613> | 訊息被流量怪獸吃掉了，請稍後再試~'
                             )
-                    ],
-                    flags: MessageFlags.Ephemeral
+                    ]
                 })
-            } catch {}
+            } else {
+                try {
+                    await interaction.channel
+                        .send({
+                            embeds: [
+                                new EmbedBuilder()
+                                    .setColor('Red')
+                                    .setDescription(
+                                        '<:outage:1265561329528471613> | 發生未知錯誤，請協助回報!'
+                                    )
+                            ],
+                            flags: MessageFlags.Ephemeral
+                        })
+                        .then((msg) => deleteMessageAfter(msg, 30 * 1000))
+                } catch {}
+            }
         }
     }
 }
