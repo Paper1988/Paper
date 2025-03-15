@@ -126,40 +126,38 @@ module.exports = {
         }
 
         // 一般歌曲播放邏輯
-        const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/
         const yt = new YouTubePlugin()
 
-        if (!youtubeRegex.test(search)) {
-            if (search.startsWith('https://')) {
-                client.distube
-                    .play(VoiceChannel, search, {
-                        textChannel: channel,
-                        member: member,
-                        position,
-                        skip
-                    })
-                    .then(() => interaction.deleteReply())
-            } else {
-                const results = await yt.search(search)
-
-                client.distube
-                    .play(VoiceChannel, results[0], {
-                        textChannel: channel,
-                        member: member,
-                        position,
-                        skip
-                    })
-                    .then(() => interaction.deleteReply())
-                    .catch((err) =>
-                        interaction
-                            .editReply({
-                                embeds: [embed.setDescription(`${emojis.warning} | ` + err)]
-                            })
-                            .then(() => setTimeout(() => interaction.deleteReply(), 15 * 1000))
-                    )
-            }
+        if (search.startsWith('https://')) {
+            client.distube
+                .play(VoiceChannel, search, {
+                    textChannel: channel,
+                    member: member,
+                    position,
+                    skip
+                })
+                .then(() => interaction.deleteReply())
         } else {
-            return await interaction
+            const results = await yt.search(search)
+
+            client.distube
+                .play(VoiceChannel, results[0], {
+                    textChannel: channel,
+                    member: member,
+                    position,
+                    skip
+                })
+                .then(() => interaction.deleteReply())
+                .catch((err) =>
+                    interaction
+                        .editReply({
+                            embeds: [embed.setDescription(`${emojis.warning} | ` + err)]
+                        })
+                        .then(() => setTimeout(() => interaction.deleteReply(), 15 * 1000))
+                )
+        }
+
+        /* return await interaction
                 .editReply({
                     content: '',
                     embeds: [
@@ -171,7 +169,6 @@ module.exports = {
                             )
                     ]
                 })
-                .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
-        }
+                .then((msg) => setTimeout(() => msg.delete(), 15 * 1000)) */
     }
 }
