@@ -8,12 +8,13 @@ const {
     Client,
     MessageFlags
 } = require('discord.js')
+const BugReport = require('../../../Structures/Schemas/Report')
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('report')
-        .setNameLocalization('zh-TW', '回報')
-        .setNameLocalization('ja', '報告')
+        .setName('feedback')
+        .setNameLocalization('zh-TW', '回饋')
+        .setNameLocalization('ja', 'フィードバック')
         .setDescription('Report bugs and suggestions to the developers')
         .setDescriptionLocalization('zh-TW', '回報Bug、提出建議')
         .setDescriptionLocalization('ja', 'バグや提案を開発者に報告する')
@@ -71,7 +72,7 @@ module.exports = {
                 .setDescriptionLocalization('ja', '遭遇したバグの写真を提供してください')
                 .setRequired(false)
         ),
-    usage: '/report <bug|suggest|other> [內容]',
+    usage: '/feedback <bug|suggest|other> [內容]',
     /**
      *
      * @param {ChatInputCommandInteraction} interaction
@@ -84,37 +85,29 @@ module.exports = {
         const picture = interaction.options.getAttachment('picture') || ''
         const guild = interaction.guild
 
-        const sch = client.channels.cache.get('975253353913254029') //''
+        const sch = client.channels.cache.get('1291288538272366593') //  975253353913254029
 
-        const send_m = new EmbedBuilder()
+        const sent_m = new EmbedBuilder()
             .setTitle(`<:correct:1265560254708711467> | 你的回報已成功提交!`)
             .setColor('Green')
 
         const cancel_m = new EmbedBuilder()
-            .setTitle(`<:outage:1265561329528471613> | 你的回報提交失敗或取消!`)
+            .setTitle(`<:outage:1265561329528471613> | 你的回報已成功取消!`)
             .setColor('Red')
 
         const send_button = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
-                .setCustomId('report:send')
+                .setCustomId('report-send')
                 .setLabel(`提交回報`)
                 .setEmoji('<:correct:1265560254708711467>')
                 .setStyle(ButtonStyle.Success)
         )
         const cancel_button = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
-                .setCustomId('report:cancel')
+                .setCustomId('report-cancel')
                 .setLabel(`取消`)
                 .setEmoji('<:xmark:1265562550947545089>')
                 .setStyle(ButtonStyle.Danger)
-        )
-
-        const solved_button = new ActionRowBuilder().addComponents(
-            new ButtonBuilder()
-                .setCustomId('report:solved')
-                .setLabel(`標示為已解決`)
-                .setEmoji('<:fix:1265269709834813462>')
-                .setStyle(ButtonStyle.Primary)
         )
 
         switch (type) {
@@ -124,7 +117,7 @@ module.exports = {
                         .setTitle('<:bug:1265560184722559020> | Bug')
                         .setColor('Red')
                         .setDescription(
-                            `提交者: ${interaction.user}(${interaction.user.id})  (伺服器: ${guild.name})`
+                            `提交者: ${interaction.user}(${interaction.user.id})\n伺服器: ${guild.name}(${guild.id})`
                         )
                         .addFields(
                             {
@@ -149,57 +142,41 @@ module.exports = {
                         .setImage(picture.url)
                         .setTimestamp()
 
+                    const fixed_button = new ActionRowBuilder().addComponents(
+                        new ButtonBuilder()
+                            .setCustomId(`feedback-fixed:${interaction.user.id}`)
+                            .setLabel(`解決`)
+                            .setEmoji('<:fix:1265269709834813462>')
+                            .setStyle(ButtonStyle.Primary)
+                    )
+
                     const message = await interaction.reply({
-                        content: `預覽:`,
+                        content: `## 預覽:`,
                         embeds: [embed],
                         components: [cancel_button, send_button],
                         flags: MessageFlags.Ephemeral
                     })
                     const clr = message.createMessageComponentCollector()
 
-                    clr.on('collect', async (ButtonInteraction) => {
-                        if (ButtonInteraction.customId == 'report:send') {
-                            const fixed = new EmbedBuilder()
-                                .setTitle('Bug已解決')
-                                .setDescription(
-                                    `<:exclamation:1265560367040299159> | 正如標題所述，你在 ${interaction.createdAt} 回報的Bug已經被開發人員認定為已修復，再次感謝你的回報!`
-                                )
-                                .setColor('Blurple')
-                                .setFooter({
-                                    text: `${client.user.username}`,
-                                    iconURL: client.user.avatarURL()
-                                })
-                                .setTimestamp()
-
-                            const msg = await sch.send({
+                    clr.on('collect', async (i) => {
+                        if (i.customId == 'report-send') {
+                            await sch.send({
                                 embeds: [embed],
-                                components: [solved_button]
+                                components: [fixed_button]
                             })
 
-                            const collector = msg.createMessageComponentCollector()
-                            collector.on('collect', async (i) => {
-                                if (i.customId == 'report:solved') {
-                                    await i.update({
-                                        content: '',
-                                        embeds: [embed.setColor('Green')],
-                                        components: []
-                                    })
-                                    await interaction.user.send({
-                                        embeds: [fixed]
-                                    })
-                                }
-                            })
+                            new BugReport({
+                                userId: interaction.user.id,
+                                createdAt: interaction.createdAt
+                            }).save()
 
-                            ButtonInteraction.update({
+                            await i.update({
                                 content: '',
-                                embeds: [send_m],
+                                embeds: [sent_m],
                                 components: []
                             })
-                        }
-                    })
-                    clr.on('collect', async (ButtonInteraction) => {
-                        if (ButtonInteraction.customId == 'report:cancel') {
-                            await ButtonInteraction.update({
+                        } else if (i.customId == 'report-cancel') {
+                            await i.update({
                                 content: '',
                                 embeds: [cancel_m],
                                 components: []
@@ -214,7 +191,7 @@ module.exports = {
                         .setTitle('<:bulb:1265560195178958941> | 建議')
                         .setColor('Yellow')
                         .setDescription(
-                            `提交者: ${interaction.user}(${interaction.user.id})  (伺服器: ${guild.name})`
+                            `提交者: ${interaction.user}(${interaction.user.id})\n伺服器: ${guild.name}(${guild.id})`
                         )
                         .addFields({
                             name: `提供的建議:`,
@@ -240,19 +217,16 @@ module.exports = {
                     })
                     const clr = message.createMessageComponentCollector()
 
-                    clr.on('collect', async (ButtonInteraction) => {
-                        if (ButtonInteraction.customId == 'report:send') {
+                    clr.on('collect', async (i) => {
+                        if (i.customId == 'report-send') {
                             await sch.send({ embeds: [embed] })
-                            ButtonInteraction.update({
+                            i.update({
                                 content: '',
-                                embeds: [send_m],
+                                embeds: [sent_m],
                                 components: []
                             })
-                        }
-                    })
-                    clr.on('collect', async (ButtonInteraction) => {
-                        if (ButtonInteraction.customId == 'report:cancel') {
-                            await ButtonInteraction.update({
+                        } else if (i.customId == 'report-cancel') {
+                            await i.update({
                                 content: '',
                                 embeds: [cancel_m],
                                 components: []
@@ -267,7 +241,7 @@ module.exports = {
                         .setTitle('<:globe:1265560486208864318> | 其他')
                         .setColor('Purple')
                         .setDescription(
-                            `提交者: ${interaction.user}(${interaction.user.id})  (伺服器: ${guild.name})`
+                            `提交者: ${interaction.user}(${interaction.user.id})\n伺服器: ${guild.name}(${guild.id})`
                         )
                         .addFields({
                             name: `提供的描述:`,
@@ -293,19 +267,16 @@ module.exports = {
                     })
                     const clr = message.createMessageComponentCollector()
 
-                    clr.on('collect', async (ButtonInteraction) => {
-                        if (ButtonInteraction.customId == 'report:send') {
+                    clr.on('collect', async (i) => {
+                        if (i.customId == 'report-send') {
                             await sch.send({ embeds: [embed] })
-                            ButtonInteraction.update({
+                            i.update({
                                 content: '',
-                                embeds: [send_m],
+                                embeds: [sent_m],
                                 components: []
                             })
-                        }
-                    })
-                    clr.on('collect', async (ButtonInteraction) => {
-                        if (ButtonInteraction.customId == 'report:cancel') {
-                            await ButtonInteraction.update({
+                        } else if (i.customId == 'report-cancel') {
+                            await i.update({
                                 content: '',
                                 embeds: [cancel_m],
                                 components: []

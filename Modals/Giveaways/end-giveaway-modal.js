@@ -1,8 +1,14 @@
 const Giveaway = require('../../Structures/Schemas/Giveaway')
-const { PermissionsBitField, MessageFlags } = require('discord.js')
+const { PermissionsBitField, MessageFlags, ModalSubmitInteraction, Client } = require('discord.js')
 
 module.exports = {
     id: 'end-giveaway-modal',
+    /**
+     *
+     * @param {ModalSubmitInteraction} interaction
+     * @param {Client} client
+     * @returns
+     */
     async execute(interaction, client) {
         const giveawayId = interaction.fields.getTextInputValue('giveawayId')
 

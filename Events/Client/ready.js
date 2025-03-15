@@ -34,17 +34,19 @@ module.exports = {
                 console.log(`>>> ✅ 成功連結到 MongoDB ${mongoose.connection.db.databaseName}!`)
             )
 
-        const Embed = new EmbedBuilder()
-            .setColor('Green')
-            .setDescription(`${client.user} 上線了!`)
-            .setTimestamp()
+        if (client.user.id == '***REMOVED***') {
+            const Embed = new EmbedBuilder()
+                .setColor('Green')
+                .setDescription(`${client.user} 上線了!`)
+                .setTimestamp()
 
-        await client
-            .fetchWebhook(
-                '1265249137327214674',
-                'JKxcMDXNaR0Y2Y-LVt-syEGHsGIrab97FdyliUTGFH_dNEGaXf8Ty7RXLeAGEvliT5IN'
-            )
-            .then((webhook) => webhook.send({ embeds: [Embed] }))
+            await client
+                .fetchWebhook(
+                    '1265249137327214674',
+                    'JKxcMDXNaR0Y2Y-LVt-syEGHsGIrab97FdyliUTGFH_dNEGaXf8Ty7RXLeAGEvliT5IN'
+                )
+                .then((webhook) => webhook.send({ embeds: [Embed] }))
+        }
 
         setInterval(async () => await updatePresence(client), 10 * 1000)
 

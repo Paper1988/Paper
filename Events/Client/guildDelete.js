@@ -16,12 +16,22 @@ module.exports = {
         const GiveawayStats = require('../../Structures/Schemas/GiveawayStats')
         const GiveawayNotification = require('../../Structures/Schemas/GiveawayNotification')
 
+        /**
+         *
+         * @param {mongoose.Model} model
+         */
         const deleteRecords = async (model) => {
-            await model.deleteMany({ GuildID: guild.id }).then((count) => {
-                console.log(
-                    `[event.guildDelete] 成功從資料庫 ${mongoose.connection.db.databaseName} 刪除 ${count.deletedCount} 筆資料!`
-                )
-            })
+            model.findOne({ GuildID: guild.id })
+                ? await model.deleteMany({ GuildID: guild.id }).then((count) => {
+                      console.log(
+                          `[event.guildDelete] 成功從資料庫 ${mongoose.connection.db.databaseName} 刪除 ${count.deletedCount} 筆資料!`
+                      )
+                  })
+                : await model.deleteMany({ guildId: guild.id }).then((count) => {
+                      console.log(
+                          `[event.guildDelete] 成功從資料庫 ${mongoose.connection.db.databaseName} 刪除 ${count.deletedCount} 筆資料!`
+                      )
+                  })
         }
 
         await Promise.all([
