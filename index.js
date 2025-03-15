@@ -31,6 +31,7 @@ const { DeezerPlugin } = require('@distube/deezer')
 const { AppleMusicPlugin } = require('distube-apple-music')
 const { TidalPlugin } = require('distube-tidal')
 const { BandlabPlugin } = require('@distube/bandlab')
+const { YtDlpPlugin } = require('@distube/yt-dlp')
 const cookieManager = require('./libs/utils/youtubeCookies.js')
 
 // 初始化時檢查 cookies
@@ -95,7 +96,8 @@ client.distube = new DisTube(client, {
             },
             cookies: cookieManager.getCookies()
         }),
-        new BandlabPlugin()
+        new BandlabPlugin(),
+        new YtDlpPlugin({ update: true })
     ]
 })
 
