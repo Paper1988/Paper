@@ -40,23 +40,11 @@ const cookieStatus = cookieManager.getStatus()
 if (!cookieStatus.isValid) {
     console.warn('YouTube cookies are invalid or missing!')
 }
+const cookies = cookieManager.getCookies()
 
 const prism = require('prism-media')
 const ffmpeg = new prism.FFmpeg({
-    args: [
-        '-analyzeduration',
-        '0',
-        '-loglevel',
-        '0',
-        '-i',
-        'input.mp3',
-        '-f',
-        's16le',
-        '-ar',
-        '48000',
-        '-ac',
-        '2'
-    ]
+    args: ['-analyzeduration', '0', '-loglevel', '0', '-f', 's16le', '-ar', '48000', '-ac', '2']
 })
 
 client.distube = new DisTube(client, {
@@ -79,10 +67,11 @@ client.distube = new DisTube(client, {
     plugins: [
         new YouTubePlugin({
             ytdlOptions: {
+                lang: 'en',
                 playerClients: ['WEB_EMBEDDED', 'IOS', 'ANDROID', 'TV', 'WEB'],
-                agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
             },
-            cookies: cookieManager.getCookies()
+            cookies
         }),
         new SpotifyPlugin({
             api: {
