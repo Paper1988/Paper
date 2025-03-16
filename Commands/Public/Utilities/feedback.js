@@ -85,7 +85,7 @@ module.exports = {
         const picture = interaction.options.getAttachment('picture') || ''
         const guild = interaction.guild
 
-        const sch = client.channels.cache.get('1291288538272366593') //  975253353913254029
+        const sch = client.channels.cache.get('975253353913254029')
 
         const sent_m = new EmbedBuilder()
             .setTitle(`<:correct:1265560254708711467> | 你的回報已成功提交!`)

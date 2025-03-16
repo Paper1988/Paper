@@ -23,7 +23,7 @@ module.exports = {
             const cookieData = {
                 cookies: cookies,
                 updatedAt: new Date().toISOString(),
-                expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30天後過期
+                expiresAt: new Date(Date.now() / 1000 + 30 * 24 * 60 * 60).toISOString() // 30天後過期，轉換為秒
             }
             fs.writeFileSync(cookieFile, JSON.stringify(cookieData, null, 2))
             return true
@@ -60,7 +60,7 @@ module.exports = {
         try {
             if (fs.existsSync(cookieFile)) {
                 const cookieData = JSON.parse(fs.readFileSync(cookieFile, 'utf8'))
-                const now = Date.now() // 直接使用毫秒
+                const now = Math.floor(Date.now() / 1000) // 直接使用秒
 
                 // 檢查必要的 cookies 是否存在且未過期
                 const requiredCookies = ['LOGIN_INFO', 'VISITOR_INFO1_LIVE']
@@ -92,7 +92,7 @@ module.exports = {
                 }
 
                 // 檢查是否快要過期（5天內）
-                const fiveDaysFromNow = now + 5 * 24 * 60 * 60 * 1000 // 5天的毫秒數
+                const fiveDaysFromNow = now + 5 * 24 * 60 * 60 // 5天的秒數
                 if (
                     loginCookie.expirationDate < fiveDaysFromNow ||
                     visitorCookie.expirationDate < fiveDaysFromNow
@@ -124,10 +124,10 @@ module.exports = {
                     hasCookies: cookieData.cookies.length > 0,
                     lastUpdate: cookieData.lastUpdate,
                     loginCookieExpires: loginCookie
-                        ? new Date(loginCookie.expirationDate).toISOString() // 使用毫秒格式
+                        ? Math.floor(loginCookie.expirationDate) // 使用秒格式
                         : null,
                     visitorCookieExpires: visitorCookie
-                        ? new Date(visitorCookie.expirationDate).toISOString() // 使用毫秒格式
+                        ? Math.floor(visitorCookie.expirationDate) // 使用秒格式
                         : null,
                     isValid: this.checkExpiration()
                 }
@@ -159,7 +159,10 @@ module.exports = {
 
         if (!status.isValid) {
             await webhook.send('⚠️ **你的 YouTube Cookies 已過期！** 請更新 Cookies。')
-        } else if (new Date(status.loginCookieExpires) - Date.now() < 5 * 24 * 60 * 60 * 1000) {
+        } else if (
+            new Date(status.loginCookieExpires * 1000) - Date.now() <
+            5 * 24 * 60 * 60 * 1000
+        ) {
             await webhook.send('⏳ **你的 YouTube Cookies 即將在 5 天內過期！** 請盡快更新。')
         }
     }

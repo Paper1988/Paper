@@ -15,8 +15,7 @@ async function results(deletedMessages, interaction) {
         .join('\n')}`
 
     const msg = await interaction.reply({
-        content: `${finalResult}`,
-        fetchReply: true
+        content: `${finalResult}`
     })
     setTimeout(() => {
         msg.delete()
