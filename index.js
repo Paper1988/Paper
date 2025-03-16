@@ -43,8 +43,36 @@ if (!cookieStatus.isValid) {
 const cookies = cookieManager.getCookies()
 
 const prism = require('prism-media')
-const ffmpeg = new prism.FFmpeg({
-    args: ['-analyzeduration', '0', '-loglevel', '0', '-f', 's16le', '-ar', '48000', '-ac', '2']
+
+const { exec } = require('child_process')
+
+let ffmpeg
+
+exec('which ffmpeg', (error, stdout, stderr) => {
+    if (error) {
+        console.error(`Error: ${error.message}`)
+        return
+    }
+    if (stderr) {
+        console.error(`stderr: ${stderr}`)
+        return
+    }
+    console.log(`FFmpeg path: ${stdout.trim()}`)
+    ffmpeg = new prism.FFmpeg({
+        args: [
+            '-analyzeduration',
+            '0',
+            '-loglevel',
+            '0',
+            '-f',
+            's16le',
+            '-ar',
+            '48000',
+            '-ac',
+            '2'
+        ],
+        executable: stdout.trim()
+    })
 })
 
 client.distube = new DisTube(client, {
