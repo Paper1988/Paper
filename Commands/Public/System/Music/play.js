@@ -13,9 +13,9 @@ module.exports = {
         await interaction.reply({
             content: '<a:discord1792loading:1212016238839070791> | 處理請求中...'
         })
-        /** return await interaction.editReply({
+        return await interaction.editReply({
             content: `${emojis.outage} | 音樂指令目前修復中！\n造成不便，敬請見諒`
-        }) */
+        }) 
         const { options, channel, member } = interaction
         const VoiceChannel = member.voice.channel
 
