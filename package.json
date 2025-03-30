@@ -6,8 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "format": "prettier --write .",
-        "format:check": "prettier --check .",
-        "postinstall": "apt-get update && apt-get install -y ffmpeg"
+        "format:check": "prettier --check ."
     },
     "keywords": [
         "discord",
