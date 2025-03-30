@@ -50,8 +50,6 @@ module.exports = {
                 .then((msg) => setTimeout(() => msg.delete(), 5 * 1000))
         }
 
-        await interaction
-            .deferUpdate()
-            .then((message) => message.edit({ components: [selectMenu, button] }))
+        await interaction.update({ components: [selectMenu, button] })
     }
 }
