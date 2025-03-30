@@ -15,7 +15,7 @@ module.exports = {
         })
         return await interaction.editReply({
             content: `${emojis.outage} | 音樂指令目前修復中！\n造成不便，敬請見諒`
-        }) 
+        })
         const { options, channel, member } = interaction
         const VoiceChannel = member.voice.channel
 
@@ -129,39 +129,42 @@ module.exports = {
         }
 
         // 一般歌曲播放邏輯
+        const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/
         const yt = new YouTubePlugin()
 
-        if (search.startsWith('https://')) {
-            client.distube
-                .play(VoiceChannel, search, {
-                    textChannel: channel,
-                    member: member,
-                    position,
-                    skip
-                })
-                .then(() => interaction.deleteReply())
-        } else {
-            const result = await yt.searchSong(search)
+        if (!youtubeRegex.test(search)) {
+            if (search.startsWith('https://')) {
+                client.distube
+                    .play(VoiceChannel, search, {
+                        textChannel: channel,
+                        member: member,
+                        position,
+                        skip,
+                        metadata: interaction
+                    })
+                    .then(() => interaction.deleteReply())
+            } else {
+                const result = await yt.searchSong(search)
 
-            client.distube
-                .play(VoiceChannel, result, {
-                    textChannel: channel,
-                    member: member,
-                    position,
-                    skip,
-                    metadata: interaction
-                })
-                .then(() => interaction.deleteReply())
-                .catch((err) =>
-                    interaction
-                        .editReply({
-                            embeds: [embed.setDescription(`${emojis.warning} | ` + err)]
-                        })
-                        .then(() => setTimeout(() => interaction.deleteReply(), 15 * 1000))
-                )
-        }
-
-        /* return await interaction
+                client.distube
+                    .play(VoiceChannel, result, {
+                        textChannel: channel,
+                        member: member,
+                        position,
+                        skip,
+                        metadata: interaction
+                    })
+                    .then(() => interaction.deleteReply())
+                    .catch((err) =>
+                        interaction
+                            .editReply({
+                                embeds: [embed.setDescription(`${emojis.warning} | ` + err)]
+                            })
+                            .then(() => setTimeout(() => interaction.deleteReply(), 15 * 1000))
+                    )
+            }
+        } else
+            return await interaction
                 .editReply({
                     content: '',
                     embeds: [
@@ -173,6 +176,6 @@ module.exports = {
                             )
                     ]
                 })
-                .then((msg) => setTimeout(() => msg.delete(), 15 * 1000)) */
+                .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
     }
 }

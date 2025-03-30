@@ -244,7 +244,7 @@ module.exports = {
 
                 const trendingChoices = trendingResults.map((song) => ({
                     name: `🔥 ${song.name.slice(0, 50)}`, // 限制長度，避免超出Discord限制
-                    value: song.url
+                    value: song.name
                 }))
 
                 // 儲存到快取
@@ -276,7 +276,7 @@ module.exports = {
 
                 choices = results.map((song) => ({
                     name: `${song.name}`.slice(0, 90),
-                    value: song.url // 保留完整名稱作為值
+                    value: song.name // 保留完整名稱作為值
                 }))
             } catch (searchError) {
                 console.error('搜尋時發生錯誤:', searchError)
