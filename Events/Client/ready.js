@@ -50,29 +50,29 @@ module.exports = {
 
         setInterval(async () => await updatePresence(client), 10 * 1000)
 
-        setInterval(async () => {
-            const giveaways = await Giveaway.find({
-                endAt: { $lt: new Date() },
-                ended: false
-            })
-
-            for (const giveaway of giveaways) {
-                try {
-                    const channel = await client.channels.fetch(giveaway.channelId)
-                    if (channel) {
-                        const message = await channel.messages.fetch(giveaway.messageId)
-                        if (message) {
-                            await endGiveaway(message.id, client)
-                        } else return
-                    }
-                } catch (error) {
-                    console.error('Error ending giveaway:', error)
-                }
-            }
-        }, 30 * 1000) // 每30秒檢查一次
-
         setInterval(
             async () => {
+                // clean outdated giveaways
+                const giveaways = await Giveaway.find({
+                    endAt: { $lt: new Date() },
+                    ended: false
+                })
+
+                for (const giveaway of giveaways) {
+                    try {
+                        const channel = await client.channels.fetch(giveaway.channelId)
+                        if (channel) {
+                            const message = await channel.messages.fetch(giveaway.messageId)
+                            if (message) {
+                                await endGiveaway(message.id, client)
+                            } else return
+                        }
+                    } catch (error) {
+                        console.error('Error ending giveaway:', error)
+                    }
+                }
+
+                // clean trashes
                 await checkAndNotify(client) //檢查 Cookie 狀態，寫入 Log，並通知用戶
 
                 if (global.gc) {

@@ -77,7 +77,8 @@ module.exports = {
             })
 
             const NewPlaylist = await interaction.client.distube.createCustomPlaylist(
-                playlist.songs.map((song) => song.url)
+                playlist.songs.map((song) => song.url),
+                { name: playlistName, parallel: true }
             )
 
             await interaction.client.distube.play(interaction.member.voice.channel, NewPlaylist, {

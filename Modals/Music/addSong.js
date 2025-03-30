@@ -25,9 +25,9 @@ module.exports = {
         await yt.search(songName, { limit: 20 }).then((results) => {
             select.addOptions(
                 results.map((song, id) => ({
-                    label: `${song.name}`,
+                    label: song.name.toString(),
                     description: `作者: ${song.uploader.name}`,
-                    value: `${song.url}`
+                    value: song.url.toString()
                 }))
             )
         })
