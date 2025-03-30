@@ -63,7 +63,7 @@ module.exports = {
                         const message = await channel.messages.fetch(giveaway.messageId)
                         if (message) {
                             await endGiveaway(message.id, client)
-                        }
+                        } else return
                     }
                 } catch (error) {
                     console.error('Error ending giveaway:', error)
