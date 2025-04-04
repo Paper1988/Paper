@@ -122,7 +122,6 @@ module.exports = {
                             })),
                             ...Object.keys({
                                 // https://distube.js.org/types/DisTubeOptions.html
-                                speed_025: 'atempo=0.25',
                                 speed_050: 'atempo=0.5',
                                 speed_075: 'atempo=0.75',
                                 speed_1: 'atempo=1',
