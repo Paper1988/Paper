@@ -98,9 +98,6 @@ importers:
       ms:
         specifier: ^2.1.3
         version: 2.1.3
-      node-opus:
-        specifier: ^0.3.3
-        version: 0.3.3
       os-utils:
         specifier: ^0.0.14
         version: 0.0.14
@@ -1180,6 +1177,7 @@ packages:
   node-opus@0.3.3:
     resolution: {integrity: sha512-ZQniA8iJ6y/qOTmW6eyzM9m8odt4CIGV0NM9/U03/pYLhGyxy18QXO25WfrWd8XsUYx57tnxll2xxj54CN08uQ==}
     engines: {node: '>=5.10.0'}
+    cpu: [x64, arm, arm64, ia32]
     os: [linux, darwin, win32, freebsd, android]
     deprecated: This project is unmaintained. See @discordjs/opus for an alternative.
 
@@ -1953,7 +1951,8 @@ snapshots:
     dependencies:
       bare-path: 3.0.0
 
-  bindings@1.2.1: {}
+  bindings@1.2.1:
+    optional: true
 
   boolbase@1.0.0: {}
 
@@ -2024,7 +2023,8 @@ snapshots:
     dependencies:
       delayed-stream: 1.0.0
 
-  commander@2.20.3: {}
+  commander@2.20.3:
+    optional: true
 
   component-emitter@1.3.1: {}
 
@@ -2632,7 +2632,8 @@ snapshots:
 
   mustache@4.2.0: {}
 
-  nan@2.22.2: {}
+  nan@2.22.2:
+    optional: true
 
   natural-compare@1.4.0: {}
 
@@ -2666,6 +2667,7 @@ snapshots:
       ogg-packet: 1.0.1
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   nopt@5.0.0:
     dependencies:
