@@ -22,16 +22,22 @@ module.exports = {
          */
         const deleteRecords = async (model) => {
             model.findOne({ GuildID: guild.id })
-                ? await model.deleteMany({ GuildID: guild.id }).then((count) => {
-                      console.log(
-                          `[event.guildDelete] 成功從資料庫 ${mongoose.connection.db.databaseName} 刪除 ${count.deletedCount} 筆資料!`
-                      )
-                  })
-                : await model.deleteMany({ guildId: guild.id }).then((count) => {
-                      console.log(
-                          `[event.guildDelete] 成功從資料庫 ${mongoose.connection.db.databaseName} 刪除 ${count.deletedCount} 筆資料!`
-                      )
-                  })
+                ? await model
+                      .deleteMany({ GuildID: guild.id })
+                      .exec()
+                      .then((count) => {
+                          console.log(
+                              `[event.guildDelete] 成功從資料庫 ${mongoose.connection.db.databaseName} 刪除 ${count.deletedCount} 筆資料!`
+                          )
+                      })
+                : await model
+                      .deleteMany({ guildId: guild.id })
+                      .exec()
+                      .then((count) => {
+                          console.log(
+                              `[event.guildDelete] 成功從資料庫 ${mongoose.connection.db.databaseName} 刪除 ${count.deletedCount} 筆資料!`
+                          )
+                      })
         }
 
         await Promise.all([
