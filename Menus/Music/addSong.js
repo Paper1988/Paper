@@ -15,6 +15,9 @@ module.exports = {
             member: interaction.member
         })
 
-        await interaction.deleteReply()
+        await interaction.reply({
+            content: `**${songDetails.name}** 已成功加入播放清單`,
+            flags: MessageFlags.Ephemeral
+        })
     }
 }
