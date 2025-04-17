@@ -234,11 +234,9 @@ const generateMusicPlayerStatus = (queue, song, completed = false) => {
             new EmbedBuilder()
                 .setColor(queue.paused ? 'Orange' : 'Green')
                 .setDescription(
-                    `<:music:1265561113039208512> | [${song.name}](${song.url}) - \` ${
-                        song.stream?.playFromSource
-                            ? secondsToDuration(songDuration)
-                            : secondsToDuration(queue.currentTime)
-                    } \``
+                    `<:music:1265561113039208512> | [${song.name}](${song.url}) - \` ${secondsToDuration(
+                        songDuration
+                    )} \``
                 )
                 .setAuthor({
                     name: `${song.user.displayName}`,
@@ -322,7 +320,7 @@ const generateMusicPlayerStatus = (queue, song, completed = false) => {
                 .setImage(song.thumbnail)
                 .setTimestamp()
                 .setFooter({
-                    text: `在 ${queue.voiceChannel.name} 中播放`
+                    text: `在 ${queue.voiceChannel.name || '未知'} 中播放`
                 })
         ],
         components: completed ? [] : generateMusicStatusButtons(queue, song)
