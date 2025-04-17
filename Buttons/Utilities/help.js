@@ -13,7 +13,7 @@ module.exports = {
      * @param {ButtonInteraction} interaction
      */
     async execute(interaction) {
-        if (!interaction.customId === 'help:back') return
+        if (interaction.customId !== 'helpBack') return
         const helpMenu = new ActionRowBuilder().addComponents(
             new StringSelectMenuBuilder()
                 .setCustomId('helpMenu')
