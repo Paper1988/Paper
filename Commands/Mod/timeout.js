@@ -65,7 +65,7 @@ module.exports = {
             .setColor('Red')
 
         if (!user)
-            return await interaction.reply({
+            return await interaction.editReply({
                 embeds: [errorsEmbed.setDescription('該名成員很可能已經離開伺服器了')],
                 flags: MessageFlags.Ephemeral
             })
@@ -80,14 +80,14 @@ module.exports = {
             errorsArray.push('所選的目標成員權限比你高!')
 
         if (errorsArray.length)
-            return interaction.reply({
+            return interaction.editReply({
                 embeds: [errorsEmbed.setDescription(errorsArray.join('\n'))],
                 flags: MessageFlags.Ephemeral
             })
 
         await user.timeout(ms(duration), reason).catch(async () => {
-            return await interaction.reply({
-                embeds: [errorsEmbed.setDescription('一個不常見的錯誤： `時間不能小於0`!')],
+            return await interaction.editReply({
+                embeds: [errorsEmbed.setDescription('時間不能小於0!')],
                 flags: MessageFlags.Ephemeral
             })
         })
@@ -106,6 +106,6 @@ module.exports = {
                 ].join('\n')
             )
 
-        return await interaction.reply({ embeds: [successEmbed] })
+        return await interaction.editReply({ embeds: [successEmbed] })
     }
 }
