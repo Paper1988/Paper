@@ -36,8 +36,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.18.0))
       '@distube/ytdl-core':
-        specifier: ^4.16.8
-        version: 4.16.8
+        specifier: ^4.16.6
+        version: 4.16.6
       '@distube/ytsr':
         specifier: ^2.0.4
         version: 2.0.4
@@ -198,6 +198,11 @@ packages:
     resolution: {integrity: sha512-9c16lRU6jbyal38UUr5E36+2lp36s0DaJySOtFjuAPgaJkp2xvKvyd+s4rFZSqVQGJO5GOhBiH+HD115SKfKAw==}
     peerDependencies:
       distube: '5'
+
+  '@distube/ytdl-core@4.16.6':
+    resolution: {integrity: sha512-+K88E2FRk/QPSC3l/U/qNq2LO0hPmFnDmK8CHK1Pzwh530aSacTLBhuZPgtoJAwNNncaTkmskP6lXoaw2eZjQw==}
+    engines: {node: '>=20.18.1'}
+    deprecated: This version is deprecated, please upgrade to the latest version.
 
   '@distube/ytdl-core@4.16.8':
     resolution: {integrity: sha512-Vl04TCOiSSwCFmOHVfzIX117tpT/eCobp2hwx4lo2EyeE70FMVrpQpKSEdh+EjywmVAHs/ZXIsaDy+wq1fMb+g==}
@@ -1689,6 +1694,18 @@ snapshots:
       dargs: 7.0.0
       distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.18.0)
       undici: 6.21.2
+
+  '@distube/ytdl-core@4.16.6':
+    dependencies:
+      http-cookie-agent: 6.0.8(tough-cookie@5.1.2)(undici@7.7.0)
+      https-proxy-agent: 7.0.6
+      m3u8stream: 0.8.6
+      miniget: 4.2.3
+      sax: 1.4.1
+      tough-cookie: 5.1.2
+      undici: 7.7.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@distube/ytdl-core@4.16.8':
     dependencies:
