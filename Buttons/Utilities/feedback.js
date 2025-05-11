@@ -27,9 +27,15 @@ module.exports = {
 
         const user = client.users.cache.get(userId)
 
-        await user.send({
-            embeds: [fixed]
-        })
+        if (user)
+            await user
+                .send({
+                    embeds: [fixed]
+                })
+                .catch(() => {
+                    console.log('User has DMs disabled')
+                })
+        else console.log('User has DMs disabled')
 
         let e = interaction.message.embeds[0]
 
