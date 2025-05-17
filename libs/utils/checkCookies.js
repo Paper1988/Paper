@@ -14,8 +14,7 @@ async function checkAndNotify(client) {
         timestamp: new Date().toISOString(),
         cookiesValid: status.isValid,
         lastUpdate: status.lastUpdate || '未知',
-        loginCookieExpires: status.loginCookieExpires || '未知',
-        visitorCookieExpires: status.visitorCookieExpires || '未知'
+        loginCookieExpires: status.loginCookieExpires || '未知'
     }
 
     // **格式化 Log 訊息**

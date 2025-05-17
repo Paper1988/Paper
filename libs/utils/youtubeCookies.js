@@ -63,7 +63,7 @@ module.exports = {
                 const now = Math.floor(Date.now() / 1000) // 直接使用秒
 
                 // 檢查必要的 cookies 是否存在且未過期
-                const requiredCookies = ['LOGIN_INFO', 'VISITOR_INFO1_LIVE']
+                const requiredCookies = ['LOGIN_INFO']
                 const missingCookies = requiredCookies.filter(
                     (cookieName) => !cookieData.cookies.some((c) => c.name === cookieName)
                 )
@@ -77,17 +77,9 @@ module.exports = {
 
                 // 檢查是否有任何必要的 cookie 已過期
                 const loginCookie = cookieData.cookies.find((c) => c.name === 'LOGIN_INFO')
-                const visitorCookie = cookieData.cookies.find(
-                    (c) => c.name === 'VISITOR_INFO1_LIVE'
-                )
 
                 if (loginCookie.expirationDate && loginCookie.expirationDate < now) {
                     console.warn('Warning: LOGIN_INFO cookie has expired')
-                    return false
-                }
-
-                if (visitorCookie.expirationDate && visitorCookie.expirationDate < now) {
-                    console.warn('Warning: VISITOR_INFO1_LIVE cookie has expired')
                     return false
                 }
 
@@ -116,18 +108,12 @@ module.exports = {
             if (fs.existsSync(cookieFile)) {
                 const cookieData = JSON.parse(fs.readFileSync(cookieFile, 'utf8'))
                 const loginCookie = cookieData.cookies.find((c) => c.name === 'LOGIN_INFO')
-                const visitorCookie = cookieData.cookies.find(
-                    (c) => c.name === 'VISITOR_INFO1_LIVE'
-                )
 
                 return {
                     hasCookies: cookieData.cookies.length > 0,
                     lastUpdate: cookieData.lastUpdate,
                     loginCookieExpires: loginCookie
                         ? Math.floor(loginCookie.expirationDate) // 使用秒格式
-                        : null,
-                    visitorCookieExpires: visitorCookie
-                        ? Math.floor(visitorCookie.expirationDate) // 使用秒格式
                         : null,
                     isValid: this.checkExpiration()
                 }
@@ -136,7 +122,6 @@ module.exports = {
                 hasCookies: false,
                 lastUpdate: null,
                 loginCookieExpires: null,
-                visitorCookieExpires: null,
                 isValid: false
             }
         } catch (error) {
@@ -145,7 +130,6 @@ module.exports = {
                 hasCookies: false,
                 lastUpdate: null,
                 loginCookieExpires: null,
-                visitorCookieExpires: null,
                 isValid: false
             }
         }
