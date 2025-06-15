@@ -1,7 +1,7 @@
 import Playlist from '@/Structures/Schemas/Playlist'
+import { deleteMessageAfter } from '@/Systems/Music'
 import emojis from '@/libs/emoji/emoji'
 import type { ButtonType } from '@/typings/component'
-import type { Queue } from 'Distube'
 import {
     ActionRowBuilder,
     ButtonBuilder,
@@ -9,8 +9,7 @@ import {
     ButtonStyle,
     MessageFlags
 } from 'discord.js'
-
-import { deleteMessageAfter } from '@/Systems/Music'
+import type { Queue } from 'distube'
 
 export default {
     id: 'playlist',

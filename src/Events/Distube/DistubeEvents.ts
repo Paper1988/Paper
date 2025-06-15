@@ -1,17 +1,17 @@
-import { EmbedBuilder, Message } from 'discord.js'
-import DB from '../../Structures/Schemas/MusicDB.js'
+import DB from '@/Structures/Schemas/MusicDB.js'
 import {
     clearPlayer,
     deleteMessageAfter, // default 15s
     generateMusicPlayerStatus,
     updateMusicPlayerStatus
-} from '../../Systems/Music'
-import client from '../../index.js'
-import emojis from '../../libs/emoji/emoji.js'
+} from '@/Systems/Music'
+import client from '@/index.js'
+import emojis from '@/libs/emoji/emoji.js'
+import { EmbedBuilder, Message } from 'discord.js'
 
-import { DisTubeError, Events, Playlist, Queue, RepeatMode, Song } from 'Distube'
+import { DisTubeError, Events, Playlist, Queue, RepeatMode, Song } from 'distube'
 
-declare module 'Distube' {
+declare module 'distube' {
     interface Queue {
         musicControllerMsgId: string
         playerIntervalId: NodeJS.Timeout
