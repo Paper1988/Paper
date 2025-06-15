@@ -28,6 +28,6 @@ client.selectMenus = new Collection()
 client.contextMenus = new Collection()
 
 client.initDistube()
-client.start({ Test: false })
+client.start({ Test: true })
 
 export default client
