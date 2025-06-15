@@ -140,4 +140,11 @@ replit.nix
 
 node_modules
 
-package-lock.json
+# pnpm store
+.pnpm-store
+# pnpm store directory
+.pnpm-store/
+# pnpm store lockfile
+.pnpm-lock.yaml
+# pnpm store cache
+.pnpm-cache
