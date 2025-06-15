@@ -78,13 +78,12 @@ client.distube
             })
             .then((msg: Message) => deleteMessageAfter(msg))
     })
-    .on(Events.ERROR, async (error: Error, queue: Queue, song: Song | undefined) => {
+    .on(Events.ERROR, async (error: any, queue: Queue, song: Song | undefined) => {
         await updateMusicPlayerStatus(queue, true)
         clearPlayer(queue)
 
         let errorMessage = ''
 
-        // 處理特定錯誤類型
         if (
             error instanceof DisTubeError &&
             error.errorCode === 'SOUNDCLOUD_PLUGIN_NO_RESULT' &&
@@ -97,7 +96,6 @@ client.distube
                 `1. 嘗試使用歌曲名稱直接搜尋\n` +
                 `2. 使用其他音樂平台的連結`
         } else {
-            // 一般錯誤訊息
             errorMessage = error.toString().slice(0, 1974)
         }
 
