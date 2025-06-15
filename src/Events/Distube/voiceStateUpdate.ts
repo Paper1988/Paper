@@ -1,11 +1,10 @@
+import { PaperClient } from '@/classes/PaperClient'
+import emojis from '@/libs/emoji/emoji'
+import { clearPlayer, deleteMessageAfter } from '@/Systems/Music'
 import type { EventType } from '@/typings/event'
 import { EmbedBuilder, Events, Message, VoiceChannel, VoiceState } from 'discord.js'
-import { Queue } from 'Distube'
-import { DisTube } from 'distube'
-import emojis from '../../libs/emoji/emoji'
-import { clearPlayer, deleteMessageAfter } from '../../Systems/Music'
+import { DisTube, Queue } from 'distube'
 
-// 存儲頻道空閒計時器
 const emptyChannelTimers = new Map()
 
 const isChannelEmpty = (channel: VoiceChannel) => {
@@ -37,7 +36,7 @@ const setEmptyChannelTimer = (queue: Queue) => {
             queue.voice.leave()
             emptyChannelTimers.delete(queue.id)
         }
-    }, 60 * 1000) // 60秒
+    }, 60 * 1000)
 
     emptyChannelTimers.set(queue.id, timer)
 }
@@ -50,15 +49,13 @@ declare module 'discord.js' {
 
 export default {
     name: Events.VoiceStateUpdate,
-    async execute(client, oldState: VoiceState, newState: VoiceState) {
+    async execute(client: PaperClient, oldState: VoiceState, newState: VoiceState) {
         if (!oldState?.channel) return
         const queue = (oldState.client.distube as DisTube).queues.get(oldState) as Queue
         if (!queue) return
 
-        // 如果是機器人的語音狀態改變，不處理
         if (oldState.member?.id === oldState.client.user.id) return
 
-        // 檢查新的頻道狀態
         if (isChannelEmpty(oldState?.channel as VoiceChannel)) {
             await queue.pause()
             queue
@@ -77,7 +74,6 @@ export default {
             setEmptyChannelTimer(queue)
         } else {
             await queue.resume()
-            // 如果頻道不為空，清除計時器
             if (emptyChannelTimers.has(queue.id)) {
                 clearTimeout(emptyChannelTimers.get(queue.id))
                 emptyChannelTimers.delete(queue.id)
