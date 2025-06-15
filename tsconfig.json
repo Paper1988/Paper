@@ -7,20 +7,11 @@
         "rootDir": "src",
         "baseUrl": ".",
         "paths": {
-            "@/*": [
-                "src/*"
-            ],
-            "@types/*": [
-                "./types/*"
-            ],
-            "@classes/*": [
-                "src/classes/*"
-            ]
+            "@/*": ["src/*"],
+            "@types/*": ["./types/*"],
+            "@classes/*": ["src/classes/*"]
         },
-        "typeRoots": [
-            "./node_modules/@types",
-            "./types"
-        ],
+        "typeRoots": ["./node_modules/@types", "./types"],
         "allowJs": true,
         "resolveJsonModule": true,
         "moduleDetection": "force",
@@ -31,25 +22,13 @@
         "forceConsistentCasingInFileNames": true,
         "strict": true,
         "isolatedModules": true,
-        "noEmit": true,
+        "noEmit": false,
         "noUncheckedIndexedAccess": true,
         "noImplicitOverride": true,
         "allowSyntheticDefaultImports": true,
-        "allowImportingTsExtensions": true,
-        "types": [
-            "node"
-        ],
-        "lib": [
-            "es2022"
-        ],
+        "types": ["node"],
+        "lib": ["es2022"]
     },
-    "include": [
-        "src/**/*.ts",
-        "types/**/*",
-        "environment.d.ts"
-    ],
-    "exclude": [
-        "node_modules",
-        "dist"
-    ]
+    "include": ["src/**/*.ts", "types/**/*", "environment.d.ts"],
+    "exclude": ["node_modules", "dist"]
 }
