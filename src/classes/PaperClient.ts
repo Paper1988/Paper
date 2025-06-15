@@ -18,8 +18,13 @@ import { AppleMusicPlugin } from 'distube-apple-music'
 import { TidalPlugin } from 'distube-tidal'
 import dotenv from 'dotenv'
 import Fastify from 'fastify'
+import fs from 'fs'
 
-dotenv.config({ path: '.env.local' })
+if (fs.existsSync('.env.local')) {
+    dotenv.config({ path: '.env.local' })
+} else {
+    dotenv.config()
+}
 
 export class PaperClient extends Client {
     override commands: Collection<string, CommandType> = new Collection<string, any>()

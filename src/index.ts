@@ -1,5 +1,5 @@
 import { Collection, GatewayIntentBits, Partials } from 'discord.js'
-import { PaperClient } from './classes/PaperClient'
+import { PaperClient } from './classes/PaperClient.js'
 
 const client = new PaperClient({
     shards: 'auto',
