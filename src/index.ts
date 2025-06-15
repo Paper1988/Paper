@@ -1,5 +1,5 @@
-import { PaperClient } from '@/classes/PaperClient'
 import { Collection, GatewayIntentBits, Partials } from 'discord.js'
+import { PaperClient } from './classes/PaperClient'
 
 const client = new PaperClient({
     shards: 'auto',
@@ -28,6 +28,7 @@ client.selectMenus = new Collection()
 client.contextMenus = new Collection()
 
 client.initDistube()
+
 client.start({ Test: true })
 
 export default client
