@@ -1,11 +1,11 @@
 {
     "name": "paper",
-    "version": "2.3.1",
+    "version": "2.4.0",
     "description": "Discord bot, Paper📄, is a multipurpose bot with music, moderation, fun, and utility features.",
     "scripts": {
         "format": "prettier --write .",
         "format:check": "prettier --check .",
-        "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+        "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && tsc-esm-fix",
         "build:watch": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
         "start": "node dist/index.js",
         "dev": "tsx watch src/index.ts"
@@ -70,6 +70,7 @@
         "prettier": "^3.5.3",
         "ts-node": "^10.9.2",
         "tsc-alias": "^1.8.16",
+        "tsc-esm-fix": "^3.1.2",
         "tsconfig-paths": "^4.2.0",
         "tsx": "^4.20.3",
         "typescript": "^5.8.3"
