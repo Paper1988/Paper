@@ -109,7 +109,7 @@ export default {
             .setTitle(`${title}`)
             .setDescription(`${splittedMsg}`)
 
-        if (color)
+        if (color) {
             try {
                 embed.setColor(color as `#${string}`)
             } catch {
@@ -120,6 +120,7 @@ export default {
                     })
                 }
             }
+        }
         if (footer) embed.setFooter({ text: footer })
         if (timestamp) embed.setTimestamp()
 

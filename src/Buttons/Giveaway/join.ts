@@ -21,18 +21,18 @@ export default {
         const member = interaction.member as GuildMember
         const errors: string[] = []
 
-        if (giveaway.requiredRoles?.length! > 0) {
-            const hasRequiredRole = giveaway.requiredRoles!.some((roleId) =>
-                member!.roles.cache.has(roleId)
-            )
+        const requiredRoles = giveaway.requiredRoles ?? []
+        if (requiredRoles.length > 0) {
+            const hasRequiredRole = requiredRoles.some((roleId) => member.roles.cache.has(roleId))
             if (!hasRequiredRole) {
                 errors.push('<:warning:1265562532857380936> | 你沒有參加此抽獎所需的身分組！')
             }
         }
 
-        if (giveaway.blacklistedRoles?.length! > 0) {
-            const hasBlacklistedRole = giveaway.blacklistedRoles!.some((roleId) =>
-                member!.roles.cache.has(roleId)
+        const blacklistedRoles = giveaway.blacklistedRoles ?? []
+        if (blacklistedRoles.length > 0) {
+            const hasBlacklistedRole = blacklistedRoles.some((roleId) =>
+                member.roles.cache.has(roleId)
             )
             if (hasBlacklistedRole) {
                 errors.push('<:warning:1265562532857380936> | 你有被禁止參加此抽獎的身分組！')
@@ -40,7 +40,7 @@ export default {
         }
 
         if (giveaway.minAccountAge) {
-            const accountAge = (Date.now() - member!.user.createdTimestamp) / (1000 * 60 * 60 * 24)
+            const accountAge = (Date.now() - member.user.createdTimestamp) / (1000 * 60 * 60 * 24)
             if (accountAge < giveaway.minAccountAge) {
                 errors.push(
                     `<:warning:1265562532857380936> | 你的帳號年齡需要至少 ${giveaway.minAccountAge} 天！`
@@ -49,11 +49,16 @@ export default {
         }
 
         if (giveaway.minServerTime) {
-            const serverTime = (Date.now() - member!.joinedTimestamp!) / (1000 * 60 * 60 * 24)
-            if (serverTime < giveaway.minServerTime) {
-                errors.push(
-                    `<:warning:1265562532857380936> | 你需要在伺服器待滿 ${giveaway.minServerTime} 天！`
-                )
+            const joinedTimestamp = member.joinedTimestamp
+            if (!joinedTimestamp) {
+                errors.push('<:warning:1265562532857380936> | 無法獲取你的加入時間！')
+            } else {
+                const serverTime = (Date.now() - joinedTimestamp) / (1000 * 60 * 60 * 24)
+                if (serverTime < giveaway.minServerTime) {
+                    errors.push(
+                        `<:warning:1265562532857380936> | 你需要在伺服器待滿 ${giveaway.minServerTime} 天！`
+                    )
+                }
             }
         }
 

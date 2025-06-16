@@ -17,7 +17,7 @@ export default {
             .exec()
             .catch(() => {})
 
-        Embed.setColor('Red').setDescription(`<:correct:1265560254708711467> | 你的afk狀態已被移除`)
+        Embed.setColor('Red').setDescription('<:correct:1265560254708711467> | 你的afk狀態已被移除')
         return interaction.reply({ embeds: [Embed], flags: MessageFlags.Ephemeral })
     }
 } as SubCommandType

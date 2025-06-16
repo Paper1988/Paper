@@ -23,11 +23,12 @@ export default {
         const { options } = interaction
         const opponent = options.getUser('opponent')!
 
-        if (interaction.user.id === opponent.id)
+        if (interaction.user.id === opponent.id) {
             return await interaction.reply({
                 content: '<:warning:1265562532857380936> | 你不能跟自己玩剪刀石頭布!',
                 flags: MessageFlags.Ephemeral
             })
+        }
 
         const Game = new RockPaperScissors({
             message: interaction,

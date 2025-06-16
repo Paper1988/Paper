@@ -23,7 +23,7 @@ export default {
 
         const user = client.users.cache.get(userId!)
 
-        if (user)
+        if (user) {
             await user
                 .send({
                     embeds: [fixed]
@@ -31,9 +31,11 @@ export default {
                 .catch(() => {
                     console.log('User has DMs disabled')
                 })
-        else console.log('User has DMs disabled')
+        } else {
+            console.log('User has DMs disabled')
+        }
 
-        let e = interaction.message.embeds[0]!
+        const e = interaction.message.embeds[0]!
 
         const embed = new EmbedBuilder()
             .setAuthor(e.author)
@@ -42,8 +44,8 @@ export default {
             .setColor('#64ff33')
             .setFields(e.fields)
             .setFooter(e.footer)
-            .setThumbnail(e.thumbnail?.url!)
-            .setImage(e.image?.url!)
+            .setThumbnail(e.thumbnail?.url ?? null)
+            .setImage(e.image?.url ?? null)
             .setURL(e.url)
 
         await interaction.update({

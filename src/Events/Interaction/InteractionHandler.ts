@@ -3,7 +3,6 @@ import {
     ButtonInteraction,
     ChannelSelectMenuInteraction,
     ChatInputCommandInteraction,
-    Client,
     ContextMenuCommandInteraction,
     EmbedBuilder,
     type Interaction,
@@ -17,15 +16,14 @@ import {
 } from 'discord.js'
 
 import type { PaperClient } from '@/classes/PaperClient'
-import BlackListGuild from '../../Structures/Schemas/BlacklistGuild'
-import BlackListUser from '../../Structures/Schemas/BlacklistUser'
-import { deleteMessageAfter } from '../../Systems/Music'
+import BlackListGuild from '@/Structures/Schemas/BlacklistGuild'
+import BlackListUser from '@/Structures/Schemas/BlacklistUser'
+import { deleteMessageAfter } from '@/Systems/Music'
 
 export default {
     name: 'interactionCreate',
     async execute(interaction: Interaction, client: PaperClient) {
         try {
-            // 檢查黑名單和維護模式
             if (interaction.guild) {
                 const [GuildData, UserData] = await Promise.all([
                     BlackListGuild.findOne({ Guild: interaction.guild.id }),
@@ -34,6 +32,8 @@ export default {
 
                 if (GuildData || UserData) {
                     const data = GuildData || UserData
+                    const time = data?.Time ?? 0
+                    const reason = data?.Reason ?? '未知原因'
                     return await (interaction as ChatInputCommandInteraction).reply({
                         embeds: [
                             new EmbedBuilder()
@@ -43,7 +43,7 @@ export default {
                                     `該${GuildData ? '伺服器' : '用戶'}為黑名單${GuildData ? '伺服器' : '用戶'}!`
                                 )
                                 .setDescription(
-                                    `<:outage:1265561329528471613> | 您${GuildData ? '的伺服器' : ''}已被列入黑名單，自從<t:${Math.floor(data?.Time! / 1000)}:R>, 原因為: **${data!.Reason}**`
+                                    `<:outage:1265561329528471613> | 您${GuildData ? '的伺服器' : ''}已被列入黑名單，自從<t:${time / 1000}:R>, 原因為: **${reason}**`
                                 )
                                 .setTimestamp()
                         ]
@@ -51,7 +51,6 @@ export default {
                 }
             }
 
-            // 處理不同類型的互動
             if (interaction.isChatInputCommand()) {
                 return await handleSlashCommand(interaction, client)
             }
@@ -95,19 +94,17 @@ export default {
                     ]
                 })
             } else {
-                try {
-                    await (interaction.channel! as TextChannel)
-                        .send({
-                            embeds: [
-                                new EmbedBuilder()
-                                    .setColor('Red')
-                                    .setDescription(
-                                        '<:outage:1265561329528471613> | 發生未知錯誤，請協助回報!'
-                                    )
-                            ]
-                        })
-                        .then((msg) => deleteMessageAfter(msg, 30 * 1000))
-                } catch {}
+                await (interaction.channel! as TextChannel)
+                    .send({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setColor('Red')
+                                .setDescription(
+                                    '<:outage:1265561329528471613> | 發生未知錯誤，請協助回報!'
+                                )
+                        ]
+                    })
+                    .then((msg) => deleteMessageAfter(msg, 30 * 1000))
             }
         }
     }
@@ -117,14 +114,14 @@ async function handleSlashCommand(interaction: ChatInputCommandInteraction, clie
     const command = client.commands.get(interaction.commandName)
     if (!command) {
         return await interaction.reply({
-            content: `<:warning:1265562532857380936> | 這項指令過期或不存在了!`,
+            content: '<:warning:1265562532857380936> | 這項指令過期或不存在了!',
             flags: MessageFlags.Ephemeral
         })
     }
 
     if (command.developer && interaction.user.id !== '538639229220028416') {
         return await interaction.reply({
-            content: `<:warning:1265562532857380936> | 這項指令僅限於開發人員使用!`,
+            content: '<:warning:1265562532857380936> | 這項指令僅限於開發人員使用!',
             flags: MessageFlags.Ephemeral
         })
     }

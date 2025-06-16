@@ -69,7 +69,7 @@ export default {
         const member =
             (interaction.options.getMember('member') as GuildMember) || interaction.member
 
-        if (member!.user.bot)
+        if (member!.user.bot) {
             return interaction.editReply({
                 content: '',
                 embeds: [
@@ -78,6 +78,7 @@ export default {
                         .setDescription('<:warning:1265562532857380936> | 機器人無法使用此功能!')
                 ]
             })
+        }
 
         try {
             const fetchedMembers = await interaction.guild!.members.fetch()

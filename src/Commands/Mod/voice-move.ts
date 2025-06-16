@@ -49,16 +49,18 @@ export default {
         const voiceChannel = member.voice.channel!
         const target = options.getMember('target')! as GuildMember
 
-        if (!voiceChannel)
+        if (!voiceChannel) {
             return await interaction.reply({
                 content: '<:warning:1265562532857380936> | 您需要在語音頻道中才能移動成員!',
                 flags: MessageFlags.Ephemeral
             })
-        if (newChannel === voiceChannel)
+        }
+        if (newChannel === voiceChannel) {
             return await interaction.reply({
                 content: '<:warning:1265562532857380936> | 您不能將成員移動到同一個頻道!',
                 flags: MessageFlags.Ephemeral
             })
+        }
 
         if (!target) {
             voiceChannel.members.forEach((m) => {

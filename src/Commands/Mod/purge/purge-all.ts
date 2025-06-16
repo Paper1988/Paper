@@ -22,8 +22,8 @@ export default {
             })
         }
 
-        let deletedMessages: Collection<string, Message<boolean> | PartialMessage | undefined>
-        deletedMessages = await channel.bulkDelete(fetch, true)
+        const deletedMessages: Collection<string, Message<boolean> | PartialMessage | undefined> =
+            await channel.bulkDelete(fetch, true)
         results(deletedMessages, interaction)
     }
 }

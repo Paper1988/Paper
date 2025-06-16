@@ -161,7 +161,8 @@ async function endGiveaway(messageId: string, client: Client): Promise<void> {
             winners: winnerId
         })
 
-        if (!stats.mostWonUser || winHistory > stats?.mostWonUser?.count!) {
+        const currentMostWon = stats.mostWonUser
+        if (!currentMostWon || winHistory > (currentMostWon.count ?? 0)) {
             stats.mostWonUser = {
                 userId: winnerId,
                 count: winHistory

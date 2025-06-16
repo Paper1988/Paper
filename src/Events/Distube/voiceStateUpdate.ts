@@ -49,7 +49,7 @@ declare module 'discord.js' {
 
 export default {
     name: Events.VoiceStateUpdate,
-    async execute(client: PaperClient, oldState: VoiceState, newState: VoiceState) {
+    async execute(client: PaperClient, oldState: VoiceState) {
         if (!oldState?.channel) return
         const queue = (oldState.client.distube as DisTube).queues.get(oldState) as Queue
         if (!queue) return

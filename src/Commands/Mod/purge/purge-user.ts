@@ -2,7 +2,6 @@ import {
     ChatInputCommandInteraction,
     Collection,
     Message,
-    type MessageResolvable,
     type PartialMessage,
     TextChannel
 } from 'discord.js'
@@ -19,15 +18,16 @@ export default {
         if (fetch.size === 0) {
             return interaction.reply({
                 content: `${emojis.warning} | 沒有訊息可以清除！`,
-                flags: 64 // Ephemeral
+                flags: 64
             })
         }
         const user = interaction.options.getUser('user')
 
-        let filtered: number | Collection<string, Message<boolean>> | readonly MessageResolvable[]
-        let deletedMessages: Collection<string, Message<boolean> | PartialMessage | undefined>
-        filtered = fetch.filter((m: Message) => m.author.id === user?.id)
-        deletedMessages = await channel.bulkDelete(filtered, true)
+        const filtered: Collection<string, Message<boolean>> = fetch.filter(
+            (m: Message) => m.author.id === user?.id
+        )
+        const deletedMessages: Collection<string, Message<boolean> | PartialMessage | undefined> =
+            await channel.bulkDelete(filtered, true)
         results(deletedMessages, interaction)
     }
 }

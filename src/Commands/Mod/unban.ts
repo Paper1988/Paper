@@ -26,17 +26,18 @@ export default {
 
         const noBanEmbed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(`<:warning:1265562532857380936> | 伺服器中沒有正被封鎖的用戶!`)
+            .setDescription('<:warning:1265562532857380936> | 伺服器中沒有正被封鎖的用戶!')
             .setFooter({
                 text: client.user!.username,
                 iconURL: client.user!.displayAvatarURL()
             })
 
-        if (fetchBan.size === 0)
+        if (fetchBan.size === 0) {
             return await interaction.reply({
                 embeds: [noBanEmbed],
                 flags: MessageFlags.Ephemeral
             })
+        }
 
         const memberList: any[] = []
         fetchBan.forEach((member) => {

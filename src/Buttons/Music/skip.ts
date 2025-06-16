@@ -11,32 +11,36 @@ export default {
         const member = interaction.member! as GuildMember
         const VoiceChannel = member.voice.channel
 
-        if (!VoiceChannel)
+        if (!VoiceChannel) {
             return await interaction
                 .editReply({
                     content: `${emojis.warning} | 你必須待在語音頻道裡面才能使用音樂按鈕!`
                 })
                 .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+        }
 
         const currentVoiceChannel = interaction.guild?.members.me?.voice.channelId
-        if (currentVoiceChannel && VoiceChannel.id !== currentVoiceChannel)
+        if (currentVoiceChannel && VoiceChannel.id !== currentVoiceChannel) {
             return await interaction.editReply({
                 content: `${emojis.warning} | 我已經在語音頻道 - <#${currentVoiceChannel}> 裡播放音樂了`
             })
+        }
 
         const queue = client.distube.getQueue(VoiceChannel)
-        if (!queue)
+        if (!queue) {
             return await interaction
                 .editReply({
                     content: `${emojis.outage} | 找不到歌曲或該歌曲已經播放完畢!`
                 })
                 .then((msg) => deleteMessageAfter(msg, 10 * 1000))
-        if (!queue.songs[1] && !queue.autoplay)
+        }
+        if (!queue.songs[1] && !queue.autoplay) {
             return await interaction
                 .editReply({
                     content: `${emojis.outage} | 這是最後一首歌了!`
                 })
                 .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+        }
 
         await queue.skip()
         await updateMusicPlayerStatus(queue, true)

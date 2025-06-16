@@ -51,8 +51,8 @@ export default {
                 .setRequired(true)
         ),
     async execute(interaction: ChatInputCommandInteraction) {
-        const langName = interaction.options.getString(`language`)
-        const text = interaction.options.getString(`message`)
+        const langName = interaction.options.getString('language')
+        const text = interaction.options.getString('message')
 
         await interaction.reply({
             content: '<a:discord_loading:1342772648282689546> | 正在翻譯你的訊息...',
@@ -61,23 +61,23 @@ export default {
 
         await translate(text!, { to: `${langName}` })
             .then((res) => {
-                let trans =
+                const trans =
                     res.from.text.didYouMean || res.from.text.autoCorrected
                         ? res.from.text.value
                         : res.text
 
                 const successEmbed = new EmbedBuilder()
-                    .setTitle(`<:translate:1265562430902243410> | 成功翻譯訊息`)
-                    .setColor(`Green`)
+                    .setTitle('<:translate:1265562430902243410> | 成功翻譯訊息')
+                    .setColor('Green')
                     .setTimestamp()
                     .addFields(
-                        { name: `翻譯前: `, value: `\`\`\`${text}\`\`\``, inline: false },
+                        { name: '翻譯前: ', value: `\`\`\`${text}\`\`\``, inline: false },
                         {
-                            name: `翻譯後: `,
+                            name: '翻譯後: ',
                             value: `\`\`\`${trans}\`\`\``,
                             inline: false
                         },
-                        { name: `語言: `, value: `${langName}`, inline: false }
+                        { name: '語言: ', value: `${langName}`, inline: false }
                     )
                 interaction.editReply({
                     content: '',
@@ -92,7 +92,7 @@ export default {
                             .setDescription(
                                 `<:warning:1265562532857380936> | 發生錯誤: \`${err.message}\``
                             )
-                            .setFooter({ text: `請協助回報!` })
+                            .setFooter({ text: '請協助回報!' })
                     ]
                 })
             })

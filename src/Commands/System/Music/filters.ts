@@ -9,25 +9,29 @@ export default {
         const filter = options.getString('set')!
         const VoiceChannel = member.voice.channel
 
-        if (!VoiceChannel)
+        if (!VoiceChannel) {
             return interaction.reply({
                 content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂指令!',
                 flags: MessageFlags.Ephemeral
             })
+        }
         const queue = client.distube.getQueue(VoiceChannel)
-        if (queue && queue.voiceChannel && VoiceChannel.id !== queue.voiceChannel.id)
+        if (queue && queue.voiceChannel && VoiceChannel.id !== queue.voiceChannel.id) {
             return interaction.reply({
                 content: `<:warning:1265562532857380936> | 我已經在語音頻道 - <#${queue.voiceChannel.id}> 裡播放音樂了`,
                 flags: MessageFlags.Ephemeral
             })
+        }
 
-        const msg = `<:warning:1265562532857380936> | **注意**，可能需要等待**3**至**5**秒後才會載入過濾器!`
+        const msg =
+            '<:warning:1265562532857380936> | **注意**，可能需要等待**3**至**5**秒後才會載入過濾器!'
 
-        if (!queue)
+        if (!queue) {
             return interaction.reply({
                 content: '<:outage:1265561329528471613> | 找不到歌曲!',
                 flags: MessageFlags.Ephemeral
             })
+        }
 
         const filters = queue.filters
         if (filters.has(filter)) {

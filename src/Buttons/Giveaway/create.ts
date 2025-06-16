@@ -15,7 +15,7 @@ export default {
         )
 
         await interaction.reply({
-            content: `<:question:1265561586693701703> | 請選擇要創建抽獎的頻道：`,
+            content: '<:question:1265561586693701703> | 請選擇要創建抽獎的頻道：',
             components: [row]
         })
     }

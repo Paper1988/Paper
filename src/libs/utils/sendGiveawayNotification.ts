@@ -22,7 +22,6 @@ export async function sendGiveawayNotification(
 
     if (!userSettings) return
 
-    // 檢查用戶是否啟用了對應類型的通知
     let shouldNotify = false
     let message = ''
 

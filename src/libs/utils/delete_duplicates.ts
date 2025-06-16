@@ -17,7 +17,7 @@ async function removeDuplicates() {
             ])
             .toArray()
 
-        for (let doc of duplicates) {
+        for (const doc of duplicates) {
             await collection.deleteMany({ _id: { $in: doc.toRemove } })
         }
 

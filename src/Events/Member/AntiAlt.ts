@@ -17,9 +17,9 @@ export default {
 
         const logChannel = member.guild.channels.cache.get(Data.LogsChannel!)
 
-        let minAge = ms('7 days')
-        let createdAt = new Date(member.user.createdAt).getTime()
-        let diff = Date.now() - createdAt
+        const minAge = ms('7 days')
+        const createdAt = new Date(member.user.createdAt).getTime()
+        const diff = Date.now() - createdAt
 
         if (minAge > diff) {
             await member.kick()
@@ -28,7 +28,7 @@ export default {
                 .setColor('Red')
                 .setTitle('發現小號!')
                 .setDescription(
-                    `<:outage:1265561329528471613> | 該用戶因帳號年齡未滿 \`7\` 天而被踢出`
+                    '<:outage:1265561329528471613> | 該用戶因帳號年齡未滿 `7` 天而被踢出'
                 )
                 .addFields(
                     {

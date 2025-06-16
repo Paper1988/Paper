@@ -19,7 +19,6 @@ export default {
             name: playlistName
         })
 
-        // 將歌曲的詳細訊息添加到播放清單
         playlist!.songs.push({
             title: song.name,
             url: song.url,

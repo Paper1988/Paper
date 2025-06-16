@@ -23,7 +23,7 @@ export default {
         const giveawayEmbed = new EmbedBuilder()
             .setColor('Purple')
             .setTitle('<:gift:1265560472409735181> | 抽獎系統')
-            .setDescription(`請選擇要執行的操作：`)
+            .setDescription('請選擇要執行的操作：')
             .setTimestamp()
 
         const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(

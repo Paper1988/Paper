@@ -84,24 +84,24 @@ export default {
         const sch = client.channels.cache.get('975253353913254029') as TextChannel
 
         const sent_m = new EmbedBuilder()
-            .setTitle(`<:correct:1265560254708711467> | 你的回報已成功提交!`)
+            .setTitle('<:correct:1265560254708711467> | 你的回報已成功提交!')
             .setColor('Green')
 
         const cancel_m = new EmbedBuilder()
-            .setTitle(`<:outage:1265561329528471613> | 你的回報已成功取消!`)
+            .setTitle('<:outage:1265561329528471613> | 你的回報已成功取消!')
             .setColor('Red')
 
         const send_button = new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder()
                 .setCustomId('report-send')
-                .setLabel(`提交回報`)
+                .setLabel('提交回報')
                 .setEmoji('<:correct:1265560254708711467>')
                 .setStyle(ButtonStyle.Success)
         )
         const cancel_button = new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder()
                 .setCustomId('report-cancel')
-                .setLabel(`取消`)
+                .setLabel('取消')
                 .setEmoji('<:xmark:1265562550947545089>')
                 .setStyle(ButtonStyle.Danger)
         )
@@ -117,13 +117,13 @@ export default {
                         )
                         .addFields(
                             {
-                                name: `提供的描述:`,
+                                name: '提供的描述:',
                                 value: `\`\`\`${description}\`\`\``,
                                 inline: true
                             },
                             {
-                                name: `造成bug的指令:`,
-                                value: `\`\`\`${command || `無選擇`}\`\`\``,
+                                name: '造成bug的指令:',
+                                value: `\`\`\`${command || '無選擇'}\`\`\``,
                                 inline: false
                             }
                         )
@@ -141,13 +141,13 @@ export default {
                     const fixed_button = new ActionRowBuilder<ButtonBuilder>().addComponents(
                         new ButtonBuilder()
                             .setCustomId(`feedback-fixed:${interaction.user.id}`)
-                            .setLabel(`解決`)
+                            .setLabel('解決')
                             .setEmoji('<:fix:1265269709834813462>')
                             .setStyle(ButtonStyle.Primary)
                     )
 
                     const message = await interaction.reply({
-                        content: `## 預覽:`,
+                        content: '## 預覽:',
                         embeds: [embed],
                         components: [cancel_button, send_button],
                         flags: MessageFlags.Ephemeral
@@ -190,7 +190,7 @@ export default {
                             `提交者: ${interaction.user}(${interaction.user.id})\n伺服器: ${guild.name}(${guild.id})`
                         )
                         .addFields({
-                            name: `提供的建議:`,
+                            name: '提供的建議:',
                             value: `\`\`\`${description}\`\`\``,
                             inline: true
                         })
@@ -206,7 +206,7 @@ export default {
                         .setTimestamp()
 
                     const message = await interaction.reply({
-                        content: `預覽:`,
+                        content: '預覽:',
                         embeds: [embed],
                         components: [cancel_button, send_button],
                         flags: MessageFlags.Ephemeral
@@ -240,7 +240,7 @@ export default {
                             `提交者: ${interaction.user}(${interaction.user.id})\n伺服器: ${guild.name}(${guild.id})`
                         )
                         .addFields({
-                            name: `提供的描述:`,
+                            name: '提供的描述:',
                             value: `\`\`\`${description}\`\`\``,
                             inline: true
                         })
@@ -256,7 +256,7 @@ export default {
                         .setTimestamp()
 
                     const message = await interaction.reply({
-                        content: `預覽:`,
+                        content: '預覽:',
                         embeds: [embed],
                         components: [cancel_button, send_button],
                         flags: MessageFlags.Ephemeral

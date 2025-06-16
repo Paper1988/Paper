@@ -1,6 +1,6 @@
+import { PaperClient } from '@/classes/PaperClient'
 import type { SubCommandType } from '@/typings/command'
 import { ChatInputCommandInteraction, GuildMember, MessageFlags } from 'discord.js'
-import { PaperClient } from './../../../classes/PaperClient'
 
 export default {
     subCommand: 'music.quit',
@@ -8,11 +8,12 @@ export default {
         const member = interaction.member! as GuildMember
         const VoiceChannel = member!.voice.channel
 
-        if (!VoiceChannel)
+        if (!VoiceChannel) {
             await interaction.reply({
                 content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂指令!',
                 flags: MessageFlags.Ephemeral
             })
+        }
 
         client.distube.voices.leave(VoiceChannel!)
         await interaction.reply({
