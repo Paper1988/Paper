@@ -99,7 +99,7 @@ export default {
                     }
                 )
                 .setFooter({
-                    text: `請複製播放清單ID並貼在來播放這個播放清單`
+                    text: '請複製播放清單ID並貼在來播放這個播放清單'
                 })
 
             const row = new ActionRowBuilder<ButtonBuilder>().addComponents(

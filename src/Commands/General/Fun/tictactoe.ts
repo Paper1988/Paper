@@ -20,11 +20,12 @@ export default {
                 .setRequired(true)
         ),
     async execute(interaction: ChatInputCommandInteraction) {
-        if (interaction.user.id === interaction.options.getUser('user')!.id)
+        if (interaction.user.id === interaction.options.getUser('user')!.id) {
             return await interaction.reply({
                 content: '<:warning:1265562532857380936> | 你不能跟自己玩圈圈叉叉!',
                 flags: MessageFlags.Ephemeral
             })
+        }
 
         const Game = new TicTacToe({
             message: interaction,

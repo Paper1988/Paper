@@ -10,10 +10,11 @@ export default {
         const { options } = interaction
         const ID = options.getNumber('user-id')!
         const reason = options.getString('reason') || '無提供'
-        if (isNaN(ID))
+        if (isNaN(ID)) {
             return interaction.editReply({
-                content: `<:outage:1265561329528471613> | ID應該要是一串數字`
+                content: '<:outage:1265561329528471613> | ID應該要是一串數字'
             })
+        }
         const User = await client.users.fetch(ID.toString())
         let Data = await BlackListUser.findOne({ User: User.id })
             .exec()

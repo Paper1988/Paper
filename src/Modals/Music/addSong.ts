@@ -1,4 +1,3 @@
-import type { PaperClient } from '@/classes/PaperClient'
 import { YouTubePlugin } from '@distube/youtube'
 import {
     ActionRowBuilder,
@@ -9,7 +8,7 @@ import {
 
 export default {
     id: 'addSong',
-    async execute(interaction: ModalSubmitInteraction, client: PaperClient) {
+    async execute(interaction: ModalSubmitInteraction) {
         const songName = interaction.fields.getTextInputValue('songName')
 
         const select = new StringSelectMenuBuilder()

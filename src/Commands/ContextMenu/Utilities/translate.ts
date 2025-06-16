@@ -34,9 +34,9 @@ export default {
             flags: MessageFlags.Ephemeral
         })
 
-        await translate(text, { to: `zh-tw` })
+        await translate(text, { to: 'zh-tw' })
             .then(async (res) => {
-                let trans =
+                const trans =
                     res.from.text.didYouMean || res.from.text.autoCorrected
                         ? res.from.text.value
                         : res.text
@@ -45,17 +45,17 @@ export default {
                 const langName = `${res.from.language.iso} → zh-tw`
 
                 const successEmbed = new EmbedBuilder()
-                    .setTitle(`<:translate:1265562430902243410> | 成功翻譯訊息`)
-                    .setColor(`Green`)
+                    .setTitle('<:translate:1265562430902243410> | 成功翻譯訊息')
+                    .setColor('Green')
                     .setTimestamp()
                     .addFields(
-                        { name: `翻譯前: `, value: `\`\`\`${text}\`\`\``, inline: false },
+                        { name: '翻譯前: ', value: `\`\`\`${text}\`\`\``, inline: false },
                         {
-                            name: `翻譯後: `,
+                            name: '翻譯後: ',
                             value: `\`\`\`${trans}\`\`\``,
                             inline: false
                         },
-                        { name: `語言: `, value: `${langName}`, inline: false }
+                        { name: '語言: ', value: `${langName}`, inline: false }
                     )
 
                 await interaction.editReply({
@@ -71,7 +71,7 @@ export default {
                             .setDescription(
                                 `<:warning:1265562532857380936> | 發生錯誤: \`${err.message}\``
                             )
-                            .setFooter({ text: `請協助回報!` })
+                            .setFooter({ text: '請協助回報!' })
                     ]
                 })
             })

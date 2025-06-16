@@ -67,7 +67,7 @@ export default {
                 }
 
                 case 'add': {
-                    const [_, __, playlistId] = customId.split(':')
+                    const [__, ___, playlistId] = customId.split(':')
                     const playlist = await Playlist.findById(playlistId)
 
                     if (!playlist) {

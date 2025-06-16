@@ -1,18 +1,17 @@
 import type { EventType } from '@/typings/event'
 import { Guild } from 'discord.js'
 import mongoose from 'mongoose'
+import AFKSystem from '../../Structures/Schemas/AFKSystem'
+import AntiAlt from '../../Structures/Schemas/AntiAlt'
+import GiveawayDB from '../../Structures/Schemas/Giveaway'
+import GiveawayHistory from '../../Structures/Schemas/GiveawayHistory'
+import GiveawayNotification from '../../Structures/Schemas/GiveawayNotification'
+import GiveawayStats from '../../Structures/Schemas/GiveawayStats'
+import MusicDB from '../../Structures/Schemas/MusicDB'
 
 export default {
     name: 'guildDelete',
     async execute(client, guild: Guild) {
-        const MusicDB: mongoose.Model<any> = require('../../Structures/Schemas/MusicDB')
-        const AntiAlt: mongoose.Model<any> = require('../../Structures/Schemas/AntiAlt')
-        const AFKSystem: mongoose.Model<any> = require('../../Structures/Schemas/AFKSystem')
-        const GiveawayDB: mongoose.Model<any> = require('../../Structures/Schemas/Giveaway')
-        const GiveawayHistory: mongoose.Model<any> = require('../../Structures/Schemas/GiveawayHistory')
-        const GiveawayStats: mongoose.Model<any> = require('../../Structures/Schemas/GiveawayStats')
-        const GiveawayNotification: mongoose.Model<any> = require('../../Structures/Schemas/GiveawayNotification')
-
         const deleteRecords = async (model: mongoose.Model<any>) => {
             const record = await model.findOne({ GuildID: guild.id })
             if (record) {

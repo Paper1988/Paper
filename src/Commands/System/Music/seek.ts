@@ -11,25 +11,28 @@ export default {
         const member = interaction.member! as GuildMember
         const VoiceChannel = member.voice.channel
 
-        if (!VoiceChannel)
+        if (!VoiceChannel) {
             return interaction.reply({
                 content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂指令!',
                 flags: MessageFlags.Ephemeral
             })
+        }
         const currentVoiceChannel = interaction.guild?.members.me?.voice.channelId
-        if (currentVoiceChannel && VoiceChannel.id !== currentVoiceChannel)
+        if (currentVoiceChannel && VoiceChannel.id !== currentVoiceChannel) {
             return await interaction.editReply({
                 content: `${emojis.warning} | 我已經在語音頻道 - <#${currentVoiceChannel}> 裡播放音樂了`
             })
+        }
 
         const queue = client.distube.getQueue(VoiceChannel)
         const Time = options.getNumber('time')
 
-        if (!queue)
+        if (!queue) {
             return interaction.reply({
                 content: '<:outage:1265561329528471613> | 找不到歌曲或該歌曲已經播放完畢!',
                 flags: MessageFlags.Ephemeral
             })
+        }
 
         queue.seek(Time!)
         await interaction

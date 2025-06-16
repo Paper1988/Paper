@@ -16,29 +16,39 @@ module.exports = {
 
         const VoiceChannel = member.voice.channel
 
-        if (!VoiceChannel)
+        if (!VoiceChannel) {
             return await interaction
                 .editReply({
                     content: `${emojis.warning} | 你必須待在語音頻道裡面才能使用音樂按鈕!`
                 })
                 .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+        }
 
         const currentVoiceChannel = interaction.guild?.members.me?.voice.channelId
-        if (currentVoiceChannel && VoiceChannel.id !== currentVoiceChannel)
+        if (currentVoiceChannel && VoiceChannel.id !== currentVoiceChannel) {
             return await interaction.editReply({
                 content: `${emojis.warning} | 我已經在語音頻道 - <#${currentVoiceChannel}> 裡播放音樂了`
             })
+        }
 
         const queue = client.distube.getQueue(VoiceChannel)
-        if (!queue)
+        if (!queue) {
             return await interaction
                 .editReply({
                     content: `${emojis.outage} | 找不到歌曲或該歌曲已經播放完畢!`
                 })
                 .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+        }
+
+        const currentSong = queue.songs[0]
+        if (!currentSong) {
+            return await interaction.editReply({
+                content: `${emojis.outage} | 無法獲取當前歌曲信息！`
+            })
+        }
 
         await Client.songs
-            .search(queue.songs[0]?.name!)
+            .search(currentSong.name ?? '')
             .then(async (songs) => {
                 const song = songs[0]!
 
@@ -46,10 +56,10 @@ module.exports = {
 
                 const Embed = new EmbedBuilder()
                     .setURL(song.url)
-                    .setTitle(queue.songs[0]?.name!)
-                    .setAuthor({ name: queue.songs[0]?.uploader.name! })
+                    .setTitle(currentSong.name!)
+                    .setAuthor({ name: currentSong.uploader?.name ?? '未知歌手' })
                     .setDescription(lyrics)
-                    .setImage(queue.songs[0]?.thumbnail!)
+                    .setImage(currentSong.thumbnail as string | null)
                     .setFooter({
                         text: '資料來源: Genius Lyrics',
                         iconURL:
@@ -66,7 +76,7 @@ module.exports = {
                             new EmbedBuilder()
                                 .setColor('Red')
                                 .setDescription(
-                                    `<:loadingerror:1268935312751595622> | 找不到 \`${queue.songs[0]?.name}\` 的歌詞!`
+                                    `<:loadingerror:1268935312751595622> | 找不到 \`${currentSong?.name}\` 的歌詞!`
                                 )
                                 .setFooter({
                                     text: '歌詞資料來源: Genius Lyrics',

@@ -24,16 +24,18 @@ export default {
 
         const embed = new EmbedBuilder().setColor('Red').setTitle('發生錯誤').setTimestamp()
 
-        if (!VoiceChannel)
+        if (!VoiceChannel) {
             return await interaction.editReply({
                 content: `${emojis.warning} | 你必須待在語音頻道裡面才能使用音樂指令!`
             })
+        }
 
         const currentVoiceChannel = interaction.guild?.members.me?.voice.channelId
-        if (currentVoiceChannel && VoiceChannel.id !== currentVoiceChannel)
+        if (currentVoiceChannel && VoiceChannel.id !== currentVoiceChannel) {
             return await interaction.editReply({
                 content: `${emojis.warning} | 我已經在語音頻道 - <#${currentVoiceChannel}> 裡播放音樂了`
             })
+        }
 
         if (!VoiceChannel.joinable) {
             return await interaction.editReply({
@@ -156,7 +158,7 @@ export default {
                             .then(() => setTimeout(() => interaction.deleteReply(), 15 * 1000))
                     )
             }
-        } else
+        } else {
             return await interaction
                 .editReply({
                     content: '',
@@ -170,5 +172,6 @@ export default {
                     ]
                 })
                 .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
+        }
     }
 } as SubCommandType

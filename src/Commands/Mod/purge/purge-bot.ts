@@ -23,10 +23,12 @@ export default {
             })
         }
 
-        let filtered: number | Collection<string, Message<boolean>> | readonly MessageResolvable[]
-        let deletedMessages: Collection<string, Message<boolean> | PartialMessage | undefined>
-        filtered = fetch.filter((m: Message) => m.author.bot)
-        deletedMessages = await channel.bulkDelete(filtered, true)
+        const filtered:
+            | number
+            | Collection<string, Message<boolean>>
+            | readonly MessageResolvable[] = fetch.filter((m: Message) => m.author.bot)
+        const deletedMessages: Collection<string, Message<boolean> | PartialMessage | undefined> =
+            await channel.bulkDelete(filtered, true)
         results(deletedMessages, interaction)
     }
 }

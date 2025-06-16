@@ -51,7 +51,7 @@ export default {
             const embed = new EmbedBuilder().setColor('Blurple').setDescription(message)
 
             if (button) {
-                const button = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
                     new ButtonBuilder()
                         .setCustomId('mcstats:refresh')
                         .setLabel('🔄 刷新數據')
@@ -61,7 +61,7 @@ export default {
                 if (updated) {
                     await interaction.editReply({
                         embeds: [embed],
-                        components: [button]
+                        components: [buttonRow]
                     })
                     await (updated as ChatInputCommandInteraction).followUp({
                         content: '<:correct:1265560254708711467> | 已刷新數據!',
@@ -70,7 +70,7 @@ export default {
                 } else {
                     msg = await interaction.reply({
                         embeds: [embed],
-                        components: [button],
+                        components: [buttonRow],
                         flags: MessageFlags.Ephemeral
                     })
                 }
@@ -90,16 +90,18 @@ export default {
                 true
             )
             const collector = msg.createMessageComponentCollector()
-            collector.on('collect', async (interaction: ButtonInteraction) => {
-                if (interaction.customId == 'mcstats:refresh') {
-                    let updatedData = await fetch(`https://mcapi.us/server/status?ip=${ip}`)
-                    let response = (await updatedData.json()) as MinecraftServerResponse
+            collector.on('collect', async (buttonInteraction: ButtonInteraction) => {
+                if (buttonInteraction.customId == 'mcstats:refresh') {
+                    const updatedData = await fetch(`https://mcapi.us/server/status?ip=${ip}`)
+                    const updatedResponse = (await updatedData.json()) as MinecraftServerResponse
                     await sendMessage(
-                        `<:globe:1265560486208864318> | **Minecraft 伺服器**:\n\n在線: ${response.online}\n名稱: ${response.server.name}\nIP: ${ip!.toLowerCase()}\n最大玩家上限: ${response.players.max}\n在線玩家: ${response.players.now}`,
+                        `<:globe:1265560486208864318> | **Minecraft 伺服器**:\n\n在線: ${updatedResponse.online}\n名稱: ${updatedResponse.server.name}\nIP: ${ip!.toLowerCase()}\n最大玩家上限: ${updatedResponse.players.max}\n在線玩家: ${updatedResponse.players.now}`,
                         true,
-                        interaction
+                        buttonInteraction
                     )
-                } else return
+                } else {
+                    return
+                }
             })
         }
     }

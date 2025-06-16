@@ -29,6 +29,6 @@ client.contextMenus = new Collection()
 
 client.initDistube()
 
-client.start({ Test: true })
+client.start()
 
 export default client

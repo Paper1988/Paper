@@ -67,20 +67,23 @@ export default {
             .setTitle('<:warning:1265562532857380936> | 無法封鎖該名成員，因為')
             .setColor('Red')
 
-        if (!target)
+        if (!target) {
             return await interaction.editReply({
                 embeds: [errorsEmbed.setDescription('所選成員很可能已經離開伺服器了')]
             })
+        }
 
         if (!target.bannable) errorsArray.push('我的權限不夠大!')
 
-        if (member.roles.highest.position < target.roles.highest.position)
+        if (member.roles.highest.position < target.roles.highest.position) {
             errorsArray.push('所選成員的權限比你高!')
+        }
 
-        if (errorsArray.length)
+        if (errorsArray.length) {
             return await interaction.editReply({
                 embeds: [errorsEmbed.setDescription(errorsArray.join('\n'))]
             })
+        }
 
         if (!target.user.bot) {
             await target.send({ embeds: [dmEmbed] })

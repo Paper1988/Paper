@@ -14,10 +14,11 @@ export default {
 
         DB.deleteMany({ GuildID: guild!.id }, async (err: Error, data: any) => {
             if (err) throw err
-            if (!data)
+            if (!data) {
                 return interaction.reply({
                     content: '<:warning:1265562532857380936> | 找不到數據'
                 })
+            }
             await interaction.reply({ embeds: [LogsReset] })
         })
     }

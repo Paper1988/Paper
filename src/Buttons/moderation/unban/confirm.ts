@@ -13,7 +13,7 @@ module.exports = {
             const { guild } = interaction
             const processEmbed = new EmbedBuilder()
                 .setColor('Blue')
-                .setDescription(`<a:discord1792loading:1212016238839070791> | 正在執行中...`)
+                .setDescription('<a:discord1792loading:1212016238839070791> | 正在執行中...')
                 .setFooter({
                     text: client.user!.username,
                     iconURL: client.user!.displayAvatarURL()

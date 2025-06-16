@@ -30,7 +30,7 @@ export default {
         const embed = new EmbedBuilder()
             .setTitle('伺服器排行')
             .setDescription(
-                `順序 | 名稱 | 成員數\n` +
+                '順序 | 名稱 | 成員數\n' +
                     description +
                     `\n\n所有成員: ${client.guilds.cache.reduce(
                         (a, b) => a + b.memberCount,

@@ -13,30 +13,39 @@ export default {
         const member = interaction.member! as GuildMember
         const VoiceChannel = member.voice.channel
 
-        if (!VoiceChannel)
+        if (!VoiceChannel) {
             return interaction.reply({
                 content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂指令!',
                 flags: MessageFlags.Ephemeral
             })
+        }
         const currentVoiceChannel = interaction.guild?.members.me?.voice.channelId
-        if (currentVoiceChannel && VoiceChannel.id !== currentVoiceChannel)
+        if (currentVoiceChannel && VoiceChannel.id !== currentVoiceChannel) {
             return await interaction.editReply({
                 content: `${emojis.warning} | 我已經在語音頻道 - <#${currentVoiceChannel}> 裡播放音樂了`
             })
+        }
 
         const queue = client.distube.getQueue(VoiceChannel)
 
-        if (!queue)
+        if (!queue) {
             return interaction.reply({
                 content: '<:outage:1265561329528471613> | 找不到歌曲或該歌曲已經播放完畢!'
             })
+        }
+
+        let Mode: boolean
+        let repeatMode: number
+        let normalizedMode: number
+        let leftSongs: number
 
         switch (options.getString('options')) {
             case 'skip':
-                if (!queue.songs[1] && !queue.autoplay)
+                if (!queue.songs[1] && !queue.autoplay) {
                     return interaction.reply({
                         content: '<:outage:1265561329528471613> | 這是最後一首歌了!'
                     })
+                }
                 await queue.skip()
                 return interaction.reply({
                     content: '<:frontforward:1265560424510787584> | 成功跳過歌曲'
@@ -71,7 +80,7 @@ export default {
                 })
 
             case 'autoplay':
-                let Mode = queue.toggleAutoplay()
+                Mode = queue.toggleAutoplay()
                 await MusicDB.findOneAndUpdate(
                     { GuildID: queue.id },
                     { autoplayMode: Mode ? true : false },
@@ -97,16 +106,18 @@ export default {
                 })
 
             case 'repeat':
-                let Mode2 = client.distube.setRepeatMode(queue)
+                repeatMode = client.distube.setRepeatMode(queue)
+                normalizedMode = repeatMode ? (repeatMode === 2 ? 2 : 1) : 0
+
                 await MusicDB.findOneAndUpdate(
                     { GuildID: queue.id },
-                    { repeatMode: (Mode2 = Mode2 ? (Mode2 == 2 ? 2 : 1) : 0) },
+                    { repeatMode: normalizedMode },
                     { new: true, upsert: true }
                 )
                 return interaction.reply({
                     content: `<:loop1:1265560917345570918> | 成功切換重複播放模式: ${
-                        Mode2
-                            ? Mode2 == 2
+                        normalizedMode
+                            ? normalizedMode == 2
                                 ? '<:loop2:1265560938417754213>整個清單'
                                 : '<:looponce:1265560956193210399>單曲'
                             : '<:xmark:1265562550947545089>'
@@ -114,12 +125,7 @@ export default {
                 })
 
             case 'queue':
-                let leftSongs: number
-                if (queue.songs.length - 10 > 0) {
-                    leftSongs = queue.songs.length - 10
-                } else {
-                    leftSongs = 0
-                }
+                leftSongs = queue.songs.length - 10 > 0 ? queue.songs.length - 10 : 0
 
                 return interaction.reply({
                     embeds: [

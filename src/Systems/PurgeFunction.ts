@@ -1,14 +1,15 @@
+import { deleteMessageAfter } from '@/Systems/Music'
 import { ChatInputCommandInteraction } from 'discord.js'
 
 async function results(deletedMessages, interaction: ChatInputCommandInteraction) {
-    const results = {}
+    const messageCounts = {}
     for (const [, deleted] of deletedMessages) {
         const user = `${deleted.author.username}#${deleted.author.discriminator}`
-        if (!results[user]) results[user] = 0
-        results[user]++
+        if (!messageCounts[user]) messageCounts[user] = 0
+        messageCounts[user]++
     }
 
-    const userMessageMap = Object.entries(results)
+    const userMessageMap = Object.entries(messageCounts)
 
     const finalResult = `<:clean:1265560229438029915>移除了\`${
         deletedMessages.size
@@ -19,9 +20,7 @@ async function results(deletedMessages, interaction: ChatInputCommandInteraction
     const msg = await interaction.reply({
         content: `${finalResult}`
     })
-    setTimeout(() => {
-        msg.delete()
-    }, 5000)
+    deleteMessageAfter(msg, 10 * 1000)
 }
 
 export default results

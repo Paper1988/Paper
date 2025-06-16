@@ -63,24 +63,29 @@ export default {
             .setTitle('<:warning:1265562532857380936> | 無法禁言該成員，因為')
             .setColor('Red')
 
-        if (!user)
+        if (!user) {
             return await interaction.editReply({
                 embeds: [errorsEmbed.setDescription('該名成員很可能已經離開伺服器了')]
             })
+        }
 
-        if (!ms(duration) || ms(duration) > ms('28d'))
+        if (!ms(duration) || ms(duration) > ms('28d')) {
             errorsArray.push('所提供的時間無效或者超過28天的限制!')
+        }
 
-        if (!user.manageable || !user.moderatable)
+        if (!user.manageable || !user.moderatable) {
             errorsArray.push('所選的目標成員無法由機器人管理(我的權限不夠大!)')
+        }
 
-        if (member.roles.highest.position < user.roles.highest.position)
+        if (member.roles.highest.position < user.roles.highest.position) {
             errorsArray.push('所選的目標成員權限比你高!')
+        }
 
-        if (errorsArray.length)
+        if (errorsArray.length) {
             return interaction.editReply({
                 embeds: [errorsEmbed.setDescription(errorsArray.join('\n'))]
             })
+        }
 
         await user.timeout(ms(duration), reason).catch(async () => {
             return await interaction.editReply({

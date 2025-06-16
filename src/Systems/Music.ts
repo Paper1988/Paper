@@ -1,3 +1,4 @@
+import emojis from '@/libs/emoji/emoji'
 import {
     ActionRowBuilder,
     ButtonBuilder,
@@ -7,13 +8,12 @@ import {
     Message,
     type MessageActionRowComponentBuilder
 } from 'discord.js'
-import emojis from '../libs/emoji/emoji'
 
 type Queue = any
 type Song = any
 
 const secondsToDuration = (seconds: string) => {
-    const secondsInNum = parseInt(seconds, 10) // don't forget the second param
+    const secondsInNum = parseInt(seconds, 10)
     let hours: number | string = Math.floor(secondsInNum / 3600)
     let minutes: number | string = Math.floor((secondsInNum - hours * 3600) / 60)
     let _seconds: number | string = secondsInNum - hours * 3600 - minutes * 60
@@ -34,68 +34,66 @@ const secondsToDuration = (seconds: string) => {
     }
 }
 
-const generateMusicStatusButtons = (queue: Queue, song: Song) => {
+const generateMusicStatusButtons = (queue: Queue) => {
     const row1 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([
         new ButtonBuilder()
-            .setCustomId(`autoplay`)
+            .setCustomId('autoplay')
             .setEmoji('<:update:1265562455828987968>')
             .setStyle(queue.autoplay ? ButtonStyle.Success : ButtonStyle.Secondary),
         new ButtonBuilder()
-            .setCustomId(`previous`) // Note the buttons ID is on the left of the _ and the id is on the right. Also note your CANNOT have another _ in the customid eg `my_coolbutton_${target.id}`
+            .setCustomId('previous')
             .setEmoji('<:backforward:1265557186621345833>')
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(queue.previousSongs.length === 0),
         new ButtonBuilder()
-            .setCustomId(`togglePause`)
+            .setCustomId('togglePause')
             .setEmoji(queue.paused ? '<:play:1265561505458294826>' : '<:pause:1265561390358331462>')
             .setStyle(queue.paused ? ButtonStyle.Primary : ButtonStyle.Secondary),
         new ButtonBuilder()
-            .setCustomId(`skip`)
+            .setCustomId('skip')
             .setEmoji('<:frontforward:1265560424510787584>')
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(queue.autoplay ? false : queue.songs.length === 1),
         new ButtonBuilder()
-            .setCustomId(`shuffle`)
+            .setCustomId('shuffle')
             .setEmoji('<:shuffle:1265561846690222081>')
             .setStyle(ButtonStyle.Secondary)
     ])
-    // next column
     const row2 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([
         new ButtonBuilder()
-            .setCustomId(`loop`)
+            .setCustomId('loop')
             .setEmoji('<:loop2:1265560938417754213>')
             .setStyle(queue.repeatMode ? ButtonStyle.Success : ButtonStyle.Secondary),
         new ButtonBuilder()
-            .setCustomId(`volumeDown`)
+            .setCustomId('volumeDown')
             .setEmoji('<:speaker_low:1265561976663310386>')
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(queue.volume <= 0),
         new ButtonBuilder()
-            .setCustomId(`stop`)
+            .setCustomId('stop')
             .setEmoji('<:stop:1265562218498363422>')
             .setStyle(ButtonStyle.Danger),
         new ButtonBuilder()
-            .setCustomId(`volumeUp`)
+            .setCustomId('volumeUp')
             .setEmoji('<:speaker:1265561928533807146>')
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(queue.volume >= 200),
         new ButtonBuilder()
-            .setCustomId(`related`)
+            .setCustomId('related')
             .setEmoji('<:add:1265556973202706503>')
             .setStyle(ButtonStyle.Secondary)
     ])
-    // next column
     const row3 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([
         new ButtonBuilder()
-            .setCustomId(`queue`)
+            .setCustomId('queue')
             .setEmoji('<:queue:1265561609632485478>')
             .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
-            .setCustomId(`addSong`)
+            .setCustomId('addSong')
             .setEmoji('<:friend:1265560408895524957>')
             .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
-            .setCustomId(`filters`)
+            .setCustomId('filters')
             .setEmoji('<:spark:1265561903195750471>')
             .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
@@ -103,7 +101,7 @@ const generateMusicStatusButtons = (queue: Queue, song: Song) => {
             .setEmoji('<:list:1265560873876062340>')
             .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
-            .setCustomId(`playlist:save`)
+            .setCustomId('playlist:save')
             .setEmoji('<:download:1320298270739791973>')
             .setStyle(ButtonStyle.Secondary)
     ])
@@ -124,26 +122,20 @@ const generateProgressBar = (length: number, totalLength: number, barLength: num
     let progressBar = ''
 
     if (progress === 0) {
-        // 全部未播放，使用全空的符號
         progressBar = leftEmpty + middleEmpty.repeat(barLength - 2) + rightEmpty
     } else if (progress === barLength) {
-        // 全部已播放
         progressBar = leftFilled + middleFilled.repeat(barLength - 2) + rightFilled
     } else {
-        // 部分播放
-        progressBar = leftFilled // 開始符號使用已播放的左邊符號
+        progressBar = leftFilled
 
-        // 處理中間部分
         if (progress > 1) {
             progressBar += middleFilled.repeat(progress - 1)
         }
 
-        // 處理未播放部分
         if (progress < barLength - 1) {
             progressBar += middleEmpty.repeat(barLength - progress - 1)
         }
 
-        // 結束符號根據是否到達最後決定
         progressBar += progress === barLength - 1 ? rightFilled : rightEmpty
     }
 
@@ -178,7 +170,6 @@ const resetPlayer = (queue: Queue) => {
 }
 
 const generateMusicPlayerStatus = (queue: Queue, song: Song, completed: boolean = false) => {
-    // 檢查必要的屬性是否存在
     if (!song?.name || !queue) {
         console.error('Missing required properties:', { song: !!song, queue: !!queue })
         return {
@@ -191,18 +182,17 @@ const generateMusicPlayerStatus = (queue: Queue, song: Song, completed: boolean 
         }
     }
 
-    // 獲取歌曲時長，如果不存在則設為 0
     const songDuration = song.duration || 0
 
-    const previousSongsLength = queue.previousSongs.reduce((store, curr) => {
+    /* const previousSongsLength = queue.previousSongs.reduce((store, curr) => {
         const duration = curr.stream.playFromSource ? curr.duration : curr.stream.song.duration
 
         return store + duration
     }, 0)
 
-    let queuePlayedLength = previousSongsLength + queue.currentTime
-    if (completed) queuePlayedLength += songDuration
-    // const totalQueueLength = previousSongsLength + songDuration;
+    const queuePlayedLength =
+        previousSongsLength + queue.currentTime + (completed ? songDuration : 0)
+    const totalQueueLength = previousSongsLength + songDuration; */
 
     return {
         embeds: [
@@ -298,7 +288,7 @@ const generateMusicPlayerStatus = (queue: Queue, song: Song, completed: boolean 
                     text: `在 ${queue.voiceChannel.name || '未知'} 中播放`
                 })
         ],
-        components: completed ? [] : generateMusicStatusButtons(queue, song)
+        components: completed ? [] : generateMusicStatusButtons(queue)
     }
 }
 

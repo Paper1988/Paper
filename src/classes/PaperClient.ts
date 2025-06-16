@@ -201,11 +201,13 @@ export class PaperClient extends Client {
         }
     }
 
-    start({ Test } = { Test: false }) {
+    start({ Production = process.env.NODE_ENV === 'production' } = {}) {
         console.log(
-            chalk.green(`>>> Starting Paper Bot in ${Test ? 'Test' : 'Production'} mode...`)
+            chalk.green(
+                `>>> Starting Paper Bot in ${Production ? 'Production' : 'Development'} mode...`
+            )
         )
-        this.login(Test ? process.env.TEST_TOKEN! : process.env.DISCORD_TOKEN!)
+        this.login(Production ? process.env.DISCORD_TOKEN! : process.env.TEST_TOKEN!)
     }
 
     initDistube() {

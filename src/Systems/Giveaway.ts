@@ -1,18 +1,19 @@
-import type { FetchGuildOptions } from 'discord.js'
-
-import { PaperClient } from '@/classes/PaperClient'
 import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
     EmbedBuilder,
+    type FetchGuildOptions,
     type MessageActionRowComponentBuilder
 } from 'discord.js'
-import { sendGiveawayNotification } from '../libs/utils/sendGiveawayNotification'
-import giveawayModel from '../Structures/Schemas/Giveaway'
-import GiveawayHistory from '../Structures/Schemas/GiveawayHistory'
-import GiveawayNotification from '../Structures/Schemas/GiveawayNotification'
-import GiveawayStats from '../Structures/Schemas/GiveawayStats'
+
+import { PaperClient } from '@/classes/PaperClient'
+
+import { sendGiveawayNotification } from '@/libs/utils/sendGiveawayNotification'
+import giveawayModel from '@/Structures/Schemas/Giveaway'
+import GiveawayHistory from '@/Structures/Schemas/GiveawayHistory'
+import GiveawayNotification from '@/Structures/Schemas/GiveawayNotification'
+import GiveawayStats from '@/Structures/Schemas/GiveawayStats'
 
 class GiveawayManagerWithOwnDatabase {
     private client: PaperClient
@@ -35,7 +36,6 @@ class GiveawayManagerWithOwnDatabase {
             }
         }
 
-        // 初始化時也執行一次清理
         await this.cleanupOldGiveaways()
     }
 
@@ -43,7 +43,7 @@ class GiveawayManagerWithOwnDatabase {
         if (delay <= 0) {
             return this.end(messageId)
         }
-        setTimeout(() => this.end(messageId), Math.min(delay, 2 ** 31 - 1)) // 確保不超過 2147483647ms
+        setTimeout(() => this.end(messageId), Math.min(delay, 2 ** 31 - 1))
     }
 
     async saveGiveaway(
@@ -60,21 +60,18 @@ class GiveawayManagerWithOwnDatabase {
         const giveaway = await giveawayModel.create(giveawayData)
         this.giveaways.set(messageId, giveaway)
 
-        // 建議改為只發送給有開啟通知的用戶
         const guild = await this.client.guilds.fetch(giveawayData.guildId)
         const members = await guild.members.fetch()
 
-        // 將所有非機器人用戶創建至通知的資料庫
         const nonBotMembers = members.filter((member) => !member.user.bot)
-        for (const [userId, member] of nonBotMembers) {
+        for (const [userId] of nonBotMembers) {
             new GiveawayNotification({
                 guildId: guild.id,
                 userId: userId
             })
         }
 
-        // 發送通知給參加者
-        for (const [userId, member] of nonBotMembers) {
+        for (const [userId] of nonBotMembers) {
             await sendGiveawayNotification(this.client, 'start', giveawayData, userId)
         }
 
@@ -104,11 +101,9 @@ class GiveawayManagerWithOwnDatabase {
         const message = await channel.messages.fetch(giveaway.messageId)
         if (!message) return null
 
-        // 選擇得獎者
         const winners = this.selectWinners(giveaway.participants, giveaway.winnerCount)
         const winnerMentions = winners.map((id) => `<@${id}>`).join(', ') || '沒有人參加抽獎'
 
-        // 更新嵌入訊息
         const endEmbed = EmbedBuilder.from(message.embeds[0]!)
             .setColor('Green')
             .setDescription(
@@ -116,7 +111,6 @@ class GiveawayManagerWithOwnDatabase {
                     `\n\n🎯 得獎者：${winnerMentions}`
             )
 
-        // 更新按鈕
         const endButtons = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
             new ButtonBuilder()
                 .setCustomId('giveaway-join')
@@ -137,13 +131,11 @@ class GiveawayManagerWithOwnDatabase {
             components: [endButtons]
         })
 
-        // 更新資料庫
         giveaway.ended = true
         giveaway.winners = winners
         await giveaway.save()
         this.giveaways.set(messageId, giveaway)
 
-        // 先發送中獎通知給得獎者
         for (const winnerId of winners) {
             await sendGiveawayNotification(
                 this.client,
@@ -156,7 +148,6 @@ class GiveawayManagerWithOwnDatabase {
             )
         }
 
-        // 只發送結束通知給非得獎者
         for (const userId of giveaway.participants) {
             if (!winners.includes(userId)) {
                 await sendGiveawayNotification(
@@ -171,19 +162,17 @@ class GiveawayManagerWithOwnDatabase {
             }
         }
 
-        // 更新統計
-        let stats = await GiveawayStats.findOne({ guildId: giveaway.guildId })
+        const stats = await GiveawayStats.findOne({ guildId: giveaway.guildId })
         if (stats) {
             stats.activeGiveaways--
             stats.totalParticipants += giveaway.participants.length
             stats.totalWinners += winners.length
 
-            // 創建抽獎歷史記錄
             await GiveawayHistory.create({
                 guildId: giveaway.guildId,
                 giveawayId: giveaway.messageId,
                 prize: giveaway.prize,
-                hosterId: giveaway.hostedBy,
+                hostedBy: giveaway.hostedBy,
                 winners: winners,
                 participantCount: giveaway.participants.length,
                 endTime: new Date(),
@@ -194,14 +183,14 @@ class GiveawayManagerWithOwnDatabase {
                 }
             })
 
-            // 更新最幸運用戶
             for (const winnerId of winners) {
                 const winHistory = await GiveawayHistory.countDocuments({
                     guildId: giveaway.guildId,
                     winners: winnerId
                 })
 
-                if (!stats.mostWonUser || winHistory > stats?.mostWonUser?.count!) {
+                const currentMostWon = stats.mostWonUser
+                if (!currentMostWon || winHistory > (currentMostWon.count ?? 0)) {
                     stats.mostWonUser = {
                         userId: winnerId,
                         count: winHistory
@@ -237,10 +226,9 @@ class GiveawayManagerWithOwnDatabase {
 
             const giveawaysToDelete = await giveawayModel.find({
                 createdAt: { $lt: thirtyDaysAgo },
-                ended: true // 只刪除已結束的抽獎
+                ended: true
             })
 
-            // 記錄要刪除的資料
             console.log('準備清理以下抽獎資料:')
             giveawaysToDelete.forEach(
                 (giveaway: { messageId: any; prize: any; createdAt: any }) => {
@@ -250,14 +238,12 @@ class GiveawayManagerWithOwnDatabase {
                 }
             )
 
-            // 執行刪除
             const deletedGiveaways = await giveawayModel.deleteMany({
                 _id: { $in: giveawaysToDelete.map((g: { _id: any }) => g._id) }
             })
 
             console.log(`已清理 ${deletedGiveaways.deletedCount} 個已結束的舊抽獎資料`)
 
-            // 如果刪除數量與預期不符，記錄警告
             if (deletedGiveaways.deletedCount !== giveawaysToDelete.length) {
                 console.warn('警告：清理的資料數量與預期不符，請檢查資料庫')
             }
@@ -267,7 +253,6 @@ class GiveawayManagerWithOwnDatabase {
     }
 
     startCleanupInterval() {
-        // 每24小時執行一次
         this.cleanupInterval = setInterval(() => this.cleanupOldGiveaways(), 24 * 60 * 60 * 1000)
         process.on('SIGINT', () => {
             if (this.cleanupInterval) clearInterval(this.cleanupInterval)
