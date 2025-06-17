@@ -1,6 +1,6 @@
-import emojis from '@/libs/emoji/emoji'
-import Playlist from '@/Structures/Schemas/Playlist'
-import type { CommandType } from '@/typings/command'
+import emojis from '@/libs/emoji/emoji.js'
+import Playlist from '@/Structures/Schemas/Playlist.js'
+import type { CommandType } from '@/typings/command.js'
 import { YouTubePlugin } from '@distube/youtube'
 import {
     ActionRowBuilder,

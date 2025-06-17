@@ -1,8 +1,8 @@
 import type { PaperClient } from '@/classes/PaperClient.js'
+import { loadFiles } from '@/Structures/Functions/fileLoader.js'
 import type { EventType } from '@/typings/event.js'
 import { Collection, REST } from 'discord.js'
 import path from 'node:path'
-import { loadFiles } from '../Functions/fileLoader.js'
 
 interface Event {
     name: string

@@ -1,6 +1,6 @@
-import type { SubCommandType } from '@/typings/command'
+import DB from '@/Structures/Schemas/AntiAlt.js'
+import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, TextChannel } from 'discord.js'
-import DB from '../../../Structures/Schemas/AntiAlt'
 
 export default {
     subCommand: 'anti-alt.setup',

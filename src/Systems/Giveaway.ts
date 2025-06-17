@@ -7,13 +7,13 @@ import {
     type MessageActionRowComponentBuilder
 } from 'discord.js'
 
-import { PaperClient } from '@/classes/PaperClient'
+import { PaperClient } from '@/classes/PaperClient.js'
 
-import { sendGiveawayNotification } from '@/libs/utils/sendGiveawayNotification'
-import giveawayModel from '@/Structures/Schemas/Giveaway'
-import GiveawayHistory from '@/Structures/Schemas/GiveawayHistory'
-import GiveawayNotification from '@/Structures/Schemas/GiveawayNotification'
-import GiveawayStats from '@/Structures/Schemas/GiveawayStats'
+import { sendGiveawayNotification } from '@/libs/utils/sendGiveawayNotification.js'
+import giveawayModel from '@/Structures/Schemas/Giveaway.js'
+import GiveawayHistory from '@/Structures/Schemas/GiveawayHistory.js'
+import GiveawayNotification from '@/Structures/Schemas/GiveawayNotification.js'
+import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
 
 class GiveawayManagerWithOwnDatabase {
     private client: PaperClient

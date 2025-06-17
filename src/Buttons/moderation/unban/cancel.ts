@@ -1,4 +1,4 @@
-import type { ButtonType } from '@/typings/component'
+import type { ButtonType } from '@/typings/component.js'
 import { ButtonInteraction, EmbedBuilder } from 'discord.js'
 
 export default {

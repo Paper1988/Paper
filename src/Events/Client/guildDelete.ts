@@ -1,13 +1,13 @@
+import AFKSystem from '@/Structures/Schemas/AFKSystem.js'
+import AntiAlt from '@/Structures/Schemas/AntiAlt.js'
+import GiveawayDB from '@/Structures/Schemas/Giveaway.js'
+import GiveawayHistory from '@/Structures/Schemas/GiveawayHistory.js'
+import GiveawayNotification from '@/Structures/Schemas/GiveawayNotification.js'
+import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
+import MusicDB from '@/Structures/Schemas/MusicDB.js'
 import type { EventType } from '@/typings/event'
 import { Guild } from 'discord.js'
 import mongoose from 'mongoose'
-import AFKSystem from '../../Structures/Schemas/AFKSystem'
-import AntiAlt from '../../Structures/Schemas/AntiAlt'
-import GiveawayDB from '../../Structures/Schemas/Giveaway'
-import GiveawayHistory from '../../Structures/Schemas/GiveawayHistory'
-import GiveawayNotification from '../../Structures/Schemas/GiveawayNotification'
-import GiveawayStats from '../../Structures/Schemas/GiveawayStats'
-import MusicDB from '../../Structures/Schemas/MusicDB'
 
 export default {
     name: 'guildDelete',

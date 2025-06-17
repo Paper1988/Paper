@@ -1,4 +1,4 @@
-import type { PaperClient } from '@/classes/PaperClient'
+import type { PaperClient } from '@/classes/PaperClient.js'
 import { ChatInputCommandInteraction, GuildMember, MessageFlags } from 'discord.js'
 
 export default {

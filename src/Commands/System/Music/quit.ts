@@ -1,5 +1,5 @@
-import { PaperClient } from '@/classes/PaperClient'
-import type { SubCommandType } from '@/typings/command'
+import { PaperClient } from '@/classes/PaperClient.js'
+import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, GuildMember, MessageFlags } from 'discord.js'
 
 export default {

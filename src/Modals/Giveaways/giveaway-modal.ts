@@ -1,6 +1,6 @@
-import type { PaperClient } from '@/classes/PaperClient'
-import Giveaway from '@/Structures/Schemas/Giveaway'
-import GiveawayStats from '@/Structures/Schemas/GiveawayStats'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import Giveaway from '@/Structures/Schemas/Giveaway.js'
+import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
 import {
     ActionRowBuilder,
     ButtonBuilder,

@@ -1,7 +1,7 @@
-import type { PaperClient } from '@/classes/PaperClient'
-import type { SubCommandType } from '@/typings/command'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import { loadEvents } from '@/Structures/Handlers/eventHandler.js'
+import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, MessageFlags } from 'discord.js'
-import { loadEvents } from '../../../Structures/Handlers/eventHandler'
 
 module.exports = {
     subCommand: 'reload.events',

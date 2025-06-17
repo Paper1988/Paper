@@ -4,7 +4,7 @@ import {
     deleteMessageAfter, // default 15s
     generateMusicPlayerStatus,
     updateMusicPlayerStatus
-} from '@/Systems/Music'
+} from '@/Systems/Music.js'
 import client from '@/index.js'
 import emojis from '@/libs/emoji/emoji.js'
 import { EmbedBuilder, Message } from 'discord.js'

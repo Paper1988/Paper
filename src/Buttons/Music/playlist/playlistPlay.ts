@@ -1,7 +1,7 @@
-import Playlist from '@/Structures/Schemas/Playlist'
-import { deleteMessageAfter } from '@/Systems/Music'
-import emojis from '@/libs/emoji/emoji'
-import type { ButtonType } from '@/typings/component'
+import Playlist from '@/Structures/Schemas/Playlist.js'
+import { deleteMessageAfter } from '@/Systems/Music.js'
+import emojis from '@/libs/emoji/emoji.js'
+import type { ButtonType } from '@/typings/component.js'
 import { ButtonInteraction, EmbedBuilder, GuildMember, MessageFlags, TextChannel } from 'discord.js'
 
 export default {

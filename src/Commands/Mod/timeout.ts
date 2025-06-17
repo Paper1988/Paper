@@ -1,4 +1,4 @@
-import type { CommandType } from '@/typings/command'
+import type { CommandType } from '@/typings/command.js'
 import {
     ChatInputCommandInteraction,
     EmbedBuilder,
@@ -7,6 +7,7 @@ import {
     PermissionFlagsBits,
     SlashCommandBuilder
 } from 'discord.js'
+import type { StringValue } from 'ms'
 import ms from 'ms'
 
 export default {
@@ -54,7 +55,7 @@ export default {
         const member = interaction.member! as GuildMember
 
         const user = options.getMember('user')! as GuildMember
-        const duration = options.getString('duration')
+        const duration = options.getString('duration')!
         const reason = options.getString('reason') || '無指定'
 
         const errorsArray: string[] = []
@@ -69,7 +70,9 @@ export default {
             })
         }
 
-        if (!ms(duration) || ms(duration) > ms('28d')) {
+        const durationMs = ms(duration as StringValue)
+        const maxDuration = ms('28d')
+        if (!duration || !durationMs || durationMs > maxDuration) {
             errorsArray.push('所提供的時間無效或者超過28天的限制!')
         }
 
@@ -87,7 +90,7 @@ export default {
             })
         }
 
-        await user.timeout(ms(duration), reason).catch(async () => {
+        await user.timeout(durationMs, reason).catch(async () => {
             return await interaction.editReply({
                 embeds: [errorsEmbed.setDescription('時間不能小於0!')]
             })
@@ -100,9 +103,7 @@ export default {
                 [
                     `被禁言用戶: ${user}`,
                     `執行者: ${member}`,
-                    `時間: **${ms(ms(duration), {
-                        long: true
-                    })}**`,
+                    `時間: **${durationMs ? ms(durationMs, { long: true }) : '無效時間'}**`,
                     `\n原因: ${reason}`
                 ].join('\n')
             )

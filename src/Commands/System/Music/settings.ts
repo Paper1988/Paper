@@ -1,8 +1,8 @@
-import type { PaperClient } from '@/classes/PaperClient'
-import emojis from '@/libs/emoji/emoji'
-import MusicDB from '@/Structures/Schemas/MusicDB'
-import { clearPlayer, updateMusicPlayerStatus } from '@/Systems/Music'
-import type { SubCommandType } from '@/typings/command'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import emojis from '@/libs/emoji/emoji.js'
+import MusicDB from '@/Structures/Schemas/MusicDB.js'
+import { clearPlayer, updateMusicPlayerStatus } from '@/Systems/Music.js'
+import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, MessageFlags } from 'discord.js'
 import { Events, Song } from 'distube'
 

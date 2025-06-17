@@ -15,10 +15,10 @@ import {
     UserSelectMenuInteraction
 } from 'discord.js'
 
-import type { PaperClient } from '@/classes/PaperClient'
-import BlackListGuild from '@/Structures/Schemas/BlacklistGuild'
-import BlackListUser from '@/Structures/Schemas/BlacklistUser'
-import { deleteMessageAfter } from '@/Systems/Music'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import BlackListGuild from '@/Structures/Schemas/BlacklistGuild.js'
+import BlackListUser from '@/Structures/Schemas/BlacklistUser.js'
+import { deleteMessageAfter } from '@/Systems/Music.js'
 
 export default {
     name: 'interactionCreate',

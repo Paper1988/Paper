@@ -1,6 +1,6 @@
-import GiveawayHistory from '@/Structures/Schemas/GiveawayHistory'
-import GiveawayStats from '@/Structures/Schemas/GiveawayStats'
-import type { ButtonType } from '@/typings/component'
+import GiveawayHistory from '@/Structures/Schemas/GiveawayHistory.js'
+import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
+import type { ButtonType } from '@/typings/component.js'
 import {
     ActionRowBuilder,
     ButtonBuilder,

@@ -1,5 +1,5 @@
+import BugReportDB from '@/Structures/Schemas/Report.js'
 import { ButtonInteraction, Client, EmbedBuilder } from 'discord.js'
-import BugReportDB from '../../Structures/Schemas/Report'
 
 export default {
     id: 'feedback-fixed',

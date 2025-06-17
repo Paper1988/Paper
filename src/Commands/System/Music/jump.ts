@@ -1,5 +1,5 @@
-import type { PaperClient } from '@/classes/PaperClient'
-import { deleteMessageAfter } from '@/Systems/Music'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import { ChatInputCommandInteraction, GuildMember, MessageFlags } from 'discord.js'
 
 export default {

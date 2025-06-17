@@ -1,5 +1,5 @@
-import { PaperClient } from '@/classes/PaperClient'
-import youtubeCookies from '@/libs/utils/youtubeCookies'
+import { PaperClient } from '@/classes/PaperClient.js'
+import youtubeCookies from '@/libs/utils/youtubeCookies.js'
 import fs from 'fs'
 import path from 'path'
 

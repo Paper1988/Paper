@@ -1,7 +1,7 @@
-import { deleteMessageAfter, updateMusicPlayerStatus } from '@/Systems/Music'
-import type { PaperClient } from '@/classes/PaperClient'
-import emojis from '@/libs/emoji/emoji'
-import type { ButtonType } from '@/typings/component'
+import { deleteMessageAfter, updateMusicPlayerStatus } from '@/Systems/Music.js'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import emojis from '@/libs/emoji/emoji.js'
+import type { ButtonType } from '@/typings/component.js'
 import type { ButtonInteraction, GuildMember } from 'discord.js'
 
 export default {

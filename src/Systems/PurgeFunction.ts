@@ -1,4 +1,4 @@
-import { deleteMessageAfter } from '@/Systems/Music'
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import { ChatInputCommandInteraction } from 'discord.js'
 
 async function results(deletedMessages, interaction: ChatInputCommandInteraction) {

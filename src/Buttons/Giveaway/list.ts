@@ -1,5 +1,5 @@
-import Giveaway from '@/Structures/Schemas/Giveaway'
-import type { ButtonType } from '@/typings/component'
+import Giveaway from '@/Structures/Schemas/Giveaway.js'
+import type { ButtonType } from '@/typings/component.js'
 import {
     ActionRowBuilder,
     ButtonBuilder,

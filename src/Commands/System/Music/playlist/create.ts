@@ -1,6 +1,6 @@
-import Playlist from '@/Structures/Schemas/Playlist'
-import emojis from '@/libs/emoji/emoji'
-import type { CommandType } from '@/typings/command'
+import Playlist from '@/Structures/Schemas/Playlist.js'
+import emojis from '@/libs/emoji/emoji.js'
+import type { CommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, MessageFlags, SlashCommandBuilder } from 'discord.js'
 
 export default {
