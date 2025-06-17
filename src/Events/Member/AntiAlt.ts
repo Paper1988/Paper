@@ -1,6 +1,6 @@
+import DB from '@/Structures/Schemas/AntiAlt.js'
 import { EmbedBuilder, GuildMember, TextChannel, Webhook } from 'discord.js'
 import ms from 'ms'
-import DB from '../../Structures/Schemas/AntiAlt'
 
 export default {
     name: 'guildMemberAdd',

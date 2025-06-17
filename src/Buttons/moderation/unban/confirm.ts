@@ -1,4 +1,4 @@
-import type { PaperClient } from '@/classes/PaperClient'
+import type { PaperClient } from '@/classes/PaperClient.js'
 import { ButtonInteraction, EmbedBuilder, MessageFlags } from 'discord.js'
 
 module.exports = {

@@ -1,5 +1,5 @@
-import emojis from '@/libs/emoji/emoji'
-import Playlist from '@/Structures/Schemas/Playlist'
+import emojis from '@/libs/emoji/emoji.js'
+import Playlist from '@/Structures/Schemas/Playlist.js'
 import {
     AttachmentBuilder,
     AutocompleteInteraction,

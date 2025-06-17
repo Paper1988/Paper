@@ -1,3 +1,4 @@
+import BugReport from '@/Structures/Schemas/Report.js'
 import {
     ActionRowBuilder,
     Attachment,
@@ -10,7 +11,6 @@ import {
     SlashCommandBuilder,
     TextChannel
 } from 'discord.js'
-import BugReport from '../../../Structures/Schemas/Report'
 
 export default {
     data: new SlashCommandBuilder()

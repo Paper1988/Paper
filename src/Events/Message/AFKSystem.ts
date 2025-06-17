@@ -1,4 +1,4 @@
-import DB from '@/Structures/Schemas/AFKSystem'
+import DB from '@/Structures/Schemas/AFKSystem.js'
 import { EmbedBuilder, Message } from 'discord.js'
 
 export default {

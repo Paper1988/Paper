@@ -9,19 +9,19 @@ import {
 } from 'discord.js'
 import mongoose from 'mongoose'
 
-import { loadButtons } from '@/Structures/Handlers/buttonHandler'
-import { loadCommands } from '@/Structures/Handlers/commandHandler'
-import { loadMenus } from '@/Structures/Handlers/menuHandler'
-import { loadModals } from '@/Structures/Handlers/modalHandler'
-import { updatePresence } from '@/libs/utils/updatePresence'
+import { loadButtons } from '@/Structures/Handlers/buttonHandler.js'
+import { loadCommands } from '@/Structures/Handlers/commandHandler.js'
+import { loadMenus } from '@/Structures/Handlers/menuHandler.js'
+import { loadModals } from '@/Structures/Handlers/modalHandler.js'
+import { updatePresence } from '@/libs/utils/updatePresence.js'
 
-import Giveaway from '@/Structures/Schemas/Giveaway'
-import GiveawayHistory from '@/Structures/Schemas/GiveawayHistory'
-import GiveawayStats from '@/Structures/Schemas/GiveawayStats'
+import Giveaway from '@/Structures/Schemas/Giveaway.js'
+import GiveawayHistory from '@/Structures/Schemas/GiveawayHistory.js'
+import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
 
-import { PaperClient } from '@/classes/PaperClient'
-import { checkAndNotify } from '@/libs/utils/checkCookies'
-import type { EventType } from '@/typings/event'
+import { PaperClient } from '@/classes/PaperClient.js'
+import { checkAndNotify } from '@/libs/utils/checkCookies.js'
+import type { EventType } from '@/typings/event.js'
 
 export default {
     name: Events.ClientReady,

@@ -1,6 +1,6 @@
-import GiveawayNotification from '@/Structures/Schemas/GiveawayNotification'
-import emoji from '@/libs/emoji/emoji'
-import type { ButtonType } from '@/typings/component'
+import GiveawayNotification from '@/Structures/Schemas/GiveawayNotification.js'
+import emoji from '@/libs/emoji/emoji.js'
+import type { ButtonType } from '@/typings/component.js'
 import {
     ActionRowBuilder,
     ButtonBuilder,

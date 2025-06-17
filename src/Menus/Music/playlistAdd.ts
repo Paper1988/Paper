@@ -1,5 +1,5 @@
-import Playlist from '@/Structures/Schemas/Playlist'
-import type { MenuType } from '@/typings/component'
+import Playlist from '@/Structures/Schemas/Playlist.js'
+import type { MenuType } from '@/typings/component.js'
 import { YouTubePlugin } from '@distube/youtube'
 import { MessageFlags, type AnySelectMenuInteraction } from 'discord.js'
 

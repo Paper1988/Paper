@@ -1,5 +1,5 @@
-import Playlist from '@/Structures/Schemas/Playlist'
-import emojis from '@/libs/emoji/emoji'
+import Playlist from '@/Structures/Schemas/Playlist.js'
+import emojis from '@/libs/emoji/emoji.js'
 import {
     ActionRowBuilder,
     AutocompleteInteraction,

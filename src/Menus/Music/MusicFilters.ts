@@ -1,7 +1,7 @@
-import { createFilterComponents } from '@/Buttons/Music/filters'
-import type { PaperClient } from '@/classes/PaperClient'
-import emojis from '@/libs/emoji/emoji'
-import { deleteMessageAfter } from '@/Systems/Music'
+import { createFilterComponents } from '@/Buttons/Music/filters.js'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import emojis from '@/libs/emoji/emoji.js'
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import { GuildMember, MessageFlags, StringSelectMenuInteraction, TextChannel } from 'discord.js'
 
 export default {

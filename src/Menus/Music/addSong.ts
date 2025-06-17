@@ -1,5 +1,5 @@
-import type { PaperClient } from '@/classes/PaperClient'
-import type { MenuType } from '@/typings/component'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import type { MenuType } from '@/typings/component.js'
 import { YouTubePlugin } from '@distube/youtube'
 import { GuildMember, MessageFlags, TextChannel, type AnySelectMenuInteraction } from 'discord.js'
 

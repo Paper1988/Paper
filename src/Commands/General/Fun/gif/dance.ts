@@ -1,4 +1,4 @@
-import type { SubCommandType } from '@/typings/command'
+import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js'
 import rga from 'random-gif-api'
 

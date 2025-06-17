@@ -9,8 +9,7 @@ export default {
         try {
             if (fs.existsSync(cookieFile)) {
                 const cookieData = JSON.parse(fs.readFileSync(cookieFile, 'utf8'))
-                // 返回 cookie 陣列
-                return cookieData.cookies || [] // 確保返回一個數組
+                return cookieData.cookies || []
             }
             return []
         } catch (error) {
@@ -38,7 +37,6 @@ export default {
         try {
             if (fs.existsSync(cookieFile)) {
                 const cookieData = JSON.parse(fs.readFileSync(cookieFile, 'utf8'))
-                // 確保格式正確
                 if (!cookieData.cookies || !Array.isArray(cookieData.cookies)) {
                     cookieData.cookies = []
                 }
@@ -47,12 +45,10 @@ export default {
                 }
                 fs.writeFileSync(cookieFile, JSON.stringify(cookieData, null, 4))
             } else {
-                // 如果文件不存在，創建一個新的
                 this.saveCookies([''])
             }
         } catch (error) {
             console.error('Error formatting cookie file:', error)
-            // 如果解析失敗，創建一個新的
             this.saveCookies([''])
         }
     },
@@ -61,9 +57,8 @@ export default {
         try {
             if (fs.existsSync(cookieFile)) {
                 const cookieData = JSON.parse(fs.readFileSync(cookieFile, 'utf8'))
-                const now = Math.floor(Date.now() / 1000) // 直接使用秒
+                const now = Math.floor(Date.now() / 1000)
 
-                // 檢查必要的 cookies 是否存在且未過期
                 const requiredCookies = ['LOGIN_INFO']
                 const missingCookies = requiredCookies.filter(
                     (cookieName) =>
@@ -77,7 +72,6 @@ export default {
                     return false
                 }
 
-                // 檢查是否有任何必要的 cookie 已過期
                 const loginCookie = cookieData.cookies.find(
                     (c: { name: string }) => c.name === 'LOGIN_INFO'
                 )
@@ -87,23 +81,21 @@ export default {
                     return false
                 }
 
-                // 檢查是否快要過期（5天內）
-                const fiveDaysFromNow = now + 5 * 24 * 60 * 60 // 5天的秒數
+                const fiveDaysFromNow = now + 5 * 24 * 60 * 60
                 if (loginCookie.expirationDate < fiveDaysFromNow) {
                     console.warn('Warning: Some YouTube cookies will expire soon')
                     return true
                 }
 
-                return true // 所有必要的 cookies 存在且有效
+                return true
             }
-            return false // cookieFile 不存在
+            return false
         } catch (error) {
             console.error('Error checking cookie expiration:', error)
             return false
         }
     },
 
-    // 新增一個方法來獲取 cookie 狀態
     getStatus() {
         try {
             if (fs.existsSync(cookieFile)) {
@@ -115,9 +107,7 @@ export default {
                 return {
                     hasCookies: cookieData.cookies.length > 0,
                     lastUpdate: cookieData.lastUpdate,
-                    loginCookieExpires: loginCookie
-                        ? Math.floor(loginCookie.expirationDate) // 使用秒格式
-                        : null,
+                    loginCookieExpires: loginCookie ? Math.floor(loginCookie.expirationDate) : null,
                     isValid: this.checkExpiration()
                 }
             }

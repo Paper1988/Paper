@@ -1,4 +1,4 @@
-import type { ButtonType } from '@/typings/component'
+import type { ButtonType } from '@/typings/component.js'
 import {
     ActionRowBuilder,
     ButtonInteraction,

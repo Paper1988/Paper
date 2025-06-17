@@ -1,6 +1,6 @@
-import { PaperClient } from '@/classes/PaperClient'
+import { PaperClient } from '@/classes/PaperClient.js'
+import GiveawayNotification from '@/Structures/Schemas/GiveawayNotification.js'
 import type { FetchGuildOptions } from 'discord.js'
-import GiveawayNotification from '../../Structures/Schemas/GiveawayNotification'
 
 export async function sendGiveawayNotification(
     client: PaperClient,

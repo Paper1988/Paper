@@ -34,6 +34,7 @@
         "@distube/ytsr": "^2.0.4",
         "@fastify/cors": "^11.0.1",
         "@iamtraction/google-translate": "^2.0.1",
+        "@types/ms": "^2.1.0",
         "apexify.js": "^4.9.25",
         "ascii-table": "^0.0.9",
         "axios": "^1.10.0",

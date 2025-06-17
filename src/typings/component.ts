@@ -1,4 +1,4 @@
-import type { PaperClient } from '@/classes/PaperClient'
+import type { PaperClient } from '@/classes/PaperClient.js'
 import {
     type AnySelectMenuInteraction,
     type ButtonInteraction,

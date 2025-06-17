@@ -1,4 +1,4 @@
-import type { CommandType } from '@/typings/command'
+import type { CommandType } from '@/typings/command.js'
 import {
     ActionRowBuilder,
     ChatInputCommandInteraction,

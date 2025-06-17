@@ -1,5 +1,5 @@
-import GiveawayNotification from '@/Structures/Schemas/GiveawayNotification'
-import type { SubCommandType } from '@/typings/command'
+import GiveawayNotification from '@/Structures/Schemas/GiveawayNotification.js'
+import type { SubCommandType } from '@/typings/command.js'
 import {
     ActionRowBuilder,
     ButtonBuilder,

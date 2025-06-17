@@ -1,4 +1,4 @@
-import type { SubCommandType } from '@/typings/command'
+import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, MessageFlags } from 'discord.js'
 /* const { ApexImagine } = require('apexify.js') */
 

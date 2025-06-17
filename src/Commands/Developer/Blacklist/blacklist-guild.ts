@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, Client, MessageFlags } from 'discord.js'
 
-import type { SubCommandType } from '@/typings/command'
-import BlackListGuild from '../../../Structures/Schemas/BlacklistGuild'
+import BlackListGuild from '@/Structures/Schemas/BlacklistGuild.js'
+import type { SubCommandType } from '@/typings/command.js'
 
 export default {
     subCommand: 'blacklist.guild',

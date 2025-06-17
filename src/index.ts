@@ -1,4 +1,4 @@
-import { PaperClient } from '@/classes/PaperClient'
+import { PaperClient } from '@/classes/PaperClient.js'
 import { Collection, GatewayIntentBits, Partials } from 'discord.js'
 
 const client = new PaperClient({

@@ -1,5 +1,5 @@
+import { loadFiles } from '@/Structures/Functions/fileLoader.js'
 import { Client, Collection } from 'discord.js'
-import { loadFiles } from '../Functions/fileLoader'
 
 declare module 'discord.js' {
     interface Client {

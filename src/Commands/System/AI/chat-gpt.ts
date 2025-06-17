@@ -1,5 +1,5 @@
 /* import ApexChat from 'apexify.js' */
-import type { SubCommandType } from '@/typings/command'
+import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, /* EmbedBuilder, */ MessageFlags } from 'discord.js'
 
 export default {

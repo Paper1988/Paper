@@ -1,7 +1,7 @@
-import { PaperClient } from '@/classes/PaperClient'
-import emojis from '@/libs/emoji/emoji'
-import { clearPlayer, deleteMessageAfter } from '@/Systems/Music'
-import type { EventType } from '@/typings/event'
+import { PaperClient } from '@/classes/PaperClient.js'
+import emojis from '@/libs/emoji/emoji.js'
+import { clearPlayer, deleteMessageAfter } from '@/Systems/Music.js'
+import type { EventType } from '@/typings/event.js'
 import { EmbedBuilder, Events, Message, VoiceChannel, VoiceState } from 'discord.js'
 import { DisTube, Queue } from 'distube'
 

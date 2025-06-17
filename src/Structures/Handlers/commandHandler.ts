@@ -1,9 +1,9 @@
-import type { PaperClient } from '@/classes/PaperClient'
-import type { CommandType } from '@/typings/command'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import { loadFiles } from '@/Structures/Functions/fileLoader.js'
+import type { CommandType } from '@/typings/command.js'
 import chalk from 'chalk'
 import type { ApplicationCommandData } from 'discord.js'
 import { Collection, ContextMenuCommandBuilder } from 'discord.js'
-import { loadFiles } from '../Functions/fileLoader'
 
 interface Command {
     data: ApplicationCommandData | ContextMenuCommandBuilder

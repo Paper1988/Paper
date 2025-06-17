@@ -1,3 +1,5 @@
+import results from '@/Systems/PurgeFunction.js'
+import emojis from '@/libs/emoji/emoji.js'
 import {
     ChatInputCommandInteraction,
     Collection,
@@ -5,8 +7,6 @@ import {
     type PartialMessage,
     TextChannel
 } from 'discord.js'
-import results from '../../../Systems/PurgeFunction'
-import emojis from '../../../libs/emoji/emoji'
 
 export default {
     subCommand: 'purge.user',

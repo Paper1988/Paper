@@ -1,4 +1,4 @@
-import type { ButtonType } from '@/typings/component'
+import type { ButtonType } from '@/typings/component.js'
 import type { ButtonInteraction } from 'discord.js'
 import { ActionRowBuilder, ChannelSelectMenuBuilder, ChannelType } from 'discord.js'
 

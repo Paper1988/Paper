@@ -1,7 +1,7 @@
-import type { PaperClient } from '@/classes/PaperClient'
-import emojis from '@/libs/emoji/emoji'
-import Playlist from '@/Structures/Schemas/Playlist'
-import type { SubCommandType } from '@/typings/command'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import emojis from '@/libs/emoji/emoji.js'
+import Playlist from '@/Structures/Schemas/Playlist.js'
+import type { SubCommandType } from '@/typings/command.js'
 import { YouTubePlugin } from '@distube/youtube'
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, TextChannel } from 'discord.js'
 

@@ -1,7 +1,7 @@
-import type { PaperClient } from '@/classes/PaperClient'
+import Giveaway from '@/Structures/Schemas/Giveaway'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import { sendGiveawayNotification } from '@/libs/utils/sendGiveawayNotification.js'
 import { ButtonInteraction, EmbedBuilder, MessageFlags, TextChannel } from 'discord.js'
-import Giveaway from '../../Structures/Schemas/Giveaway'
-import { sendGiveawayNotification } from '../../libs/utils/sendGiveawayNotification'
 
 export default {
     id: 'giveaway-reroll',

@@ -1,7 +1,7 @@
-import type { PaperClient } from '@/classes/PaperClient'
-import emojis from '@/libs/emoji/emoji'
-import { deleteMessageAfter } from '@/Systems/Music'
-import type { ButtonType } from '@/typings/component'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import emojis from '@/libs/emoji/emoji.js'
+import { deleteMessageAfter } from '@/Systems/Music.js'
+import type { ButtonType } from '@/typings/component.js'
 import type { ButtonInteraction, GuildMember } from 'discord.js'
 import { Events } from 'distube'
 

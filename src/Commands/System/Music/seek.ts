@@ -1,6 +1,6 @@
-import type { PaperClient } from '@/classes/PaperClient'
-import emojis from '@/libs/emoji/emoji'
-import { deleteMessageAfter } from '@/Systems/Music'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import emojis from '@/libs/emoji/emoji.js'
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import type { SubCommandType } from '@/typings/command'
 import { ChatInputCommandInteraction, GuildMember, MessageFlags } from 'discord.js'
 

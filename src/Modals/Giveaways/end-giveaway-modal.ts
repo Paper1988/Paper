@@ -1,6 +1,6 @@
-import type { PaperClient } from '@/classes/PaperClient'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import Giveaway from '@/Structures/Schemas/Giveaway.js'
 import { MessageFlags, ModalSubmitInteraction, PermissionsBitField } from 'discord.js'
-import Giveaway from '../../Structures/Schemas/Giveaway'
 
 export default {
     id: 'end-giveaway-modal',

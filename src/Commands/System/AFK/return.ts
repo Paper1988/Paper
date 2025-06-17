@@ -1,6 +1,6 @@
-import type { SubCommandType } from '@/typings/command'
+import DB from '@/Structures/Schemas/AFKSystem.js'
+import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags } from 'discord.js'
-import DB from '../../../Structures/Schemas/AFKSystem'
 
 export default {
     subCommand: 'afk.return',

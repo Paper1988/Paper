@@ -1,6 +1,6 @@
-import Giveaway from '@/Structures/Schemas/Giveaway'
-import GiveawayStats from '@/Structures/Schemas/GiveawayStats'
-import type { ButtonType } from '@/typings/component'
+import Giveaway from '@/Structures/Schemas/Giveaway.js'
+import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
+import type { ButtonType } from '@/typings/component.js'
 import { ButtonInteraction, EmbedBuilder, GuildMember, MessageFlags } from 'discord.js'
 
 export default {

@@ -1,4 +1,4 @@
-import { PaperClient } from '@/classes/PaperClient'
+import { PaperClient } from '@/classes/PaperClient.js'
 import type {
     AutocompleteInteraction,
     ChatInputApplicationCommandData,

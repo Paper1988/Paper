@@ -1,4 +1,4 @@
-import emojis from '@/libs/emoji/emoji'
+import emojis from '@/libs/emoji/emoji.js'
 import {
     ChannelType,
     ChatInputCommandInteraction,
