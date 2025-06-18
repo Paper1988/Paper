@@ -11,7 +11,7 @@ import {
     TextInputStyle
 } from 'discord.js'
 
-module.exports = {
+export default {
     id: 'addSong',
     async execute(interaction: ButtonInteraction, client: PaperClient) {
         const member = interaction.member! as GuildMember
