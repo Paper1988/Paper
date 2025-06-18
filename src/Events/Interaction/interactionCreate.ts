@@ -7,11 +7,11 @@ import {
     EmbedBuilder,
     type Interaction,
     MentionableSelectMenuInteraction,
+    Message,
     MessageFlags,
     ModalSubmitInteraction,
     RoleSelectMenuInteraction,
     StringSelectMenuInteraction,
-    TextChannel,
     UserSelectMenuInteraction
 } from 'discord.js'
 
@@ -51,33 +51,33 @@ export default {
                 }
             }
 
-            if (interaction.isChatInputCommand()) {
+            if (interaction.isChatInputCommand && interaction.isChatInputCommand()) {
                 return await handleSlashCommand(interaction, client)
             }
 
-            if (interaction.isButton()) {
+            if (interaction.isButton && interaction.isButton()) {
                 return await handleButton(interaction, client)
             }
 
-            if (interaction.isModalSubmit()) {
+            if (interaction.isModalSubmit && interaction.isModalSubmit()) {
                 return await handleModal(interaction, client)
             }
 
             if (
-                interaction.isStringSelectMenu() ||
-                interaction.isUserSelectMenu() ||
-                interaction.isRoleSelectMenu() ||
-                interaction.isChannelSelectMenu() ||
-                interaction.isMentionableSelectMenu()
+                (interaction.isStringSelectMenu && interaction.isStringSelectMenu()) ||
+                (interaction.isUserSelectMenu && interaction.isUserSelectMenu()) ||
+                (interaction.isRoleSelectMenu && interaction.isRoleSelectMenu()) ||
+                (interaction.isChannelSelectMenu && interaction.isChannelSelectMenu()) ||
+                (interaction.isMentionableSelectMenu && interaction.isMentionableSelectMenu())
             ) {
                 return await handleSelectMenu(interaction, client)
             }
 
-            if (interaction.isContextMenuCommand()) {
+            if (interaction.isContextMenuCommand && interaction.isContextMenuCommand()) {
                 return await handleContextMenu(interaction, client)
             }
 
-            if (interaction.isAutocomplete()) {
+            if (interaction.isAutocomplete && interaction.isAutocomplete()) {
                 return await handleAutocomplete(interaction, client)
             }
         } catch (error: any) {
@@ -93,8 +93,8 @@ export default {
                             )
                     ]
                 })
-            } else {
-                await (interaction.channel! as TextChannel)
+            } else if (interaction.channel && 'send' in interaction.channel) {
+                await interaction.channel
                     .send({
                         embeds: [
                             new EmbedBuilder()
@@ -104,7 +104,7 @@ export default {
                                 )
                         ]
                     })
-                    .then((msg) => deleteMessageAfter(msg, 30 * 1000))
+                    .then((msg: Message) => deleteMessageAfter(msg, 30 * 1000))
             }
         }
     }

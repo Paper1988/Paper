@@ -5,7 +5,7 @@ import {
     SlashCommandBuilder
 } from 'discord.js'
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName('credits')
         .setNameLocalization('zh-TW', '版權資訊')

@@ -66,7 +66,7 @@ export default defineConfig([
             },
 
             'import/parsers': {
-                '@typescript-eslint/parser': ['.ts', '.tsx']
+                '@typescript-eslint/parser': ['.js', '.ts', '.tsx']
             }
         },
 
@@ -164,7 +164,6 @@ export default defineConfig([
             'space-in-parens': 'error',
             'space-infix-ops': 'error',
             'space-unary-ops': 'error',
-            'spaced-comment': 'error',
             yoda: 'error'
         }
     }

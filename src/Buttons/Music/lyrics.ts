@@ -8,7 +8,7 @@ import emojis from '@/libs/emoji/emoji.js'
 import { deleteMessageAfter } from '@/Systems/Music.js'
 import type { ButtonType } from '@/typings/component.js'
 
-module.exports = {
+export default {
     id: 'lyrics',
     async execute(interaction: ButtonInteraction, client: PaperClient) {
         await interaction.deferReply()
