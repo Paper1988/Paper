@@ -1,4 +1,4 @@
-import Giveaway from '@/Structures/Schemas/Giveaway'
+import Giveaway from '@/Structures/Schemas/Giveaway.js'
 import type { PaperClient } from '@/classes/PaperClient.js'
 import { sendGiveawayNotification } from '@/libs/utils/sendGiveawayNotification.js'
 import { ButtonInteraction, EmbedBuilder, MessageFlags, TextChannel } from 'discord.js'
