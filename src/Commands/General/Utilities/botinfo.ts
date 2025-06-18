@@ -38,7 +38,7 @@ export default {
         await client.user!.fetch()
         await client.application!.fetch()
 
-        const getChannelTypeSize = (type) =>
+        const getChannelTypeSize = (type: number[]) =>
             client.channels.cache.filter((channel) => type.includes(channel.type)).size
 
         const totalMemory = os.totalmem() / (1024 * 1024) // 總記憶體 (MB)

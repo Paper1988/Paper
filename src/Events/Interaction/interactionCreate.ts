@@ -51,33 +51,33 @@ export default {
                 }
             }
 
-            if (interaction.isChatInputCommand && interaction.isChatInputCommand()) {
+            if (interaction.isChatInputCommand()) {
                 return await handleSlashCommand(interaction, client)
             }
 
-            if (interaction.isButton && interaction.isButton()) {
+            if (interaction.isButton()) {
                 return await handleButton(interaction, client)
             }
 
-            if (interaction.isModalSubmit && interaction.isModalSubmit()) {
+            if (interaction.isModalSubmit()) {
                 return await handleModal(interaction, client)
             }
 
             if (
-                (interaction.isStringSelectMenu && interaction.isStringSelectMenu()) ||
-                (interaction.isUserSelectMenu && interaction.isUserSelectMenu()) ||
-                (interaction.isRoleSelectMenu && interaction.isRoleSelectMenu()) ||
-                (interaction.isChannelSelectMenu && interaction.isChannelSelectMenu()) ||
-                (interaction.isMentionableSelectMenu && interaction.isMentionableSelectMenu())
+                interaction.isStringSelectMenu() ||
+                interaction.isUserSelectMenu() ||
+                interaction.isRoleSelectMenu() ||
+                interaction.isChannelSelectMenu() ||
+                interaction.isMentionableSelectMenu()
             ) {
                 return await handleSelectMenu(interaction, client)
             }
 
-            if (interaction.isContextMenuCommand && interaction.isContextMenuCommand()) {
+            if (interaction.isContextMenuCommand()) {
                 return await handleContextMenu(interaction, client)
             }
 
-            if (interaction.isAutocomplete && interaction.isAutocomplete()) {
+            if (interaction.isAutocomplete()) {
                 return await handleAutocomplete(interaction, client)
             }
         } catch (error: any) {
