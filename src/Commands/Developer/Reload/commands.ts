@@ -3,7 +3,7 @@ import { loadCommands } from '@/Structures/Handlers/commandHandler.js'
 import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, MessageFlags } from 'discord.js'
 
-module.exports = {
+export default {
     subCommand: 'reload.commands',
     async execute(interaction: ChatInputCommandInteraction, client: PaperClient) {
         loadCommands(client)

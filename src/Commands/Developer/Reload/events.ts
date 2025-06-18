@@ -3,7 +3,7 @@ import { loadEvents } from '@/Structures/Handlers/eventHandler.js'
 import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, MessageFlags } from 'discord.js'
 
-module.exports = {
+export default {
     subCommand: 'reload.events',
     async execute(interaction: ChatInputCommandInteraction, client: PaperClient) {
         for (const [key, value] of client.events) client.removeListener(`${key}`, value)

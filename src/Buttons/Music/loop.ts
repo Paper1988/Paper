@@ -5,7 +5,7 @@ import emojis from '@/libs/emoji/emoji.js'
 import type { ButtonType } from '@/typings/component.js'
 import type { ButtonInteraction, GuildMember } from 'discord.js'
 
-module.exports = {
+export default {
     id: 'loop',
     async execute(interaction: ButtonInteraction, client: PaperClient) {
         await interaction.deferReply()

@@ -1,7 +1,7 @@
 import type { PaperClient } from '@/classes/PaperClient.js'
 import { ButtonInteraction, EmbedBuilder, MessageFlags } from 'discord.js'
 
-module.exports = {
+export default {
     id: 'unbanConfirm',
     async execute(interaction: ButtonInteraction, client: PaperClient) {
         try {
