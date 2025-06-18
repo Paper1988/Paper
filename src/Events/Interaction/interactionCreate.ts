@@ -3,109 +3,62 @@ import {
     ButtonInteraction,
     ChannelSelectMenuInteraction,
     ChatInputCommandInteraction,
-    ContextMenuCommandInteraction,
-    EmbedBuilder,
-    type Interaction,
     MentionableSelectMenuInteraction,
-    Message,
-    MessageFlags,
-    ModalSubmitInteraction,
     RoleSelectMenuInteraction,
     StringSelectMenuInteraction,
-    UserSelectMenuInteraction
+    UserSelectMenuInteraction,
+    type Interaction
 } from 'discord.js'
 
 import type { PaperClient } from '@/classes/PaperClient.js'
-import BlackListGuild from '@/Structures/Schemas/BlacklistGuild.js'
-import BlackListUser from '@/Structures/Schemas/BlacklistUser.js'
-import { deleteMessageAfter } from '@/Systems/Music.js'
+import {
+    checkBlacklist,
+    CONFIG,
+    handleInteractionError,
+    interactionUtils
+} from '@/libs/utils/index.js'
 
 export default {
     name: 'interactionCreate',
     async execute(interaction: Interaction, client: PaperClient) {
         try {
-            if (interaction.guild) {
-                const [GuildData, UserData] = await Promise.all([
-                    BlackListGuild.findOne({ Guild: interaction.guild.id }),
-                    BlackListUser.findOne({ User: interaction.user.id })
-                ])
-
-                if (GuildData || UserData) {
-                    const data = GuildData || UserData
-                    const time = data?.Time ?? 0
-                    const reason = data?.Reason ?? '未知原因'
-                    return await (interaction as ChatInputCommandInteraction).reply({
-                        embeds: [
-                            new EmbedBuilder()
-                                .setColor('Red')
-                                .setThumbnail(interaction.guild.iconURL())
-                                .setTitle(
-                                    `該${GuildData ? '伺服器' : '用戶'}為黑名單${GuildData ? '伺服器' : '用戶'}!`
-                                )
-                                .setDescription(
-                                    `<:outage:1265561329528471613> | 您${GuildData ? '的伺服器' : ''}已被列入黑名單，自從<t:${time / 1000}:R>, 原因為: **${reason}**`
-                                )
-                                .setTimestamp()
-                        ]
-                    })
-                }
+            // 檢查黑名單
+            if (await checkBlacklist(interaction)) {
+                return
             }
 
-            if (interaction.isChatInputCommand()) {
+            // 路由到對應的處理函數 - 使用更安全的類型檢查
+            if ('isChatInputCommand' in interaction && interaction.isChatInputCommand()) {
                 return await handleSlashCommand(interaction, client)
             }
 
-            if (interaction.isButton()) {
+            if ('isButton' in interaction && interaction.isButton()) {
                 return await handleButton(interaction, client)
             }
 
-            if (interaction.isModalSubmit()) {
+            if ('isModalSubmit' in interaction && interaction.isModalSubmit()) {
                 return await handleModal(interaction, client)
             }
 
             if (
-                interaction.isStringSelectMenu() ||
-                interaction.isUserSelectMenu() ||
-                interaction.isRoleSelectMenu() ||
-                interaction.isChannelSelectMenu() ||
-                interaction.isMentionableSelectMenu()
+                ('isStringSelectMenu' in interaction && interaction.isStringSelectMenu()) ||
+                ('isUserSelectMenu' in interaction && interaction.isUserSelectMenu()) ||
+                ('isRoleSelectMenu' in interaction && interaction.isRoleSelectMenu()) ||
+                ('isChannelSelectMenu' in interaction && interaction.isChannelSelectMenu()) ||
+                ('isMentionableSelectMenu' in interaction && interaction.isMentionableSelectMenu())
             ) {
                 return await handleSelectMenu(interaction, client)
             }
 
-            if (interaction.isContextMenuCommand()) {
+            if ('isContextMenuCommand' in interaction && interaction.isContextMenuCommand()) {
                 return await handleContextMenu(interaction, client)
             }
 
-            if (interaction.isAutocomplete()) {
+            if ('isAutocomplete' in interaction && interaction.isAutocomplete()) {
                 return await handleAutocomplete(interaction, client)
             }
-        } catch (error: any) {
-            console.error(`[Interaction Error]: ${error.stack || error}`)
-            if (String(error).includes('DiscordAPIError[10062]: Unknown interaction')) {
-                await interaction.user.send({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setColor('Red')
-                            .setTitle('發生錯誤')
-                            .setDescription(
-                                '<:outage:1265561329528471613> | 訊息被流量怪獸吃掉了，請稍後再試~'
-                            )
-                    ]
-                })
-            } else if (interaction.channel && 'send' in interaction.channel) {
-                await interaction.channel
-                    .send({
-                        embeds: [
-                            new EmbedBuilder()
-                                .setColor('Red')
-                                .setDescription(
-                                    '<:outage:1265561329528471613> | 發生未知錯誤，請協助回報!'
-                                )
-                        ]
-                    })
-                    .then((msg: Message) => deleteMessageAfter(msg, 30 * 1000))
-            }
+        } catch (error) {
+            await handleInteractionError(error, interaction)
         }
     }
 }
@@ -113,17 +66,15 @@ export default {
 async function handleSlashCommand(interaction: ChatInputCommandInteraction, client: PaperClient) {
     const command = client.commands.get(interaction.commandName)
     if (!command) {
-        return await interaction.reply({
-            content: '<:warning:1265562532857380936> | 這項指令過期或不存在了!',
-            flags: MessageFlags.Ephemeral
-        })
+        return await interactionUtils.sendErrorResponse(
+            interaction,
+            CONFIG.MESSAGES.COMMAND_NOT_FOUND
+        )
     }
 
-    if (command.developer && interaction.user.id !== '538639229220028416') {
-        return await interaction.reply({
-            content: '<:warning:1265562532857380936> | 這項指令僅限於開發人員使用!',
-            flags: MessageFlags.Ephemeral
-        })
+    // 檢查開發者權限
+    if (command.developer && !interactionUtils.isDeveloper(interaction.user.id)) {
+        return await interactionUtils.sendDeveloperError(interaction)
     }
 
     const subCommand = interaction.options.getSubcommand(false)
@@ -132,10 +83,10 @@ async function handleSlashCommand(interaction: ChatInputCommandInteraction, clie
             `${interaction.commandName}.${subCommand}`
         )
         if (!subCommandFile) {
-            return await interaction.reply({
-                content: '<:warning:1265562532857380936> | 這項指令過期或不存在了!',
-                flags: MessageFlags.Ephemeral
-            })
+            return await interactionUtils.sendErrorResponse(
+                interaction,
+                CONFIG.MESSAGES.COMMAND_NOT_FOUND
+            )
         }
         await subCommandFile.execute(interaction, client)
     } else {
@@ -144,79 +95,48 @@ async function handleSlashCommand(interaction: ChatInputCommandInteraction, clie
 }
 
 async function handleButton(interaction: ButtonInteraction, client: PaperClient) {
-    if (interaction.customId.startsWith('mcstats')) return
-    if (interaction.customId.startsWith('report')) return
-    if (interaction.customId.startsWith('rps_')) return
-    if (interaction.customId.startsWith('approve_')) return
-    if (interaction.customId.startsWith('unban')) return
-    if (interaction.customId.startsWith('TicTacToe_')) return
+    // 檢查是否為特殊按鈕（直接返回，不處理）
+    if (CONFIG.BUTTON_PREFIXES.some((prefix) => interaction.customId.startsWith(prefix))) {
+        return
+    }
 
-    const buttonCustomId = interaction.customId.includes('/')
-        ? interaction.customId.split('/')
-        : interaction.customId.split(':')
-
+    const buttonCustomId = interactionUtils.parseCustomId(interaction.customId)
     const Button = await client.buttons.get(buttonCustomId[0]!)
 
     if (!Button) {
-        return await interaction.reply({
-            content: '<:warning:1265562532857380936> | 這個按鈕不存在或過期了!',
-            flags: MessageFlags.Ephemeral
-        })
+        return await interactionUtils.sendErrorResponse(
+            interaction,
+            CONFIG.MESSAGES.BUTTON_NOT_FOUND
+        )
     }
 
-    if (Button.permission && !interaction.memberPermissions!.has(Button.permission)) {
-        return await interaction.reply({
-            embeds: [
-                new EmbedBuilder()
-                    .setColor('Red')
-                    .setDescription('<:warning:1265562532857380936> | 你沒有權限使用!')
-            ],
-            flags: MessageFlags.Ephemeral
-        })
+    // 檢查權限
+    if (!interactionUtils.hasPermission(interaction, Button.permission)) {
+        return await interactionUtils.sendPermissionError(interaction)
     }
 
     await Button.execute(interaction, client)
 }
 
-async function handleModal(interaction: ModalSubmitInteraction, client: PaperClient) {
-    const CustomId = interaction.customId.includes('/')
-        ? interaction.customId.split('/')
-        : interaction.customId.split(':')
+async function handleModal(interaction: any, client: PaperClient) {
+    const CustomId = interactionUtils.parseCustomId(interaction.customId)
     const Modal = await client.modals.get(CustomId[0]!)
 
     if (!Modal) {
-        return await interaction.reply({
-            embeds: [
-                new EmbedBuilder()
-                    .setColor('Red')
-                    .setDescription('<:outage:1265561329528471613> | 找不到該Modal')
-            ],
-            flags: MessageFlags.Ephemeral
-        })
+        return await interactionUtils.sendErrorResponse(
+            interaction,
+            CONFIG.MESSAGES.MODAL_NOT_FOUND
+        )
     }
 
-    if (Modal.permission && !interaction.memberPermissions!.has(Modal.permission)) {
-        return await interaction.reply({
-            embeds: [
-                new EmbedBuilder()
-                    .setColor('Red')
-                    .setDescription('<:warning:1265562532857380936> | 你沒有權限使用!')
-            ],
-            flags: MessageFlags.Ephemeral
-        })
+    // 檢查權限
+    if (!interactionUtils.hasPermission(interaction, Modal.permission)) {
+        return await interactionUtils.sendPermissionError(interaction)
     }
 
-    let dev: boolean = false
-    if (Modal.developers === true) dev = interaction.user.id !== '538639229220028416'
-    if (dev) {
-        return interaction.reply({
-            embeds: [
-                new EmbedBuilder()
-                    .setColor('Blue')
-                    .setDescription('<:warning:1265562532857380936> | 這項Modal僅限於開發人員使用!')
-            ],
-            flags: MessageFlags.Ephemeral
-        })
+    // 檢查開發者權限
+    if (Modal.developers && !interactionUtils.isDeveloper(interaction.user.id)) {
+        return await interactionUtils.sendDeveloperError(interaction)
     }
 
     await Modal.execute(interaction, client, CustomId.slice(1, -1))
@@ -231,48 +151,29 @@ async function handleSelectMenu(
         | MentionableSelectMenuInteraction,
     client: PaperClient
 ) {
-    const CustomId = interaction.customId.includes('/')
-        ? interaction.customId.split('/')
-        : interaction.customId.split(':')
+    const CustomId = interactionUtils.parseCustomId(interaction.customId)
     const Menu = await client.selectMenus.get(CustomId[0]!)
 
     if (!Menu) {
-        return await interaction.reply({
-            embeds: [
-                new EmbedBuilder()
-                    .setColor('Red')
-                    .setDescription('<:outage:1265561329528471613> | 找不到該下拉選單')
-            ],
-            flags: MessageFlags.Ephemeral
-        })
+        return await interactionUtils.sendErrorResponse(interaction, CONFIG.MESSAGES.MENU_NOT_FOUND)
     }
 
     await Menu.execute(interaction, client, CustomId.slice(1, -1))
 }
 
-async function handleContextMenu(interaction: ContextMenuCommandInteraction, client: PaperClient) {
+async function handleContextMenu(interaction: any, client: PaperClient) {
     const menu = client.contextMenus.get(interaction.commandName)
 
     if (!menu) {
-        return await interaction.reply({
-            embeds: [
-                new EmbedBuilder()
-                    .setColor('Red')
-                    .setDescription('<:outage:1265561329528471613> | 找不到該右鍵選單')
-            ],
-            flags: MessageFlags.Ephemeral
-        })
+        return await interactionUtils.sendErrorResponse(
+            interaction,
+            CONFIG.MESSAGES.CONTEXT_MENU_NOT_FOUND
+        )
     }
 
-    if (menu.permission && !interaction.memberPermissions!.has(menu.permission)) {
-        return interaction.reply({
-            embeds: [
-                new EmbedBuilder()
-                    .setColor('Red')
-                    .setDescription('<:warning:1265562532857380936> | 你沒有權限使用!')
-            ],
-            flags: MessageFlags.Ephemeral
-        })
+    // 檢查權限
+    if (!interactionUtils.hasPermission(interaction, menu.permission)) {
+        return await interactionUtils.sendPermissionError(interaction)
     }
 
     await menu.execute(interaction, client)
@@ -282,17 +183,17 @@ async function handleAutocomplete(interaction: AutocompleteInteraction, client: 
     const command = client.commands.get(interaction.commandName)
 
     if (!command) {
-        return console.log(`[Autocomplete] 找不到指令 ${interaction.commandName}`)
+        console.log(`[Autocomplete] 找不到指令 ${interaction.commandName}`)
+        return
     }
 
     if (command.autocomplete) {
         try {
             await command.autocomplete(interaction, client)
         } catch (error) {
-            console.log('[Autocomplete] ' + error)
+            console.error('[Autocomplete Error]:', error)
         }
-    } else if (!command.autocomplete) {
+    } else {
         console.warn(`[Autocomplete] 指令 ${interaction.commandName} 沒有實現 autocomplete 方法。`)
-        return
     }
 }
