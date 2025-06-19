@@ -19,6 +19,7 @@ import Giveaway from '@/Structures/Schemas/Giveaway.js'
 import GiveawayHistory from '@/Structures/Schemas/GiveawayHistory.js'
 import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
 
+import { registerDistubeEvents } from '@/Events/Distube/DistubeEvents.js'
 import { PaperClient } from '@/classes/PaperClient.js'
 import { checkAndNotify } from '@/libs/utils/checkCookies.js'
 import type { EventType } from '@/typings/event.js'
@@ -33,6 +34,9 @@ export default {
             loadModals(client),
             loadMenus(client)
         ])
+
+        // 註冊 DisTube 事件處理器
+        registerDistubeEvents(client)
 
         try {
             await client.startFastify()
