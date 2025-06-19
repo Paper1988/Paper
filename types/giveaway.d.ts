@@ -18,6 +18,7 @@ export interface IGiveaway extends Document {
     minAccountAge: number
     minServerTime: number
     reminded: boolean
+    hasError?: boolean
     createdAt: Date
     updatedAt: Date
 }
