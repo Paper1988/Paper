@@ -27,7 +27,7 @@ if (fs.existsSync('.env.local')) {
 }
 
 export class PaperClient extends Client {
-    override commands: Collection<string, CommandType> = new Collection<string, any>()
+    override commands: Collection<string, CommandType> = new Collection<string, CommandType>()
     override buttons = new Collection<string, any>()
     override events = new Collection<string, any>()
     override subCommands = new Collection<string, any>()

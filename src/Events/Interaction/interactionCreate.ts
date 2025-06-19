@@ -29,6 +29,11 @@ export default {
 
             // 路由到對應的處理函數 - 使用更安全的類型檢查
             if ('isChatInputCommand' in interaction && interaction.isChatInputCommand()) {
+                console.log(
+                    '收到 slash command:',
+                    interaction.commandName,
+                    client.commands.has(interaction.commandName)
+                )
                 return await handleSlashCommand(interaction, client)
             }
 
