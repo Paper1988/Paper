@@ -19,7 +19,8 @@ const giveawaySchema = new mongoose.Schema<IGiveaway>(
         blacklistedRoles: [String],
         minAccountAge: { type: Number, default: 0 },
         minServerTime: { type: Number, default: 0 },
-        reminded: { type: Boolean, default: false }
+        reminded: { type: Boolean, default: false },
+        hasError: { type: Boolean, default: false }
     },
     { timestamps: true }
 )
