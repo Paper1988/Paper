@@ -20,7 +20,7 @@ import {
 
 export default {
     name: 'interactionCreate',
-    async execute(interaction: Interaction, client: PaperClient) {
+    async execute(client: PaperClient, interaction: Interaction) {
         try {
             // 檢查黑名單
             if (await checkBlacklist(interaction)) {
@@ -28,7 +28,7 @@ export default {
             }
 
             // 路由到對應的處理函數 - 使用更安全的類型檢查
-            if ('isChatInputCommand' in interaction && interaction.isChatInputCommand()) {
+            if (interaction.isChatInputCommand()) {
                 console.log(
                     '收到 slash command:',
                     interaction.commandName,
@@ -37,29 +37,29 @@ export default {
                 return await handleSlashCommand(interaction, client)
             }
 
-            if ('isButton' in interaction && interaction.isButton()) {
+            if (interaction.isButton()) {
                 return await handleButton(interaction, client)
             }
 
-            if ('isModalSubmit' in interaction && interaction.isModalSubmit()) {
+            if (interaction.isModalSubmit()) {
                 return await handleModal(interaction, client)
             }
 
             if (
-                ('isStringSelectMenu' in interaction && interaction.isStringSelectMenu()) ||
-                ('isUserSelectMenu' in interaction && interaction.isUserSelectMenu()) ||
-                ('isRoleSelectMenu' in interaction && interaction.isRoleSelectMenu()) ||
-                ('isChannelSelectMenu' in interaction && interaction.isChannelSelectMenu()) ||
-                ('isMentionableSelectMenu' in interaction && interaction.isMentionableSelectMenu())
+                interaction.isStringSelectMenu() ||
+                interaction.isUserSelectMenu() ||
+                interaction.isRoleSelectMenu() ||
+                interaction.isChannelSelectMenu() ||
+                interaction.isMentionableSelectMenu()
             ) {
                 return await handleSelectMenu(interaction, client)
             }
 
-            if ('isContextMenuCommand' in interaction && interaction.isContextMenuCommand()) {
+            if (interaction.isContextMenuCommand()) {
                 return await handleContextMenu(interaction, client)
             }
 
-            if ('isAutocomplete' in interaction && interaction.isAutocomplete()) {
+            if (interaction.isAutocomplete()) {
                 return await handleAutocomplete(interaction, client)
             }
         } catch (error) {
