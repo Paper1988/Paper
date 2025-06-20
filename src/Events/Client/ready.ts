@@ -36,7 +36,6 @@ export default {
             loadMenus(client)
         ])
 
-        // 註冊 DisTube 事件處理器
         registerDistubeEvents(client)
 
         try {
@@ -47,7 +46,6 @@ export default {
 
         mongoose.set('strictQuery', false)
 
-        // 建立資料庫連線函數，包含重試機制
         const connectToDB = async (retryCount = 0, maxRetries = 5): Promise<void> => {
             try {
                 await mongoose.connect(process.env.DATABASE_URL!, {
@@ -78,10 +76,8 @@ export default {
             }
         }
 
-        // 啟動資料庫連線
         await connectToDB()
 
-        // 定期檢查資料庫健康
         const dbHealthCheckInterval = setInterval(
             async () => {
                 const healthStatus = await checkMongoDBHealth()
@@ -93,13 +89,12 @@ export default {
                         console.error(`>>> ❌ 錯誤詳情: ${healthStatus.details.error}`)
                     }
 
-                    // 嘗試重新連線
                     if (
                         mongoose.connection.readyState !== 1 &&
                         mongoose.connection.readyState !== 2
                     ) {
                         console.log('>>> 🔄 嘗試重新連線至 MongoDB...')
-                        connectToDB(0, 3) // 最多嘗試 3 次
+                        connectToDB(0, 3)
                     }
                 } else {
                     console.log(
@@ -108,21 +103,19 @@ export default {
                 }
             },
             30 * 60 * 1000
-        ) // 每 30 分鐘檢查一次
+        )
 
-        // 當 Bot 關閉時清理
         client.once('shutdown', () => {
             if (dbHealthCheckInterval) clearInterval(dbHealthCheckInterval)
         })
 
-        // 設置資料庫連線監聽器
         mongoose.connection.on('error', (error) => {
             console.error('>>> ❌ MongoDB 連線錯誤:', error)
         })
 
         mongoose.connection.on('disconnected', () => {
             console.log('>>> 🔌 MongoDB 連線斷開，嘗試重新連線...')
-            connectToDB() // 自動重新連線
+            connectToDB()
         })
 
         if (client.user?.id === '***REMOVED***') {
@@ -143,17 +136,15 @@ export default {
         setInterval(
             async () => {
                 try {
-                    // 檢查資料庫連線狀態
                     if (mongoose.connection.readyState !== 1) {
                         console.warn('>>> ⚠️ MongoDB 連線未就緒，跳過定時任務...')
                         return
                     }
 
-                    // 使用適當的超時處理查詢
                     const giveaways = await Giveaway.find({
                         endAt: { $lt: new Date() },
                         ended: false
-                    }).maxTimeMS(20000) // 設置最大執行時間為 20 秒
+                    }).maxTimeMS(20000)
 
                     console.log(`>>> 🎉 找到 ${giveaways.length} 個需要結束的抽獎活動`)
 
@@ -167,9 +158,7 @@ export default {
                                 error
                             )
 
-                            // 防止一個錯誤影響整個批次處理
                             try {
-                                // 標記錯誤的抽獎活動為已結束，避免重複處理
                                 await Giveaway.updateOne(
                                     { messageId: giveaway.messageId },
                                     { $set: { ended: true, hasError: true } }
@@ -182,7 +171,6 @@ export default {
 
                     await checkAndNotify(client)
 
-                    // 嘗試進行垃圾回收
                     if (global.gc) {
                         global.gc()
                         console.log('>>> ✅ 已執行垃圾回收')
@@ -197,7 +185,6 @@ export default {
 } satisfies EventType
 
 async function endGiveaway(messageId: string, client: Client): Promise<void> {
-    // 使用 safeDbOperation 包裝資料庫查詢
     const giveaway = await safeDbOperation(
         () => Giveaway.findOne({ messageId, ended: false }).maxTimeMS(10000),
         undefined
@@ -272,11 +259,9 @@ async function endGiveaway(messageId: string, client: Client): Promise<void> {
             return
         }
 
-        // 標記抽獎活動為已結束
         giveaway.ended = true
         await safeDbOperation(() => giveaway.save())
 
-        // 更新統計資訊
         await safeDbOperation(async () => {
             const stats =
                 (await GiveawayStats.findOne({ guildId: giveaway.guildId }).maxTimeMS(10000)) ||
@@ -302,7 +287,6 @@ async function endGiveaway(messageId: string, client: Client): Promise<void> {
 
             await stats.save()
 
-            // 記錄抽獎歷史
             const history = new GiveawayHistory({
                 guildId: giveaway.guildId,
                 giveawayId: giveaway.messageId,
@@ -324,7 +308,6 @@ async function endGiveaway(messageId: string, client: Client): Promise<void> {
         console.log(`>>> ✅ 成功結束抽獎活動: ${messageId}，有 ${winners.length} 個獲獎者`)
     } catch (error) {
         console.error(`>>> ❌ 處理抽獎活動時發生錯誤 (ID: ${messageId}):`, error)
-        // 在錯誤情況下標記為已處理，避免重複處理
         await safeDbOperation(() =>
             Giveaway.updateOne({ messageId }, { $set: { ended: true, hasError: true } })
         )

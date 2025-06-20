@@ -94,7 +94,10 @@ export class PaperClient extends Client {
         })
 
         const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001
-        const HOST = '0.0.0.0'
+        const HOST =
+            process.env.NODE_ENV === 'production'
+                ? 'paper.up.railway.app'
+                : 'paper-test.up.railway.app'
 
         fastify.register(fastifyCors, {
             origin: ['https://paper-dashboard.vercel.app', 'http://localhost:3000'],
