@@ -20,7 +20,7 @@ import {
 
 export default {
     name: 'interactionCreate',
-    async execute(interaction: Interaction, client: PaperClient) {
+    async execute(client: PaperClient, interaction: Interaction) {
         try {
             // 檢查黑名單
             if (await checkBlacklist(interaction)) {
