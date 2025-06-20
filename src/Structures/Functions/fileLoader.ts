@@ -10,7 +10,7 @@ function getFileUrl(filePath: string): string {
     try {
         return pathToFileURL(filePath).href
     } catch (err) {
-        console.warn(`無法將路徑轉換為 URL: ${filePath}`, err)
+        console.warn(`>>> ⚠️ 無法將路徑轉換為 URL: ${filePath}`, err)
         return filePath
     }
 }
@@ -26,29 +26,35 @@ export async function loadFiles(dirName: string): Promise<string[]> {
         const files = await glob(searchPath)
 
         if (files.length === 0) {
-            console.warn(`警告: 在 ${dirName} 目錄中沒有找到任何檔案`)
+            console.warn(`>>> ⚠️ 警告: 在 ${dirName} 目錄中沒有找到任何檔案`)
             return []
         }
 
         const validFiles = files.filter((file) => {
             const ext = path.extname(file).toLowerCase()
-            return ['.ts', '.js'].includes(ext)
+            const isValid = ['.ts', '.js'].includes(ext)
+            if (!isValid) {
+                console.log(`>>> 排除非有效檔案: ${file}`)
+            }
+            return isValid
         })
 
         if (validFiles.length === 0) {
-            console.warn(`警告: 在 ${dirName} 目錄中沒有找到有效的 .ts 或 .js 檔案`)
+            console.warn(`>>> ⚠️ 警告: 在 ${dirName} 目錄中沒有找到有效的 .ts 或 .js 檔案`)
             return []
         }
 
-        return validFiles.map((file) => {
+        const fileUrls = validFiles.map((file) => {
             if (process.env.NODE_ENV === 'production') {
                 return file
             }
             return getFileUrl(file)
         })
+
+        return fileUrls
     } catch (err) {
-        console.error(`從資料夾 ${dirName} 載入檔案時發生錯誤:`)
-        console.error('錯誤詳情:', err)
+        console.error(`>>> ❌ 從資料夾 ${dirName} 載入檔案時發生錯誤:`)
+        console.error('>>> ❌ 錯誤詳情:', err)
         throw err
     }
 }
