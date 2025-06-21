@@ -259,20 +259,25 @@ const eventHandlers = {
     finishSong: async (queue: Queue) => {
         try {
             if (queue.repeatMode === RepeatMode.DISABLED) {
+                // 無循環模式：清除播放器狀態
                 await updateMusicPlayerStatus(queue, true)
-                return
-            }
-
-            if (queue.repeatMode === RepeatMode.SONG) {
+            } else if (queue.repeatMode === RepeatMode.SONG) {
+                // 單曲循環：保持播放器狀態
                 await updateMusicPlayerStatus(queue, false)
-                return
-            }
-
-            if (queue.repeatMode === RepeatMode.QUEUE && (queue.songs[1] || queue.autoplay)) {
-                await updateMusicPlayerStatus(queue, false)
-            } else if (!queue.songs[1]) {
+            } else if (queue.repeatMode === RepeatMode.QUEUE) {
+                // 佇列循環模式
+                if (queue.songs.length === 1) {
+                    // 佇列中只有一首歌：保持播放器狀態（因為會循環播放同一首）
+                    await updateMusicPlayerStatus(queue, false)
+                } else {
+                    // 佇列中有多首歌：清除播放器狀態（下一首歌會自動播放）
+                    await updateMusicPlayerStatus(queue, true)
+                }
+            } else if (!queue.songs[1] && !queue.autoplay) {
+                // 沒有下一首歌且沒有自動播放：清除播放器狀態
                 await updateMusicPlayerStatus(queue, true)
             }
+            return
         } catch (error) {
             handleMusicError(error, queue, '處理歌曲結束時發生錯誤')
             clearPlayer(queue)
@@ -305,7 +310,7 @@ const eventHandlers = {
      */
     ffmpegDebug: (msg: string) => {
         // 避免過度記錄
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev') {
             console.log('[FFMPEG]', msg)
         }
     },

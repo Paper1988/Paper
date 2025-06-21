@@ -95,11 +95,9 @@ export class PaperClient extends Client {
             logger: true
         })
 
-        const PORT = process.env.PORT! ? parseInt(process.env.PORT!, 10) : 3001
-        const HOST =
-            process.env.NODE_ENV! === 'production'
-                ? 'paper.up.railway.app'
-                : 'paper-test.up.railway.app'
+        const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001
+
+        const HOST = '0.0.0.0'
 
         fastify.register(fastifyCors, {
             origin: ['https://paper-dashboard.vercel.app', 'http://localhost:3000'],
@@ -200,6 +198,7 @@ export class PaperClient extends Client {
         try {
             await fastify.listen({ port: PORT, host: HOST })
             console.log(`Bot API server listening on ${HOST}:${PORT}`)
+            console.log(`Environment: ${process.env.NODE_ENV || 'development'}`)
         } catch (err) {
             fastify.log.error(err)
             throw err
