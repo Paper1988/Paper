@@ -17,10 +17,13 @@ import {
     handleInteractionError,
     interactionUtils
 } from '@/libs/utils/index.js'
+import type { EventType } from '@/typings/event'
 
 export default {
     name: 'interactionCreate',
     async execute(client: PaperClient, interaction: Interaction) {
+        if (!client) return
+
         try {
             if (await checkBlacklist(interaction)) {
                 return
@@ -59,7 +62,7 @@ export default {
             await handleInteractionError(error, interaction)
         }
     }
-}
+} satisfies EventType
 
 async function handleSlashCommand(interaction: ChatInputCommandInteraction, client: PaperClient) {
     const command = client.commands.get(interaction.commandName)

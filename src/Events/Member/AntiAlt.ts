@@ -1,4 +1,6 @@
 import DB from '@/Structures/Schemas/AntiAlt.js'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import type { EventType } from '@/typings/event'
 import { EmbedBuilder, GuildMember, TextChannel, Webhook } from 'discord.js'
 import ms from 'ms'
 
@@ -7,7 +9,8 @@ export default {
     /**
      * @param {GuildMember} member
      */
-    async execute(member: GuildMember) {
+    async execute(client: PaperClient, member: GuildMember) {
+        if (!client) return
         const Data = await DB.findOne({
             GuildID: member.guild.id
         })
@@ -69,4 +72,4 @@ export default {
                 })
         }
     }
-}
+} satisfies EventType
