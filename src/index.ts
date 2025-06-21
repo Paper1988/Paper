@@ -44,7 +44,7 @@ try {
     console.log(chalk.green('>>> DisTube 初始化完成'))
 
     console.log(chalk.yellow('>>> 正在啟動機器人...'))
-    client.start({ Production: false })
+    client.start()
     console.log(chalk.green('>>> 機器人啟動程序已開始'))
 
     // 捕獲主線程未捕獲的異常

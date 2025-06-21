@@ -22,18 +22,11 @@ export default {
     name: 'interactionCreate',
     async execute(client: PaperClient, interaction: Interaction) {
         try {
-            // 檢查黑名單
             if (await checkBlacklist(interaction)) {
                 return
             }
 
-            // 路由到對應的處理函數 - 使用更安全的類型檢查
             if (interaction.isChatInputCommand()) {
-                console.log(
-                    '收到 slash command:',
-                    interaction.commandName,
-                    client.commands.has(interaction.commandName)
-                )
                 return await handleSlashCommand(interaction, client)
             }
 
@@ -100,13 +93,12 @@ async function handleSlashCommand(interaction: ChatInputCommandInteraction, clie
 }
 
 async function handleButton(interaction: ButtonInteraction, client: PaperClient) {
-    // 檢查是否為特殊按鈕（直接返回，不處理）
     if (CONFIG.BUTTON_PREFIXES.some((prefix) => interaction.customId.startsWith(prefix))) {
         return
     }
 
     const buttonCustomId = interactionUtils.parseCustomId(interaction.customId)
-    const Button = await client.buttons.get(buttonCustomId[0]!)
+    const Button = client.buttons.get(buttonCustomId[0]!)
 
     if (!Button) {
         return await interactionUtils.sendErrorResponse(
@@ -115,17 +107,12 @@ async function handleButton(interaction: ButtonInteraction, client: PaperClient)
         )
     }
 
-    // 檢查權限
-    if (!interactionUtils.hasPermission(interaction, Button.permission)) {
-        return await interactionUtils.sendPermissionError(interaction)
-    }
-
-    await Button.execute(interaction, client)
+    await Button.execute(interaction, client, buttonCustomId.slice(1, -1))
 }
 
 async function handleModal(interaction: any, client: PaperClient) {
     const CustomId = interactionUtils.parseCustomId(interaction.customId)
-    const Modal = await client.modals.get(CustomId[0]!)
+    const Modal = client.modals.get(CustomId[0]!)
 
     if (!Modal) {
         return await interactionUtils.sendErrorResponse(
@@ -134,13 +121,7 @@ async function handleModal(interaction: any, client: PaperClient) {
         )
     }
 
-    // 檢查權限
-    if (!interactionUtils.hasPermission(interaction, Modal.permission)) {
-        return await interactionUtils.sendPermissionError(interaction)
-    }
-
-    // 檢查開發者權限
-    if (Modal.developers && !interactionUtils.isDeveloper(interaction.user.id)) {
+    if (Modal.developer && !interactionUtils.isDeveloper(interaction.user.id)) {
         return await interactionUtils.sendDeveloperError(interaction)
     }
 
@@ -157,7 +138,7 @@ async function handleSelectMenu(
     client: PaperClient
 ) {
     const CustomId = interactionUtils.parseCustomId(interaction.customId)
-    const Menu = await client.selectMenus.get(CustomId[0]!)
+    const Menu = client.selectMenus.get(CustomId[0]!)
 
     if (!Menu) {
         return await interactionUtils.sendErrorResponse(interaction, CONFIG.MESSAGES.MENU_NOT_FOUND)
@@ -174,11 +155,6 @@ async function handleContextMenu(interaction: any, client: PaperClient) {
             interaction,
             CONFIG.MESSAGES.CONTEXT_MENU_NOT_FOUND
         )
-    }
-
-    // 檢查權限
-    if (!interactionUtils.hasPermission(interaction, menu.permission)) {
-        return await interactionUtils.sendPermissionError(interaction)
     }
 
     await menu.execute(interaction, client)

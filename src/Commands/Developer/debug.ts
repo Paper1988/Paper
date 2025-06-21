@@ -17,23 +17,7 @@ export default {
         const guildCount = client.guilds.cache.size
         const userCount = client.users.cache.size
 
-        const logStr = `
-            命令數量: ${commandsCount}
-            事件數量: ${eventsCount}
-            按鈕數量: ${buttonsCount}
-            子命令數量: ${subsCount}
-            模態對話框: ${modalsCount}
-            選單數量: ${menusCount}
-            右鍵菜單: ${contextCount}
-            伺服器數: ${guildCount}
-            用戶數: ${userCount}
-            互動 ID: ${interaction.id}
-            用戶 ID: ${interaction.user.id}
-            節點版本: ${process.version}
-            機器人延遲: ${client.ws.ping}ms
-            記憶體用量: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
-        `
-        console.log('>>> 調試命令執行:\n', logStr)
+        const logStr = `命令數量: ${commandsCount}\n事件數量: ${eventsCount}\n按鈕數量: ${buttonsCount}\n子命令數量: ${subsCount}\n模態對話框: ${modalsCount}\n選單數量: ${menusCount}\n右鍵菜單: ${contextCount}\n伺服器數: ${guildCount}\n用戶數: ${userCount}\n互動 ID: ${interaction.id}\n用戶 ID: ${interaction.user.id}\n節點版本: ${process.version}\n機器人延遲: ${client.ws.ping}ms\n記憶體用量: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`
 
         const embed = new EmbedBuilder()
             .setColor('Blue')
