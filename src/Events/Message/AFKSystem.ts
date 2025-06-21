@@ -1,9 +1,11 @@
 import DB from '@/Structures/Schemas/AFKSystem.js'
+import type { PaperClient } from '@/classes/PaperClient.js'
 import { EmbedBuilder, Message } from 'discord.js'
 
 export default {
     name: 'messageCreate',
-    async execute(message: Message) {
+    async execute(client: PaperClient, message: Message) {
+        if (!client) return
         if (!message.author || message.author.bot) return
         if (!message.guild) return
 

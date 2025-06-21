@@ -1,3 +1,4 @@
+import type { PaperClient } from '@/classes/PaperClient'
 import AFKSystem from '@/Structures/Schemas/AFKSystem.js'
 import AntiAlt from '@/Structures/Schemas/AntiAlt.js'
 import GiveawayDB from '@/Structures/Schemas/Giveaway.js'
@@ -11,7 +12,8 @@ import mongoose from 'mongoose'
 
 export default {
     name: 'guildDelete',
-    async execute(client, guild: Guild) {
+    async execute(client: PaperClient, guild: Guild) {
+        if (!client) return
         const deleteRecords = async (model: mongoose.Model<any>) => {
             const record = await model.findOne({ GuildID: guild.id })
             if (record) {

@@ -29,6 +29,8 @@ export default {
     name: Events.ClientReady,
     once: true,
     async execute(client: PaperClient) {
+        if (!client) return
+
         await Promise.all([
             loadCommands(client),
             loadButtons(client),
