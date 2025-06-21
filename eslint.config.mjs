@@ -79,7 +79,8 @@ export default defineConfig([
                     tabWidth: 4,
                     singleQuote: true,
                     printWidth: 100,
-                    trailingComma: 'none'
+                    trailingComma: 'none',
+                    endOfLine: 'lf'
                 }
             ],
 
@@ -157,6 +158,7 @@ export default defineConfig([
             semi: ['error', 'never'],
             'space-before-blocks': 'error',
             '@typescript-eslint/no-unused-vars': 'off',
+            endOfLine: 'lf',
             /*'@typescript-eslint/no-non-null-assertion': 'warning', */
 
             'space-before-function-paren': 'off',

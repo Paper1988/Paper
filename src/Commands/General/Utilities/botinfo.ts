@@ -96,7 +96,6 @@ export default {
                     inline: true
                 },
                 {
-                    // Using the caches for some of these isn't always reliable, but it would be a waste of resources to loop through all servers every single time someone used this command.
                     name: '<:list:1265560873876062340> | 各項統計',
                     value: [
                         `<:globe:1265560486208864318> **伺服器**(快取) \`${client.guilds.cache.size}\``,

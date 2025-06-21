@@ -8,35 +8,41 @@ import {
 type ButtonExecute = (
     interaction: ButtonInteraction,
     client: PaperClient,
-    args?: string[]
+    args?: string[],
+    developer?: boolean
 ) => Promise<void | unknown>
 
 type MenuExecute = (
     interaction: AnySelectMenuInteraction,
     client: PaperClient,
-    args?: string[]
+    args?: string[],
+    developer?: boolean
 ) => Promise<void | unknown>
 
 type ModalExecute = (
     interaction: ModalSubmitInteraction,
     client: PaperClient,
-    args?: string[]
+    args?: string[],
+    developer?: boolean
 ) => Promise<void | unknown>
 
 export type ButtonType = {
     id: string
     execute: ButtonExecute
     args?: string[]
+    developer?: boolean
 }
 
 export type MenuType = {
     id: string
     execute: MenuExecute
     args?: string[]
+    developer?: boolean
 }
 
 export type ModalType = {
     id: string
     execute: ModalExecute
     args?: string[]
+    developer?: boolean
 }

@@ -2,6 +2,8 @@ import Cookie from '@/libs/utils/youtubeCookies.js'
 import { loadEvents } from '@/Structures/Handlers/eventHandler.js'
 import Giveaway from '@/Systems/Giveaway.js'
 import type { CommandType } from '@/typings/command.js'
+import type { ButtonType, MenuType, ModalType } from '@/typings/component'
+import type { EventType } from '@/typings/event'
 import { BandlabPlugin } from '@distube/bandlab'
 import { DeezerPlugin } from '@distube/deezer'
 import { DirectLinkPlugin } from '@distube/direct-link'
@@ -28,11 +30,11 @@ if (fs.existsSync('.env.local')) {
 
 export class PaperClient extends Client {
     override commands: Collection<string, CommandType> = new Collection<string, CommandType>()
-    override buttons = new Collection<string, any>()
-    override events = new Collection<string, any>()
+    override buttons: Collection<string, ButtonType> = new Collection<string, ButtonType>()
+    override events: Collection<string, EventType> = new Collection<string, EventType>()
     override subCommands = new Collection<string, any>()
-    override modals = new Collection<string, any>()
-    override selectMenus = new Collection<string, any>()
+    override modals: Collection<string, ModalType> = new Collection<string, ModalType>()
+    override selectMenus: Collection<string, MenuType> = new Collection<string, MenuType>()
     override contextMenus = new Collection<string, any>()
     override distube!: DisTube
     private errorWebhook: WebhookClient | null = null
@@ -49,8 +51,8 @@ export class PaperClient extends Client {
     }
 
     private initErrorHandling() {
-        if (process.env.ANTICRASH_WEBHOOK_URL) {
-            this.errorWebhook = new WebhookClient({ url: process.env.ANTICRASH_WEBHOOK_URL })
+        if (process.env.ANTICRASH_WEBHOOK_URL!) {
+            this.errorWebhook = new WebhookClient({ url: process.env.ANTICRASH_WEBHOOK_URL! })
         }
 
         process.on('unhandledRejection', (error: Error) => {
@@ -93,9 +95,9 @@ export class PaperClient extends Client {
             logger: true
         })
 
-        const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001
+        const PORT = process.env.PORT! ? parseInt(process.env.PORT!, 10) : 3001
         const HOST =
-            process.env.NODE_ENV === 'production'
+            process.env.NODE_ENV! === 'production'
                 ? 'paper.up.railway.app'
                 : 'paper-test.up.railway.app'
 
@@ -204,7 +206,7 @@ export class PaperClient extends Client {
         }
     }
 
-    start({ Production = process.env.NODE_ENV === 'production' } = {}) {
+    start({ Production = process.env.NODE_ENV! === 'production' } = {}) {
         console.log(
             chalk.green(
                 `>>> Starting Paper Bot in ${Production ? 'Production' : 'Development'} mode...`
