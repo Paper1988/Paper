@@ -3,7 +3,7 @@ import { loadEvents } from '@/Structures/Handlers/eventHandler.js'
 import Giveaway from '@/Systems/Giveaway.js'
 import type { CommandType } from '@/typings/command.js'
 import type { ButtonType, MenuType, ModalType } from '@/typings/component'
-import type { EventType } from '@/typings/event'
+import type { EventExecute } from '@/typings/event'
 import { BandlabPlugin } from '@distube/bandlab'
 import { DeezerPlugin } from '@distube/deezer'
 import { DirectLinkPlugin } from '@distube/direct-link'
@@ -31,7 +31,7 @@ if (fs.existsSync('.env.local')) {
 export class PaperClient extends Client {
     override commands: Collection<string, CommandType> = new Collection<string, CommandType>()
     override buttons: Collection<string, ButtonType> = new Collection<string, ButtonType>()
-    override events: Collection<string, EventType> = new Collection<string, EventType>()
+    override events: Collection<string, EventExecute> = new Collection<string, EventExecute>()
     override subCommands = new Collection<string, any>()
     override modals: Collection<string, ModalType> = new Collection<string, ModalType>()
     override selectMenus: Collection<string, MenuType> = new Collection<string, MenuType>()

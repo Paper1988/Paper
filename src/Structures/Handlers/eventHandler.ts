@@ -1,6 +1,6 @@
 import type { PaperClient } from '@/classes/PaperClient.js'
 import { loadFiles } from '@/Structures/Functions/fileLoader.js'
-import type { EventType } from '@/typings/event.js'
+import type { EventExecute } from '@/typings/event.js'
 import { Collection, REST } from 'discord.js'
 import path from 'node:path'
 
@@ -8,7 +8,7 @@ interface Event {
     name: string
     once?: boolean
     rest?: boolean
-    execute: (...args: any[]) => void
+    execute: (...args: any[]) => Promise<void> | void
 }
 
 declare module 'discord.js' {
@@ -28,7 +28,7 @@ function validateEvent(event: any): event is Event {
 
 export async function loadEvents(client: PaperClient): Promise<void> {
     console.time('Events Loaded')
-    client.events = new Collection<string, EventType>()
+    client.events = new Collection<string, EventExecute>()
     const events: Array<{ Event: string; Status: string; Error?: string }> = []
 
     const files = await loadFiles('Events')
