@@ -1,6 +1,6 @@
 import Cookie from '@/libs/utils/youtubeCookies.js'
 import { loadEvents } from '@/Structures/Handlers/eventHandler.js'
-import GuildConfig from '@/Structures/Schemas/GuildConfig'
+import GuildConfig from '@/Structures/Schemas/GuildConfig.js'
 import Giveaway from '@/Systems/Giveaway.js'
 import type { CommandType } from '@/typings/command.js'
 import type { ButtonType, MenuType, ModalType } from '@/typings/component'
