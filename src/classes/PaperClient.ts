@@ -1,5 +1,6 @@
 import Cookie from '@/libs/utils/youtubeCookies.js'
 import { loadEvents } from '@/Structures/Handlers/eventHandler.js'
+import GuildConfig from '@/Structures/Schemas/GuildConfig'
 import Giveaway from '@/Systems/Giveaway.js'
 import type { CommandType } from '@/typings/command.js'
 import type { ButtonType, MenuType, ModalType } from '@/typings/component'
@@ -88,6 +89,28 @@ export class PaperClient extends Client {
         } catch (err) {
             console.error(chalk.red('發送錯誤到 Webhook 失敗:', err))
         }
+    }
+
+    /**
+     * 獲取所有可用於 Dashboard 配置（非開發者專用）的指令列表。
+     * @returns {Array<{ name: string; description: string }>} 可配置指令的陣列。
+     */
+    getAvailableConfigCommands(): Array<{ name: string; description: string }> {
+        const configurableCommands: { name: string; description: string }[] = []
+
+        this.commands.forEach((command) => {
+            if (!command.subCommand && !command.developer) {
+                configurableCommands.push({
+                    name: command.name,
+                    description: command.description
+                })
+            }
+        })
+
+        // 你提到沒有 command.data.name 或 description，這正是因為它們在 command 的頂層了。
+        // 如果將來有其他類型的指令需要特殊處理，可以在這裡擴展邏輯。
+
+        return configurableCommands
     }
 
     async startFastify() {
@@ -193,6 +216,36 @@ export class PaperClient extends Client {
                     error: error instanceof Error ? error.message : String(error)
                 })
             }
+        })
+
+        fastify.get('/api/guilds/:guildId/config', async (request, reply) => {
+            const { guildId } = request.params as { guildId: string }
+            if (!this.isReady()) {
+                return reply.code(503).send({ message: 'Bot is not ready yet.' })
+            }
+            try {
+                const guildConfig = await GuildConfig.findOne({ guildId })
+                if (!guildConfig) {
+                    return reply.send({
+                        guildId,
+                        disabledCommands: []
+                    })
+                }
+                reply.send(guildConfig)
+            } catch (error) {
+                fastify.log.error(`Error fetching config for guild ${guildId}:`, error)
+                reply.code(500).send({
+                    message: 'Failed to fetch guild configuration.',
+                    error: error instanceof Error ? error.message : String(error)
+                })
+            }
+        })
+
+        fastify.get('/api/commands', async (request, reply) => {
+            if (!this.isReady()) {
+                return reply.code(503).send({ message: 'Bot is not ready yet.' })
+            }
+            reply.send(this.getAvailableConfigCommands())
         })
 
         try {
