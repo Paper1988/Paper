@@ -1,9 +1,16 @@
 import { PaperClient } from '@/classes/PaperClient.js'
-import chalk from 'chalk'
+import { Logger } from '@/libs/utils/logger.js'
+import * as Sentry from '@sentry/node'
 import { Collection, GatewayIntentBits, Partials } from 'discord.js'
 
-console.log(chalk.cyan('>>> 正在初始化機器人...'))
-console.log(`>>> Node.js 版本: ${process.version}`)
+Sentry.init({
+    dsn: process.env.SENTRY_DNS,
+    tracesSampleRate: 1.0,
+    environment: process.env.NODE_ENV || 'dev'
+})
+
+Logger.info('>>> 正在初始化機器人...')
+Logger.info(`>>> Node.js 版本: ${process.version}`)
 
 let client: PaperClient
 
@@ -26,7 +33,7 @@ try {
         ]
     })
 
-    console.log(chalk.green('>>> 已建立 Discord Client 實例'))
+    Logger.info('已建立 Discord Client 實例')
 
     client.commands = new Collection()
     client.buttons = new Collection()
@@ -36,27 +43,18 @@ try {
     client.selectMenus = new Collection()
     client.contextMenus = new Collection()
 
-    console.log(chalk.green('>>> 已初始化集合'))
+    Logger.info('已初始化集合')
 
     // 初始化 DisTube
-    console.log(chalk.yellow('>>> 正在初始化 DisTube...'))
+    Logger.info('正在初始化 DisTube...')
     client.initDistube()
-    console.log(chalk.green('>>> DisTube 初始化完成'))
+    Logger.info('DisTube 初始化完成')
 
-    console.log(chalk.yellow('>>> 正在啟動機器人...'))
+    Logger.info('正在啟動機器人...')
     client.start()
-    console.log(chalk.green('>>> 機器人啟動程序已開始'))
-
-    // 捕獲主線程未捕獲的異常
-    process.on('uncaughtException', (err) => {
-        console.error(chalk.red('>>> [主線程] 未捕獲的錯誤:'), err)
-    })
-
-    process.on('unhandledRejection', (reason) => {
-        console.error(chalk.red('>>> [主線程] 未處理的 Promise 拒絕:'), reason)
-    })
+    Logger.info('機器人啟動程序已開始')
 } catch (error) {
-    console.error(chalk.red('>>> [嚴重錯誤] 機器人啟動失敗:'), error)
+    Logger.error('機器人啟動失敗:', error)
     process.exit(1)
 }
 
