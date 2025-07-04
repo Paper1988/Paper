@@ -23,13 +23,21 @@ import { registerDistubeEvents } from '@/Systems/DistubeEvents.js'
 import { PaperClient } from '@/classes/PaperClient.js'
 import { checkAndNotify } from '@/libs/utils/checkCookies.js'
 import { checkMongoDBHealth, safeDbOperation } from '@/libs/utils/dbHealthCheck.js'
+import { Logger } from '@/libs/utils/logger.js'
 import type { EventType } from '@/typings/event.js'
+import * as Sentry from '@sentry/node'
 
 export default {
     name: Events.ClientReady,
     once: true,
     async execute(client: PaperClient) {
         if (!client) return
+
+        Sentry.setContext('client', {
+            username: client.user?.username,
+            id: client.user?.id,
+            guilds: client.guilds.cache.size
+        })
 
         await Promise.all([
             loadCommands(client),
@@ -43,7 +51,7 @@ export default {
         try {
             await client.startFastify()
         } catch (error) {
-            console.error('Failed to start Fastify server:', error)
+            Logger.error('Failed to start Fastify server:', error)
         }
 
         mongoose.set('strictQuery', false)
@@ -52,27 +60,24 @@ export default {
             try {
                 await mongoose.connect(process.env.DATABASE_URL!, {
                     dbName: 'Js',
-                    connectTimeoutMS: 30000, // 增加連線超時時間到 30 秒
-                    socketTimeoutMS: 45000, // Socket 超時設為 45 秒
-                    serverSelectionTimeoutMS: 30000, // 伺服器選擇超時時間為 30 秒
-                    heartbeatFrequencyMS: 10000, // 心跳頻率為 10 秒
-                    maxPoolSize: 10, // 連線池大小
+                    connectTimeoutMS: 30000,
+                    socketTimeoutMS: 45000,
+                    serverSelectionTimeoutMS: 30000,
+                    heartbeatFrequencyMS: 10000,
+                    maxPoolSize: 10,
                     retryWrites: true,
                     retryReads: true
                 })
-                console.log(`>>> ✅ 成功連結到 MongoDB ${mongoose.connection.db!.databaseName}!`)
+                Logger.info(`成功連結到 MongoDB ${mongoose.connection.db!.databaseName}!`)
             } catch (error) {
-                console.error(
-                    `>>> ❌ MongoDB 連線失敗 (嘗試 ${retryCount + 1}/${maxRetries}):`,
-                    error
-                )
+                Logger.error(`MongoDB 連線失敗 (嘗試 ${retryCount + 1}/${maxRetries}):`, error)
 
                 if (retryCount < maxRetries) {
-                    console.log(`>>> 🔄 ${5000}ms 後重試連線...`)
+                    Logger.info(`>>> 🔄 ${5000}ms 後重試連線...`)
                     await new Promise((resolve) => setTimeout(resolve, 5000))
                     await connectToDB(retryCount + 1, maxRetries)
                 } else {
-                    console.error(`>>> ❌ 已達最大重試次數 (${maxRetries})，無法連接到 MongoDB`)
+                    Logger.error(`已達最大重試次數 (${maxRetries})，無法連接到 MongoDB`)
                     // 可以在這裡處理無法連線的情況，例如傳送通知或優雅地關閉 Bot
                 }
             }
@@ -84,24 +89,20 @@ export default {
             async () => {
                 const healthStatus = await checkMongoDBHealth()
                 if (healthStatus.status !== 'healthy') {
-                    console.warn(
-                        `>>> ⚠️ MongoDB 健康檢查失敗: ${healthStatus.details.readyStateDesc}`
-                    )
+                    Logger.warn(`MongoDB 健康檢查失敗: ${healthStatus.details.readyStateDesc}`)
                     if (healthStatus.details.error) {
-                        console.error(`>>> ❌ 錯誤詳情: ${healthStatus.details.error}`)
+                        Logger.error(`錯誤詳情: ${healthStatus.details.error}`)
                     }
 
                     if (
                         mongoose.connection.readyState !== 1 &&
                         mongoose.connection.readyState !== 2
                     ) {
-                        console.log('>>> 🔄 嘗試重新連線至 MongoDB...')
+                        Logger.info('>>> 🔄 嘗試重新連線至 MongoDB...')
                         connectToDB(0, 3)
                     }
                 } else {
-                    console.log(
-                        `>>> ✅ MongoDB 健康檢查通過 (延遲: ${healthStatus.details.ping}ms)`
-                    )
+                    Logger.info(`MongoDB 健康檢查通過 (延遲: ${healthStatus.details.ping}ms)`)
                 }
             },
             30 * 60 * 1000
@@ -112,11 +113,11 @@ export default {
         })
 
         mongoose.connection.on('error', (error) => {
-            console.error('>>> ❌ MongoDB 連線錯誤:', error)
+            Logger.error('MongoDB 連線錯誤:', error)
         })
 
         mongoose.connection.on('disconnected', () => {
-            console.log('>>> 🔌 MongoDB 連線斷開，嘗試重新連線...')
+            Logger.info('MongoDB 連線斷開，嘗試重新連線...')
             connectToDB()
         })
 
@@ -139,7 +140,7 @@ export default {
             async () => {
                 try {
                     if (mongoose.connection.readyState !== 1) {
-                        console.warn('>>> ⚠️ MongoDB 連線未就緒，跳過定時任務...')
+                        Logger.warn('MongoDB 連線未就緒，跳過定時任務...')
                         return
                     }
 
@@ -148,15 +149,15 @@ export default {
                         ended: false
                     }).maxTimeMS(20000)
 
-                    console.log(`>>> 🎉 找到 ${giveaways.length} 個需要結束的抽獎活動`)
+                    Logger.info(`找到 ${giveaways.length} 個需要結束的抽獎活動`)
 
                     for (const giveaway of giveaways) {
                         try {
                             await endGiveaway(giveaway.messageId, client)
-                            console.log(`>>> ✅ 成功結束抽獎活動: ${giveaway.messageId}`)
+                            Logger.info(`成功結束抽獎活動: ${giveaway.messageId}`)
                         } catch (error) {
-                            console.error(
-                                `>>> ❌ 結束抽獎活動時發生錯誤 (ID: ${giveaway.messageId}):`,
+                            Logger.error(
+                                `結束抽獎活動時發生錯誤 (ID: ${giveaway.messageId}):`,
                                 error
                             )
 
@@ -166,7 +167,7 @@ export default {
                                     { $set: { ended: true, hasError: true } }
                                 )
                             } catch (dbError) {
-                                console.error(`>>> ❌ 更新抽獎活動狀態失敗:`, dbError)
+                                Logger.error(`更新抽獎活動狀態失敗:`, dbError)
                             }
                         }
                     }
@@ -175,10 +176,10 @@ export default {
 
                     if (global.gc) {
                         global.gc()
-                        console.log('>>> ✅ 已執行垃圾回收')
+                        Logger.info('已執行垃圾回收')
                     }
                 } catch (mainError) {
-                    console.error('>>> ❌ 定時任務執行時發生嚴重錯誤:', mainError)
+                    Logger.error('定時任務執行時發生嚴重錯誤:', mainError)
                 }
             },
             24 * 60 * 60 * 1000
@@ -193,14 +194,14 @@ async function endGiveaway(messageId: string, client: Client): Promise<void> {
     )
 
     if (!giveaway) {
-        console.log(`>>> ⚠️ 找不到未結束的抽獎活動: ${messageId}`)
+        Logger.warn(`找不到未結束的抽獎活動: ${messageId}`)
         return
     }
 
     try {
         const channel = await client.channels.fetch(giveaway.channelId)
         if (!channel?.isTextBased()) {
-            console.log(`>>> ⚠️ 找不到頻道或頻道不是文字頻道: ${giveaway.channelId}`)
+            Logger.warn(`找不到頻道或頻道不是文字頻道: ${giveaway.channelId}`)
             await safeDbOperation(() =>
                 Giveaway.updateOne({ messageId }, { $set: { ended: true, hasError: true } })
             )
@@ -209,7 +210,7 @@ async function endGiveaway(messageId: string, client: Client): Promise<void> {
 
         const message = await channel.messages.fetch(giveaway.messageId)
         if (!message) {
-            console.log(`>>> ⚠️ 找不到訊息: ${giveaway.messageId}`)
+            Logger.warn(`找不到訊息: ${giveaway.messageId}`)
             await safeDbOperation(() =>
                 Giveaway.updateOne({ messageId }, { $set: { ended: true, hasError: true } })
             )
@@ -254,7 +255,7 @@ async function endGiveaway(messageId: string, client: Client): Promise<void> {
                 })
             }
         } else {
-            console.error('>>> ⚠️ 訊息中沒有嵌入內容')
+            Logger.warn('訊息中沒有嵌入內容')
             await safeDbOperation(() =>
                 Giveaway.updateOne({ messageId }, { $set: { ended: true, hasError: true } })
             )
@@ -307,9 +308,9 @@ async function endGiveaway(messageId: string, client: Client): Promise<void> {
             await history.save()
         })
 
-        console.log(`>>> ✅ 成功結束抽獎活動: ${messageId}，有 ${winners.length} 個獲獎者`)
+        Logger.info(`成功結束抽獎活動: ${messageId}，有 ${winners.length} 個獲獎者`)
     } catch (error) {
-        console.error(`>>> ❌ 處理抽獎活動時發生錯誤 (ID: ${messageId}):`, error)
+        Logger.error(`處理抽獎活動時發生錯誤 (ID: ${messageId}):`, error)
         await safeDbOperation(() =>
             Giveaway.updateOne({ messageId }, { $set: { ended: true, hasError: true } })
         )

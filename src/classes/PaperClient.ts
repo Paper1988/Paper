@@ -1,7 +1,8 @@
-import Cookie from '@/libs/utils/youtubeCookies.js'
 import { loadEvents } from '@/Structures/Handlers/eventHandler.js'
 import GuildConfig from '@/Structures/Schemas/GuildConfig.js'
 import Giveaway from '@/Systems/Giveaway.js'
+import { Logger } from '@/libs/utils/logger.js'
+import Cookie from '@/libs/utils/youtubeCookies.js'
 import type { CommandType } from '@/typings/command.js'
 import type { ButtonType, MenuType, ModalType } from '@/typings/component'
 import type { EventExecute } from '@/typings/event'
@@ -57,17 +58,17 @@ export class PaperClient extends Client {
         }
 
         process.on('unhandledRejection', (error: Error) => {
-            console.error('未處理的 Promise 拒絕:', error)
+            Logger.error(error)
             this.sendErrorToWebhook('未處理的 Promise 拒絕', error)
         })
 
         process.on('uncaughtException', (error: Error) => {
-            console.error('未捕獲的異常:', error)
+            Logger.error(error)
             this.sendErrorToWebhook('未捕獲的異常', error)
         })
 
         this.on('error', (error: Error) => {
-            console.error('Discord 客戶端錯誤:', error)
+            Logger.error(error)
             this.sendErrorToWebhook('Discord 客戶端錯誤', error)
         })
     }
@@ -87,7 +88,7 @@ export class PaperClient extends Client {
                 ]
             })
         } catch (err) {
-            console.error(chalk.red('發送錯誤到 Webhook 失敗:', err))
+            Logger.error('發送錯誤到 Webhook 失敗:', err as Error)
         }
     }
 
