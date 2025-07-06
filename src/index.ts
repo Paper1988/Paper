@@ -9,8 +9,8 @@ Sentry.init({
     environment: process.env.NODE_ENV || 'dev'
 })
 
-Logger.info('>>> 正在初始化機器人...')
-Logger.info(`>>> Node.js 版本: ${process.version}`)
+Logger.info('正在初始化機器人...')
+Logger.info(`Node.js 版本: ${process.version}`)
 
 let client: PaperClient
 
