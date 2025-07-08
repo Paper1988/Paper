@@ -13,28 +13,28 @@ importers:
         version: 0.10.0
       '@discordjs/voice':
         specifier: ^0.18.0
-        version: 0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1)
+        version: 0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)
       '@distube/bandlab':
         specifier: ^1.0.0
-        version: 1.0.0(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))
+        version: 1.0.0(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))
       '@distube/deezer':
         specifier: ^2.0.1
-        version: 2.0.1(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))
+        version: 2.0.1(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))
       '@distube/direct-link':
         specifier: ^1.0.1
-        version: 1.0.1(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))
+        version: 1.0.1(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))
       '@distube/soundcloud':
         specifier: ^2.0.4
-        version: 2.0.4(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))
+        version: 2.0.4(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))
       '@distube/spotify':
         specifier: ^2.0.2
-        version: 2.0.2(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))
+        version: 2.0.2(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))
       '@distube/youtube':
         specifier: ^1.0.4
-        version: 1.0.4(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))
+        version: 1.0.4(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))
       '@distube/yt-dlp':
         specifier: ^2.0.1
-        version: 2.0.1(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))
+        version: 2.0.1(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))
       '@distube/ytdl-core':
         specifier: ^4.16.12
         version: 4.16.12
@@ -82,22 +82,22 @@ importers:
         version: 4.4.2
       discord-giveaways:
         specifier: ^6.0.1
-        version: 6.0.1(discord.js@14.20.0)
+        version: 6.0.1(discord.js@14.21.0)
       discord.js:
-        specifier: ^14.20.0
-        version: 14.20.0
+        specifier: ^14.21.0
+        version: 14.21.0
       discord.js-anticrash:
         specifier: ^5.2.5
         version: 5.2.5
       distube:
         specifier: ^5.0.7
-        version: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0)
+        version: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0)
       distube-apple-music:
         specifier: ^0.1.0
-        version: 0.1.0(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))
+        version: 0.1.0(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))
       distube-tidal:
         specifier: ^0.1.0
-        version: 0.1.0(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))
+        version: 0.1.0(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
@@ -134,9 +134,6 @@ importers:
       node-opus:
         specifier: ^0.3.3
         version: 0.3.3
-      opusscript:
-        specifier: ^0.1.1
-        version: 0.1.1
       os-utils:
         specifier: ^0.0.14
         version: 0.0.14
@@ -1699,8 +1696,8 @@ packages:
     resolution: {integrity: sha512-jAecC4GKBLHQs4EfNsLNqL1zvaaz9VXqTgqqhFYHLXCLX3z5ZxkXeELM4HUNy4Az3X7pqz2BDmXiLuYfj17K8A==}
     engines: {node: '>=18.6.0'}
 
-  discord.js@14.20.0:
-    resolution: {integrity: sha512-5fRTptK2vpuz+bTuAEUQLSo/3AgCSLHl6Mm9+/ofb+8cbbnjWllhtaqRBq7XcpzlBnfNEugKv8HvCwcOtIHpCg==}
+  discord.js@14.21.0:
+    resolution: {integrity: sha512-U5w41cEmcnSfwKYlLv5RJjB8Joa+QJyRwIJz5i/eg+v2Qvv6EYpCRhN9I2Rlf0900LuqSDg8edakUATrDZQncQ==}
     engines: {node: '>=18'}
 
   distube-apple-music@0.1.0:
@@ -2792,9 +2789,6 @@ packages:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
 
-  opusscript@0.1.1:
-    resolution: {integrity: sha512-mL0fZZOUnXdZ78woRXp18lApwpp0lF5tozJOD1Wut0dgrA9WuQTgSels/CSmFleaAZrJi/nci5KOVtbuxeWoQA==}
-
   os-utils@0.0.14:
     resolution: {integrity: sha512-ajB8csaHLBvJOYsHJkp8YdO2FvlBbf/ZxaYQwXXRDyQ84UoE+uTuLXxqd0shekXMX6Qr/pt/DDyLMRAMsgfWzg==}
 
@@ -3578,11 +3572,11 @@ snapshots:
 
   '@discordjs/util@1.1.1': {}
 
-  '@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1)':
+  '@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)':
     dependencies:
       '@types/ws': 8.18.1
       discord-api-types: 0.37.120
-      prism-media: 1.3.5(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1)
+      prism-media: 1.3.5(@discordjs/opus@0.10.0)(node-opus@0.3.3)
       tslib: 2.8.1
       ws: 8.18.2
     transitivePeerDependencies:
@@ -3608,29 +3602,29 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@distube/bandlab@1.0.0(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))':
+  '@distube/bandlab@1.0.0(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))':
     dependencies:
-      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0)
+      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0)
       undici: 6.21.3
 
-  '@distube/deezer@2.0.1(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))':
+  '@distube/deezer@2.0.1(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))':
     dependencies:
-      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0)
+      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0)
       undici: 6.21.3
 
-  '@distube/direct-link@1.0.1(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))':
+  '@distube/direct-link@1.0.1(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))':
     dependencies:
-      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0)
+      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0)
       undici: 6.21.3
 
-  '@distube/soundcloud@2.0.4(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))':
+  '@distube/soundcloud@2.0.4(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))':
     dependencies:
-      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0)
+      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0)
       soundcloud.ts: 0.6.5
 
-  '@distube/spotify@2.0.2(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))':
+  '@distube/spotify@2.0.2(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))':
     dependencies:
-      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0)
+      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0)
       spotify-uri: 4.1.0
       spotify-url-info: 3.2.18
       spotify-web-api-node: 5.0.2
@@ -3638,19 +3632,19 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@distube/youtube@1.0.4(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))':
+  '@distube/youtube@1.0.4(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))':
     dependencies:
       '@distube/ytdl-core': 4.16.12
       '@distube/ytpl': 1.2.3
       '@distube/ytsr': 2.0.4
-      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0)
+      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@distube/yt-dlp@2.0.1(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0))':
+  '@distube/yt-dlp@2.0.1(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0))':
     dependencies:
       dargs: 7.0.0
-      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0)
+      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0)
       undici: 6.21.3
 
   '@distube/ytdl-core@4.16.12':
@@ -5071,7 +5065,7 @@ snapshots:
 
   discord-gamecord@4.4.2:
     dependencies:
-      discord.js: 14.20.0
+      discord.js: 14.21.0
       html-entities: 2.6.0
       node-fetch: 2.7.0
     transitivePeerDependencies:
@@ -5079,15 +5073,15 @@ snapshots:
       - encoding
       - utf-8-validate
 
-  discord-giveaways@6.0.1(discord.js@14.20.0):
+  discord-giveaways@6.0.1(discord.js@14.21.0):
     dependencies:
       deepmerge-ts: 4.3.0
-      discord.js: 14.20.0
+      discord.js: 14.21.0
       serialize-javascript: 6.0.2
 
   discord.js-anticrash@5.2.5: {}
 
-  discord.js@14.20.0:
+  discord.js@14.21.0:
     dependencies:
       '@discordjs/builders': 1.11.2
       '@discordjs/collection': 1.5.3
@@ -5106,21 +5100,21 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  distube-apple-music@0.1.0(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0)):
+  distube-apple-music@0.1.0(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0)):
     dependencies:
-      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0)
+      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0)
       isomorphic-unfetch: 4.0.2
       node-html-parser: 6.1.13
 
-  distube-tidal@0.1.0(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0)):
+  distube-tidal@0.1.0(distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0)):
     dependencies:
-      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0)
+      distube: 5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0)
       tidal-music-api: 1.2.1
 
-  distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1))(discord.js@14.20.0):
+  distube@5.0.7(@discordjs/voice@0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3))(discord.js@14.21.0):
     dependencies:
-      '@discordjs/voice': 0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1)
-      discord.js: 14.20.0
+      '@discordjs/voice': 0.18.0(@discordjs/opus@0.10.0)(node-opus@0.3.3)
+      discord.js: 14.21.0
       tiny-typed-emitter: 2.1.0
       undici: 7.10.0
 
@@ -6372,8 +6366,6 @@ snapshots:
       type-check: 0.4.0
       word-wrap: 1.2.5
 
-  opusscript@0.1.1: {}
-
   os-utils@0.0.14: {}
 
   own-keys@1.0.1:
@@ -6486,11 +6478,10 @@ snapshots:
 
   prettier@3.5.3: {}
 
-  prism-media@1.3.5(@discordjs/opus@0.10.0)(node-opus@0.3.3)(opusscript@0.1.1):
+  prism-media@1.3.5(@discordjs/opus@0.10.0)(node-opus@0.3.3):
     optionalDependencies:
       '@discordjs/opus': 0.10.0
       node-opus: 0.3.3
-      opusscript: 0.1.1
 
   process-warning@4.0.1: {}
 
