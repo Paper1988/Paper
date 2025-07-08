@@ -153,6 +153,7 @@ export default {
                     .catch((err) =>
                         interaction
                             .editReply({
+                                content: '',
                                 embeds: [embed.setDescription(`${emojis.warning} | ` + err)]
                             })
                             .then(() => setTimeout(() => interaction.deleteReply(), 15 * 1000))
