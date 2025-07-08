@@ -1,11 +1,10 @@
 import { loadEvents } from '@/Structures/Handlers/eventHandler.js'
-import GuildConfig from '@/Structures/Schemas/GuildConfig.js'
 import Giveaway from '@/Systems/Giveaway.js'
 import { Logger } from '@/libs/utils/logger.js'
 import Cookie from '@/libs/utils/youtubeCookies.js'
 import type { CommandType } from '@/typings/command.js'
-import type { ButtonType, MenuType, ModalType } from '@/typings/component'
-import type { EventExecute } from '@/typings/event'
+import type { ButtonType, MenuType, ModalType } from '@/typings/component.js'
+import type { EventExecute } from '@/typings/event.js'
 import { BandlabPlugin } from '@distube/bandlab'
 import { DeezerPlugin } from '@distube/deezer'
 import { DirectLinkPlugin } from '@distube/direct-link'
@@ -13,7 +12,6 @@ import { SoundCloudPlugin } from '@distube/soundcloud'
 import { SpotifyPlugin } from '@distube/spotify'
 import { YouTubePlugin } from '@distube/youtube'
 import { YtDlpPlugin } from '@distube/yt-dlp'
-import fastifyCors from '@fastify/cors'
 import chalk from 'chalk'
 import type { ClientOptions } from 'discord.js'
 import { Client, Collection, WebhookClient } from 'discord.js'
@@ -21,7 +19,6 @@ import { DisTube } from 'distube'
 import { AppleMusicPlugin } from 'distube-apple-music'
 import { TidalPlugin } from 'distube-tidal'
 import dotenv from 'dotenv'
-import Fastify from 'fastify'
 import fs from 'fs'
 
 if (fs.existsSync('.env.local')) {
@@ -40,6 +37,7 @@ export class PaperClient extends Client {
     override contextMenus = new Collection<string, any>()
     override distube!: DisTube
     private errorWebhook: WebhookClient | null = null
+    private apiServer: any = null
 
     constructor(options: ClientOptions) {
         super(options)
@@ -108,155 +106,16 @@ export class PaperClient extends Client {
             }
         })
 
-        // 你提到沒有 command.data.name 或 description，這正是因為它們在 command 的頂層了。
-        // 如果將來有其他類型的指令需要特殊處理，可以在這裡擴展邏輯。
-
         return configurableCommands
     }
 
-    async startFastify() {
-        const fastify = Fastify({
-            logger: true
-        })
-
-        const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001
-
-        const HOST = '0.0.0.0'
-
-        fastify.register(fastifyCors, {
-            origin: ['https://paper-dashboard.vercel.app', 'http://localhost:3000'],
-            methods: ['GET', 'POST', 'PUT', 'DELETE'],
-            credentials: true
-        })
-
-        fastify.get('/api/bot-status', async (request, reply) => {
-            if (this.isReady()) {
-                reply.send({
-                    status: 'online',
-                    username: this.user?.tag,
-                    guildCount: this.guilds.cache.size
-                })
-            } else {
-                reply.code(503).send({ status: 'offline', message: '機器人已離線' })
-            }
-        })
-
-        fastify.get('/api/guilds', async (request, reply) => {
-            // 你可以在這裡添加認證檢查，例如：
-            // 檢查請求是否來自已認證的 Dashboard
-            // 或是透過 API Key 等方式驗證
-
-            if (!this.isReady()) {
-                return reply.code(503).send({ message: 'Bot is not ready yet.' })
-            }
-
-            try {
-                const guilds = this.guilds.cache.map((guild) => ({
-                    id: guild.id,
-                    name: guild.name,
-                    icon: guild.iconURL(),
-                    memberCount: guild.memberCount,
-                    ownerId: guild.ownerId
-                }))
-                reply.send(guilds)
-            } catch (error) {
-                fastify.log.error('Error fetching guilds:', error)
-                reply.code(500).send({
-                    message: 'Failed to fetch guilds.',
-                    error: error instanceof Error ? error.message : String(error)
-                })
-            }
-        })
-
-        fastify.get('/api/guilds/:guildId', async (request, reply) => {
-            const { guildId } = request.params as { guildId: string }
-
-            // 認證檢查：確保只有授權使用者能存取
-            // 這是一個可以強化安全性的地方，例如檢查請求是否來自已認證的 Dashboard
-            // 並且 session 中的使用者是該 guild 的管理員或擁有者
-            // 目前我們假設 Next.js API 路由會處理認證
-
-            if (!this.isReady()) {
-                return reply.code(503).send({ message: 'Bot is not ready yet.' })
-            }
-
-            try {
-                const guild = this.guilds.cache.get(guildId)
-
-                if (!guild) {
-                    return reply.code(404).send({ message: 'Guild not found.' })
-                }
-
-                // 獲取一些更詳細的資訊
-                // 注意：為了獲取頻道等，可能需要 Guilds Intent 和其他相關 Intent
-                // 如果你需要列出所有頻道，你可能需要遍歷 guild.channels.cache
-                // 這裡只列出基本資訊
-                const guildInfo = {
-                    id: guild.id,
-                    name: guild.name,
-                    icon: guild.iconURL(),
-                    memberCount: guild.memberCount,
-                    ownerId: guild.ownerId,
-                    description: guild.description,
-                    features: guild.features,
-                    preferredLocale: guild.preferredLocale,
-                    verificationLevel: guild.verificationLevel,
-                    channels: guild.channels.cache.map((channel) => ({
-                        id: channel.id,
-                        name: channel.name,
-                        type: channel.type
-                    }))
-                    // ... 你可能還需要從資料庫中獲取該伺服器的自訂設定
-                }
-
-                reply.send(guildInfo)
-            } catch (error) {
-                fastify.log.error(`Error fetching guild ${guildId}:`, error)
-                reply.code(500).send({
-                    message: 'Failed to fetch guild details.',
-                    error: error instanceof Error ? error.message : String(error)
-                })
-            }
-        })
-
-        fastify.get('/api/guilds/:guildId/config', async (request, reply) => {
-            const { guildId } = request.params as { guildId: string }
-            if (!this.isReady()) {
-                return reply.code(503).send({ message: 'Bot is not ready yet.' })
-            }
-            try {
-                const guildConfig = await GuildConfig.findOne({ guildId })
-                if (!guildConfig) {
-                    return reply.send({
-                        guildId,
-                        disabledCommands: []
-                    })
-                }
-                reply.send(guildConfig)
-            } catch (error) {
-                fastify.log.error(`Error fetching config for guild ${guildId}:`, error)
-                reply.code(500).send({
-                    message: 'Failed to fetch guild configuration.',
-                    error: error instanceof Error ? error.message : String(error)
-                })
-            }
-        })
-
-        fastify.get('/api/commands', async (request, reply) => {
-            if (!this.isReady()) {
-                return reply.code(503).send({ message: 'Bot is not ready yet.' })
-            }
-            reply.send(this.getAvailableConfigCommands())
-        })
-
-        try {
-            await fastify.listen({ port: PORT, host: HOST })
-            console.log(`Bot API server listening on ${HOST}:${PORT}`)
-            console.log(`Environment: ${process.env.NODE_ENV || 'development'}`)
-        } catch (err) {
-            fastify.log.error(err)
-            throw err
-        }
+    /**
+     * 啟動 API 伺服器
+     */
+    async startApiServer() {
+        const { ApiServer } = await import('@/api/server.js')
+        this.apiServer = new ApiServer(this)
+        await this.apiServer.start()
     }
 
     start({ Production = process.env.NODE_ENV! === 'production' } = {}) {
@@ -268,54 +127,171 @@ export class PaperClient extends Client {
         this.login(Production ? process.env.DISCORD_TOKEN! : process.env.TEST_TOKEN!)
     }
 
-    initDistube() {
+    /**
+     * 初始化 DisTube 音樂播放器
+     * 配置所有支援的音樂平台插件和自定義過濾器
+     */
+    initDistube(): void {
+        try {
+            // 初始化 YouTube cookies
+            this.initYouTubeCookies()
+
+            // 創建 DisTube 實例
+            this.distube = new DisTube(this, this.getDistubeConfig())
+
+            Logger.info('DisTube 初始化成功')
+        } catch (error) {
+            Logger.error('DisTube 初始化失敗:', error as Error)
+            throw error
+        }
+    }
+
+    /**
+     * 初始化 YouTube cookies
+     */
+    private initYouTubeCookies(): void {
         Cookie.formatExistingFile()
         const cookieStatus = Cookie.getStatus()
-        if (!cookieStatus.isValid) {
-            console.warn('YouTube cookies are invalid or missing!')
-        }
-        const cookies = Cookie.getCookies()
 
-        this.distube = new DisTube(this, {
-            customFilters: {
-                speed_050: 'atempo=0.5',
-                speed_075: 'atempo=0.75',
-                speed_1: 'atempo=1',
-                speed_125: 'atempo=1.25',
-                speed_150: 'atempo=1.5',
-                speed_175: 'atempo=1.75',
-                speed_2: 'atempo=2'
-            },
+        if (!cookieStatus.isValid) {
+            Logger.warn('YouTube cookies 無效或缺失，某些功能可能受限')
+        }
+    }
+
+    /**
+     * 獲取 DisTube 配置
+     */
+    private getDistubeConfig() {
+        return {
+            // 自定義音頻過濾器
+            customFilters: this.getCustomFilters(),
+
+            // 事件發送設定
             emitNewSongOnly: true,
             emitAddSongWhenCreatingQueue: false,
             emitAddListWhenCreatingQueue: false,
+
+            // 其他設定
             nsfw: true,
-            plugins: [
-                new YouTubePlugin({
-                    ytdlOptions: {
-                        lang: 'zh-TW',
-                        playerClients: ['WEB_EMBEDDED', 'IOS', 'ANDROID', 'TV', 'WEB']
-                    },
-                    cookies
-                }),
-                new SpotifyPlugin({
-                    api: {
-                        clientId: process.env.SPOTIFY_CLIENT_ID!,
-                        clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
-                        topTracksCountry: 'TW'
-                    }
-                }),
-                new SoundCloudPlugin({
-                    clientId: process.env.SOUNDCLOUD_CLIENT_ID!,
-                    oauthToken: process.env.SOUNDCLOUD_OAUTH_TOKEN!
-                }),
-                new DirectLinkPlugin(),
-                new TidalPlugin(),
-                new DeezerPlugin(),
-                new AppleMusicPlugin(),
-                new BandlabPlugin(),
-                new YtDlpPlugin({ update: true })
-            ]
+
+            // 插件配置
+            plugins: this.getDistubePlugins()
+        }
+    }
+
+    /**
+     * 獲取自定義音頻過濾器
+     */
+    private getCustomFilters() {
+        return {
+            speed_025: 'atempo=0.25',
+            speed_050: 'atempo=0.5',
+            speed_075: 'atempo=0.75',
+            speed_1: 'atempo=1',
+            speed_125: 'atempo=1.25',
+            speed_150: 'atempo=1.5',
+            speed_175: 'atempo=1.75',
+            speed_2: 'atempo=2'
+        } as const
+    }
+
+    /**
+     * 獲取 DisTube 插件配置
+     */
+    private getDistubePlugins() {
+        const plugins: any[] = []
+
+        // YouTube 插件
+        plugins.push(this.createYouTubePlugin())
+
+        // Spotify 插件
+        if (this.isSpotifyConfigured()) {
+            plugins.push(this.createSpotifyPlugin())
+        }
+
+        // SoundCloud 插件
+        if (this.isSoundCloudConfigured()) {
+            plugins.push(this.createSoundCloudPlugin())
+        }
+
+        // 其他插件（無需配置）
+        plugins.push(
+            new DirectLinkPlugin(),
+            new TidalPlugin(),
+            new DeezerPlugin(),
+            new AppleMusicPlugin(),
+            new BandlabPlugin(),
+            new YtDlpPlugin({ update: true })
+        )
+
+        return plugins
+    }
+
+    /**
+     * 創建 YouTube 插件
+     */
+    private createYouTubePlugin() {
+        const cookies = Cookie.getCookies()
+
+        return new YouTubePlugin({
+            ytdlOptions: {
+                lang: 'zh-TW',
+                playerClients: ['WEB_EMBEDDED', 'IOS', 'ANDROID', 'TV', 'WEB']
+            },
+            cookies
         })
+    }
+
+    /**
+     * 創建 Spotify 插件
+     */
+    private createSpotifyPlugin() {
+        const clientId = process.env.SPOTIFY_CLIENT_ID
+        const clientSecret = process.env.SPOTIFY_CLIENT_SECRET
+
+        if (!clientId || !clientSecret) {
+            throw new Error('Spotify 配置缺失：需要 SPOTIFY_CLIENT_ID 和 SPOTIFY_CLIENT_SECRET')
+        }
+
+        return new SpotifyPlugin({
+            api: {
+                clientId,
+                clientSecret,
+                topTracksCountry: 'TW'
+            }
+        })
+    }
+
+    /**
+     * 創建 SoundCloud 插件
+     */
+    private createSoundCloudPlugin() {
+        const clientId = process.env.SOUNDCLOUD_CLIENT_ID
+        const oauthToken = process.env.SOUNDCLOUD_OAUTH_TOKEN
+
+        if (!clientId || !oauthToken) {
+            throw new Error(
+                'SoundCloud 配置缺失：需要 SOUNDCLOUD_CLIENT_ID 和 SOUNDCLOUD_OAUTH_TOKEN'
+            )
+        }
+
+        return new SoundCloudPlugin({
+            clientId,
+            oauthToken
+        })
+    }
+
+    /**
+     * 檢查 Spotify 是否已配置
+     */
+    private isSpotifyConfigured(): boolean {
+        return !!(process.env.SPOTIFY_CLIENT_ID && process.env.SPOTIFY_CLIENT_SECRET)
+    }
+
+    /**
+     * 檢查 SoundCloud 是否已配置
+     */
+    private isSoundCloudConfigured(): boolean {
+        return !!(process.env.SOUNDCLOUD_CLIENT_ID && process.env.SOUNDCLOUD_OAUTH_TOKEN)
     }
 }

@@ -43,9 +43,8 @@ try {
     client.selectMenus = new Collection()
     client.contextMenus = new Collection()
 
-    Logger.info('已初始化集合')
+    Logger.info('已初始化各Collection')
 
-    // 初始化 DisTube
     Logger.info('正在初始化 DisTube...')
     client.initDistube()
     Logger.info('DisTube 初始化完成')
