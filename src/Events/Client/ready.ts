@@ -49,9 +49,9 @@ export default {
         registerDistubeEvents(client)
 
         try {
-            await client.startFastify()
+            await client.startApiServer()
         } catch (error) {
-            Logger.error('Failed to start Fastify server:', error)
+            Logger.error('Failed to start API server:', error)
         }
 
         mongoose.set('strictQuery', false)
