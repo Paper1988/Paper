@@ -80,7 +80,7 @@ function classifyMusicError(error: any, song?: Song) {
                 '建議：\n' +
                 '1. 嘗試使用歌曲名稱直接搜尋\n' +
                 '2. 使用其他音樂平台的連結',
-            footer: '試試用 YouTube 或直接搜尋歌名'
+            footer: '試試直接搜尋歌名'
         }
     }
 
@@ -143,6 +143,7 @@ const eventHandlers = {
      */
     addList: (queue: Queue, playlist: Playlist) => {
         try {
+            if (!playlist.songs[0]) return
             const { embeds } = generateMusicPlayerStatus(queue, playlist.songs[0])
             embeds[0]!.data.fields = undefined
 

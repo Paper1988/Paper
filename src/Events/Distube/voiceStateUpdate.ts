@@ -59,7 +59,8 @@ export default {
 
         if (isChannelEmpty(oldState?.channel as VoiceChannel)) {
             await queue.pause()
-            queue
+
+            await queue
                 .textChannel!.send({
                     embeds: [
                         new EmbedBuilder()
@@ -74,7 +75,7 @@ export default {
 
             setEmptyChannelTimer(queue)
         } else {
-            await queue.resume()
+            if (queue.isPaused()) await queue.resume()
             if (emptyChannelTimers.has(queue.id)) {
                 clearTimeout(emptyChannelTimers.get(queue.id))
                 emptyChannelTimers.delete(queue.id)
