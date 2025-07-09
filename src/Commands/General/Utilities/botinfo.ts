@@ -81,7 +81,7 @@ export default {
                             .type()
                             .replace('Windows_NT', 'Windows')
                             .replace('Darwin', 'macOS')}\``,
-                        `<:reminder:1265561686358753280> **上線時間** <t:${client.readyTimestamp}:R>`,
+                        `<:reminder:1265561686358753280> **上線時間** <t:${Math.floor(client.readyTimestamp! / 1000)}:R>`,
                         `<:internet:1265560594321375333> **Ping** \`${client.ws.ping}ms\``,
                         `<:dollar:1265560329040039979> **CPU型號** \`${os.cpus()[0]!.model}\``,
                         `<:bulb:1265560195178958941> **RAM使用率** \`${memoryUsagePercentage.toFixed(2)}%\``,

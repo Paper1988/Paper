@@ -18,14 +18,14 @@ const setEmptyChannelTimer = (queue: Queue) => {
     }
 
     const timer = setTimeout(async () => {
-        if (isChannelEmpty(queue.voiceChannel as VoiceChannel)) {
+        if (queue.voiceChannel && isChannelEmpty(queue.voiceChannel as VoiceChannel)) {
             await queue
                 .textChannel!.send({
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
                             .setDescription(
-                                `${emojis.musicstop} | 由於語音頻道已空超過1分鐘，已停止播放`
+                                `${emojis.musicstop} | 由於語音頻道已空超過1分鐘，已清除播放佇列`
                             )
                     ]
                 })
@@ -52,21 +52,22 @@ export default {
     async execute(client: PaperClient, oldState: VoiceState) {
         if (!client) return
         if (!oldState?.channel) return
-        const queue = (oldState.client.distube as DisTube).queues.get(oldState) as Queue
-        if (!queue) return
-
         if (oldState.member?.id === oldState.client.user.id) return
 
-        if (isChannelEmpty(oldState?.channel as VoiceChannel)) {
-            await queue.pause()
+        const queue = (oldState.client.distube as DisTube).getQueue(oldState.guild.id) as Queue
+        if (!queue) return
+        if (!queue.voiceChannel) return
+        if (!queue.textChannel) return
 
-            await queue
-                .textChannel!.send({
+        if (isChannelEmpty(queue.voiceChannel as VoiceChannel)) {
+            await queue.pause()
+            await queue.textChannel
+                .send({
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
                             .setDescription(
-                                `${emojis.warning} | 語音頻道已空，<t:${Date.now() + 60 * 1000}:R>將停止播放並退出語音頻道`
+                                `${emojis.warning} | 語音頻道已空，<t:${Math.floor((Date.now() + 60 * 1000) / 1000)}:R>將停止播放並退出語音頻道`
                             )
                             .setFooter({ text: '• 重新加入語音頻道來維持播放' })
                     ]

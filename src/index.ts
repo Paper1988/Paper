@@ -1,4 +1,5 @@
 import { PaperClient } from '@/classes/PaperClient.js'
+import '@/libs/patch-opus.js'
 import { Logger } from '@/libs/utils/logger.js'
 import * as Sentry from '@sentry/node'
 import { Collection, GatewayIntentBits, Partials } from 'discord.js'
