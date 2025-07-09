@@ -171,7 +171,7 @@ export default {
                         .setDescription('請選擇一個控制項目')
                         .setRequired(true)
                         .addChoices(
-                            { name: '顯示播放清單', value: 'queue' },
+                            { name: '顯示播放佇列', value: 'queue' },
                             { name: '播放上一首歌曲', value: 'previous' },
                             { name: '暫停/恢復播放歌曲', value: 'togglePause' },
                             { name: '跳過歌曲', value: 'skip' },
@@ -197,10 +197,9 @@ export default {
         const value = interaction.options.getFocused().toString().trim()
 
         try {
-            // 如果用戶還沒輸入任何內容，顯示熱門歌曲
             if (!value) {
                 const userLocale = interaction.locale || 'zh-TW'
-                let regionCode = 'TW' // 預設美國
+                let regionCode = 'TW'
 
                 const regionMap = {
                     'zh-TW': 'TW',
@@ -213,7 +212,6 @@ export default {
 
                 regionCode = regionMap[userLocale] || regionCode
 
-                // 檢查快取
                 const cacheKey = `trending_${regionCode}`
                 const cachedResults = trendingCache.get(cacheKey)
 
