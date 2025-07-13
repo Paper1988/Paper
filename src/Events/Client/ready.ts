@@ -105,7 +105,7 @@ export default {
                     Logger.info(`MongoDB 健康檢查通過 (延遲: ${healthStatus.details.ping}ms)`)
                 }
             },
-            30 * 60 * 1000
+            24 * 60 * 60 * 1000
         )
 
         client.once('shutdown', () => {

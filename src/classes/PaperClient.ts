@@ -12,7 +12,6 @@ import { SoundCloudPlugin } from '@distube/soundcloud'
 import { SpotifyPlugin } from '@distube/spotify'
 import { YouTubePlugin } from '@distube/youtube'
 import { YtDlpPlugin } from '@distube/yt-dlp'
-import chalk from 'chalk'
 import type { ClientOptions } from 'discord.js'
 import { Client, Collection, WebhookClient } from 'discord.js'
 import { DisTube } from 'distube'
@@ -119,10 +118,8 @@ export class PaperClient extends Client {
     }
 
     start({ Production = process.env.NODE_ENV! === 'production' } = {}) {
-        console.log(
-            chalk.green(
-                `>>> Starting Paper Bot in ${Production ? 'Production' : 'Development'} mode...`
-            )
+        Logger.info(
+            `>>> Starting Paper Bot in ${Production ? 'Production' : 'Development'} mode...`
         )
         this.login(Production ? process.env.DISCORD_TOKEN! : process.env.TEST_TOKEN!)
     }
@@ -163,18 +160,11 @@ export class PaperClient extends Client {
      */
     private getDistubeConfig() {
         return {
-            // 自定義音頻過濾器
             customFilters: this.getCustomFilters(),
-
-            // 事件發送設定
             emitNewSongOnly: true,
             emitAddSongWhenCreatingQueue: false,
             emitAddListWhenCreatingQueue: false,
-
-            // 其他設定
             nsfw: true,
-
-            // 插件配置
             plugins: this.getDistubePlugins()
         }
     }

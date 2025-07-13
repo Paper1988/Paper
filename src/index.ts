@@ -33,8 +33,6 @@ try {
         ]
     })
 
-    Logger.info('已建立 Discord Client 實例')
-
     client.commands = new Collection()
     client.buttons = new Collection()
     client.events = new Collection()
@@ -43,9 +41,8 @@ try {
     client.selectMenus = new Collection()
     client.contextMenus = new Collection()
 
-    Logger.info('已初始化各Collection')
+    Logger.info('已建立 Discord Client 實例')
 
-    Logger.info('正在初始化 DisTube...')
     client.initDistube()
     Logger.info('DisTube 初始化完成')
 

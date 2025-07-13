@@ -17,6 +17,7 @@ import {
     handleInteractionError,
     interactionUtils
 } from '@/libs/utils/index.js'
+import { Logger } from '@/libs/utils/logger.js'
 import type { EventType } from '@/typings/event'
 
 export default {
@@ -167,7 +168,7 @@ async function handleAutocomplete(interaction: AutocompleteInteraction, client: 
     const command = client.commands.get(interaction.commandName)
 
     if (!command) {
-        console.log(`[Autocomplete] 找不到指令 ${interaction.commandName}`)
+        Logger.warn(`[Autocomplete] 找不到指令 ${interaction.commandName}`)
         return
     }
 
@@ -175,9 +176,9 @@ async function handleAutocomplete(interaction: AutocompleteInteraction, client: 
         try {
             await command.autocomplete(interaction, client)
         } catch (error) {
-            console.error('[Autocomplete Error]:', error)
+            Logger.error('[Autocomplete Error]:', error)
         }
     } else {
-        console.warn(`[Autocomplete] 指令 ${interaction.commandName} 沒有實現 autocomplete 方法。`)
+        Logger.warn(`[Autocomplete] 指令 ${interaction.commandName} 沒有實現 autocomplete 方法。`)
     }
 }

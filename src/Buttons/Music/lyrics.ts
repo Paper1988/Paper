@@ -1,4 +1,11 @@
-import { ButtonInteraction, EmbedBuilder, GuildMember } from 'discord.js'
+import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonInteraction,
+    ButtonStyle,
+    EmbedBuilder,
+    GuildMember
+} from 'discord.js'
 
 import Genius from 'genius-lyrics'
 const Client = new Genius.Client()
@@ -67,7 +74,15 @@ export default {
                     })
                     .setColor('Gold')
 
-                await interaction.editReply({ embeds: [Embed] })
+                const closeButton = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('close-message')
+                        .setLabel('關閉')
+                        .setStyle(ButtonStyle.Danger)
+                        .setEmoji(emojis.xmark)
+                )
+
+                await interaction.editReply({ embeds: [Embed], components: [closeButton] })
             })
             .catch(async () => {
                 await interaction
