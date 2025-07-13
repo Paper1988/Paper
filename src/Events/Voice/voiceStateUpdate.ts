@@ -1,6 +1,6 @@
 import { PaperClient } from '@/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
-import { clearPlayer, deleteMessageAfter } from '@/Systems/Music.js'
+import { clearPlayer, deleteMessageAfter, updateMusicPlayerStatus } from '@/Systems/Music.js'
 import type { EventType } from '@/typings/event.js'
 import { EmbedBuilder, Events, Message, VoiceChannel, VoiceState } from 'discord.js'
 import { DisTube, Queue } from 'distube'
@@ -32,6 +32,7 @@ const setEmptyChannelTimer = (queue: Queue) => {
                 .then((msg) => deleteMessageAfter(msg, 30 * 1000))
 
             clearPlayer(queue)
+            await updateMusicPlayerStatus(queue, true)
             queue.stop()
             queue.voice.leave()
             emptyChannelTimers.delete(queue.id)
@@ -60,7 +61,7 @@ export default {
         if (!queue.textChannel) return
 
         if (isChannelEmpty(queue.voiceChannel as VoiceChannel)) {
-            await queue.pause()
+            if (!queue.isPaused()) await queue.pause()
             await queue.textChannel
                 .send({
                     embeds: [

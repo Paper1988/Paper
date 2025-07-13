@@ -1,4 +1,5 @@
 import type { PaperClient } from '@/classes/PaperClient'
+import { Logger } from '@/libs/utils/logger'
 import AFKSystem from '@/Structures/Schemas/AFKSystem.js'
 import AntiAlt from '@/Structures/Schemas/AntiAlt.js'
 import GiveawayDB from '@/Structures/Schemas/Giveaway.js'
@@ -21,7 +22,7 @@ export default {
                     .deleteMany({ GuildID: guild.id })
                     .exec()
                     .then((count) => {
-                        console.log(
+                        Logger.info(
                             `[event.guildDelete] 成功從資料庫 ${mongoose.connection.db!.databaseName} 刪除 ${count.deletedCount} 筆資料!`
                         )
                     })
@@ -30,7 +31,7 @@ export default {
                     .deleteMany({ guildId: guild.id })
                     .exec()
                     .then((count) => {
-                        console.log(
+                        Logger.info(
                             `[event.guildDelete] 成功從資料庫 ${mongoose.connection.db!.databaseName} 刪除 ${count.deletedCount} 筆資料!`
                         )
                     })
@@ -46,7 +47,7 @@ export default {
             deleteRecords(GiveawayStats),
             deleteRecords(GiveawayNotification)
         ]).catch((err) => {
-            console.error('[event.guildDelete] 刪除資料庫資料時發生錯誤:', err)
+            Logger.error('[event.guildDelete] 刪除資料庫資料時發生錯誤:', err)
         })
     }
 } satisfies EventType
