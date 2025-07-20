@@ -1,6 +1,6 @@
 import DB from '@/Structures/Schemas/AFKSystem.js'
 import type { PaperClient } from '@/classes/PaperClient.js'
-import { Logger } from '@/libs/utils/logger'
+import { Logger } from '@/libs/utils/logger.js'
 import { EmbedBuilder, Message } from 'discord.js'
 
 export default {
