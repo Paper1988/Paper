@@ -1,5 +1,5 @@
-import type { PaperClient } from '@/classes/PaperClient'
-import { Logger } from '@/libs/utils/logger'
+import type { PaperClient } from '@/classes/PaperClient.js'
+import { Logger } from '@/libs/utils/logger.js'
 import AFKSystem from '@/Structures/Schemas/AFKSystem.js'
 import AntiAlt from '@/Structures/Schemas/AntiAlt.js'
 import GiveawayDB from '@/Structures/Schemas/Giveaway.js'
