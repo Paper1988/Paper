@@ -55,29 +55,39 @@ export default {
         if (!oldState?.channel) return
         if (oldState.member?.id === oldState.client.user.id) return
 
-        const queue = (oldState.client.distube as DisTube).getQueue(oldState.guild.id) as Queue
+        const queue = client.distube.getQueue(oldState.guild.id) as Queue
         if (!queue) return
         if (!queue.voiceChannel) return
         if (!queue.textChannel) return
 
+        const emptyChannelMessages = new Map<string, Message>()
+
         if (isChannelEmpty(queue.voiceChannel as VoiceChannel)) {
             if (!queue.isPaused()) await queue.pause()
-            await queue.textChannel
-                .send({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setColor('Red')
-                            .setDescription(
-                                `${emojis.warning} | 語音頻道已空，<t:${Math.floor((Date.now() + 60 * 1000) / 1000)}:R>將停止播放並退出語音頻道`
-                            )
-                            .setFooter({ text: '• 重新加入語音頻道來維持播放' })
-                    ]
-                })
-                .then((msg: Message) => deleteMessageAfter(msg, 60 * 1000))
+            const sentMsg = await queue.textChannel.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor('Red')
+                        .setDescription(
+                            `${emojis.warning} | 語音頻道已空，<t:${Math.floor((Date.now() + 60 * 1000) / 1000)}:R>將停止播放並退出語音頻道`
+                        )
+                        .setFooter({ text: '• 重新加入語音頻道來維持播放' })
+                ]
+            })
+
+            emptyChannelMessages.set(queue.id, sentMsg)
+            deleteMessageAfter(sentMsg, 60 * 1000)
 
             setEmptyChannelTimer(queue)
         } else {
             if (queue.isPaused()) await queue.resume()
+            const lastMsg = emptyChannelMessages.get(queue.id)
+            if (lastMsg) {
+                try {
+                    await lastMsg.delete()
+                } catch {}
+                emptyChannelMessages.delete(queue.id)
+            }
             if (emptyChannelTimers.has(queue.id)) {
                 clearTimeout(emptyChannelTimers.get(queue.id))
                 emptyChannelTimers.delete(queue.id)
