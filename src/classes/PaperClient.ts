@@ -228,10 +228,9 @@ export class PaperClient extends Client {
 
         return new YouTubePlugin({
             ytdlOptions: {
-                lang: 'zh-TW',
-                playerClients: ['WEB_EMBEDDED', 'IOS', 'ANDROID', 'TV', 'WEB']
+                lang: 'zh-TW'
             },
-            cookies
+            cookies: cookies
         })
     }
 
