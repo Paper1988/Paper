@@ -9,9 +9,8 @@ export default {
         try {
             if (fs.existsSync(cookieFile)) {
                 const cookieData = JSON.parse(fs.readFileSync(cookieFile, 'utf8'))
-                return cookieData.cookies || []
+                return cookieData.cookies
             }
-            return []
         } catch (error) {
             console.error('Error reading cookies:', error)
             return []
