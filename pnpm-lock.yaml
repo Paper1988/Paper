@@ -180,6 +180,9 @@ importers:
       '@types/node':
         specifier: ^22.15.31
         version: 22.15.31
+      '@types/node-fetch':
+        specifier: ^2.6.12
+        version: 2.6.12
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1
