@@ -270,6 +270,7 @@ const deleteMessageAfter = (
     msg: InteractionResponse | Message,
     time = DEFAULT_DELETE_TIME
 ): void => {
+    if (!msg) return
     setTimeout(() => msg.delete(), time)
 }
 

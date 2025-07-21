@@ -1,5 +1,6 @@
 import { loadEvents } from '@/Structures/Handlers/eventHandler.js'
 import Giveaway from '@/Systems/Giveaway.js'
+import { checkAndNotify } from '@/libs/utils'
 import { Logger } from '@/libs/utils/logger.js'
 import Cookie from '@/libs/utils/youtubeCookies.js'
 import type { CommandType } from '@/typings/command.js'
@@ -222,6 +223,8 @@ export class PaperClient extends Client {
      */
     private createYouTubePlugin() {
         const cookies = Cookie.getCookies()
+
+        checkAndNotify(this)
 
         return new YouTubePlugin({
             ytdlOptions: {
