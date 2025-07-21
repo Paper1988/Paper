@@ -15,7 +15,7 @@ async function sendLogToDiscord(logData: any) {
         `【YouTube Cookies 狀態通知】\n` +
         `有效: ${logData.cookiesValid ? '✅' : '❌'}\n` +
         `最後更新: ${logData.lastUpdate}\n` +
-        `登入 Cookie 到期: ${logData.loginCookieExpires}\n` +
+        `登入 Cookie 到期: ${new Date(logData.loginCookieExpires * 1000).toLocaleString('zh-TW')}\n` +
         `時間: ${logData.timestamp}`
     await fetch(DISCORD_WEBHOOK_URL, {
         method: 'POST',
