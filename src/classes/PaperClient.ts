@@ -1,6 +1,6 @@
 import { loadEvents } from '@/Structures/Handlers/eventHandler.js'
 import Giveaway from '@/Systems/Giveaway.js'
-import { checkAndNotify } from '@/libs/utils'
+import { checkAndNotify } from '@/libs/utils/checkCookies.js'
 import { Logger } from '@/libs/utils/logger.js'
 import Cookie from '@/libs/utils/youtubeCookies.js'
 import type { CommandType } from '@/typings/command.js'
