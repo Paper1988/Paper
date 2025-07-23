@@ -34,7 +34,7 @@
         },
         {
             "name": "__Secure-1PSIDCC",
-            "value": "AKEyXzUIdnfvrnxoE-aOijGhy_JbIAiYQopWTMlmOL36hZIq63O9JGrVC_4MeoIzcP8XkC9_Ow",
+            "value": "AKEyXzWRDk5rSZWahr839lAlKSMret8DRvQZk9bVXM60Y29qWHBQUyIzoEkoxY4_xhviY5HAJA",
             "domain": ".youtube.com",
             "hostOnly": false,
             "path": "/",
@@ -44,13 +44,13 @@
             "session": false,
             "firstPartyDomain": "",
             "partitionKey": null,
-            "expirationDate": 1784722744,
+            "expirationDate": 1784785383,
             "storeId": "firefox-default",
             "id": 3
         },
         {
             "name": "__Secure-1PSIDTS",
-            "value": "sidts-CjIB5H03P5xx-0vNs5iz73ZsVSnQKHjwDar21Z5LrLmZOyUu6NW_3DZ6AUzKEChSrmVZuBAA",
+            "value": "sidts-CjIB5H03P_sglwqYVHwQzFAfJKYMiJ6Vwsu4Yznde09KGKpe2Gcqb_ThvQwS4ySYIxdliRAA",
             "domain": ".youtube.com",
             "hostOnly": false,
             "path": "/",
@@ -60,7 +60,7 @@
             "session": false,
             "firstPartyDomain": "",
             "partitionKey": null,
-            "expirationDate": 1784722744,
+            "expirationDate": 1784785368,
             "storeId": "firefox-default",
             "id": 4
         },
@@ -98,7 +98,7 @@
         },
         {
             "name": "__Secure-3PSIDCC",
-            "value": "AKEyXzVSQRNfosrYnxH7iYmCrj6h6xJF78sX1zLR85ZPGZDnmDdcEgKzSQPhpqkdaM37pQVI",
+            "value": "AKEyXzUHWhI1u-BMFQaQ76j1W1YRLQuydPipJZ_bpmwhkitsqF5dDir6iCKiEySxq6ZLBHOw",
             "domain": ".youtube.com",
             "hostOnly": false,
             "path": "/",
@@ -108,13 +108,13 @@
             "session": false,
             "firstPartyDomain": "",
             "partitionKey": null,
-            "expirationDate": 1784722744,
+            "expirationDate": 1784785383,
             "storeId": "firefox-default",
             "id": 7
         },
         {
             "name": "__Secure-3PSIDTS",
-            "value": "sidts-CjIB5H03P5xx-0vNs5iz73ZsVSnQKHjwDar21Z5LrLmZOyUu6NW_3DZ6AUzKEChSrmVZuBAA",
+            "value": "sidts-CjIB5H03P_sglwqYVHwQzFAfJKYMiJ6Vwsu4Yznde09KGKpe2Gcqb_ThvQwS4ySYIxdliRAA",
             "domain": ".youtube.com",
             "hostOnly": false,
             "path": "/",
@@ -124,13 +124,13 @@
             "session": false,
             "firstPartyDomain": "",
             "partitionKey": null,
-            "expirationDate": 1784722744,
+            "expirationDate": 1784785368,
             "storeId": "firefox-default",
             "id": 8
         },
         {
             "name": "__Secure-ROLLOUT_TOKEN",
-            "value": "CImN882gr8OypwEQwICG1IvOjgMY7MLJ1IvOjgM%3D",
+            "value": "CImN882gr8OypwEQwICG1IvOjgMY_rTs6NDQjgM%3D",
             "domain": ".youtube.com",
             "hostOnly": false,
             "path": "/",
@@ -140,7 +140,7 @@
             "session": false,
             "firstPartyDomain": "",
             "partitionKey": null,
-            "expirationDate": 1768657698,
+            "expirationDate": 1768744984,
             "storeId": "firefox-default",
             "id": 9
         },
@@ -178,7 +178,7 @@
         },
         {
             "name": "LOGIN_INFO",
-            "value": "AFmmF2swRAIgL0fXZZjNX_R0CD_ztzHOLhRA4nGgDsps6pUfLXwR4VICICW6okRe4o70oejD1-7OxhWRE8gQyZxtTB9_yB7QEkcd:QUQ3MjNmeDZMeEx0aUJvZUctMW5Hb0djT0kxUUQ5RmJEVUg5SG5OamUwTTR4azJ1SU5oTlpTR1A2SHAtQ0ZJWFRuX2pzekNWN3VwMHM1ZWIxbWwxWU1YOEtsNXNvT1Q3cldhSkYzcERqeFhjVGU0UVcyS2VsZjFmRFR5T1V0Z1l3cXNybEZpZzg3RURDY3pwUGlSS1cwZTE0b09lUEpDQ29R",
+            "value": "AFmmF2swRgIhALbB-_1ptRvn0uXP_By1W-2fcFZMlEi3WgGWKXc6rsQbAiEAvVaHvMx2GvBwB5JpS4dMkXfS63nm5aawFYTwyAWWHF0:QUQ3MjNmeTFxZWdod0lQU1BvV0lTMVhRb1ZITDVWQzZ4UnhYc1l2MFp3ZUxWTkpKdHZPV3g0RV80WUFqNlYxRl80djNVUm53c2JpVmRpUWhMUC1heExlY3ZYR1JSaHJJLS1Lb0NlcFI5aFBnamRHeVMtUnFaaHlmdlpDWXpzYVRRMmhta2NULVlFU0s4bWZyOTc4N3ZnZUdSaVNZbENKV1dn",
             "domain": ".youtube.com",
             "hostOnly": false,
             "path": "/",
@@ -188,13 +188,13 @@
             "session": false,
             "firstPartyDomain": "",
             "partitionKey": null,
-            "expirationDate": 1787665699,
+            "expirationDate": 1787809379,
             "storeId": "firefox-default",
             "id": 12
         },
         {
             "name": "PREF",
-            "value": "f6=40000000&tz=Asia.Taipei",
+            "value": "f6=40000000&tz=Asia.Taipei&f5=30000&f7=100",
             "domain": ".youtube.com",
             "hostOnly": false,
             "path": "/",
@@ -204,7 +204,7 @@
             "session": false,
             "firstPartyDomain": "",
             "partitionKey": null,
-            "expirationDate": 1787746743,
+            "expirationDate": 1787809382,
             "storeId": "firefox-default",
             "id": 13
         },
@@ -242,7 +242,7 @@
         },
         {
             "name": "SIDCC",
-            "value": "AKEyXzWyzuoiScNUOA9cX11nqOwaZfNvxW2fzC6RtdPPk20P8aOZ_S6ODCerL7cmkWEkJKxTpg",
+            "value": "AKEyXzVtUVz7MlpR3uD6aFk6KIKR60AN-S6_7vMHt_9nZ31IIPhwnmRP9Olg_x6D8vecCliKJw",
             "domain": ".youtube.com",
             "hostOnly": false,
             "path": "/",
@@ -252,7 +252,7 @@
             "session": false,
             "firstPartyDomain": "",
             "partitionKey": null,
-            "expirationDate": 1784722744,
+            "expirationDate": 1784785383,
             "storeId": "firefox-default",
             "id": 16
         },
@@ -273,8 +273,8 @@
             "id": 17
         },
         {
-            "name": "ST-uwicob",
-            "value": "session_logininfo=AFmmF2swRAIgL0fXZZjNX_R0CD_ztzHOLhRA4nGgDsps6pUfLXwR4VICICW6okRe4o70oejD1-7OxhWRE8gQyZxtTB9_yB7QEkcd%3AQUQ3MjNmeDZMeEx0aUJvZUctMW5Hb0djT0kxUUQ5RmJEVUg5SG5OamUwTTR4azJ1SU5oTlpTR1A2SHAtQ0ZJWFRuX2pzekNWN3VwMHM1ZWIxbWwxWU1YOEtsNXNvT1Q3cldhSkYzcERqeFhjVGU0UVcyS2VsZjFmRFR5T1V0Z1l3cXNybEZpZzg3RURDY3pwUGlSS1cwZTE0b09lUEpDQ29R",
+            "name": "ST-l3hjtt",
+            "value": "session_logininfo=AFmmF2swRgIhALbB-_1ptRvn0uXP_By1W-2fcFZMlEi3WgGWKXc6rsQbAiEAvVaHvMx2GvBwB5JpS4dMkXfS63nm5aawFYTwyAWWHF0%3AQUQ3MjNmeTFxZWdod0lQU1BvV0lTMVhRb1ZITDVWQzZ4UnhYc1l2MFp3ZUxWTkpKdHZPV3g0RV80WUFqNlYxRl80djNVUm53c2JpVmRpUWhMUC1heExlY3ZYR1JSaHJJLS1Lb0NlcFI5aFBnamRHeVMtUnFaaHlmdlpDWXpzYVRRMmhta2NULVlFU0s4bWZyOTc4N3ZnZUdSaVNZbENKV1dn",
             "domain": ".youtube.com",
             "hostOnly": false,
             "path": "/",
@@ -284,13 +284,13 @@
             "session": false,
             "firstPartyDomain": "",
             "partitionKey": null,
-            "expirationDate": 1753186749,
+            "expirationDate": 1753249387,
             "storeId": "firefox-default",
             "id": 18
         },
         {
-            "name": "ST-xuwub9",
-            "value": "session_logininfo=AFmmF2swRAIgL0fXZZjNX_R0CD_ztzHOLhRA4nGgDsps6pUfLXwR4VICICW6okRe4o70oejD1-7OxhWRE8gQyZxtTB9_yB7QEkcd%3AQUQ3MjNmeDZMeEx0aUJvZUctMW5Hb0djT0kxUUQ5RmJEVUg5SG5OamUwTTR4azJ1SU5oTlpTR1A2SHAtQ0ZJWFRuX2pzekNWN3VwMHM1ZWIxbWwxWU1YOEtsNXNvT1Q3cldhSkYzcERqeFhjVGU0UVcyS2VsZjFmRFR5T1V0Z1l3cXNybEZpZzg3RURDY3pwUGlSS1cwZTE0b09lUEpDQ29R",
+            "name": "ST-tladcw",
+            "value": "session_logininfo=AFmmF2swRgIhALbB-_1ptRvn0uXP_By1W-2fcFZMlEi3WgGWKXc6rsQbAiEAvVaHvMx2GvBwB5JpS4dMkXfS63nm5aawFYTwyAWWHF0%3AQUQ3MjNmeTFxZWdod0lQU1BvV0lTMVhRb1ZITDVWQzZ4UnhYc1l2MFp3ZUxWTkpKdHZPV3g0RV80WUFqNlYxRl80djNVUm53c2JpVmRpUWhMUC1heExlY3ZYR1JSaHJJLS1Lb0NlcFI5aFBnamRHeVMtUnFaaHlmdlpDWXpzYVRRMmhta2NULVlFU0s4bWZyOTc4N3ZnZUdSaVNZbENKV1dn",
             "domain": ".youtube.com",
             "hostOnly": false,
             "path": "/",
@@ -300,7 +300,7 @@
             "session": false,
             "firstPartyDomain": "",
             "partitionKey": null,
-            "expirationDate": 1753186749,
+            "expirationDate": 1753249388,
             "storeId": "firefox-default",
             "id": 19
         },
@@ -316,7 +316,7 @@
             "session": false,
             "firstPartyDomain": "",
             "partitionKey": null,
-            "expirationDate": 1768738743,
+            "expirationDate": 1768801380,
             "storeId": "firefox-default",
             "id": 20
         },
@@ -332,9 +332,24 @@
             "session": false,
             "firstPartyDomain": "",
             "partitionKey": null,
-            "expirationDate": 1768738743,
+            "expirationDate": 1768801380,
             "storeId": "firefox-default",
             "id": 21
+        },
+        {
+            "name": "wide",
+            "value": "1",
+            "domain": ".youtube.com",
+            "hostOnly": false,
+            "path": "/",
+            "secure": false,
+            "httpOnly": false,
+            "sameSite": "unspecified",
+            "session": true,
+            "firstPartyDomain": "",
+            "partitionKey": null,
+            "storeId": "firefox-default",
+            "id": 22
         },
         {
             "name": "YSC",
@@ -349,7 +364,7 @@
             "firstPartyDomain": "",
             "partitionKey": null,
             "storeId": "firefox-default",
-            "id": 22
+            "id": 23
         }
     ]
 }
