@@ -1,4 +1,4 @@
-import { deleteMessageAfter } from '@/Systems/Music'
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import type { PaperClient } from '@/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
 import type { SubCommandType } from '@/typings/command.js'

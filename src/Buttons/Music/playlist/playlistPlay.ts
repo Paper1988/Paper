@@ -1,4 +1,4 @@
-import { deleteMessageAfter } from '@/Systems/Music'
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import emojis from '@/libs/emoji/emoji.js'
 import type { ButtonType } from '@/typings/component.js'
 import { ButtonInteraction } from 'discord.js'
