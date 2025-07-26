@@ -1,13 +1,17 @@
-import Playlist from '@/Structures/Schemas/Playlist.js'
-import { deleteMessageAfter } from '@/Systems/Music.js'
+import { deleteMessageAfter } from '@/Systems/Music'
 import emojis from '@/libs/emoji/emoji.js'
 import type { ButtonType } from '@/typings/component.js'
-import { ButtonInteraction, EmbedBuilder, GuildMember, MessageFlags, TextChannel } from 'discord.js'
+import { ButtonInteraction } from 'discord.js'
 
 export default {
     id: 'playlist-play',
     async execute(interaction: ButtonInteraction) {
-        try {
+        return await interaction
+            .reply({
+                content: `${emojis.outage} | 音樂指令目前修復中！\n-# 造成不便，敬請見諒`
+            })
+            .then(deleteMessageAfter)
+        /* try {
             const [_, userId, playlistName] = interaction.customId.split(':')
             const member = interaction.member! as GuildMember
             const VoiceChannel = member.voice.channel!
@@ -108,6 +112,6 @@ export default {
                     content: `${emojis.outage} | 播放播放清單時發生錯誤`
                 })
                 .then((msg) => deleteMessageAfter(msg, 10 * 1000))
-        }
+        } */
     }
 } satisfies ButtonType
