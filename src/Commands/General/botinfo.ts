@@ -2,7 +2,6 @@ import emojis from '@/libs/emoji/emoji.js'
 import {
     ChannelType,
     ChatInputCommandInteraction,
-    Client,
     EmbedBuilder,
     MessageFlags,
     SlashCommandBuilder,
@@ -11,6 +10,7 @@ import {
     version
 } from 'discord.js'
 
+import { PaperClient } from '@/classes/PaperClient.js'
 import mongoose from 'mongoose'
 import os from 'os'
 
@@ -22,7 +22,7 @@ export default {
         .setDescription('View bot information')
         .setDescriptionLocalization('zh-TW', '查看機器人資訊')
         .setDescriptionLocalization('ja', 'ボットの情報を表示'),
-    async execute(interaction: ChatInputCommandInteraction, client: Client) {
+    async execute(interaction: ChatInputCommandInteraction, client: PaperClient) {
         const formatter = new Intl.ListFormat('en-GB', {
             style: 'long',
             type: 'conjunction'
