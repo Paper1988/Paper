@@ -3,7 +3,7 @@ import emojis from '@/libs/emoji/emoji.js'
 import { clearPlayer, deleteMessageAfter, updateMusicPlayerStatus } from '@/Systems/Music.js'
 import type { EventType } from '@/typings/event.js'
 import { EmbedBuilder, Events, Message, VoiceChannel, VoiceState } from 'discord.js'
-import { DisTube, Queue } from 'distube'
+import { Queue } from 'distube'
 
 const emptyChannelTimers = new Map()
 
@@ -40,12 +40,6 @@ const setEmptyChannelTimer = (queue: Queue) => {
     }, 60 * 1000)
 
     emptyChannelTimers.set(queue.id, timer)
-}
-
-declare module 'discord.js' {
-    interface Client {
-        distube: DisTube
-    }
 }
 
 export default {
