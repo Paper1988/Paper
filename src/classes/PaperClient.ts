@@ -35,9 +35,9 @@ export class PaperClient extends Client {
     override modals: Collection<string, ModalType> = new Collection<string, ModalType>()
     override selectMenus: Collection<string, MenuType> = new Collection<string, MenuType>()
     override contextMenus = new Collection<string, any>()
-    override distube!: DisTube
     private errorWebhook: WebhookClient | null = null
     private apiServer: any = null
+    distube!: DisTube
 
     constructor(options: ClientOptions) {
         super(options)
