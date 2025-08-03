@@ -52,13 +52,12 @@ export default {
                 )
                 .setTimestamp()
 
-            return await createAndDeleteWebhook(logEmbed) // Send the logs to the logs channel
+            return await createAndDeleteWebhook(logEmbed)
         }
 
         async function createAndDeleteWebhook(embedName: EmbedBuilder) {
             await (logChannel! as TextChannel)
                 .createWebhook({
-                    // Creates a webhook in the logging channel specified before
                     name: member.guild.name,
                     avatar: member.guild.iconURL(),
                     reason: '自動踢出小號系統'

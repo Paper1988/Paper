@@ -9,8 +9,8 @@ Sentry.init({
     environment: process.env.NODE_ENV || 'dev'
 })
 
-Logger.info('>>> 正在初始化機器人...')
-Logger.info(`>>> Node.js 版本: ${process.version}`)
+Logger.info('正在初始化機器人...')
+Logger.info(`Node.js 版本: ${process.version}`)
 
 let client: PaperClient
 
@@ -33,8 +33,6 @@ try {
         ]
     })
 
-    Logger.info('已建立 Discord Client 實例')
-
     client.commands = new Collection()
     client.buttons = new Collection()
     client.events = new Collection()
@@ -43,10 +41,8 @@ try {
     client.selectMenus = new Collection()
     client.contextMenus = new Collection()
 
-    Logger.info('已初始化集合')
+    Logger.info('已建立 Discord Client 實例')
 
-    // 初始化 DisTube
-    Logger.info('正在初始化 DisTube...')
     client.initDistube()
     Logger.info('DisTube 初始化完成')
 

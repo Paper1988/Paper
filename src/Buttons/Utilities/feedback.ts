@@ -12,7 +12,7 @@ export default {
         const fixed = new EmbedBuilder()
             .setTitle('Bug已解決')
             .setDescription(
-                `<:exclamation:1265560367040299159> | 正如標題所述，你在 \`${Report?.createdAt?.toLocaleString('zh-Hant-TW')}\` 回報的Bug已經被開發人員修復，再次感謝你的回報！\n-# 如果還有問題，歡迎隨時回報`
+                `<:exclamation:1265560367040299159> | 正如標題所述，你在 \`${Report?.createdAt?.toLocaleString('zh-Hant-TW', { timeZone: 'Asia/Taipei' })}\` 回報的Bug已經被開發人員修復，再次感謝你的回報！\n-# 如果還有問題，歡迎隨時回報`
             )
             .setColor('Blurple')
             .setFooter({

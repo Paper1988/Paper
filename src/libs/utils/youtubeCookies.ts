@@ -9,9 +9,8 @@ export default {
         try {
             if (fs.existsSync(cookieFile)) {
                 const cookieData = JSON.parse(fs.readFileSync(cookieFile, 'utf8'))
-                return cookieData.cookies || []
+                return cookieData.cookies
             }
-            return []
         } catch (error) {
             console.error('Error reading cookies:', error)
             return []
@@ -23,7 +22,7 @@ export default {
             const cookieData = {
                 cookies: cookies,
                 updatedAt: new Date().toISOString(),
-                expiresAt: new Date(Date.now() / 1000 + 30 * 24 * 60 * 60).toISOString() // 30天後過期，轉換為秒
+                expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30天後過期
             }
             fs.writeFileSync(cookieFile, JSON.stringify(cookieData, null, 2))
             return true

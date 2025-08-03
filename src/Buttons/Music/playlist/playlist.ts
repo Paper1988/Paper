@@ -1,5 +1,6 @@
 import Playlist from '@/Structures/Schemas/Playlist.js'
 import { deleteMessageAfter } from '@/Systems/Music.js'
+import { PaperClient } from '@/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
 import type { ButtonType } from '@/typings/component'
 import {
@@ -13,11 +14,11 @@ import type { Queue } from 'distube'
 
 export default {
     id: 'playlist',
-    async execute(interaction: ButtonInteraction) {
+    async execute(interaction: ButtonInteraction, client: PaperClient) {
         const { customId } = interaction
         const [_, action] = customId.split(':')
 
-        const queue = interaction.client.distube.getQueue(interaction.guildId!) as Queue
+        const queue = client.distube.getQueue(interaction.guildId!) as Queue
         const currentSong = queue.songs[0]
 
         if (!queue || !currentSong) {

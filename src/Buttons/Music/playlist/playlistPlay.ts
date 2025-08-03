@@ -1,13 +1,19 @@
 import Playlist from '@/Structures/Schemas/Playlist.js'
 import { deleteMessageAfter } from '@/Systems/Music.js'
+import { PaperClient } from '@/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
 import type { ButtonType } from '@/typings/component.js'
 import { ButtonInteraction, EmbedBuilder, GuildMember, MessageFlags, TextChannel } from 'discord.js'
 
 export default {
     id: 'playlist-play',
-    async execute(interaction: ButtonInteraction) {
-        try {
+    async execute(interaction: ButtonInteraction, client: PaperClient) {
+        return await interaction
+            .reply({
+                content: `${emojis.outage} | 音樂指令目前修復中！\n-# 造成不便，敬請見諒`
+            })
+            .then(deleteMessageAfter)
+        /* try {
             const [_, userId, playlistName] = interaction.customId.split(':')
             const member = interaction.member! as GuildMember
             const VoiceChannel = member.voice.channel!
@@ -73,12 +79,12 @@ export default {
                 content: `${emojis.discord_loading} | 正在載入播放清單 **${playlistName}** 中的 ${playlist.songs.length} 首歌曲...`
             })
 
-            const NewPlaylist = await interaction.client.distube.createCustomPlaylist(
+            const NewPlaylist = await client.distube.createCustomPlaylist(
                 playlist.songs.map((song) => song.url).filter((url): url is string => url != null),
                 { name: playlistName }
             )
 
-            await interaction.client.distube.play(member.voice.channel, NewPlaylist, {
+            await client.distube.play(member.voice.channel, NewPlaylist, {
                 member: member,
                 textChannel: interaction.channel! as TextChannel,
                 metadata: { interaction }
@@ -108,6 +114,6 @@ export default {
                     content: `${emojis.outage} | 播放播放清單時發生錯誤`
                 })
                 .then((msg) => deleteMessageAfter(msg, 10 * 1000))
-        }
+        } */
     }
 } satisfies ButtonType

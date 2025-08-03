@@ -49,9 +49,9 @@ export default {
         registerDistubeEvents(client)
 
         try {
-            await client.startFastify()
+            await client.startApiServer()
         } catch (error) {
-            Logger.error('Failed to start Fastify server:', error)
+            Logger.error('Failed to start API server:', error)
         }
 
         mongoose.set('strictQuery', false)
@@ -105,7 +105,7 @@ export default {
                     Logger.info(`MongoDB 健康檢查通過 (延遲: ${healthStatus.details.ping}ms)`)
                 }
             },
-            30 * 60 * 1000
+            24 * 60 * 60 * 1000
         )
 
         client.once('shutdown', () => {

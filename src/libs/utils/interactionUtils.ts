@@ -1,4 +1,4 @@
-import { type Interaction, MessageFlags, type PermissionResolvable } from 'discord.js'
+import { MessageFlags, type Interaction, type PermissionResolvable } from 'discord.js'
 
 // 配置常量
 export const CONFIG = {
@@ -12,7 +12,7 @@ export const CONFIG = {
         MENU_NOT_FOUND: '<:outage:1265561329528471613> | 找不到該下拉選單',
         CONTEXT_MENU_NOT_FOUND: '<:outage:1265561329528471613> | 找不到該右鍵選單',
         UNKNOWN_ERROR: '<:outage:1265561329528471613> | 發生未知錯誤，請協助回報!',
-        INTERACTION_EXPIRED: '<:outage:1265561329528471613> | 訊息被流量怪獸吃掉了，請稍後再試~'
+        INTERACTION_EXPIRED: '<:outage:1265561329528471613> | 訊息被流量怪獸吃掉了，請稍後再試'
     },
     BUTTON_PREFIXES: ['mcstats', 'report', 'rps_', 'approve_', 'unban', 'TicTacToe_']
 } as const

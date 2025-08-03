@@ -7,15 +7,16 @@ import {
 } from '@/Systems/Music.js'
 import { PaperClient } from '@/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
+import { Logger } from '@/libs/utils/logger.js'
 import { EmbedBuilder, Message } from 'discord.js'
 import { DisTubeError, Events, Playlist, Queue, RepeatMode, Song } from 'distube'
 
-// 使用環境變數或從配置文件載入
 const DEBUG_WEBHOOK_ID = process.env.DEBUG_WEBHOOK_ID || '1344304470615654430'
 const DEBUG_WEBHOOK_TOKEN =
     process.env.DEBUG_WEBHOOK_TOKEN ||
     '***REMOVED***'
 
+// 擴充Queue的屬性
 declare module 'distube' {
     interface Queue {
         musicControllerMsgId: string
@@ -46,7 +47,7 @@ async function sendQueueMessage(
         deleteMessageAfter(msg, deleteAfterMs)
         return msg
     } catch (err) {
-        console.error('發送隊列訊息時發生錯誤:', err)
+        Logger.error('發送隊列訊息時發生錯誤:', err)
         return null
     }
 }
@@ -55,7 +56,7 @@ async function sendQueueMessage(
  * 統一的音樂錯誤處理
  */
 function handleMusicError(error: any, queue?: Queue, context = '音樂播放時發生錯誤') {
-    console.error(`${context}:`, error)
+    Logger.error(`${context}:`, error)
 
     if (queue?.textChannel) {
         sendQueueMessage(queue, `${emojis.outage} | ${context}，請協助回報！`, 'Red')
@@ -80,7 +81,7 @@ function classifyMusicError(error: any, song?: Song) {
                 '建議：\n' +
                 '1. 嘗試使用歌曲名稱直接搜尋\n' +
                 '2. 使用其他音樂平台的連結',
-            footer: '試試用 YouTube 或直接搜尋歌名'
+            footer: '試試直接搜尋歌名'
         }
     }
 
@@ -143,6 +144,7 @@ const eventHandlers = {
      */
     addList: (queue: Queue, playlist: Playlist) => {
         try {
+            if (!playlist.songs[0]) return
             const { embeds } = generateMusicPlayerStatus(queue, playlist.songs[0])
             embeds[0]!.data.fields = undefined
 
@@ -184,7 +186,7 @@ const eventHandlers = {
                     .then((msg: Message) => deleteMessageAfter(msg, 30 * 1000))
             }
         } catch (finalError) {
-            console.error('處理錯誤事件時發生錯誤:', finalError)
+            Logger.error('處理錯誤事件時發生錯誤:', finalError)
         }
     },
 
@@ -301,7 +303,7 @@ const eventHandlers = {
                 embeds: [new EmbedBuilder().setDescription(`\`\`\`\n${msg}\n\`\`\``)]
             })
         } catch (error) {
-            console.error('發送調試消息時發生錯誤:', error)
+            Logger.error('發送調試消息時發生錯誤:', error)
         }
     },
 
@@ -329,7 +331,7 @@ const eventHandlers = {
  * 這個函數應該在 Bot ready 時被呼叫
  */
 export function registerDistubeEvents(client: PaperClient): void {
-    console.log('註冊 DisTube 事件處理器...')
+    Logger.info('註冊 DisTube 事件處理器...')
 
     client.distube
         .on(Events.PLAY_SONG, eventHandlers.playSong)
@@ -345,5 +347,5 @@ export function registerDistubeEvents(client: PaperClient): void {
         .on(Events.FFMPEG_DEBUG, eventHandlers.ffmpegDebug)
         .on(Events.DISCONNECT, eventHandlers.disconnect)
 
-    console.log('DisTube 事件處理器註冊完成')
+    Logger.info('DisTube 事件處理器註冊完成')
 }

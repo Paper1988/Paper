@@ -1,14 +1,31 @@
 import { PaperClient } from '@/classes/PaperClient.js'
 import youtubeCookies from '@/libs/utils/youtubeCookies.js'
-import fs from 'fs'
-import path from 'path'
+// 移除 fs, path
+import fetch from 'node-fetch'
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname)
-const logFile = path.join(__dirname, 'logs/cookieCheck.log')
-const logRetentionDays = 30
+// 你可以在這裡填入你的 Discord Webhook URL
+const DISCORD_WEBHOOK_URL =
+    '***REMO$'
 
 /**
- * 檢查 Cookie 狀態，寫入 Log，並通知用戶
+ * 發送 logData 到 Discord Webhook
+ */
+async function sendLogToDiscord(logData: any) {
+    const content =
+        `【YouTube Cookies 狀態通知】\n` +
+        `有效: ${logData.cookiesValid ? '✅' : '❌'}\n` +
+        `最後更新: ${logData.lastUpdate}\n` +
+        `登入 Cookie 到期: ${new Date(logData.loginCookieExpires * 1000).toLocaleString('zh-TW')}\n` +
+        `時間: ${logData.timestamp}`
+    await fetch(DISCORD_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content })
+    })
+}
+
+/**
+ * 檢查 Cookie 狀態，發送到 Discord Webhook，並通知用戶
  */
 async function checkAndNotify(client: PaperClient) {
     const status = youtubeCookies.getStatus() // 取得 Cookies 狀態
@@ -19,36 +36,13 @@ async function checkAndNotify(client: PaperClient) {
         loginCookieExpires: status.loginCookieExpires || '未知'
     }
 
-    // **格式化 Log 訊息**
-    fs.appendFileSync(logFile, JSON.stringify(logData, null, 2) + ',\n')
+    // 發送到 Discord Webhook
+    await sendLogToDiscord(logData)
     console.table(logData) // 輸出整齊表格
 
-    // **通知使用者**
+    // 通知使用者
     await youtubeCookies.notifyExpiration(client, status)
-
-    // **清理舊 Log**
-    cleanOldLogs()
 }
 
-/**
- * 清理超過 30 天的 Log
- */
-function cleanOldLogs() {
-    if (fs.existsSync(logFile)) {
-        const logs = fs.readFileSync(logFile, 'utf8').split('},\n')
-        const filteredLogs = logs.filter((log) => {
-            const match = log.match(/"timestamp":\s*"([^"]+)"/)
-            if (match) {
-                const logDate = new Date(match[1]!)
-                return Date.now() - logDate.getTime() < logRetentionDays * 24 * 60 * 60 * 1000
-            }
-            return false
-        })
-
-        fs.writeFileSync(logFile, filteredLogs.join('},\n') + '},\n')
-        console.log('✅ 已清理超過 30 天的 Log 記錄')
-    }
-}
-
-// **匯出函式，讓 ready 事件使用**
+// 匯出函式，讓 ready 事件使用
 export { checkAndNotify }

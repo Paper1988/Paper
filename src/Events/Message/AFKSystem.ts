@@ -1,5 +1,6 @@
 import DB from '@/Structures/Schemas/AFKSystem.js'
 import type { PaperClient } from '@/classes/PaperClient.js'
+import { Logger } from '@/libs/utils/logger.js'
 import { EmbedBuilder, Message } from 'discord.js'
 
 export default {
@@ -14,7 +15,7 @@ export default {
             UserID: message.author.id
         })
             .exec()
-            .catch(() => {})
+            .catch((err) => Logger.warn("Can't find AFK database", err))
 
         if (!DB) return
 
