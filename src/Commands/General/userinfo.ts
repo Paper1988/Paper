@@ -7,7 +7,7 @@ import {
     SlashCommandBuilder
 } from 'discord.js'
 
-import { profileImage } from 'discord-arts'
+import { Profile } from 'discord-arts'
 
 function addSuffix(number: number) {
     if (number % 100 >= 11 && number % 100 <= 13) return '第' + number + '位'
@@ -83,7 +83,7 @@ export default {
         try {
             const fetchedMembers = await interaction.guild!.members.fetch()
 
-            const profileBuffer = await profileImage(member!.id)
+            const profileBuffer = await Profile(member!.id)
 
             const imageAttachment = new AttachmentBuilder(profileBuffer, {
                 name: 'profile.png'
