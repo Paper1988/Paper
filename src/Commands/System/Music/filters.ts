@@ -40,7 +40,7 @@ export default {
                 content: `<:linkremove:1265560814769672222> | 成功移除 \`${filter}\` 過濾器\n${msg}`
             })
         } else {
-            await filters.add(filter)
+            filters.add(filter)
             return interaction.reply({
                 content: `<:linkadd:1265560789503311915> | 成功增加 \`${filter}\` 過濾器\n${msg}`
             })

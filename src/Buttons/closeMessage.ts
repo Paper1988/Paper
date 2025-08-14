@@ -4,7 +4,6 @@ import { ButtonInteraction } from 'discord.js'
 export default {
     id: 'close-message',
     async execute(interaction: ButtonInteraction) {
-        // 嘗試刪除訊息，如果沒有權限則隱藏
         try {
             await interaction.message.delete()
         } catch {
