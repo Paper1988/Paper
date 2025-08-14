@@ -8,12 +8,12 @@ import { ButtonInteraction, EmbedBuilder, GuildMember, MessageFlags, TextChannel
 export default {
     id: 'playlist-play',
     async execute(interaction: ButtonInteraction, client: PaperClient) {
-        return await interaction
+        /* return await interaction
             .reply({
                 content: `${emojis.outage} | 音樂指令目前修復中！\n-# 造成不便，敬請見諒`
             })
-            .then(deleteMessageAfter)
-        /* try {
+            .then(deleteMessageAfter) */
+        try {
             const [_, userId, playlistName] = interaction.customId.split(':')
             const member = interaction.member! as GuildMember
             const VoiceChannel = member.voice.channel!
@@ -24,7 +24,7 @@ export default {
                         content: `${emojis.warning} | 請先加入語音頻道`,
                         flags: MessageFlags.Ephemeral
                     })
-                    .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                    .then(deleteMessageAfter)
             }
 
             const permissions = member.voice.channel.permissionsFor(interaction.client.user)!
@@ -42,7 +42,7 @@ export default {
                         ],
                         flags: MessageFlags.Ephemeral
                     })
-                    .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                    .then(deleteMessageAfter)
             }
 
             const playlist = await Playlist.findOne({
@@ -56,7 +56,7 @@ export default {
                         content: `${emojis.warning} | 找不到指定的播放清單`,
                         flags: MessageFlags.Ephemeral
                     })
-                    .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                    .then(deleteMessageAfter)
             }
 
             if (playlist.isPrivate && playlist.userId !== interaction.user.id) {
@@ -72,7 +72,7 @@ export default {
                         content: `${emojis.warning} | 播放清單是空的`,
                         flags: MessageFlags.Ephemeral
                     })
-                    .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                    .then(deleteMessageAfter)
             }
 
             await interaction.reply({
@@ -97,23 +97,22 @@ export default {
                 .editReply({
                     content: `${emojis.correct} | 已將播放清單 **${playlistName}** 中的 ${playlist.songs.length} 首歌曲加入播放佇列`
                 })
-                .then(() => setTimeout(() => interaction.deleteReply(), 10 * 1000))
+                .then(deleteMessageAfter)
         } catch (error: any) {
             console.error('播放播放清單時發生錯誤:', error)
-            // 如果是播放源錯誤，給出更具體的提示
             if (error.message?.includes('playFromSource')) {
                 return await interaction
                     .editReply({
                         content: `${emojis.outage} | 無法播放歌曲，可能是播放清單中的歌曲連結已失效`
                     })
-                    .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                    .then(deleteMessageAfter)
             }
 
             await interaction
                 .editReply({
                     content: `${emojis.outage} | 播放播放清單時發生錯誤`
                 })
-                .then((msg) => deleteMessageAfter(msg, 10 * 1000))
-        } */
+                .then(deleteMessageAfter)
+        }
     }
 } satisfies ButtonType
