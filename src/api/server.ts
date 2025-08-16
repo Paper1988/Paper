@@ -490,7 +490,11 @@ export class ApiServer {
             // 清理連接
             connection.socket.on('close', () => {
                 clearInterval(interval)
-                this.client.distube.removeAllListeners()
+                this.client.distube
+                    .off(Events.PLAY_SONG, handleMusicEvent)
+                    .off(Events.ADD_SONG, handleMusicEvent)
+                    .off(Events.FINISH_SONG, handleMusicEvent)
+                    .off(Events.DISCONNECT, handleMusicEvent)
             })
         })
     }
