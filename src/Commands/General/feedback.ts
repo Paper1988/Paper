@@ -81,7 +81,14 @@ export default {
         const picture = interaction.options.getAttachment('picture') || ''
         const guild = interaction.guild!
 
-        const sch = client.channels.cache.get('975253353913254029') as TextChannel
+        const feedbackChannelId = process.env.FEEDBACK_CHANNEL_ID
+        if (!feedbackChannelId) {
+            return await interaction.reply({
+                content: '<:warning:1265562532857380936> | 系統配置錯誤，請聯繫管理員。',
+                flags: MessageFlags.Ephemeral
+            })
+        }
+        const sch = client.channels.cache.get(feedbackChannelId) as TextChannel
 
         const sent_m = new EmbedBuilder()
             .setTitle('<:correct:1265560254708711467> | 你的回報已成功提交!')

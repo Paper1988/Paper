@@ -487,10 +487,15 @@ export class ApiServer {
                 .on(Events.FINISH_SONG, handleMusicEvent)
                 .on(Events.DISCONNECT, handleMusicEvent)
 
-            // 清理連接
+            // 清理連接 - 只移除這個連接的特定事件監聽器
             connection.socket.on('close', () => {
                 clearInterval(interval)
-                this.client.distube.removeAllListeners()
+                // 移除特定的事件監聽器，而不是所有監聽器
+                this.client.distube
+                    .off(Events.PLAY_SONG, handleMusicEvent)
+                    .off(Events.ADD_SONG, handleMusicEvent)
+                    .off(Events.FINISH_SONG, handleMusicEvent)
+                    .off(Events.DISCONNECT, handleMusicEvent)
             })
         })
     }

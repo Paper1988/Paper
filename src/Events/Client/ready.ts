@@ -121,17 +121,23 @@ export default {
             connectToDB()
         })
 
-        if (client.user?.id === '869166906765103135') {
-            const Embed = new EmbedBuilder()
-                .setColor('Green')
-                .setDescription(`${client.user} 上線了!`)
-                .setTimestamp()
+        // Send startup notification if configured
+        const statusWebhookId = process.env.STATUS_WEBHOOK_ID
+        const statusWebhookToken = process.env.STATUS_WEBHOOK_TOKEN
+        const productionBotId = process.env.PRODUCTION_BOT_ID
+        
+        if (client.user?.id === productionBotId && statusWebhookId && statusWebhookToken) {
+            try {
+                const Embed = new EmbedBuilder()
+                    .setColor('Green')
+                    .setDescription(`${client.user} 上線了!`)
+                    .setTimestamp()
 
-            const webhook = await client.fetchWebhook(
-                '1265249137327214674',
-                'JKxcMDXNaR0Y2Y-LVt-syEGHsGIrab97FdyliUTGFH_dNEGaXf8Ty7RXLeAGEvliT5IN'
-            )
-            await webhook.send({ embeds: [Embed] })
+                const webhook = await client.fetchWebhook(statusWebhookId, statusWebhookToken)
+                await webhook.send({ embeds: [Embed] })
+            } catch (error) {
+                Logger.error('Failed to send startup notification:', error)
+            }
         }
 
         setInterval(() => updatePresence(client), 10 * 1000)
@@ -217,7 +223,7 @@ async function endGiveaway(messageId: string, client: Client): Promise<void> {
             return
         }
 
-        const winners = selectWinners(giveaway.participants, giveaway.winnerCount - 1)
+        const winners = selectWinners(giveaway.participants, giveaway.winnerCount)
         const winnerMentions = winners.map((id) => `<@${id}>`).join(', ') || '沒有人參加抽獎'
 
         if (message.embeds.length > 0) {
