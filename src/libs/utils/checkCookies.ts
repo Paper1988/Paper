@@ -4,13 +4,13 @@ import youtubeCookies from '@/libs/utils/youtubeCookies.js'
 import fetch from 'node-fetch'
 
 // 你可以在這裡填入你的 Discord Webhook URL
-const DISCORD_WEBHOOK_URL =
-    'https://discord.com/api/webhooks/1348200943795179520/CP_C1vdKJs-ewK8mZTL9eQEZBZdn3lyDW0P6v_Umu80azVg-3QgA5ta-V24U6Bn7oJ9g'
+const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL ?? ''
 
 /**
  * 發送 logData 到 Discord Webhook
  */
 async function sendLogToDiscord(logData: any) {
+    if (!DISCORD_WEBHOOK_URL) return
     const content =
         `【YouTube Cookies 狀態通知】\n` +
         `有效: ${logData.cookiesValid ? '✅' : '❌'}\n` +
