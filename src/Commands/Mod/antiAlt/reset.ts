@@ -1,5 +1,5 @@
 import DB from '@/Structures/Schemas/AntiAlt.js'
-import { emojis } from '@/libs/utils'
+import { emojis } from '@/libs/utils/index.js'
 import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js'
 
