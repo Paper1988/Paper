@@ -1,9 +1,8 @@
-import Playlist from '@/Structures/Schemas/Playlist.js'
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import type { PaperClient } from '@/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
 import type { SubCommandType } from '@/typings/command.js'
-import { YouTubePlugin } from '@distube/youtube'
-import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, TextChannel } from 'discord.js'
+import { ChatInputCommandInteraction } from 'discord.js'
 
 export default {
     subCommand: 'music.play',
@@ -11,12 +10,12 @@ export default {
         await interaction.reply({
             content: '<a:discord1792loading:1212016238839070791> | 處理請求中...'
         })
-        /* return await interaction
+        return await interaction
             .editReply({
                 content: `${emojis.outage} | 音樂指令目前修復中！\n-# 造成不便，敬請見諒`
             })
-            .then(deleteMessageAfter) */
-        const { options, channel } = interaction
+            .then(deleteMessageAfter)
+        /* const { options, channel } = interaction
         const member = interaction.member! as GuildMember
         const VoiceChannel = member.voice.channel
 
@@ -175,6 +174,6 @@ export default {
                     ]
                 })
                 .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
-        }
+        } */
     }
 } as SubCommandType
