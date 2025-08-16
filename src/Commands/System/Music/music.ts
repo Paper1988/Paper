@@ -220,26 +220,26 @@ export default {
                 }
 
                 // 如果沒有快取或快取過期，重新獲取
-                let trendingResults
+                let trendingResults: any[]
                 switch (regionCode) {
                     case 'TW':
-                        trendingResults = await yt.search('台灣流行音樂 最新', { limit: 15 })
+                        trendingResults = await yt.search('台灣流行音樂 最新', { limit: 20 })
                         break
                     case 'JP':
-                        trendingResults = await yt.search('日本流行音楽 最新', { limit: 15 })
+                        trendingResults = await yt.search('日本流行音楽 最新', { limit: 20 })
                         break
                     case 'KR':
-                        trendingResults = await yt.search('한국 인기 음악', { limit: 15 })
+                        trendingResults = await yt.search('한국 인기 음악', { limit: 20 })
                         break
                     case 'CN':
-                        trendingResults = await yt.search('中国流行音乐 最新', { limit: 15 })
+                        trendingResults = await yt.search('中国流行音乐 最新', { limit: 20 })
                         break
                     default:
-                        trendingResults = await yt.search('popular music trending', { limit: 15 })
+                        trendingResults = await yt.search('popular music trending', { limit: 20 })
                 }
 
                 const trendingChoices = trendingResults.map((song) => ({
-                    name: `🔥 ${song.name.slice(0, 50)}`, // 限制長度，避免超出Discord限制
+                    name: `🔥 ${song.name.slice(0, 90)}`, // 限制長度，避免超出Discord限制
                     value: song.name
                 }))
 
@@ -265,9 +265,7 @@ export default {
                     .replace(/\s+/g, ' ') // 將多個空格轉換為單個空格
                     .trim()
 
-                const results = await yt.search(searchTerm, {
-                    limit: 15
-                })
+                const results = await yt.search(searchTerm)
 
                 choices = results.map((song) => ({
                     name: `${song.name}`.slice(0, 90),
@@ -288,7 +286,7 @@ export default {
                     const searchTerms = searchLower.split(/\s+/)
                     return searchTerms.every((term) => titleLower.includes(term))
                 })
-                .slice(0, 15)
+                .slice(0, 20)
 
             return await interaction.respond(filtered)
         } catch (error) {
