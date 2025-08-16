@@ -217,7 +217,7 @@ async function endGiveaway(messageId: string, client: Client): Promise<void> {
             return
         }
 
-        const winners = selectWinners(giveaway.participants, giveaway.winnerCount - 1)
+        const winners = selectWinners(giveaway.participants, giveaway.winnerCount)
         const winnerMentions = winners.map((id) => `<@${id}>`).join(', ') || '沒有人參加抽獎'
 
         if (message.embeds.length > 0) {

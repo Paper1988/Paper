@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/node'
 import { Collection, GatewayIntentBits, Partials } from 'discord.js'
 
 Sentry.init({
-    dsn: process.env.SENTRY_DNS,
+    dsn: process.env.SENTRY_DSN,
     tracesSampleRate: 1.0,
     environment: process.env.NODE_ENV || 'dev'
 })
