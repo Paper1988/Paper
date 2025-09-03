@@ -97,7 +97,7 @@ export default {
 
         // 檢查是否為 YouTube 連結（用戶直接輸入）
         const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/
-        if (youtubeRegex.test(actualSearchValue)) {
+        if (youtubeRegex.test(search)) {
             // 如果是直接輸入的 YouTube 連結，阻擋播放
             return await interaction
                 .editReply({
@@ -114,11 +114,9 @@ export default {
                 .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
         }
 
-        // 一般歌曲播放邏輯
         const yt = new YouTubePlugin()
 
         if (actualSearchValue.startsWith('https://')) {
-            // 處理其他平台的音樂連結
             client.distube
                 .play(VoiceChannel, actualSearchValue, {
                     textChannel: channel! as TextChannel,
@@ -137,14 +135,13 @@ export default {
                         .then(() => setTimeout(() => interaction.deleteReply(), 15 * 1000))
                 )
         } else {
-            // 處理搜尋詞或從 autocomplete 返回的 YouTube 連結
             try {
                 let songToPlay: any
 
                 // 檢查是否為 YouTube 連結（來自 autocomplete）
                 if (
-                    actualSearchValue.startsWith('https://www.youtube.com/') ||
-                    actualSearchValue.startsWith('https://youtu.be/')
+                    search.startsWith('https://www.youtube.com/') ||
+                    search.startsWith('https://youtu.be/')
                 ) {
                     // 這是從 autocomplete 返回的 YouTube 連結，允許播放
                     songToPlay = actualSearchValue
