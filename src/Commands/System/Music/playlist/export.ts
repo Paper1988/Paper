@@ -29,9 +29,11 @@ export default {
         ),
     async autocomplete(interaction: AutocompleteInteraction) {
         const focusedValue = interaction.options.getFocused()
-        const playlists = await Playlist.find({
+        const playlists = (await Playlist.find({
             userId: interaction.user.id
-        }).select('name')
+        }).select('name')) as Array<{
+            name: string
+        }>
 
         const filtered = playlists
             .filter((p) => p.name.toLowerCase().includes(focusedValue.toLowerCase()))
@@ -44,10 +46,14 @@ export default {
         const playlistName = interaction.options.getString('playlist')
 
         try {
-            const playlist = await Playlist.findOne({
+            const playlist = (await Playlist.findOne({
                 userId: interaction.user.id,
                 name: playlistName
-            })
+            })) as {
+                name: string
+                description: string
+                songs: any[]
+            }
 
             if (!playlist) {
                 return await interaction.reply({
