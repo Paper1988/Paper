@@ -32,40 +32,47 @@ export default {
                 .setDescriptionLocalization('ja', '詳細を確認するプレイリストを選択')
                 .setAutocomplete(true)
         ),
-    /**
-     *
-     * @param {AutocompleteInteraction} interaction
-     */
-    async autocomplete(interaction) {
+    async autocomplete(interaction: AutocompleteInteraction) {
         const focusedValue = interaction.options.getFocused()
-        const playlists = await Playlist.find({
+        const playlists = (await Playlist.find({
             $or: [{ userId: interaction.user.id }, { isPrivate: false }]
-        }).select('name userId isPrivate')
+        }).select('name userId isPrivate')) as Array<{
+            name: string
+            userId: string
+            isPrivate: boolean
+        }>
 
-        const filtered = playlists
-            .map((p) => ({
-                name: `${p.name}${p.userId === interaction.user.id ? ' (我的)' : ''}${p.isPrivate ? ' 🔒' : ''}`,
-                value: `${p.userId}:${p.name}`
-            }))
+        const filtered: Array<{ name: string; value: string }> = playlists
+            .map((p) => {
+                const userId = p.userId === interaction.user.id ? ' (我的)' : ''
+                const isPrivate = p.isPrivate ? ' 🔒' : ''
+
+                const name = `${p.name}${userId}${isPrivate}`
+                const value = `${p.userId}:${p.name}`
+
+                return { name, value }
+            })
             .filter((p) => p.name.toLowerCase().includes(focusedValue.toLowerCase()))
             .slice(0, 25)
 
         await interaction.respond(filtered)
     },
-    /**
-     *
-     * @param {ChatInputCommandInteraction} interaction
-     * @returns
-     */
-    async execute(interaction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         try {
             const playlistOption = interaction.options.getString('playlist')
 
             // 如果沒有指定播放清單，顯示用戶的所有播放清單
             if (!playlistOption) {
-                const playlists = await Playlist.find({
+                const playlists = (await Playlist.find({
                     userId: interaction.user.id
-                }).select('name songs isPrivate plays createdAt')
+                }).select('name songs isPrivate plays createdAt')) as Array<{
+                    name: string
+                    userId: string
+                    isPrivate: boolean
+                    createdAt: Date
+                    songs: []
+                    plays: number
+                }>
 
                 if (playlists.length === 0) {
                     return await interaction.reply({
@@ -151,13 +158,19 @@ export default {
                 embed
                     .addFields({
                         name: '<:richpresent:1265561713969987676> 歌曲列表',
-                        value: playlist.songs
+                        value: (
+                            playlist.songs as Array<{
+                                title: string
+                                url: string
+                                duration: number
+                            }>
+                        )
                             .slice(startIdx, endIdx)
                             .map(
                                 (song, index) =>
-                                    `${startIdx + index + 1}. [${song.title}](${song.url}) (${
-                                        song.duration! / 60
-                                    }:${(song.duration! % 60).toString().padStart(2, '0')})`
+                                    `${startIdx + index + 1}. [${song.title}](${song.url}) (${Math.floor(
+                                        song.duration / 60
+                                    )}:${(song.duration % 60).toString().padStart(2, '0')})`
                             )
                             .join('\n')
                     })
@@ -166,7 +179,7 @@ export default {
                     })
             }
 
-            const row = new ActionRowBuilder().addComponents(
+            const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
                 new ButtonBuilder()
                     .setCustomId(`playlist-page:${playlist.userId}:${playlist.name}:prev:${page}`)
                     .setLabel('上一頁')

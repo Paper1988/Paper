@@ -43,9 +43,11 @@ export default {
         ),
     async autocomplete(interaction: AutocompleteInteraction) {
         const focusedValue = interaction.options.getFocused().trim()
-        const playlists = await Playlist.find({
+        const playlists = (await Playlist.find({
             userId: interaction.user.id
-        }).select('name')
+        }).select('name')) as Array<{
+            name: string
+        }>
 
         const filtered = playlists
             .filter((p) => p.name.toLowerCase().includes(focusedValue.toLowerCase()))

@@ -2,7 +2,9 @@ import { deleteMessageAfter } from '@/Systems/Music.js'
 import type { PaperClient } from '@/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
 import type { SubCommandType } from '@/typings/command.js'
-import { ChatInputCommandInteraction } from 'discord.js'
+import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, TextChannel } from 'discord.js'
+import { YouTubePlugin } from '@distube/youtube'
+import { cacheGetJson } from '@/libs/utils/redis.js'
 
 export default {
     subCommand: 'music.play',
@@ -10,12 +12,8 @@ export default {
         await interaction.reply({
             content: '<a:discord1792loading:1212016238839070791> | 處理請求中...'
         })
-        return await interaction
-            .editReply({
-                content: `${emojis.outage} | 音樂指令目前修復中！\n-# 造成不便，敬請見諒`
-            })
-            .then(deleteMessageAfter)
-        /* const { options, channel } = interaction
+
+        const { options, channel } = interaction
         const member = interaction.member! as GuildMember
         const VoiceChannel = member.voice.channel
 
@@ -52,98 +50,118 @@ export default {
 
         await client.distube.voices.join(VoiceChannel)
 
-        // 檢查是否為播放清單ID (格式: userId:playlistName)
-        // 使用正則表達式來確保格式正確
-        const playlistPattern = /^\d{17,19}:[^:]+$/
-        if (playlistPattern.test(search)) {
-            const [userId, playlistName] = search.split(':')
+        // 檢查是否為 token（來自 autocomplete）
+        let actualSearchValue = search
+        if (search.startsWith('tk_')) {
             try {
-                const playlist = await Playlist.findOne({
-                    userId: userId,
-                    name: playlistName
-                })
-
-                if (!playlist) {
-                    return await interaction.editReply({
-                        content: `${emojis.warning} | 找不到指定的播放清單`
-                    })
-                }
-
-                if (playlist.isPrivate && playlist.userId !== interaction.user.id) {
-                    return await interaction.editReply({
-                        content: `${emojis.warning} | 這是私人播放清單`
-                    })
-                }
-
-                if (playlist.songs.length === 0) {
-                    return await interaction.editReply({
-                        content: `${emojis.warning} | 播放清單是空的`
-                    })
-                }
-
-                const NewPlaylist = await client.distube.createCustomPlaylist(
-                    playlist.songs.map((song) => song.url!)
+                // 從 Redis 獲取 token 對應的歌曲資訊
+                const trackInfo = await cacheGetJson<{ value: string; type: string }>(
+                    `ac:track:${search}`
                 )
 
-                await client.distube.play(
-                    (interaction.member! as GuildMember).voice.channel!,
-                    NewPlaylist,
-                    {
-                        member: interaction.member! as GuildMember,
-                        textChannel: interaction.channel! as TextChannel,
-                        metadata: { interaction }
-                    }
-                )
-
-                // 更新播放次數
-                playlist.plays++
-                await playlist.save()
-
-                await interaction.editReply({
-                    content: `${emojis.correct} | 已將播放清單 **${playlistName}** 中的 ${playlist.songs.length} 首歌曲加入播放佇列`
-                })
-            } catch (error: any) {
-                console.error('播放播放清單時發生錯誤:', error)
-                if (error.message?.includes('playFromSource')) {
-                    return await interaction.editReply({
-                        content: `${emojis.outage} | 無法播放歌曲，可能是播放清單中的歌曲連結已失效`
-                    })
+                if (!trackInfo) {
+                    return await interaction
+                        .editReply({
+                            content: '',
+                            embeds: [
+                                new EmbedBuilder()
+                                    .setColor('Red')
+                                    .setTitle('Token 已過期')
+                                    .setDescription(
+                                        `${emojis.warning} | 此搜尋結果已過期，請重新搜尋歌曲。`
+                                    )
+                            ]
+                        })
+                        .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
                 }
-                await interaction.editReply({
-                    content: `${emojis.outage} | 播放播放清單時發生錯誤`,
+
+                // 使用 token 中的值作為搜尋內容
+                actualSearchValue = trackInfo.value
+            } catch (error) {
+                console.error('解析 token 時發生錯誤:', error)
+                return await interaction
+                    .editReply({
+                        content: '',
+                        embeds: [
+                            new EmbedBuilder()
+                                .setColor('Red')
+                                .setTitle('Token 解析失敗')
+                                .setDescription(
+                                    `${emojis.warning} | 無法解析搜尋結果，請重新搜尋歌曲。`
+                                )
+                        ]
+                    })
+                    .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
+            }
+        }
+
+        // 檢查是否為 YouTube 連結（用戶直接輸入）
+        const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/
+        if (youtubeRegex.test(actualSearchValue)) {
+            // 如果是直接輸入的 YouTube 連結，阻擋播放
+            return await interaction
+                .editReply({
+                    content: '',
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
+                            .setTitle('拒絕請求')
                             .setDescription(
-                                `${emojis.outage} | 播放播放清單時發生錯誤，請協助回報！`
+                                `${emojis.warning} | Discord禁止機器人播放來自Youtube的連結！請使用搜尋功能來播放歌曲。`
                             )
                     ]
                 })
-            }
-            return
+                .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
         }
 
         // 一般歌曲播放邏輯
-        const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/
         const yt = new YouTubePlugin()
 
-        if (!youtubeRegex.test(search)) {
-            if (search.startsWith('https://')) {
-                client.distube
-                    .play(VoiceChannel, search, {
-                        textChannel: channel! as TextChannel,
-                        member: member,
-                        position,
-                        skip: skip!,
-                        metadata: interaction
+        if (actualSearchValue.startsWith('https://')) {
+            // 處理其他平台的音樂連結
+            client.distube
+                .play(VoiceChannel, actualSearchValue, {
+                    textChannel: channel! as TextChannel,
+                    member: member,
+                    position,
+                    skip: skip!,
+                    metadata: interaction
+                })
+                .then(() => interaction.deleteReply())
+                .catch((err) =>
+                    interaction
+                        .editReply({
+                            content: '',
+                            embeds: [embed.setDescription(`${emojis.warning} | ` + err)]
+                        })
+                        .then(() => setTimeout(() => interaction.deleteReply(), 15 * 1000))
+                )
+        } else {
+            // 處理搜尋詞或從 autocomplete 返回的 YouTube 連結
+            try {
+                let songToPlay: any
+
+                // 檢查是否為 YouTube 連結（來自 autocomplete）
+                if (
+                    actualSearchValue.startsWith('https://www.youtube.com/') ||
+                    actualSearchValue.startsWith('https://youtu.be/')
+                ) {
+                    // 這是從 autocomplete 返回的 YouTube 連結，允許播放
+                    songToPlay = actualSearchValue
+                } else {
+                    // 一般搜尋
+                    const results = await yt.search(actualSearchValue, { limit: 1 })
+                    songToPlay = results[0]
+                }
+
+                if (!songToPlay) {
+                    return await interaction.editReply({
+                        content: `${emojis.warning} | 找不到相關的歌曲`
                     })
-                    .then(() => interaction.deleteReply())
-            } else {
-                const results = await yt.search(search, { limit: 1 })
-                const result = results[0]
+                }
 
                 client.distube
-                    .play(VoiceChannel, result!, {
+                    .play(VoiceChannel, songToPlay, {
                         textChannel: channel! as TextChannel,
                         member: member,
                         position,
@@ -159,21 +177,12 @@ export default {
                             })
                             .then(() => setTimeout(() => interaction.deleteReply(), 15 * 1000))
                     )
-            }
-        } else {
-            return await interaction
-                .editReply({
-                    content: '',
-                    embeds: [
-                        new EmbedBuilder()
-                            .setColor('Red')
-                            .setTitle('拒絕請求')
-                            .setDescription(
-                                `${emojis.warning} | Discord禁止機器人播放來自Youtube的連結！請嘗試使用其他平台的音樂連結。`
-                            )
-                    ]
+            } catch (error) {
+                console.error('播放歌曲時發生錯誤:', error)
+                return await interaction.editReply({
+                    content: `${emojis.outage} | 播放歌曲時發生錯誤，請稍後再試`
                 })
-                .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
-        } */
+            }
+        }
     }
 } as SubCommandType

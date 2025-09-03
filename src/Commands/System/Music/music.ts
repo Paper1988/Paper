@@ -1,14 +1,10 @@
 import { YouTubePlugin } from '@distube/youtube'
-import { AutocompleteInteraction, Collection, SlashCommandBuilder } from 'discord.js'
+import { AutocompleteInteraction, SlashCommandBuilder } from 'discord.js'
 import { defaultFilters } from 'distube'
-
-interface CacheEntry {
-    choices: { name: string; value: string }[]
-    timestamp: number
-}
+import { cacheSetJsonWithTTL, cacheGetJson } from '@/libs/utils/redis.js'
+import { randomUUID } from 'crypto'
 
 const CACHE_DURATION = 30 * 60 * 1000
-const trendingCache = new Collection<string, CacheEntry>()
 
 export default {
     data: new SlashCommandBuilder()
@@ -212,8 +208,12 @@ export default {
 
                 regionCode = regionMap[userLocale] || regionCode
 
+                // 使用 Redis 快取來儲存熱門歌曲
                 const cacheKey = `trending_${regionCode}`
-                const cachedResults = trendingCache.get(cacheKey)
+                let cachedResults = await cacheGetJson<{
+                    choices: { name: string; value: string }[]
+                    timestamp: number
+                }>(cacheKey)
 
                 if (cachedResults && Date.now() - cachedResults.timestamp < CACHE_DURATION) {
                     return await interaction.respond(cachedResults.choices)
@@ -238,16 +238,30 @@ export default {
                         trendingResults = await yt.search('popular music trending', { limit: 20 })
                 }
 
-                const trendingChoices = trendingResults.map((song) => ({
-                    name: `🔥 ${song.name.slice(0, 90)}`, // 限制長度，避免超出Discord限制
-                    value: song.name
-                }))
+                const trendingChoices = await Promise.all(
+                    trendingResults.slice(0, 20).map(async (song) => {
+                        const token = 'tk_' + randomUUID().replace(/-/g, '').slice(0, 12)
+                        await cacheSetJsonWithTTL(
+                            `ac:track:${token}`,
+                            {
+                                value: song.url || song.name || 'unknown',
+                                type: 'trending'
+                            },
+                            CACHE_DURATION / 1000
+                        )
+                        return { name: `🔥 ${song.name.slice(0, 90)}`, value: token }
+                    })
+                )
 
-                // 儲存到快取
-                trendingCache.set(cacheKey, {
-                    choices: trendingChoices,
-                    timestamp: Date.now()
-                })
+                // 儲存到 Redis 快取
+                await cacheSetJsonWithTTL(
+                    cacheKey,
+                    {
+                        choices: trendingChoices,
+                        timestamp: Date.now()
+                    },
+                    CACHE_DURATION / 1000
+                )
 
                 return await interaction.respond(trendingChoices)
             }
@@ -265,12 +279,52 @@ export default {
                     .replace(/\s+/g, ' ') // 將多個空格轉換為單個空格
                     .trim()
 
-                const results = await yt.search(searchTerm)
+                // 使用 Redis 快取來儲存搜尋結果
+                const searchCacheKey = `search_${Buffer.from(searchTerm).toString('base64')}`
+                let cachedSearchResults = await cacheGetJson<{
+                    choices: { name: string; value: string }[]
+                    timestamp: number
+                }>(searchCacheKey)
 
-                choices = results.map((song) => ({
-                    name: `${song.name}`.slice(0, 90),
-                    value: song.name! // 保留完整名稱作為值
-                }))
+                if (
+                    cachedSearchResults &&
+                    Date.now() - cachedSearchResults.timestamp < CACHE_DURATION
+                ) {
+                    choices = cachedSearchResults.choices
+                } else {
+                    const results = await yt.search(searchTerm)
+
+                    // 生成 token 並儲存歌曲資訊
+                    const choicesWithTokens = await Promise.all(
+                        results.map(async (song) => {
+                            const token = 'tk_' + randomUUID().replace(/-/g, '').slice(0, 12)
+                            await cacheSetJsonWithTTL(
+                                `ac:track:${token}`,
+                                {
+                                    value: song.url || song.name || 'unknown',
+                                    type: 'search'
+                                },
+                                CACHE_DURATION / 1000
+                            )
+                            return {
+                                name: `${song.name}`.slice(0, 90),
+                                value: token
+                            }
+                        })
+                    )
+
+                    choices = choicesWithTokens
+
+                    // 儲存搜尋結果到 Redis 快取
+                    await cacheSetJsonWithTTL(
+                        searchCacheKey,
+                        {
+                            choices,
+                            timestamp: Date.now()
+                        },
+                        CACHE_DURATION / 1000
+                    )
+                }
             } catch (searchError) {
                 console.error('搜尋時發生錯誤:', searchError)
                 return await interaction.respond([])
