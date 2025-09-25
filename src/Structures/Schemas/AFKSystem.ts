@@ -7,7 +7,6 @@ const afkSchema = new Schema({
     Time: String
 })
 
-// 加索引提高查詢效率
 afkSchema.index({ GuildID: 1, UserID: 1 })
 
 export default model('AFK', afkSchema)

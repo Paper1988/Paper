@@ -5,7 +5,6 @@ const antiAltSchema = new Schema({
     LogsChannel: String
 })
 
-// 加索引提高查詢效率
 antiAltSchema.index({ GuildID: 1 })
 
 export default model('Anti-Alt', antiAltSchema)

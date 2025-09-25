@@ -187,10 +187,9 @@ export default {
     }
 } satisfies EventType
 
-async function endGiveaway(messageId: string, client: Client): Promise<void> {
-    const giveaway = await safeDbOperation(
-        () => Giveaway.findOne({ messageId, ended: false }).maxTimeMS(10000),
-        undefined
+async function endGiveaway(messageId: string, client: PaperClient): Promise<void> {
+    const giveaway = await safeDbOperation(() =>
+        Giveaway.findOne({ messageId, ended: false }).maxTimeMS(10000)
     )
 
     if (!giveaway) {
@@ -266,10 +265,10 @@ async function endGiveaway(messageId: string, client: Client): Promise<void> {
         await safeDbOperation(() => giveaway.save())
 
         await safeDbOperation(async () => {
-            const stats =
-                (await GiveawayStats.findOne({ guildId: giveaway.guildId }).maxTimeMS(10000)) ||
-                new GiveawayStats({ guildId: giveaway.guildId })
-
+            const existingStats = await GiveawayStats.findOne({
+                guildId: giveaway.guildId
+            }).maxTimeMS(10000)
+            const stats = existingStats ?? new GiveawayStats({ guildId: giveaway.guildId })
             stats.activeGiveaways--
             stats.totalWinners += winners.length
 

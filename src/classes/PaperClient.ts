@@ -18,23 +18,15 @@ import { Client, Collection, WebhookClient } from 'discord.js'
 import { DisTube } from 'distube'
 import { AppleMusicPlugin } from 'distube-apple-music'
 import { TidalPlugin } from 'distube-tidal'
-import dotenv from 'dotenv'
-import fs from 'fs'
-
-if (fs.existsSync('.env.local')) {
-    dotenv.config({ path: '.env.local' })
-} else {
-    dotenv.config()
-}
 
 export class PaperClient extends Client {
-    override commands: Collection<string, CommandType> = new Collection<string, CommandType>()
-    override buttons: Collection<string, ButtonType> = new Collection<string, ButtonType>()
+    commands: Collection<string, CommandType> = new Collection<string, CommandType>()
     override events: Collection<string, EventExecute> = new Collection<string, EventExecute>()
-    override subCommands = new Collection<string, any>()
-    override modals: Collection<string, ModalType> = new Collection<string, ModalType>()
-    override selectMenus: Collection<string, MenuType> = new Collection<string, MenuType>()
-    override contextMenus = new Collection<string, any>()
+    buttons: Collection<string, ButtonType> = new Collection<string, ButtonType>()
+    subCommands = new Collection<string, any>()
+    modals: Collection<string, ModalType> = new Collection<string, ModalType>()
+    selectMenus: Collection<string, MenuType> = new Collection<string, MenuType>()
+    contextMenus = new Collection<string, any>()
     private errorWebhook: WebhookClient | null = null
     private apiServer: any = null
     distube!: DisTube

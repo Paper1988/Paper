@@ -23,7 +23,6 @@ const playlistSchema = new Schema(
     }
 )
 
-// 確保每個用戶的播放清單名稱是唯一的
 playlistSchema.index({ userId: 1, name: 1 }, { unique: true })
 
 export default model('Playlist', playlistSchema)

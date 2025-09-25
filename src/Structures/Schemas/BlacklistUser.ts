@@ -6,7 +6,6 @@ const blacklistUserSchema = new Schema({
     Time: Number
 })
 
-// 加索引提高查詢效率
 blacklistUserSchema.index({ User: 1 })
 blacklistUserSchema.index({ Time: 1 })
 

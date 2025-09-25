@@ -1,24 +1,10 @@
 import type { PaperClient } from '@/classes/PaperClient.js'
 import { loadFiles } from '@/Structures/Functions/fileLoader.js'
-import type { EventExecute } from '@/typings/event.js'
-import { Collection, REST } from 'discord.js'
+import type { EventExecute, EventType } from '@/typings/event.js'
+import { Collection } from 'discord.js'
 import path from 'node:path'
 
-interface Event {
-    name: string
-    once?: boolean
-    rest?: boolean
-    execute: (...args: any[]) => Promise<void> | void
-}
-
-declare module 'discord.js' {
-    interface Client {
-        events: Collection<string, any> | Map<string, any>
-        rest: REST
-    }
-}
-
-function validateEvent(event: any): event is Event {
+function validateEvent(event: any): event is EventType {
     return (
         typeof event === 'object' &&
         typeof event.name === 'string' &&
@@ -41,7 +27,7 @@ export async function loadEvents(client: PaperClient): Promise<void> {
                 throw new Error('Invalid event structure')
             }
 
-            const event: Event = importedEvent
+            const event = importedEvent
             const execute = (...args: any[]) => event.execute(client, ...args)
             const target = event.rest ? client.rest : client
 

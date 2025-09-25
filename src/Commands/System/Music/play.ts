@@ -111,7 +111,7 @@ export default {
                             )
                     ]
                 })
-                .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
+                .then(deleteMessageAfter)
         }
 
         const yt = new YouTubePlugin()
@@ -132,7 +132,7 @@ export default {
                             content: '',
                             embeds: [embed.setDescription(`${emojis.warning} | ` + err)]
                         })
-                        .then(() => setTimeout(() => interaction.deleteReply(), 15 * 1000))
+                        .then(deleteMessageAfter)
                 )
         } else {
             try {
@@ -172,13 +172,15 @@ export default {
                                 content: '',
                                 embeds: [embed.setDescription(`${emojis.warning} | ` + err)]
                             })
-                            .then(() => setTimeout(() => interaction.deleteReply(), 15 * 1000))
+                            .then(deleteMessageAfter)
                     )
             } catch (error) {
                 console.error('播放歌曲時發生錯誤:', error)
-                return await interaction.editReply({
-                    content: `${emojis.outage} | 播放歌曲時發生錯誤，請稍後再試`
-                })
+                return await interaction
+                    .editReply({
+                        content: `${emojis.outage} | 播放歌曲時發生錯誤，請稍後再試`
+                    })
+                    .then(deleteMessageAfter)
             }
         }
     }

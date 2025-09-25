@@ -1,13 +1,7 @@
 import { loadFiles } from '@/Structures/Functions/fileLoader.js'
-import { Client } from 'discord.js'
+import type { PaperClient } from '@/classes/PaperClient.js'
 
-declare module 'discord.js' {
-    interface Client {
-        modals: Map<string, any>
-    }
-}
-
-export async function loadModals(client: Client): Promise<void> {
+export async function loadModals(client: PaperClient): Promise<void> {
     client.modals.clear()
     console.time('Modals Loaded')
 
