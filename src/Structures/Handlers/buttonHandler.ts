@@ -1,13 +1,7 @@
 import { loadFiles } from '@/Structures/Functions/fileLoader.js'
-import { Client, Collection } from 'discord.js'
+import type { PaperClient } from '@/classes/PaperClient.js'
 
-declare module 'discord.js' {
-    interface Client {
-        buttons: Collection<string, any>
-    }
-}
-
-export async function loadButtons(client: Client): Promise<void> {
+export async function loadButtons(client: PaperClient): Promise<void> {
     console.time('Buttons Loaded')
     client.buttons.clear()
 

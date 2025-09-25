@@ -1,3 +1,4 @@
+import emojis from '@/libs/emoji/emoji.js'
 import type { CommandType } from '@/typings/command.js'
 import {
     ChatInputCommandInteraction,
@@ -47,25 +48,23 @@ export default {
             (options.getMember('target')! as GuildMember) || (interaction.member! as GuildMember)
 
         const embed = new EmbedBuilder()
-            .setColor(`#${guild.roles.cache.get(role.id)!.color.toString(16)}`)
+            .setColor(`#${guild.roles.cache.get(role.id)!.colors.primaryColor.toString(16)}`)
             .setTitle('🎭 身分組管理 🎭')
 
         if (!role.editable || role.position === 0) {
-            embed.setDescription(`<:warning:1265562532857380936> | 我無法編輯身分組: **${role}** !`)
+            embed.setDescription(`${emojis.warning} | 我無法編輯身分組: **${role}** !`)
             return await interaction.editReply({ embeds: [embed] })
         }
 
         embed.setDescription(
             target.roles.cache.has(role.id)
-                ? `<:correct:1265560254708711467> | 成功從 ${target} 身上移除 **${role}**`
-                : `<:correct:1265560254708711467> | 成功添加身分組: **${role}** 至 ${target} 身上`
+                ? `${emojis.correct} | 成功從 ${target} 身上移除 **${role}**`
+                : `${emojis.correct} | 成功添加身分組: **${role}** 至 ${target} 身上`
         )
 
-        if (target.roles.cache.has(role.id)) {
-            await target.roles.remove(role)
-        } else {
-            await target.roles.add(role)
-        }
+        target.roles.cache.has(role.id)
+            ? await target.roles.remove(role)
+            : await target.roles.add(role)
 
         const message = await interaction.editReply({
             embeds: [embed]

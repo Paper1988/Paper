@@ -19,7 +19,6 @@ const giveawayHistorySchema = new mongoose.Schema(
     { timestamps: true }
 )
 
-// 加索引提高查詢效率
 giveawayHistorySchema.index({ guildId: 1, endTime: 1 })
 
 export default mongoose.model('GiveawayHistory', giveawayHistorySchema)

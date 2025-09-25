@@ -1,15 +1,9 @@
 import { loadFiles } from '@/Structures/Functions/fileLoader.js'
-import { Client } from 'discord.js'
+import type { PaperClient } from '@/classes/PaperClient.js'
 
-declare module 'discord.js' {
-    interface Client {
-        selectMenus: Map<string, any>
-    }
-}
-
-export async function loadMenus(client: Client): Promise<void> {
+export async function loadMenus(client: PaperClient): Promise<void> {
     console.time('Menus Loaded')
-    await client.selectMenus.clear()
+    client.selectMenus.clear()
 
     const menus: { Menus: string; Status: string }[] = []
     const Files = await loadFiles('Menus')

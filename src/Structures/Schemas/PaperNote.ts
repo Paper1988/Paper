@@ -3,21 +3,21 @@ import mongoose from 'mongoose'
 const noteSchema = new mongoose.Schema({
     noteId: { type: String, required: true, index: true },
     userId: { type: String, required: true, index: true },
-    title: { type: String, maxlength: 200 }, // 自動生成或用戶提供
-    content: { type: String, maxlength: 10000 }, // 限制長度節省空間
+    title: { type: String, maxlength: 200 },
+    content: { type: String, maxlength: 10000 },
     type: {
         type: String,
         enum: ['text', 'image'],
         required: true,
         index: true
     },
-    tags: [{ type: String, maxlength: 50 }], // 標籤陣列
+    tags: [{ type: String, maxlength: 50 }],
     metadata: {
         filename: String,
         fileSize: Number,
         contentType: String,
         storageUrl: String,
-        thumbnailUrl: String // 縮圖連結
+        thumbnailUrl: String
     },
     createdAt: { type: Date, default: Date.now, index: true }
 })

@@ -2,6 +2,14 @@ import { PaperClient } from '@/classes/PaperClient.js'
 import { Logger } from '@/libs/utils/logger.js'
 import * as Sentry from '@sentry/node'
 import { Collection, GatewayIntentBits, Partials } from 'discord.js'
+import dotenv from 'dotenv'
+import fs from 'fs'
+
+if (fs.existsSync('.env.local')) {
+    dotenv.config({ path: '.env.local' })
+} else {
+    dotenv.config()
+}
 
 Sentry.init({
     dsn: process.env.SENTRY_DSN,

@@ -120,4 +120,6 @@ async function createPlaylist(interaction, playlistName, importData) {
         content: `<:download:1320298270739791973> | 成功匯入播放清單 **${playlistName}**\n<:todolist:1320296314071945267> 共 ${importData.songs.length} 首歌曲`,
         components: []
     })
+
+    return playlist
 }

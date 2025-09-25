@@ -7,7 +7,6 @@ const musicSchema = new Schema({
     repeatMode: { type: Number, default: 0 }
 })
 
-// 加索引提高查詢效率
 musicSchema.index({ GuildID: 1 })
 
 export default model('Music', musicSchema)
