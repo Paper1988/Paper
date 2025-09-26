@@ -136,20 +136,8 @@ export default {
                 )
         } else {
             try {
-                let songToPlay: any
-
-                // 檢查是否為 YouTube 連結（來自 autocomplete）
-                if (
-                    search.startsWith('https://www.youtube.com/') ||
-                    search.startsWith('https://youtu.be/')
-                ) {
-                    // 這是從 autocomplete 返回的 YouTube 連結，允許播放
-                    songToPlay = actualSearchValue
-                } else {
-                    // 一般搜尋
-                    const results = await yt.search(actualSearchValue, { limit: 1 })
-                    songToPlay = results[0]
-                }
+                const results = await yt.search(actualSearchValue, { limit: 1 })
+                let songToPlay  = results[0]
 
                 if (!songToPlay) {
                     return await interaction.editReply({
