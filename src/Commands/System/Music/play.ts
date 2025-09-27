@@ -10,7 +10,7 @@ export default {
     subCommand: 'music.play',
     async execute(interaction: ChatInputCommandInteraction, client: PaperClient) {
         await interaction.reply({
-            content: '<a:discord1792loading:1212016238839070791> | 處理請求中...'
+            content: `${emojis.discord_loading} | 處理請求中...`
         })
 
         const { options, channel } = interaction
@@ -55,9 +55,7 @@ export default {
         if (search.startsWith('tk_')) {
             try {
                 // 從 Redis 獲取 token 對應的歌曲資訊
-                const trackInfo = await cacheGetJson<{ value: string; type: string }>(
-                    `ac:track:${search}`
-                )
+                const trackInfo = await cacheGetJson<{ value: string }>(`ac:track:${search}`)
 
                 if (!trackInfo) {
                     return await interaction
@@ -66,13 +64,12 @@ export default {
                             embeds: [
                                 new EmbedBuilder()
                                     .setColor('Red')
-                                    .setTitle('Token 已過期')
                                     .setDescription(
                                         `${emojis.warning} | 此搜尋結果已過期，請重新搜尋歌曲。`
                                     )
                             ]
                         })
-                        .then((msg) => setTimeout(() => msg.delete(), 15 * 1000))
+                        .then(deleteMessageAfter)
                 }
 
                 // 使用 token 中的值作為搜尋內容
@@ -85,7 +82,6 @@ export default {
                         embeds: [
                             new EmbedBuilder()
                                 .setColor('Red')
-                                .setTitle('Token 解析失敗')
                                 .setDescription(
                                     `${emojis.warning} | 無法解析搜尋結果，請重新搜尋歌曲。`
                                 )
@@ -136,20 +132,8 @@ export default {
                 )
         } else {
             try {
-                let songToPlay: any
-
-                // 檢查是否為 YouTube 連結（來自 autocomplete）
-                if (
-                    search.startsWith('https://www.youtube.com/') ||
-                    search.startsWith('https://youtu.be/')
-                ) {
-                    // 這是從 autocomplete 返回的 YouTube 連結，允許播放
-                    songToPlay = actualSearchValue
-                } else {
-                    // 一般搜尋
-                    const results = await yt.search(actualSearchValue, { limit: 1 })
-                    songToPlay = results[0]
-                }
+                const results = await yt.search(actualSearchValue, { limit: 1 })
+                let songToPlay = results[0]
 
                 if (!songToPlay) {
                     return await interaction.editReply({
