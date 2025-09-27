@@ -13,7 +13,11 @@ export default {
             content: `${emojis.discord_loading} | 處理請求中...`
         })
 
-        const { options, channel } = interaction
+        return await interaction.editReply({
+            content: `${emojis.outage} | 音樂指令目前修復中！`
+        })
+
+        /* const { options, channel } = interaction
         const member = interaction.member! as GuildMember
         const VoiceChannel = member.voice.channel
 
@@ -166,6 +170,6 @@ export default {
                     })
                     .then(deleteMessageAfter)
             }
-        }
+        } */
     }
 } as SubCommandType
