@@ -244,8 +244,7 @@ export default {
                         await cacheSetJsonWithTTL(
                             `ac:track:${token}`,
                             {
-                                value: song.url || song.name || 'unknown',
-                                type: 'trending'
+                                value: song.url || song.name || 'unknown'
                             },
                             CACHE_DURATION / 1000
                         )
@@ -301,8 +300,7 @@ export default {
                             await cacheSetJsonWithTTL(
                                 `ac:track:${token}`,
                                 {
-                                    value: song.url || song.name || 'unknown',
-                                    type: 'search'
+                                    value: song.url || song.name || 'unknown'
                                 },
                                 CACHE_DURATION / 1000
                             )
