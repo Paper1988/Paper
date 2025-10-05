@@ -1,5 +1,6 @@
 import GuildConfig from '@/Structures/Schemas/GuildConfig.js'
 import type { PaperClient } from '@/classes/PaperClient.js'
+import { aggregateWeeklyStats } from '@/jobs/weeklyAggregation'
 import { YouTubePlugin } from '@distube/youtube'
 import fastifyCors from '@fastify/cors'
 import { Events } from 'distube'
@@ -496,6 +497,21 @@ export class ApiServer {
                     .off(Events.FINISH_SONG, handleMusicEvent)
                     .off(Events.DISCONNECT, handleMusicEvent)
             })
+        })
+
+        this.fastify.get('/aggregateWeeklyStats', async (request, reply) => {
+            try {
+                await aggregateWeeklyStats()
+                reply.code(200).send({ ok: true })
+            } catch (err) {
+                console.error(err)
+                reply.code(500).send({ ok: false, error: err })
+            }
+        })
+
+        this.fastify.get('/health', async (request, reply) => {
+            await reply.code(200)
+            return { status: 'ok', timestamp: new Date().toISOString() }
         })
     }
 

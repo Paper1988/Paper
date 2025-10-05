@@ -9,7 +9,6 @@ import {
     UserSelectMenuInteraction,
     type Interaction
 } from 'discord.js'
-
 import type { PaperClient } from '@/classes/PaperClient.js'
 import {
     checkBlacklist,
@@ -18,7 +17,11 @@ import {
     interactionUtils
 } from '@/libs/utils/index.js'
 import { Logger } from '@/libs/utils/logger.js'
-import type { EventType } from '@/typings/event'
+import type { EventType } from '@/typings/event.js'
+import CommandUsage from '@/Structures/Schemas/commandUsage.js'
+
+const cooldownMap = new Map<string, number>()
+const COOLDOWN_MS = 2000 // 2秒
 
 export default {
     name: 'interactionCreate',
@@ -65,6 +68,18 @@ export default {
     }
 } satisfies EventType
 
+async function recordUsage(interaction: ChatInputCommandInteraction) {
+    try {
+        await CommandUsage.create({
+            userId: interaction.user.id,
+            command: interaction.commandName,
+            timestamp: new Date()
+        })
+    } catch (err) {
+        Logger.error('儲存指令使用紀錄失敗:', err)
+    }
+}
+
 async function handleSlashCommand(interaction: ChatInputCommandInteraction, client: PaperClient) {
     const command = client.commands.get(interaction.commandName)
     if (!command) {
@@ -74,9 +89,26 @@ async function handleSlashCommand(interaction: ChatInputCommandInteraction, clie
         )
     }
 
+    const key = `${interaction.user.id}-${interaction.commandName}`
+    const now = Date.now()
+
     // 檢查開發者權限
     if (command.developer && !interactionUtils.isDeveloper(interaction.user.id)) {
         return await interactionUtils.sendDeveloperError(interaction)
+    }
+
+    if (cooldownMap.has(key)) {
+        if (command.developer) return
+        const lastTime = cooldownMap.get(key)!
+        if (now - lastTime < COOLDOWN_MS) {
+            // 太快重複使用，跳過紀錄
+        } else {
+            cooldownMap.set(key, now)
+            await recordUsage(interaction)
+        }
+    } else {
+        cooldownMap.set(key, now)
+        await recordUsage(interaction)
     }
 
     const subCommand = interaction.options.getSubcommand(false)

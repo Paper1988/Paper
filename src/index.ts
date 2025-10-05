@@ -4,6 +4,9 @@ import * as Sentry from '@sentry/node'
 import { Collection, GatewayIntentBits, Partials } from 'discord.js'
 import dotenv from 'dotenv'
 import fs from 'fs'
+import Cronitor from 'cronitor'
+import cron from 'node-cron'
+import { aggregateWeeklyStats } from '@/jobs/weeklyAggregation.js'
 
 if (fs.existsSync('.env.local')) {
     dotenv.config({ path: '.env.local' })
@@ -19,6 +22,34 @@ Sentry.init({
 
 Logger.info('正在初始化機器人...')
 Logger.info(`Node.js 版本: ${process.version}`)
+
+const cronitor = Cronitor(process.env.CRONITOR_API_KEY!)
+
+await cronitor.Monitor.put({
+    type: 'job',
+    key: 'aggregateWeeklyStats',
+    schedule: '0 0 * * *'
+})
+
+cronitor.wrap('q1eIdH', async (): Promise<void> => {
+    await aggregateWeeklyStats()
+})
+
+cron.schedule(
+    '0 0 * * 1',
+    async () => {
+        console.log('開始每週統計...')
+        try {
+            await aggregateWeeklyStats()
+            console.log('每週統計完成')
+        } catch (err) {
+            console.error('每週統計失敗', err)
+        }
+    },
+    {
+        timezone: 'Asia/Taipei' // 設定為台北時區
+    }
+)
 
 let client: PaperClient
 
