@@ -148,3 +148,5 @@ node_modules
 .pnpm-lock.yaml
 # pnpm store cache
 .pnpm-cache
+
+WARP.md

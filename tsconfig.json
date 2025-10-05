@@ -26,7 +26,6 @@
         "noUncheckedIndexedAccess": true,
         "noImplicitOverride": true,
         "allowSyntheticDefaultImports": true,
-        "types": ["node"],
         "lib": ["es2022", "DOM", "DOM.Iterable"]
     },
     "include": ["src/**/*.ts", "types/**/*", "environment.d.ts"],
