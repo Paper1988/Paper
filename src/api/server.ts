@@ -1,6 +1,6 @@
 import GuildConfig from '@/Structures/Schemas/GuildConfig.js'
 import type { PaperClient } from '@/classes/PaperClient.js'
-import { aggregateWeeklyStats } from '@/jobs/weeklyAggregation'
+import { aggregateWeeklyStats } from '@/jobs/weeklyAggregation.js'
 import { YouTubePlugin } from '@distube/youtube'
 import fastifyCors from '@fastify/cors'
 import { Events } from 'distube'
