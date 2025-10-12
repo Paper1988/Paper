@@ -1,6 +1,6 @@
 import type { PaperClient } from '@/classes/PaperClient.js'
 import { loadFiles } from '@/Structures/Functions/fileLoader.js'
-import type { ApplicationCommandData } from 'discord.js'
+import type { ApplicationCommand, ApplicationCommandData } from 'discord.js'
 import { ContextMenuCommandBuilder } from 'discord.js'
 import path from 'node:path'
 import { Logger } from '@/libs/utils/logger.js'
@@ -41,9 +41,9 @@ export async function loadCommands(client: PaperClient): Promise<void> {
                         })
                         continue
                     }
-                } catch (importError) {
+                } catch (importError: any) {
                     const fileName = path.basename(file)
-                    Logger.error(`導入文件 ${fileName} 時出錯:`, importError)
+                    Logger.error(`導入文件 ${fileName} 時出錯:`, importError.stack)
                     commands.push({
                         Command: fileName,
                         Status: '❌',
@@ -53,7 +53,7 @@ export async function loadCommands(client: PaperClient): Promise<void> {
                     continue
                 }
 
-                if (!command.subCommand && !command.data) {
+                if (!command.subCommandGroup && !command.subCommand && !command.data) {
                     const fileName = path.basename(file)
                     Logger.warn(`警告: 在 ${fileName} 中未找到指令數據`)
                     commands.push({
@@ -64,12 +64,22 @@ export async function loadCommands(client: PaperClient): Promise<void> {
                     continue
                 }
 
+                // <command>.<sub>
                 if (command.subCommand) {
                     client.subCommands.set(command.subCommand, command)
                     commands.push({ Command: `[SUB] ${command.subCommand}`, Status: '✅' })
                     continue
                 }
 
+                // <command>.<group>.<sub>
+                if (command.subCommandGroup) {
+                    const key = command.subCommandGroup as string
+                    client.subCommands.set(key, command)
+                    commands.push({ Command: `[SUBG] ${key}`, Status: '✅' })
+                    continue
+                }
+
+                // context menu
                 if (command.data instanceof ContextMenuCommandBuilder) {
                     client.contextMenus.set(command.data.name, command)
                     commandsArray.push(command.data.toJSON())
@@ -92,7 +102,7 @@ export async function loadCommands(client: PaperClient): Promise<void> {
         }
 
         Logger.info(
-            `成功載入 ${client.commands.size} 個命令、${client.subCommands.size} 個子命令、${client.contextMenus.size} 個右鍵菜單`
+            `成功載入 ${client.commands.size} 個指令、${client.subCommands.size} 個子指令、${client.contextMenus.size} 個右鍵菜單`
         )
 
         if (client.application) {

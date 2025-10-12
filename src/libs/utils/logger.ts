@@ -7,16 +7,23 @@ export class Logger {
     }
 
     static warn(message: string, ...args: any[]) {
-        console.warn(chalk.yellow('[WARN]', message, ...args))
+        console.warn(chalk.yellow('[WARN]', chalk.magenta(`[${__filename}]`), message, ...args))
         Sentry.captureMessage(message, 'warning')
     }
 
     static error(error: Error | string, ...args: any[]) {
         if (error instanceof Error) {
-            console.error(chalk.red('[ERROR]', error.stack || error.message, ...args))
+            console.error(
+                chalk.red(
+                    '[ERROR]',
+                    chalk.magenta(`[${__filename}]`),
+                    error.stack || error.message,
+                    ...args
+                )
+            )
             Sentry.captureException(error)
         } else {
-            console.error(chalk.red('[ERROR]', error, ...args))
+            console.error(chalk.red('[ERROR]', chalk.magenta(`[${__filename}]`), error, ...args))
             Sentry.captureMessage(error, 'error')
         }
     }

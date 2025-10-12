@@ -1,3 +1,4 @@
+import { Logger } from '@/libs/utils/logger'
 import { glob } from 'glob'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -10,7 +11,7 @@ function getFileUrl(filePath: string): string {
     try {
         return pathToFileURL(filePath).href
     } catch (err) {
-        console.warn(`>>> ⚠️ 無法將路徑轉換為 URL: ${filePath}`, err)
+        Logger.warn(`⚠️ 無法將路徑轉換為 URL: ${filePath}`, err)
         return filePath
     }
 }
@@ -26,7 +27,7 @@ export async function loadFiles(dirName: string): Promise<string[]> {
         const files = await glob(searchPath)
 
         if (files.length === 0) {
-            console.warn(`>>> ⚠️ 警告: 在 ${dirName} 目錄中沒有找到任何檔案`)
+            Logger.warn(`⚠️ 警告: 在 ${dirName} 目錄中沒有找到任何檔案`)
             return []
         }
 
@@ -34,13 +35,13 @@ export async function loadFiles(dirName: string): Promise<string[]> {
             const ext = path.extname(file).toLowerCase()
             const isValid = ['.ts', '.js'].includes(ext)
             if (!isValid) {
-                console.log(`>>> 排除非有效檔案: ${file}`)
+                console.log(`排除非有效檔案: ${file}`)
             }
             return isValid
         })
 
         if (validFiles.length === 0) {
-            console.warn(`>>> ⚠️ 警告: 在 ${dirName} 目錄中沒有找到有效的 .ts 或 .js 檔案`)
+            Logger.warn(`⚠️ 警告: 在 ${dirName} 目錄中沒有找到有效的 .ts 或 .js 檔案`)
             return []
         }
 
@@ -53,8 +54,8 @@ export async function loadFiles(dirName: string): Promise<string[]> {
 
         return fileUrls
     } catch (err) {
-        console.error(`>>> ❌ 從資料夾 ${dirName} 載入檔案時發生錯誤:`)
-        console.error('>>> ❌ 錯誤詳情:', err)
+        Logger.error(`❌ 從資料夾 ${dirName} 載入檔案時發生錯誤:`)
+        Logger.error('❌ 錯誤詳情:', err)
         throw err
     }
 }
