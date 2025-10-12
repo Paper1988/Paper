@@ -1,4 +1,4 @@
-import { Logger } from '@/libs/utils/logger'
+import { Logger } from '@/libs/utils/logger.js'
 import { glob } from 'glob'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
