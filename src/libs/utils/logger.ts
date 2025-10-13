@@ -15,6 +15,7 @@ export class Logger {
     }
 
     static error(error: Error | string, ...args: any[]) {
+        const __filename = fileURLToPath(import.meta.url)
         if (error instanceof Error) {
             console.error(
                 chalk.red(
