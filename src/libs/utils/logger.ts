@@ -1,5 +1,7 @@
 import * as Sentry from '@sentry/node'
 import chalk from 'chalk'
+import { fileURLToPath } from 'node:url'
+import path from 'node:path'
 
 export class Logger {
     static info(message: string, ...args: any[]) {
@@ -7,6 +9,7 @@ export class Logger {
     }
 
     static warn(message: string, ...args: any[]) {
+        const __filename = fileURLToPath(import.meta.url)
         console.warn(chalk.yellow('[WARN]', chalk.magenta(`[${__filename}]`), message, ...args))
         Sentry.captureMessage(message, 'warning')
     }
