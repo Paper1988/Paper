@@ -1,6 +1,6 @@
 import type { PaperClient } from '@/classes/PaperClient.js'
 import { aggregateWeeklyStats } from '@/jobs/weeklyAggregation.js'
-import { Logger } from '@/libs/utils/logger'
+import { Logger } from '@/libs/utils/logger.js'
 import fastifyCors from '@fastify/cors'
 import Fastify from 'fastify'
 
