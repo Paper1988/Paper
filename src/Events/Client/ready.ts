@@ -2,12 +2,12 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
-    Client,
     EmbedBuilder,
     Events,
     TextChannel
 } from 'discord.js'
 import mongoose from 'mongoose'
+import { PaperClient } from '@/classes/PaperClient.js'
 
 import { loadButtons } from '@/Structures/Handlers/buttonHandler.js'
 import { loadCommands } from '@/Structures/Handlers/commandHandler.js'
@@ -20,7 +20,6 @@ import GiveawayHistory from '@/Structures/Schemas/GiveawayHistory.js'
 import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
 
 import { registerDistubeEvents } from '@/Systems/DistubeEvents.js'
-import { PaperClient } from '@/classes/PaperClient.js'
 import { checkAndNotify } from '@/libs/utils/checkCookies.js'
 import { checkMongoDBHealth, safeDbOperation } from '@/libs/utils/dbHealthCheck.js'
 import { Logger } from '@/libs/utils/logger.js'
@@ -55,33 +54,6 @@ export default {
         }
 
         mongoose.set('strictQuery', false)
-
-        const connectToDB = async (retryCount = 0, maxRetries = 5): Promise<void> => {
-            try {
-                await mongoose.connect(process.env.DATABASE_URL!, {
-                    dbName: 'Js',
-                    connectTimeoutMS: 30000,
-                    socketTimeoutMS: 45000,
-                    serverSelectionTimeoutMS: 30000,
-                    heartbeatFrequencyMS: 10000,
-                    maxPoolSize: 10,
-                    retryWrites: true,
-                    retryReads: true
-                })
-                Logger.info(`成功連結到 MongoDB ${mongoose.connection.db!.databaseName}!`)
-            } catch (error) {
-                Logger.error(`MongoDB 連線失敗 (嘗試 ${retryCount + 1}/${maxRetries}):`, error)
-
-                if (retryCount < maxRetries) {
-                    Logger.info(`>>> 🔄 ${5000}ms 後重試連線...`)
-                    await new Promise((resolve) => setTimeout(resolve, 5000))
-                    await connectToDB(retryCount + 1, maxRetries)
-                } else {
-                    Logger.error(`已達最大重試次數 (${maxRetries})，無法連接到 MongoDB`)
-                    // 可以在這裡處理無法連線的情況，例如傳送通知或優雅地關閉 Bot
-                }
-            }
-        }
 
         await connectToDB()
 
@@ -186,6 +158,33 @@ export default {
         )
     }
 } satisfies EventType
+
+const connectToDB = async (retryCount = 0, maxRetries = 5): Promise<void> => {
+    try {
+        await mongoose.connect(process.env.DATABASE_URL!, {
+            dbName: 'Js',
+            connectTimeoutMS: 30000,
+            socketTimeoutMS: 45000,
+            serverSelectionTimeoutMS: 30000,
+            heartbeatFrequencyMS: 10000,
+            maxPoolSize: 10,
+            retryWrites: true,
+            retryReads: true
+        })
+        Logger.info(`成功連結到 MongoDB ${mongoose.connection.db!.databaseName}!`)
+    } catch (error) {
+        Logger.error(`MongoDB 連線失敗 (嘗試 ${retryCount + 1}/${maxRetries}):`, error)
+
+        if (retryCount < maxRetries) {
+            Logger.info(`>>> 🔄 ${5000}ms 後重試連線...`)
+            await new Promise((resolve) => setTimeout(resolve, 5000))
+            await connectToDB(retryCount + 1, maxRetries)
+        } else {
+            Logger.error(`已達最大重試次數 (${maxRetries})，無法連接到 MongoDB`)
+            // 可以在這裡處理無法連線的情況，例如傳送通知或優雅地關閉 Bot
+        }
+    }
+}
 
 async function endGiveaway(messageId: string, client: PaperClient): Promise<void> {
     const giveaway = await safeDbOperation(() =>
