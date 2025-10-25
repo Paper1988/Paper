@@ -267,7 +267,7 @@ async function endGiveaway(messageId: string, client: PaperClient): Promise<void
             const existingStats = await GiveawayStats.findOne({
                 guildId: giveaway.guildId
             }).maxTimeMS(10000)
-            const stats = existingStats ?? new GiveawayStats({ guildId: giveaway.guildId })
+            const stats: any = existingStats ?? new GiveawayStats({ guildId: giveaway.guildId })
             stats.activeGiveaways--
             stats.totalWinners += winners.length
 
