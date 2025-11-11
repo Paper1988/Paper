@@ -2,7 +2,6 @@ import type { CommandType } from '@/typings/command.js'
 import translate from '@iamtraction/google-translate'
 import {
     ApplicationCommandType,
-    Client,
     ContextMenuCommandBuilder,
     ContextMenuCommandInteraction,
     EmbedBuilder,
@@ -17,8 +16,7 @@ export default {
         .setType(ApplicationCommandType.Message)
         .setContexts(0, 1, 2)
         .setIntegrationTypes(0, 1),
-    async execute(interaction: ContextMenuCommandInteraction, client: Client) {
-        // 取得被選取的訊息內容
+    async execute(interaction: ContextMenuCommandInteraction) {
         const targetMessage = await interaction.channel?.messages.fetch(interaction.targetId)
         const text = targetMessage?.content
 

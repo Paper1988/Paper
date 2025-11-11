@@ -97,7 +97,7 @@ async function handleSlashCommand(interaction: ChatInputCommandInteraction, clie
         return await interactionUtils.sendDeveloperError(interaction)
     }
 
-    /* if (cooldownMap.has(key)) {
+    if (cooldownMap.has(key)) {
         if (command.developer) return
         const lastTime = cooldownMap.get(key)!
         if (now - lastTime < COOLDOWN_MS) {
@@ -109,7 +109,7 @@ async function handleSlashCommand(interaction: ChatInputCommandInteraction, clie
     } else {
         cooldownMap.set(key, now)
         await recordUsage(interaction)
-    } */
+    }
 
     const subCommand = interaction.options.getSubcommand(false)
     if (subCommand) {
