@@ -42,8 +42,8 @@ export default {
                 .setDescriptionLocalization('ja', '非公開のプレイリストに設定する')
         ),
     async execute(interaction: ChatInputCommandInteraction) {
-        const name = interaction.options.getString('name')
-        const description = interaction.options.getString('description')
+        const name = interaction.options.getString('name', true)
+        const description = interaction.options.getString('description') ?? undefined
         const isPrivate = interaction.options.getBoolean('private') ?? true
 
         try {

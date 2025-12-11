@@ -49,7 +49,7 @@ class GiveawayManagerWithOwnDatabase {
     async saveGiveaway(
         messageId: string,
         giveawayData: {
-            guildId: string | FetchGuildOptions
+            guildId: string
             prize: string
             endAt: number
             channelId: string
