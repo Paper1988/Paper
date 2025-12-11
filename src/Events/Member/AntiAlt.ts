@@ -6,9 +6,6 @@ import ms from 'ms'
 
 export default {
     name: 'guildMemberAdd',
-    /**
-     * @param {GuildMember} member
-     */
     async execute(client: PaperClient, member: GuildMember) {
         if (!client) return
         const Data = await DB.findOne({
@@ -18,7 +15,7 @@ export default {
             .catch(() => {})
         if (!Data) return
 
-        const logChannel = member.guild.channels.cache.get(Data.LogsChannel!)
+        const logChannel = member.guild.channels.cache.get(Data.LogsChannel!)! as TextChannel
 
         const minAge = ms('7 days')
         const createdAt = new Date(member.user.createdAt).getTime()
@@ -56,7 +53,7 @@ export default {
         }
 
         async function createAndDeleteWebhook(embedName: EmbedBuilder) {
-            await (logChannel! as TextChannel)
+            await logChannel
                 .createWebhook({
                     name: member.guild.name,
                     avatar: member.guild.iconURL(),
