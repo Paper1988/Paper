@@ -2,15 +2,28 @@ import CommandUsage from '@/Structures/Schemas/commandUsage.js'
 import WeeklyStats from '@/Structures/Schemas/weeklyStats.js'
 import type { PipelineStage } from 'mongoose'
 
+export function getMondayStart(date: Date, timezoneOffset = 8) {
+    // 轉成台灣時間
+    const local = new Date(date.getTime() + timezoneOffset * 60 * 60 * 1000)
+
+    const day = local.getUTCDay() // 0 = Sunday, 1 = Monday
+    const diff = day === 0 ? -6 : 1 - day
+
+    local.setUTCDate(local.getUTCDate() + diff)
+    local.setUTCHours(0, 0, 0, 0)
+
+    // 轉回 UTC，方便存 DB
+    return new Date(local.getTime() - timezoneOffset * 60 * 60 * 1000)
+}
+
 export async function aggregateWeeklyStats() {
     const now = new Date()
-    // 找這週的週一（起始日）
-    const weekStart = new Date(now)
-    weekStart.setUTCHours(0, 0, 0, 0)
-    weekStart.setUTCDate(weekStart.getUTCDate() - weekStart.getUTCDay() + 1) // 設成週一
 
-    const weekEnd = new Date(weekStart)
-    weekEnd.setUTCDate(weekStart.getUTCDate() + 7)
+    // 本週一
+    const thisWeekStart = getMondayStart(now)
+    // 上週一
+    const weekStart = new Date(thisWeekStart.getTime() - 7 * 24 * 60 * 60 * 1000)
+    const weekEnd = thisWeekStart
 
     // 檢查是否已經存在該週的統計
     const existingStats = await WeeklyStats.findOne({
