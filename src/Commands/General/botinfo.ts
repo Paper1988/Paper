@@ -88,7 +88,7 @@ export default {
                         `<:library:1265560754241929289> **資料庫連線** ${status[mongoose.connection.readyState]}`,
                         `<:nodejs:1265561229624213636> **Node.js** \`${process.version}\``,
                         `<:djs:1265560315928772619> **Discord.js** \`${version}\``,
-                        `<:queue:1265561609632485478> **正在播放** \`${client.moonlink?.players.playingPlayers}\``
+                        `<:queue:1265561609632485478> **正在播放** \`${client.moonlink?.players.playingPlayers.length ?? 0}\` 個播放器`
                     ].join('\n'),
                     inline: true
                 },
