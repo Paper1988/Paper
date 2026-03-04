@@ -1,10 +1,10 @@
-import { MusicDbFetch, deleteMessageAfter } from '@/Systems/Music.js'
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
+import { MusicDbFetch, deleteMessageAfter } from '@/Systems/Music.js'
 import emojis from '@/libs/emoji/emoji.js'
+import { Logger } from '@/libs/utils/logger'
 import type { MenuType } from '@/typings/component.js'
 import { GuildMember, MessageFlags, TextChannel, type AnySelectMenuInteraction } from 'discord.js'
 import type { Player, Track } from 'moonlink.js'
-import { Logger } from '@/libs/utils/logger'
 
 export default {
     id: 'addSong',
@@ -36,7 +36,7 @@ export default {
 
         if (!client.moonlink) {
             return interaction.reply({
-                content: `${emojis.outage} | 發生未知錯誤，無法添加音樂`,
+                content: `${emojis.outage} | 發生未知錯誤`,
                 flags: MessageFlags.Ephemeral
             })
         }
@@ -48,7 +48,7 @@ export default {
             let player: Player
 
             if (!currentPlayer) {
-                player = client.moonlink.createPlayer({
+                player = client.moonlink.players.create({
                     guildId: interaction.guildId!,
                     voiceChannelId: VoiceChannel.id,
                     textChannelId: interaction.channel.id,
@@ -62,14 +62,12 @@ export default {
             }
 
             if (!player.connected) {
-                player.connect({ setDeaf: true })
+                player.connect({ selfDeaf: true })
             }
 
             const result = await client.moonlink.search({
                 query: songUrl!,
-                requester: interaction.user,
-                source: 'youtube',
-                fallbackSources: ['spsearch', 'soundcloud']
+                requester: interaction.user
             })
 
             if (!result.tracks.length || !result.tracks[0]) {
@@ -79,7 +77,7 @@ export default {
                 })
             }
 
-            const track = result.tracks[0]
+            const track = result.tracks[0] as Track
             player.queue.add(track)
 
             if (!player.playing && !player.paused) {
@@ -93,7 +91,7 @@ export default {
         } catch (error) {
             Logger.error('添加歌曲時發生錯誤:', error)
             await interaction.reply({
-                content: `${emojis.outage} | 添加歌曲時發生錯誤: ${error instanceof Error ? error.message : '未知錯誤'}`,
+                content: `${emojis.outage} | 添加歌曲時發生錯誤`,
                 flags: MessageFlags.Ephemeral
             })
         }

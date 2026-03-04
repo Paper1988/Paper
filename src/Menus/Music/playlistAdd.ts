@@ -1,9 +1,10 @@
 import Playlist from '@/Structures/Schemas/Playlist.js'
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
+import { Logger } from '@/libs/utils/logger'
 import type { MenuType } from '@/typings/component.js'
 import { MessageFlags, type AnySelectMenuInteraction } from 'discord.js'
-import { Logger } from '@/libs/utils/logger'
+import type { Track } from 'moonlink.js'
 
 export default {
     id: 'playlist-add',
@@ -14,7 +15,7 @@ export default {
 
         if (!client.moonlink) {
             return interaction.reply({
-                content: `${emojis.outage} | 發生未知錯誤，無法獲取歌曲資訊`,
+                content: `${emojis.outage} | 發生未知錯誤`,
                 flags: MessageFlags.Ephemeral
             })
         }
@@ -22,9 +23,7 @@ export default {
         try {
             const result = await client.moonlink.search({
                 query: selectedSongUrl!,
-                requester: interaction.user,
-                source: 'youtube',
-                fallbackSources: ['spsearch', 'soundcloud']
+                requester: interaction.user
             })
 
             if (!result.tracks.length || !result.tracks[0]) {
@@ -34,7 +33,7 @@ export default {
                 })
             }
 
-            const track = result.tracks[0]
+            const track = result.tracks[0] as Track
 
             const playlist = await Playlist.findOne({
                 userId,
@@ -50,9 +49,9 @@ export default {
 
             playlist.songs.push({
                 title: track.title,
-                url: track.url,
+                url: track.uri,
                 duration: track.duration,
-                thumbnail: track.getThumbnailUrl(),
+                thumbnail: track.thumbnail,
                 uploader: {
                     name: track.author || '未知'
                 },
@@ -68,7 +67,7 @@ export default {
         } catch (error) {
             Logger.error('將歌曲加入播放清單時發生錯誤:', error)
             await interaction.reply({
-                content: `${emojis.outage} | 將歌曲加入播放清單時發生錯誤: ${error instanceof Error ? error.message : '未知錯誤'}`,
+                content: `${emojis.outage} | 將歌曲加入播放清單時發生錯誤`,
                 flags: MessageFlags.Ephemeral
             })
         }
