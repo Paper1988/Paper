@@ -1,5 +1,5 @@
-import type { PaperClient } from '@/classes/PaperClient.js'
 import { Logger } from '@/libs/utils/logger.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import AFKSystem from '@/Structures/Schemas/AFKSystem.js'
 import AntiAlt from '@/Structures/Schemas/AntiAlt.js'
 import GiveawayDB from '@/Structures/Schemas/Giveaway.js'
@@ -23,7 +23,7 @@ export default {
                     .exec()
                     .then((count) => {
                         Logger.info(
-                            `[event.guildDelete] 成功從資料庫 ${mongoose.connection.db!.databaseName} 刪除 ${count.deletedCount} 筆資料!`
+                            `[event.guildDelete] 成功從資料庫 ${model.name} 刪除 ${count.deletedCount} 筆資料!`
                         )
                     })
             } else {
@@ -32,7 +32,7 @@ export default {
                     .exec()
                     .then((count) => {
                         Logger.info(
-                            `[event.guildDelete] 成功從資料庫 ${mongoose.connection.db!.databaseName} 刪除 ${count.deletedCount} 筆資料!`
+                            `[event.guildDelete] 成功從資料庫 ${model.name} 刪除 ${count.deletedCount} 筆資料!`
                         )
                     })
             }

@@ -1,11 +1,10 @@
-import { PaperClient } from '@/classes/PaperClient.js'
+import { cronJob } from '@/jobs/index.js'
 import { Logger } from '@/libs/utils/logger.js'
+import { PaperClient } from '@/Structures/classes/PaperClient.js'
 import * as Sentry from '@sentry/node'
-import { Collection, GatewayIntentBits, Partials } from 'discord.js'
+import { GatewayIntentBits, Partials } from 'discord.js'
 import dotenv from 'dotenv'
 import fs from 'fs'
-import cron from 'node-cron'
-import { aggregateWeeklyStats } from '@/jobs/weeklyAggregation.js'
 
 if (fs.existsSync('.env.local')) {
     dotenv.config({ path: '.env.local' })
@@ -22,21 +21,12 @@ Sentry.init({
 Logger.info('正在初始化機器人...')
 Logger.info(`Node.js 版本: ${process.version}`)
 
-cron.schedule(
-    '0 0 * * 1',
-    async () => {
-        console.log('開始每週統計...')
-        try {
-            await aggregateWeeklyStats()
-            console.log('每週統計完成')
-        } catch (err) {
-            console.error('每週統計失敗', err)
-        }
-    },
-    {
-        timezone: 'Asia/Taipei'
-    }
-)
+try {
+    cronJob.startJobs()
+    Logger.info('已啟動排程')
+} catch (error) {
+    Logger.error('無法啟動排程', error)
+}
 
 let client: PaperClient
 
@@ -59,21 +49,10 @@ try {
         ]
     })
 
-    client.commands = new Collection()
-    client.buttons = new Collection()
-    client.events = new Collection()
-    client.subCommands = new Collection()
-    client.modals = new Collection()
-    client.selectMenus = new Collection()
-    client.contextMenus = new Collection()
-
     Logger.info('已建立 Discord Client 實例')
 
-    client.initDistube()
-    Logger.info('DisTube 初始化完成')
-
     Logger.info('正在啟動機器人...')
-    client.start()
+    await client.start()
     Logger.info('機器人啟動程序已開始')
 } catch (error) {
     Logger.error('機器人啟動失敗:', error)

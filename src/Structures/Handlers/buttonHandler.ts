@@ -1,5 +1,5 @@
 import { loadFiles } from '@/Structures/Functions/fileLoader.js'
-import type { PaperClient } from '@/classes/PaperClient.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 
 export async function loadButtons(client: PaperClient): Promise<void> {
     console.time('Buttons Loaded')

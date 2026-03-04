@@ -1,7 +1,7 @@
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
 import Playlist from '@/Structures/Schemas/Playlist.js'
 import type { CommandType } from '@/typings/command.js'
-import { YouTubePlugin } from '@distube/youtube'
 import {
     ActionRowBuilder,
     AutocompleteInteraction,
@@ -11,6 +11,7 @@ import {
     StringSelectMenuBuilder,
     type APISelectMenuOption
 } from 'discord.js'
+import { Logger } from '@/libs/utils/logger'
 
 export default {
     data: new SlashCommandBuilder()
@@ -56,9 +57,16 @@ export default {
 
         await interaction.respond(filtered)
     },
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction, client: PaperClient) {
         const playlistName = interaction.options.getString('playlist')
         const searchQuery = interaction.options.getString('search')!
+
+        if (!client.moonlink) {
+            return await interaction.reply({
+                content: `${emojis.outage} | 發生未知錯誤，無法搜尋歌曲`,
+                flags: MessageFlags.Ephemeral
+            })
+        }
 
         try {
             const playlist = await Playlist.findOne({
@@ -73,10 +81,15 @@ export default {
                 })
             }
 
-            const yt = new YouTubePlugin()
-            const results = await yt.search(searchQuery)
+            const result = await client.moonlink.search({
+                query: searchQuery,
+                requester: interaction.user,
+                limit: 25,
+                source: 'youtube',
+                fallbackSources: ['spsearch', 'soundcloud']
+            })
 
-            if (results.length === 0) {
+            if (!result.tracks.length) {
                 return await interaction.reply({
                     content: `${emojis.warning} | 找不到任何符合的歌曲`,
                     flags: MessageFlags.Ephemeral
@@ -87,12 +100,29 @@ export default {
                 .setCustomId(`playlist-add:${playlist.userId}:${playlist.name}`)
                 .setPlaceholder('選擇歌曲')
 
-            results.forEach((song) => {
-                selectMenu.addOptions({
-                    label: song.name!,
-                    value: song.url
-                } as APISelectMenuOption)
-            })
+            const options = result.tracks
+                .slice(0, 25)
+                .filter((track) => track.url)
+                .map((track) => {
+                    const label =
+                        track.title.length > 100
+                            ? track.title.substring(0, 97) + '...'
+                            : track.title
+                    return {
+                        label,
+                        value: track.url!,
+                        description: track.author ? `${track.author}` : undefined
+                    } as APISelectMenuOption
+                })
+
+            if (options.length === 0) {
+                return await interaction.reply({
+                    content: `${emojis.warning} | 找不到有效的歌曲`,
+                    flags: MessageFlags.Ephemeral
+                })
+            }
+
+            selectMenu.addOptions(options)
 
             const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu)
 
@@ -101,9 +131,9 @@ export default {
                 components: [row]
             })
         } catch (error) {
-            console.error('搜尋歌曲時發生錯誤:', error)
+            Logger.error('搜尋歌曲時發生錯誤:', error)
             await interaction.reply({
-                content: `${emojis.outage} | 搜尋歌曲時發生錯誤`,
+                content: `${emojis.outage} | 搜尋歌曲時發生錯誤: ${error instanceof Error ? error.message : '未知錯誤'}`,
                 flags: MessageFlags.Ephemeral
             })
         }

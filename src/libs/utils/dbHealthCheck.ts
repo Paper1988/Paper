@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { Logger } from './logger'
 
 /**
  * MongoDB 連線狀態代碼
@@ -93,14 +94,14 @@ export async function safeDbOperation<T>(
     try {
         // 檢查資料庫連線狀態
         if (mongoose.connection.readyState !== 1) {
-            console.warn('>>> ⚠️ 資料庫未連線，無法執行操作')
+            Logger.warn('資料庫未連線，無法執行操作')
             return fallback
         }
 
         // 執行資料庫操作
         return await operation()
-    } catch (error) {
-        console.error('>>> ❌ 資料庫操作失敗:', error)
+    } catch (error: any) {
+        Logger.error(error, '❌資料庫操作失敗:')
         return fallback
     }
 }

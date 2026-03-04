@@ -1,7 +1,5 @@
 import * as Sentry from '@sentry/node'
 import chalk from 'chalk'
-import { fileURLToPath } from 'node:url'
-import path from 'node:path'
 
 export class Logger {
     static info(message: string, ...args: any[]) {
@@ -9,25 +7,22 @@ export class Logger {
     }
 
     static warn(message: string, ...args: any[]) {
-        const __filename = fileURLToPath(import.meta.url)
-        console.warn(chalk.yellow('[WARN]', chalk.magenta(`[${__filename}]`), message, ...args))
+        console.warn(chalk.yellow('[WARN]', message, ...args))
         Sentry.captureMessage(message, 'warning')
     }
 
     static error(error: Error | string, ...args: any[]) {
-        const __filename = fileURLToPath(import.meta.url)
         if (error instanceof Error) {
             console.error(
                 chalk.red(
                     '[ERROR]',
-                    chalk.magenta(`[${__filename}]`),
                     error.stack || error.message,
                     ...args
                 )
             )
             Sentry.captureException(error)
         } else {
-            console.error(chalk.red('[ERROR]', chalk.magenta(`[${__filename}]`), error, ...args))
+            console.error(chalk.red('[ERROR]', error, ...args))
             Sentry.captureMessage(error, 'error')
         }
     }

@@ -1,26 +1,32 @@
+import MusicDB from '@/Structures/Schemas/MusicDB.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
 import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
     EmbedBuilder,
+    Guild,
     InteractionResponse,
     Message,
+    TextChannel,
+    VoiceChannel,
     type MessageActionRowComponentBuilder
 } from 'discord.js'
+import { Player, Track } from 'moonlink.js'
 
-// 使用 DisTube 的原始類型
-import type { Queue, Song } from 'distube'
-
-// 常數提取
 const PROGRESS_BAR_LENGTH = 22
 const DEFAULT_DELETE_TIME = 15 * 1000
-const VOLUME_MAX = 200
+const VOLUME_MAX = 100
 const VOLUME_MIN = 0
 
-// 優化的時間轉換函數
-const secondsToDuration = (seconds: string | number): string => {
-    const totalSeconds = typeof seconds === 'string' ? parseInt(seconds, 10) : Math.floor(seconds)
+const getInterval = (track: Track) => {
+    if (track.isStream) return 60 * 1000 // 直播每分鐘更新一次狀態就好
+    return 10 * 1000 // 普通歌曲 10 秒
+}
+
+const millisToDuration = (millis: number): string => {
+    const totalSeconds = Math.floor(millis / 1000)
     const hours = Math.floor(totalSeconds / 3600)
     const minutes = Math.floor((totalSeconds % 3600) / 60)
     const secs = totalSeconds % 60
@@ -33,8 +39,12 @@ const secondsToDuration = (seconds: string | number): string => {
     return `${pad(minutes)}:${pad(secs)}`
 }
 
-// 優化的按鈕生成函數
-const generateMusicStatusButtons = (queue: Queue) => {
+const secondsToDuration = (seconds: string | number): string => {
+    const totalSeconds = typeof seconds === 'string' ? parseInt(seconds, 10) : Math.floor(seconds)
+    return millisToDuration(totalSeconds * 1000)
+}
+
+const generateMusicStatusButtons = (player: Player) => {
     const createButton = (customId: string, emoji: string, style: ButtonStyle, disabled = false) =>
         new ButtonBuilder()
             .setCustomId(customId)
@@ -46,24 +56,24 @@ const generateMusicStatusButtons = (queue: Queue) => {
         createButton(
             'autoplay',
             emojis.update,
-            queue.autoplay ? ButtonStyle.Success : ButtonStyle.Secondary
+            player.autoPlay ? ButtonStyle.Success : ButtonStyle.Secondary
         ),
         createButton(
             'previous',
             emojis.backforward,
             ButtonStyle.Secondary,
-            queue.previousSongs.length === 0
+            player.previous.length === 0
         ),
         createButton(
             'togglePause',
-            queue.paused ? emojis.play : emojis.pause,
-            queue.paused ? ButtonStyle.Primary : ButtonStyle.Secondary
+            player.paused ? emojis.play : emojis.pause,
+            player.paused ? ButtonStyle.Primary : ButtonStyle.Secondary
         ),
         createButton(
             'skip',
             emojis.frontforward,
             ButtonStyle.Secondary,
-            queue.autoplay ? false : queue.songs.length === 1
+            player.autoPlay ? false : player.queue.tracks.length <= 1
         ),
         createButton('shuffle', emojis.shuffle, ButtonStyle.Secondary)
     ])
@@ -72,23 +82,27 @@ const generateMusicStatusButtons = (queue: Queue) => {
         createButton(
             'loop',
             emojis.loop2,
-            queue.repeatMode ? ButtonStyle.Success : ButtonStyle.Secondary
+            player.loop !== 'off' ? ButtonStyle.Success : ButtonStyle.Secondary
         ),
         createButton(
             'volumeDown',
             emojis.speaker_low,
             ButtonStyle.Secondary,
-            queue.volume <= VOLUME_MIN
+            player.volume <= VOLUME_MIN
         ),
         createButton('stop', emojis.stop, ButtonStyle.Danger),
-        createButton('volumeUp', emojis.speaker, ButtonStyle.Secondary, queue.volume >= VOLUME_MAX),
+        createButton(
+            'volumeUp',
+            emojis.speaker,
+            ButtonStyle.Secondary,
+            player.volume >= VOLUME_MAX
+        ),
         createButton('related', emojis.add, ButtonStyle.Secondary)
     ])
 
     const row3 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([
         createButton('queue', emojis.queue, ButtonStyle.Secondary),
         createButton('addSong', emojis.friend, ButtonStyle.Secondary),
-        createButton('filters', emojis.spark, ButtonStyle.Secondary),
         createButton('lyrics', emojis.list, ButtonStyle.Secondary),
         createButton('playlist:save', emojis.download, ButtonStyle.Secondary)
     ])
@@ -96,7 +110,6 @@ const generateMusicStatusButtons = (queue: Queue) => {
     return [row1, row2, row3]
 }
 
-// 優化的進度條生成函數
 const generateProgressBar = (
     length: number,
     totalLength: number,
@@ -123,94 +136,138 @@ const generateProgressBar = (
     return emojis.leftfull + filledPart + emptyPart + rightPart
 }
 
-// 優化的播放器狀態更新函數
-const updateMusicPlayerStatus = async (queue: Queue, completed?: boolean): Promise<void> => {
-    if (!queue?.textChannel) return
+const updateMusicPlayerStatus = async (
+    player: Player,
+    client: PaperClient,
+    completed?: boolean
+): Promise<void> => {
+    if (!player.textChannelId) return
 
-    const musicControllerMsgId = (queue as any).musicControllerMsgId
+    const musicControllerMsgId = player.data.musicControllerMsgId as string
     if (!musicControllerMsgId) return
 
-    const msg = queue.textChannel.messages.cache.get(musicControllerMsgId)
-    if (!msg) return
-
-    const song = queue.songs[0]
-    if (!song) {
-        clearPlayer(queue)
+    const msg = (client.channels.cache.get(player.textChannelId) as TextChannel).messages.cache.get(
+        musicControllerMsgId
+    )
+    if (!msg) {
+        player.set('musicControllerMsgId', undefined)
         return
     }
 
-    if (completed) resetPlayer(queue)
-    await msg.edit(generateMusicPlayerStatus(queue, song, completed))
+    const track = player.current
+    if (!track) {
+        clearPlayer(player)
+        return
+    }
+
+    if (completed) resetPlayer(player)
+    await msg.edit(generateMusicPlayerStatus(player, client, track, completed))
 }
 
-const clearPlayer = (queue: Queue): void => {
-    resetPlayer(queue)
-    if (queue.playerIntervalId) {
-        clearInterval(queue.playerIntervalId)
+const clearPlayer = (player: Player): void => {
+    resetPlayer(player)
+    const intervalId = player.data.playerIntervalId as NodeJS.Timeout
+    if (intervalId) {
+        clearInterval(intervalId)
     }
 }
 
-const resetPlayer = (queue: Queue): void => {
-    ;(queue as any).musicControllerMsgId = null
+const resetPlayer = (player: Player): void => {
+    player.set('musicControllerMsgId', undefined)
 }
 
-// 優化的音樂播放器狀態生成函數
-const generateMusicPlayerStatus = (queue: Queue, song: Song, completed = false) => {
-    if (!song?.name || !queue) {
-        console.error('Missing required properties:', { song: !!song, queue: !!queue })
+// 啟動進度條自動更新
+const startProgressUpdater = (player: Player, client: PaperClient): void => {
+    // 清除舊的 interval (如果存在)
+    if (player.data.playerIntervalId) {
+        clearInterval(player.data.playerIntervalId as NodeJS.Timeout)
+    }
+
+    if (!player.current) return
+
+    // 設置新的 interval
+    player.set(
+        'playerIntervalId',
+        setInterval(
+            () => {
+                if (!player.playing || player.paused) {
+                    return
+                }
+                updateMusicPlayerStatus(player, client).catch(console.error)
+            },
+            getInterval(player.current ?? ({ isStream: false } as Track))
+        )
+    )
+}
+
+// 停止進度條更新
+const stopProgressUpdater = (player: Player): void => {
+    if (player.data.playerIntervalId) {
+        clearInterval(player.data.playerIntervalId as NodeJS.Timeout)
+        player.set('playerIntervalId', undefined)
+    }
+}
+
+// 音樂播放器狀態
+const generateMusicPlayerStatus = (
+    player: Player,
+    client: PaperClient,
+    track: Track,
+    completed = false
+) => {
+    if (!track?.title || !player) {
+        console.error('Missing required properties:', { track: !!track, player: !!player })
         return {
             embeds: [
                 new EmbedBuilder()
                     .setColor('Red')
                     .setDescription(`${emojis.outage} | 無法獲取歌曲資訊`)
-            ],
-            components: []
+            ]
         }
     }
 
-    const songDuration = song.duration || 0
-    const isSpotify = song.source === 'spotify'
-    const isLive = song.isLive || !songDuration
+    const songDuration = track.duration || 0
+    const currentPosition = completed ? songDuration : track.position
+    const isLive = track.isStream || !songDuration
 
-    // 進度顯示邏輯
     const getProgressDisplay = () => {
         if (isLive) return '🔴 直播中'
         if (completed) {
-            const duration = secondsToDuration(songDuration)
+            const duration = millisToDuration(songDuration)
             return `\`${duration}\` - \`${duration}\``
         }
-        return `\`${secondsToDuration(queue.currentTime)}\` - \`${secondsToDuration(songDuration)}\``
+        return `\`${millisToDuration(currentPosition)}\` - \`${millisToDuration(songDuration)}\``
     }
 
-    // 重複播放模式文字
     const getRepeatModeText = () => {
-        if (!queue.repeatMode) return emojis.xmark
-        return queue.repeatMode === 2 ? '整個清單' : '單曲'
+        if (player.loop === 'off') return emojis.xmark
+        return player.loop === 'queue' ? '整個清單' : '單曲'
     }
+
+    const progressBar = isLive
+        ? '🔴 ━━━━━━━━━━━━━━━━━━━━━━ 直播中'
+        : generateProgressBar(currentPosition, songDuration)
+
+    const voiceChannel = client.channels.cache.get(player.voiceChannelId) as
+        | VoiceChannel
+        | undefined
 
     return {
         embeds: [
             new EmbedBuilder()
-                .setColor(queue.paused ? 'Orange' : 'Green')
+                .setColor(player.paused ? 'Orange' : 'Green')
                 .setDescription(
-                    `${emojis.music} | [${song.name}](${song.url}) - \` ${secondsToDuration(songDuration)} \``
+                    `${emojis.music} | [${track.title}](${track.uri}) - \` ${millisToDuration(songDuration)} \``
                 )
                 .setAuthor({
-                    name: song.user?.displayName || '未知用戶',
-                    iconURL: song.user?.displayAvatarURL() || undefined
+                    name: client.users.cache.get(track.requester)?.username ?? '未知用戶',
+                    iconURL:
+                        client.users.cache.get(track.requester)?.displayAvatarURL() ?? undefined
                 })
                 .addFields(
                     {
                         name: `${emojis.speaker}音量`,
-                        value: `\`${queue.volume}%\``,
-                        inline: true
-                    },
-                    {
-                        name: `${emojis.spark}過濾器`,
-                        value:
-                            queue.filters.names.length > 0
-                                ? queue.filters.names.join(', ')
-                                : emojis.xmark,
+                        value: `\`${player.volume}%\``,
                         inline: true
                     },
                     {
@@ -220,7 +277,7 @@ const generateMusicPlayerStatus = (queue: Queue, song: Song, completed = false) 
                     },
                     {
                         name: `${emojis.update}自動播放`,
-                        value: queue.autoplay ? emojis.correct : emojis.xmark,
+                        value: player.autoPlay ? emojis.correct : emojis.xmark,
                         inline: true
                     },
                     {
@@ -229,40 +286,28 @@ const generateMusicPlayerStatus = (queue: Queue, song: Song, completed = false) 
                         inline: true
                     },
                     {
-                        name: `${emojis.playlist}播放清單`,
-                        value: `\`${queue.songs.length} 首歌曲\``,
-                        inline: true
-                    },
-                    {
                         name: `${emojis.people}作者`,
-                        value: `\`${song.uploader.name || '無'}\``,
+                        value: `\`${track.author || '無'}\``,
                         inline: true
                     },
                     {
-                        name: `${emojis.views}觀看次數`,
-                        value: `\`${song.views?.toLocaleString() || '無資料'}\``,
-                        inline: true
-                    },
-                    {
-                        name: `${emojis.likes}喜歡數`,
-                        value: `\`${song.likes?.toLocaleString() || '無資料'}\``,
+                        name: `${emojis.playlist}播放清單`,
+                        value: `\`${player.queue.tracks.length + 1} 首歌曲\``,
                         inline: true
                     },
                     {
                         name: '進度條',
-                        value: completed
-                            ? generateProgressBar(songDuration, songDuration)
-                            : generateProgressBar(queue.currentTime, songDuration)
+                        value: progressBar
                     }
                 )
-                .setImage(isSpotify ? null : song.thumbnail || null)
-                .setThumbnail(isSpotify ? song.thumbnail || null : null)
+                .setImage(track.sourceName === 'youtube' ? track.thumbnail : null)
+                .setThumbnail(track.sourceName === 'spotify' ? track.thumbnail : null)
                 .setTimestamp()
                 .setFooter({
-                    text: `在 ${queue.voiceChannel?.name || '未知'} 中播放`
+                    text: `在 ${voiceChannel?.name ?? '未知頻道'} 中播放`
                 })
         ],
-        components: completed ? [] : generateMusicStatusButtons(queue)
+        components: completed ? [] : generateMusicStatusButtons(player)
     }
 }
 
@@ -274,12 +319,40 @@ const deleteMessageAfter = (
     setTimeout(() => msg.delete(), time)
 }
 
+async function MusicDbFetch(guild: Guild) {
+    const db = await MusicDB.findOne({ GuildID: guild.id })
+
+    let repeatMode: Player['loop'] = 'off'
+
+    switch (db?.repeatMode) {
+        case 0:
+            repeatMode = 'off'
+            break
+        case 1:
+            repeatMode = 'track'
+            break
+        case 2:
+            repeatMode = 'queue'
+    }
+
+    return {
+        volume: db?.volume,
+        repeatMode: repeatMode,
+        autoplay: db?.autoplay
+    }
+}
+
 export {
     clearPlayer,
     deleteMessageAfter,
     generateMusicPlayerStatus,
     generateMusicStatusButtons,
     generateProgressBar,
+    millisToDuration,
+    MusicDbFetch,
     resetPlayer,
+    secondsToDuration,
+    startProgressUpdater,
+    stopProgressUpdater,
     updateMusicPlayerStatus
 }

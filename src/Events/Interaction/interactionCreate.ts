@@ -9,7 +9,7 @@ import {
     UserSelectMenuInteraction,
     type Interaction
 } from 'discord.js'
-import type { PaperClient } from '@/classes/PaperClient.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import {
     checkBlacklist,
     CONFIG,

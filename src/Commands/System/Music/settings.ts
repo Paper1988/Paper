@@ -1,10 +1,10 @@
-import type { PaperClient } from '@/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import MusicDB from '@/Structures/Schemas/MusicDB.js'
 import { clearPlayer, updateMusicPlayerStatus } from '@/Systems/Music.js'
 import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, MessageFlags } from 'discord.js'
-import { Events, Song } from 'distube'
+import type { Player } from 'moonlink.js'
 
 export default {
     subCommand: 'music.settings',
@@ -15,102 +15,111 @@ export default {
 
         if (!VoiceChannel) {
             return interaction.reply({
-                content: '<:warning:1265562532857380936> | 你必須待在語音頻道裡面才能使用音樂指令!',
+                content: `${emojis.warning} | 你必須待在一個語音頻道裡面才能使用音樂指令!`,
                 flags: MessageFlags.Ephemeral
             })
         }
-        const currentVoiceChannel = interaction.guild?.members.me?.voice.channelId
-        if (currentVoiceChannel && VoiceChannel.id !== currentVoiceChannel) {
-            return await interaction.editReply({
-                content: `${emojis.warning} | 我已經在語音頻道 - <#${currentVoiceChannel}> 裡播放音樂了`
+
+        const currentPlayer = client.moonlink?.players.get(interaction.guildId!) as Player
+        if (currentPlayer?.voiceChannelId && VoiceChannel.id !== currentPlayer.voiceChannelId) {
+            return await interaction.reply({
+                content: `${emojis.warning} | 我已經在語音頻道 - <#${currentPlayer.voiceChannelId}> 裡播放音樂了`
             })
         }
 
-        const queue = client.distube.getQueue(VoiceChannel)
+        const player: Player = currentPlayer
+        const queue = player.queue
 
-        if (!queue) {
+        if (!player) {
             return interaction.reply({
-                content: '<:outage:1265561329528471613> | 找不到歌曲或該歌曲已經播放完畢!'
+                content: `${emojis.outage} | 找不到歌曲或該歌曲已經播放完畢!`
             })
         }
 
         let Mode: boolean
-        let repeatMode: number
         let normalizedMode: number
         let leftSongs: number
 
         switch (options.getString('options')) {
             case 'skip':
-                if (!queue.songs[1] && !queue.autoplay) {
+                if (!queue.tracks[1] && !player.autoPlay) {
                     return interaction.reply({
-                        content: '<:outage:1265561329528471613> | 這是最後一首歌了!'
+                        content: `${emojis.outage} | 這是最後一首歌了!`
                     })
                 }
-                await queue.skip()
+                await player.skip()
                 return interaction.reply({
-                    content: '<:frontforward:1265560424510787584> | 成功跳過歌曲'
+                    content: `${emojis.frontforward} | 成功跳過歌曲`
                 })
 
             case 'stop':
-                await queue.stop()
-                await updateMusicPlayerStatus(queue, true)
-                clearPlayer(queue)
-                queue.voice.leave()
+                await player.stop()
+                await updateMusicPlayerStatus(player, client, true)
+                player.queue.clear()
+                clearPlayer(player)
+                await player.disconnect()
+
                 return interaction.reply({
                     content: '<:stop:1265562218498363422> | 成功停止音樂並退出語音頻道'
                 })
 
             case 'togglePause':
-                if (!queue.paused) {
-                    await queue.pause()
+                if (!player.paused) {
+                    await player.pause()
                     return interaction.reply({
                         content: '<:pause:1265561390358331462> | 成功暫停播放歌曲'
                     })
                 } else {
-                    await queue.resume()
+                    await player.resume()
                     return interaction.reply({
                         content: '<:play:1265561505458294826> | 成功恢復播放歌曲'
                     })
                 }
 
             case 'shuffle':
-                await queue.shuffle()
+                player.queue.shuffle()
                 return interaction.reply({
                     content: '<:shuffle:1265561846690222081> | 成功隨機播放歌曲'
                 })
 
             case 'autoplay':
-                Mode = queue.toggleAutoplay()
+                if (player.autoPlay) player.setAutoPlay(true)
+                else player.setAutoPlay(false)
+
+                Mode = player.autoPlay
                 await MusicDB.findOneAndUpdate(
-                    { GuildID: queue.id },
+                    { GuildID: player.guildId },
                     { autoplayMode: Mode ? true : false },
                     { new: true, upsert: true }
                 )
                 return interaction.reply({
                     content: `<:update:1265562455828987968> | 成功切換自動播放模式: ${
-                        Mode ? '<:correct:1265560254708711467>' : '<:xmark:1265562550947545089>'
+                        Mode ? emojis.correct : emojis.xmark
                     }`
                 })
 
             case 'previous':
-                await queue.previous()
-                queue.emit(Events.FINISH_SONG, queue)
+                await player.back()
                 return interaction.reply({
-                    content: '<:backforward:1265557186621345833> | 成功播放上一首歌曲'
-                })
-
-            case 'related':
-                await queue.addRelatedSong()
-                return interaction.reply({
-                    content: '<:plus:1265561528866967667> | 成功添加相似歌曲到播放清單中'
+                    content: `${emojis.backforward} | 成功播放上一首歌曲`
                 })
 
             case 'repeat':
-                repeatMode = client.distube.setRepeatMode(queue)
-                normalizedMode = repeatMode ? (repeatMode === 2 ? 2 : 1) : 0
+                switch (player.loop) {
+                    case 'off':
+                        player.setLoop('track')
+                        break
+                    case 'track':
+                        player.setLoop('queue')
+                        break
+                    case 'queue':
+                        player.setLoop('off')
+                        break
+                }
+                normalizedMode = player.loop === 'off' ? 0 : player.loop === 'track' ? 1 : 2
 
                 await MusicDB.findOneAndUpdate(
-                    { GuildID: queue.id },
+                    { GuildID: player.guildId },
                     { repeatMode: normalizedMode },
                     { new: true, upsert: true }
                 )
@@ -120,29 +129,59 @@ export default {
                             ? normalizedMode == 2
                                 ? '<:loop2:1265560938417754213>整個清單'
                                 : '<:looponce:1265560956193210399>單曲'
-                            : '<:xmark:1265562550947545089>'
+                            : emojis.xmark
                     }`
                 })
 
             case 'queue':
-                leftSongs = queue.songs.length - 10 > 0 ? queue.songs.length - 10 : 0
+                leftSongs = queue.tracks.length - 10
 
-                return interaction.reply({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setColor('Purple')
-                            .setDescription(
-                                `<:queue:1265561609632485478> | 播放清單\n${queue.songs
-                                    .slice(0, 10)
-                                    .map(
-                                        (song, id) =>
-                                            `\n**${id + 1}**. \`${song.name}\` - \`${song.formattedDuration}\``
-                                    )}\n\n- \`和另外${leftSongs}首歌\``
-                            )
-                            .setImage((queue.songs[0] as Song).thumbnail!)
-                            .setTimestamp()
-                    ]
-                })
+                const embed = new EmbedBuilder()
+                    .setColor('Purple')
+                    .setImage(queue.tracks[0]?.artworkUrl!)
+                    .setTimestamp()
+
+                if (player.current) {
+                    embed.setDescription(
+                        `${emojis.queue} | 播放佇列\n**現在播放:** [${
+                            player.current.title
+                        }](${player.current.uri}) | \` ${formatDuration(
+                            player.current.duration
+                        )} \``
+                    )
+                }
+
+                if (player.queue.size > 0) {
+                    const tracks = player.queue.tracks.map((track, index) => {
+                        return `**${index + 1}**. [${track.title}](${
+                            track.uri
+                        }) | \` ${formatDuration(track.duration)} \``
+                    })
+
+                    embed.addFields({
+                        name: '接下來:',
+                        value: tracks.slice(0, 10).join('\n')
+                    })
+
+                    if (player.queue.size > 10) {
+                        embed.addFields({
+                            name: '以及...',
+                            value: `\` ${leftSongs} \` 首其他歌曲在佇列中`
+                        })
+                    }
+                }
+
+                return interaction.reply({ embeds: [embed] })
         }
     }
 } as SubCommandType
+
+const formatDuration = (ms: number) => {
+    const seconds = Math.floor((ms / 1000) % 60)
+    const minutes = Math.floor((ms / (1000 * 60)) % 60)
+    const hours = Math.floor(ms / (1000 * 60 * 60))
+
+    return `${hours ? `${hours}:` : ''}${minutes
+        .toString()
+        .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+}

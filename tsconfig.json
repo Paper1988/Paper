@@ -9,7 +9,7 @@
         "paths": {
             "@/*": ["src/*"],
             "@types/*": ["./types/*"],
-            "@classes/*": ["src/classes/*"]
+            "@classes/*": ["src/Structures/classes/*"]
         },
         "typeRoots": ["./node_modules/@types", "./types"],
         "allowJs": true,

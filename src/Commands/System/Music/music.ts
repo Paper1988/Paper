@@ -1,10 +1,21 @@
-import { YouTubePlugin } from '@distube/youtube'
-import { AutocompleteInteraction, SlashCommandBuilder } from 'discord.js'
-import { defaultFilters } from 'distube'
-import { cacheSetJsonWithTTL, cacheGetJson } from '@/libs/utils/redis.js'
+import { PaperClient } from '@/Structures/classes/PaperClient.js'
+import { cacheGetJson, cacheSetJsonWithTTL } from '@/libs/utils/redis.js'
 import { randomUUID } from 'crypto'
+import { AutocompleteInteraction, SlashCommandBuilder } from 'discord.js'
+import type { SearchResult, Track } from 'moonlink.js'
 
-const CACHE_DURATION = 30 * 60 * 1000
+const CACHE_DURATION = 60 * 1000
+
+function formatDuration(ms: number): string {
+    const seconds = Math.floor((ms / 1000) % 60)
+    const minutes = Math.floor((ms / (1000 * 60)) % 60)
+    const hours = Math.floor(ms / (1000 * 60 * 60))
+
+    if (hours > 0) {
+        return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+    }
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`
+}
 
 export default {
     data: new SlashCommandBuilder()
@@ -33,7 +44,7 @@ export default {
                         .setRequired(true)
                         .setAutocomplete(true)
                 )
-                .addNumberOption((option) =>
+                /* .addNumberOption((option) =>
                     option
                         .setName('position')
                         .setNameLocalization('zh-TW', '位置')
@@ -41,7 +52,7 @@ export default {
                         .setDescription('Position in queue')
                         .setDescriptionLocalization('zh-TW', '在播放清單中的位置')
                         .setDescriptionLocalization('ja', 'キューでの位置')
-                )
+                ) */
                 .addBooleanOption((option) =>
                     option
                         .setName('skip')
@@ -99,42 +110,6 @@ export default {
         )
         .addSubcommand((sub) =>
             sub
-                .setName('filters')
-                .setNameLocalization('zh-TW', '過濾器')
-                .setNameLocalization('ja', 'フィルター')
-                .setDescription('Add/Remove filters')
-                .setDescriptionLocalization('zh-TW', '增添/移除過濾器')
-                .setDescriptionLocalization('ja', 'フィルターを追加/削除')
-                .addStringOption((options) =>
-                    options
-                        .setName('set')
-                        .setNameLocalization('zh-TW', '選擇')
-                        .setNameLocalization('ja', '選択')
-                        .setDescription('Please select the filter')
-                        .setDescriptionLocalization('zh-TW', '請選擇過濾器')
-                        .setDescriptionLocalization('ja', 'フィルターを選択してください')
-                        .setRequired(true)
-                        .addChoices(
-                            { name: '移除所有過濾器', value: 'false' },
-                            ...Object.keys(defaultFilters).map((k) => ({
-                                name: k,
-                                value: k
-                            })),
-                            ...Object.keys({
-                                // https://distube.js.org/types/DisTubeOptions.html
-                                speed_050: 'atempo=0.5',
-                                speed_075: 'atempo=0.75',
-                                speed_1: 'atempo=1',
-                                speed_125: 'atempo=1.25',
-                                speed_150: 'atempo=1.5',
-                                speed_175: 'atempo=1.75',
-                                speed_2: 'atempo=2'
-                            }).map((k) => ({ name: k, value: k }))
-                        )
-                )
-        )
-        .addSubcommand((sub) =>
-            sub
                 .setName('jump')
                 .setNameLocalization('zh-TW', '跳轉')
                 .setNameLocalization('ja', 'ジャンプ')
@@ -174,7 +149,6 @@ export default {
                             { name: '停止音樂', value: 'stop' },
                             { name: '隨機播放', value: 'shuffle' },
                             { name: '切換自動播放', value: 'autoplay' },
-                            { name: '添加相似歌曲', value: 'related' },
                             { name: '切換重複播放', value: 'repeat' }
                         )
                 )
@@ -188,9 +162,10 @@ export default {
                 .setDescriptionLocalization('zh-TW', '退出語音頻道')
                 .setDescriptionLocalization('ja', 'ボイスチャンネルを離れる')
         ),
-    async autocomplete(interaction: AutocompleteInteraction) {
-        const yt = new YouTubePlugin()
+    async autocomplete(interaction: AutocompleteInteraction, client: PaperClient) {
         const value = interaction.options.getFocused().toString().trim()
+
+        if (!client.moonlink) return await interaction.respond([])
 
         try {
             if (!value) {
@@ -208,51 +183,71 @@ export default {
 
                 regionCode = regionMap[userLocale] || regionCode
 
-                // 使用 Redis 快取來儲存熱門歌曲
-                const cacheKey = `trending_${regionCode}`
+                const cacheKey = `music:trending:${regionCode}`
                 let cachedResults = await cacheGetJson<{
                     choices: { name: string; value: string }[]
                     timestamp: number
                 }>(cacheKey)
 
-                if (cachedResults && Date.now() - cachedResults.timestamp < CACHE_DURATION) {
+                if (cachedResults && Date.now() - cachedResults.timestamp < CACHE_DURATION * 1000) {
                     return await interaction.respond(cachedResults.choices)
                 }
 
-                // 如果沒有快取或快取過期，重新獲取
-                let trendingResults: any[]
+                let trendingQuery: string
                 switch (regionCode) {
                     case 'TW':
-                        trendingResults = await yt.search('台灣流行音樂 最新', { limit: 20 })
+                        trendingQuery = '台灣流行音樂 最新'
                         break
                     case 'JP':
-                        trendingResults = await yt.search('日本流行音楽 最新', { limit: 20 })
+                        trendingQuery = '日本流行音楽 最新'
                         break
                     case 'KR':
-                        trendingResults = await yt.search('한국 인기 음악', { limit: 20 })
+                        trendingQuery = '한국 인기 음악'
                         break
                     case 'CN':
-                        trendingResults = await yt.search('中国流行音乐 最新', { limit: 20 })
+                        trendingQuery = '中国流行音乐 最新'
                         break
                     default:
-                        trendingResults = await yt.search('popular music trending', { limit: 20 })
+                        trendingQuery = 'popular music trending'
+                }
+
+                const trendingResults = (await client.moonlink.search({
+                    query: trendingQuery,
+                    requester: interaction.user.id
+                })) as SearchResult
+
+                if (!trendingResults.tracks.length) {
+                    return await interaction.respond([])
                 }
 
                 const trendingChoices = await Promise.all(
-                    trendingResults.slice(0, 20).map(async (song) => {
+                    trendingResults.tracks.slice(0, 20).map(async (track) => {
                         const token = 'tk_' + randomUUID().replace(/-/g, '').slice(0, 12)
+
                         await cacheSetJsonWithTTL(
-                            `ac:track:${token}`,
+                            `music:track:${interaction.user.id}:${token}`,
                             {
-                                value: song.url || song.name || 'unknown'
+                                title: track.title,
+                                author: track.author,
+                                duration: track.duration,
+                                uri: track.uri,
+                                identifier: track.identifier,
+                                thumbnail: track.artworkUrl,
+                                sourceName: track.sourceName
                             },
                             CACHE_DURATION / 1000
                         )
-                        return { name: `🔥 ${song.name.slice(0, 90)}`, value: token }
+
+                        const duration = formatDuration(track.duration)
+                        const name = `🔥 ${track.title} [${duration}]`
+
+                        return {
+                            name: name.length > 100 ? name.substring(0, 97) + '...' : name,
+                            value: token
+                        }
                     })
                 )
 
-                // 儲存到 Redis 快取
                 await cacheSetJsonWithTTL(
                     cacheKey,
                     {
@@ -265,68 +260,92 @@ export default {
                 return await interaction.respond(trendingChoices)
             }
 
-            // 如果是URL，不提供建議
             if (value.startsWith('https://') || value.startsWith('http://')) {
-                return await interaction.respond([])
+                return await interaction.respond([
+                    {
+                        name: value,
+                        value: value
+                    }
+                ])
             }
 
-            // 一般搜尋
-            let choices: { name: string; value: string }[] = []
-            try {
-                // 對搜尋詞進行處理
-                const searchTerm = value
-                    .replace(/\s+/g, ' ') // 將多個空格轉換為單個空格
-                    .trim()
+            const searchTerm = value.replace(/\s+/g, ' ').trim()
 
-                // 使用 Redis 快取來儲存搜尋結果
-                const searchCacheKey = `search_${Buffer.from(searchTerm).toString('base64')}`
-                let cachedSearchResults = await cacheGetJson<{
-                    choices: { name: string; value: string }[]
-                    timestamp: number
-                }>(searchCacheKey)
+            const searchCacheKey = `music:search:${interaction.user.id}:${Buffer.from(searchTerm).toString('base64').slice(0, 100)}`
+            let cachedSearchResults = await cacheGetJson<{
+                choices: { name: string; value: string }[]
+                timestamp: number
+            }>(searchCacheKey)
 
-                if (
-                    cachedSearchResults &&
-                    Date.now() - cachedSearchResults.timestamp < CACHE_DURATION
-                ) {
-                    choices = cachedSearchResults.choices
-                } else {
-                    const results = await yt.search(searchTerm)
+            if (
+                cachedSearchResults &&
+                Date.now() - cachedSearchResults.timestamp < CACHE_DURATION * 1000
+            ) {
+                const filtered = cachedSearchResults.choices
+                    .filter((choice) => {
+                        const searchLower = value.toLowerCase()
+                        const titleLower = choice.name.toLowerCase()
 
-                    // 生成 token 並儲存歌曲資訊
-                    const choicesWithTokens = await Promise.all(
-                        results.map(async (song) => {
-                            const token = 'tk_' + randomUUID().replace(/-/g, '').slice(0, 12)
-                            await cacheSetJsonWithTTL(
-                                `ac:track:${token}`,
-                                {
-                                    value: song.url || song.name || 'unknown'
-                                },
-                                CACHE_DURATION / 1000
-                            )
-                            return {
-                                name: `${song.name}`.slice(0, 90),
-                                value: token
-                            }
-                        })
-                    )
+                        if (titleLower.includes(searchLower)) return true
 
-                    choices = choicesWithTokens
+                        const searchTerms = searchLower.split(/\s+/)
+                        return searchTerms.every((term) => titleLower.includes(term))
+                    })
+                    .slice(0, 20)
 
-                    // 儲存搜尋結果到 Redis 快取
+                return await interaction.respond(filtered)
+            }
+
+            const results = await client.moonlink.search({
+                query: searchTerm,
+                requester: interaction.user.id
+            })
+
+            if (!results.tracks.length) {
+                return await interaction.respond([
+                    {
+                        name: '❌ 找不到任何結果',
+                        value: '_no_results'
+                    }
+                ])
+            }
+
+            const choices = await Promise.all(
+                results.tracks.slice(0, 25).map(async (track: Track) => {
+                    const token = 'tk_' + randomUUID().replace(/-/g, '').slice(0, 12)
+
                     await cacheSetJsonWithTTL(
-                        searchCacheKey,
+                        `music:track:${interaction.user.id}:${token}`,
                         {
-                            choices,
-                            timestamp: Date.now()
+                            title: track.title,
+                            author: track.author,
+                            duration: track.duration,
+                            uri: track.uri,
+                            identifier: track.identifier,
+                            thumbnail: track.artworkUrl,
+                            sourceName: track.sourceName
                         },
                         CACHE_DURATION / 1000
                     )
-                }
-            } catch (searchError) {
-                console.error('搜尋時發生錯誤:', searchError)
-                return await interaction.respond([])
-            }
+
+                    const duration = formatDuration(track.duration)
+                    const name = `${track.title} [${duration}]`
+
+                    return {
+                        name: name.length > 100 ? name.substring(0, 97) + '...' : name,
+                        value: token
+                    }
+                })
+            )
+
+            await cacheSetJsonWithTTL(
+                searchCacheKey,
+                {
+                    choices,
+                    timestamp: Date.now()
+                },
+                CACHE_DURATION / 1000
+            )
 
             const filtered = choices
                 .filter((choice) => {

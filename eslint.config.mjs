@@ -2,10 +2,10 @@ import { fixupConfigRules, fixupPluginRules } from '@eslint/compat'
 import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 import typescriptEslint from '@typescript-eslint/eslint-plugin'
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import tsParser from '@typescript-eslint/parser'
 import _import from 'eslint-plugin-import'
 import prettier from 'eslint-plugin-prettier'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import { defineConfig } from 'eslint/config'
 import globals from 'globals'
 import path from 'node:path'
@@ -85,6 +85,8 @@ export default defineConfig([
                     endOfLine: 'lf'
                 }
             ],
+
+            '@typescript-eslint/no-floating-promises': 'error',
 
             '@typescript-eslint/no-explicit-any': [
                 'off',

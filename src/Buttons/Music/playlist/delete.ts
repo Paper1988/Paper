@@ -16,7 +16,7 @@ export default {
                         content: `${emojis.correct} | 已取消刪除播放清單`,
                         components: []
                     })
-                    .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                    .then(deleteMessageAfter)
             }
 
             const playlist = await Playlist.findOne({
@@ -30,7 +30,7 @@ export default {
                         content: `${emojis.warning} | 找不到指定的播放清單`,
                         components: []
                     })
-                    .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                    .then(deleteMessageAfter)
             }
 
             await playlist.deleteOne()
@@ -46,7 +46,7 @@ export default {
                     content: `${emojis.outage} | 處理播放清單刪除時發生錯誤`,
                     components: []
                 })
-                .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                .then(deleteMessageAfter)
         }
     }
 } satisfies ButtonType

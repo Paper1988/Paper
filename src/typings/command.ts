@@ -1,4 +1,4 @@
-import { PaperClient } from '@/classes/PaperClient.js'
+import { PaperClient } from '@/Structures/classes/PaperClient.js'
 import type {
     AutocompleteInteraction,
     ChatInputApplicationCommandData,
@@ -19,7 +19,6 @@ type CommandInteractionType =
     | ContextMenuCommandInteraction
     | CommandInteraction
     | AutocompleteInteraction
-    | CommandInteraction
 
 export type CommandType = {
     data?: SlashCommandBuilder | ContextMenuCommandBuilder

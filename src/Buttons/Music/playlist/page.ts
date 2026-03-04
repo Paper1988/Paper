@@ -30,7 +30,7 @@ export default {
                         content: `${emojis.warning} | 找不到指定的播放清單`,
                         flags: MessageFlags.Ephemeral
                     })
-                    .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                    .then(deleteMessageAfter)
             }
 
             if (playlist.isPrivate && playlist.userId !== interaction.user.id) {
@@ -39,7 +39,7 @@ export default {
                         content: `${emojis.warning} | 這是私人播放清單`,
                         flags: MessageFlags.Ephemeral
                     })
-                    .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                    .then(deleteMessageAfter)
             }
 
             const totalPages = Math.ceil(playlist.songs.length / songsPerPage)
@@ -101,7 +101,7 @@ export default {
                     content: `${emojis.outage} | 處理分頁時發生錯誤`,
                     flags: MessageFlags.Ephemeral
                 })
-                .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                .then(deleteMessageAfter)
         }
     }
 } satisfies ButtonType

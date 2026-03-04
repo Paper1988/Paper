@@ -1,4 +1,4 @@
-import { PaperClient } from '@/classes/PaperClient.js'
+import { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { ActivityType } from 'discord.js'
 
 async function updatePresence(client: PaperClient) {

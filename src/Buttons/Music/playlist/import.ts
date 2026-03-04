@@ -23,7 +23,7 @@ export default {
                         content: `${emojis.correct} | 已取消匯入播放清單`,
                         components: []
                     })
-                    .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                    .then(deleteMessageAfter)
             }
 
             // 獲取原始播放清單
@@ -34,7 +34,7 @@ export default {
                         content: `${emojis.warning} | 找不到指定的播放清單`,
                         flags: MessageFlags.Ephemeral
                     })
-                    .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                    .then(deleteMessageAfter)
             }
 
             // 檢查是否為播放清單主人
@@ -44,7 +44,7 @@ export default {
                         content: `${emojis.warning} | 這是你自己的播放清單`,
                         flags: MessageFlags.Ephemeral
                     })
-                    .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                    .then(deleteMessageAfter)
             }
 
             // 檢查是否為私人播放清單
@@ -54,7 +54,7 @@ export default {
                         content: `${emojis.warning} | 這是私人播放清單`,
                         flags: MessageFlags.Ephemeral
                     })
-                    .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                    .then(deleteMessageAfter)
             }
 
             // 檢查用戶是否已有相同名稱的播放清單
@@ -117,7 +117,7 @@ export default {
                     content: `${emojis.outage} | 匯入播放清單時發生錯誤`,
                     flags: MessageFlags.Ephemeral
                 })
-                .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                .then(deleteMessageAfter)
         }
     }
 } satisfies ButtonType

@@ -1,3 +1,4 @@
+import { PaperClient } from '@/Structures/classes/PaperClient.js'
 import {
     ActionRowBuilder,
     ButtonBuilder,
@@ -6,8 +7,8 @@ import {
     Events,
     TextChannel
 } from 'discord.js'
+import dns from 'dns'
 import mongoose from 'mongoose'
-import { PaperClient } from '@/classes/PaperClient.js'
 
 import { loadButtons } from '@/Structures/Handlers/buttonHandler.js'
 import { loadCommands } from '@/Structures/Handlers/commandHandler.js'
@@ -19,8 +20,7 @@ import Giveaway from '@/Structures/Schemas/Giveaway.js'
 import GiveawayHistory from '@/Structures/Schemas/GiveawayHistory.js'
 import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
 
-import { registerDistubeEvents } from '@/Systems/DistubeEvents.js'
-import { checkAndNotify } from '@/libs/utils/checkCookies.js'
+import { registerMoonlinkEvents } from '@/Systems/MoonlinkEvents.js'
 import { checkMongoDBHealth, safeDbOperation } from '@/libs/utils/dbHealthCheck.js'
 import { Logger } from '@/libs/utils/logger.js'
 import type { EventType } from '@/typings/event.js'
@@ -45,17 +45,24 @@ export default {
             loadMenus(client)
         ])
 
-        registerDistubeEvents(client)
+        if (client.moonlink && client.user?.id) {
+            try {
+                registerMoonlinkEvents(client)
+                Logger.info('Moonlink 已成功初始化並註冊事件')
+            } catch (error) {
+                Logger.error('Moonlink 初始化失敗:', error)
+            }
+        }
+
+        mongoose.set('strictQuery', false)
+
+        await connectToDB()
 
         try {
             await client.startApiServer()
         } catch (error) {
             Logger.error('Failed to start API server:', error)
         }
-
-        mongoose.set('strictQuery', false)
-
-        await connectToDB()
 
         const dbHealthCheckInterval = setInterval(
             async () => {
@@ -70,8 +77,10 @@ export default {
                         mongoose.connection.readyState !== 1 &&
                         mongoose.connection.readyState !== 2
                     ) {
-                        Logger.info('>>> 🔄 嘗試重新連線至 MongoDB...')
-                        connectToDB(0, 3)
+                        Logger.info('🔄 嘗試重新連線至 MongoDB...')
+                        connectToDB(0, 3).catch((err) =>
+                            Logger.error('健康檢查重連失敗:', err.stack)
+                        )
                     }
                 } else {
                     Logger.info(`MongoDB 健康檢查通過 (延遲: ${healthStatus.details.ping}ms)`)
@@ -88,9 +97,9 @@ export default {
             Logger.error('MongoDB 連線錯誤:', error)
         })
 
-        mongoose.connection.on('disconnected', () => {
+        mongoose.connection.on('disconnected', async () => {
             Logger.info('MongoDB 連線斷開，嘗試重新連線...')
-            connectToDB()
+            await connectToDB().catch((err) => Logger.error('重連 MongoDB 失敗:', err.stack))
         })
 
         if (client.user?.id === '***REMOVED***') {
@@ -100,8 +109,8 @@ export default {
                 .setTimestamp()
 
             const webhook = await client.fetchWebhook(
-                '1265249137327214674',
-                'JKxcMDXNaR0Y2Y-LVt-syEGHsGIrab97FdyliUTGFH_dNEGaXf8Ty7RXLeAGEvliT5IN'
+                process.env.STARTUP_WEBHOOK_ID!,
+                process.env.STARTUP_WEBHOOK_TOKEN!
             )
             await webhook.send({ embeds: [Embed] })
         }
@@ -144,8 +153,6 @@ export default {
                         }
                     }
 
-                    await checkAndNotify(client)
-
                     if (global.gc) {
                         global.gc()
                         Logger.info('已執行垃圾回收')
@@ -161,7 +168,13 @@ export default {
 
 const connectToDB = async (retryCount = 0, maxRetries = 5): Promise<void> => {
     try {
-        await mongoose.connect(process.env.DATABASE_URL!, {
+        dns.setDefaultResultOrder('ipv4first')
+
+        if (process.env.DATABASE_URI?.startsWith('mongodb+srv://')) {
+            dns.setServers(['8.8.8.8', '8.8.4.4']) // 使用 Google DNS
+        }
+
+        await mongoose.connect(process.env.DATABASE_URI!, {
             dbName: 'Js',
             connectTimeoutMS: 30000,
             socketTimeoutMS: 45000,
@@ -175,8 +188,14 @@ const connectToDB = async (retryCount = 0, maxRetries = 5): Promise<void> => {
     } catch (error) {
         Logger.error(`MongoDB 連線失敗 (嘗試 ${retryCount + 1}/${maxRetries}):`, error)
 
+        console.error('完整錯誤:', JSON.stringify(error, null, 2))
+        if (error instanceof Error) {
+            console.error('錯誤訊息:', error.message)
+            console.error('錯誤堆疊:', error.stack)
+        }
+
         if (retryCount < maxRetries) {
-            Logger.info(`>>> 🔄 ${5000}ms 後重試連線...`)
+            Logger.info(`🔄 ${5000}ms 後重試連線...`)
             await new Promise((resolve) => setTimeout(resolve, 5000))
             await connectToDB(retryCount + 1, maxRetries)
         } else {
@@ -219,11 +238,12 @@ async function endGiveaway(messageId: string, client: PaperClient): Promise<void
         const winnerMentions = winners.map((id) => `<@${id}>`).join(', ') || '沒有人參加抽獎'
 
         if (message.embeds.length > 0) {
+            const originalDesc = message.embeds[0]?.data.description?.split('\n\n')[0] ?? ''
+
             const endEmbed = EmbedBuilder.from(message.embeds[0]!)
                 .setColor('Green')
                 .setDescription(
-                    message.embeds[0]!.data.description!.split('\n\n')[0] +
-                        `\n\n<:person:1265561455529562154> | 得獎者：${winnerMentions}`
+                    originalDesc + `\n\n<:person:1265561455529562154> | 得獎者：${winnerMentions}`
                 )
 
             const endButtons = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -268,14 +288,16 @@ async function endGiveaway(messageId: string, client: PaperClient): Promise<void
                 guildId: giveaway.guildId
             }).maxTimeMS(10000)
             const stats: any = existingStats ?? new GiveawayStats({ guildId: giveaway.guildId })
-            stats.activeGiveaways--
+            stats.activeGiveaways = Math.max(0, (stats.activeGiveaways ?? 0) - 1)
             stats.totalWinners += winners.length
 
             for (const winnerId of winners) {
-                const winHistory = await GiveawayHistory.countDocuments({
-                    guildId: giveaway.guildId,
-                    winners: winnerId
-                }).maxTimeMS(10000)
+                // +1 因為本次抽獎的 GiveawayHistory 尚未存入，countDocuments 查不到這次
+                const winHistory =
+                    (await GiveawayHistory.countDocuments({
+                        guildId: giveaway.guildId,
+                        winners: winnerId
+                    }).maxTimeMS(10000)) + 1
 
                 const currentMostWon = stats.mostWonUser
                 if (!currentMostWon || winHistory > (currentMostWon.count ?? 0)) {
@@ -316,6 +338,10 @@ async function endGiveaway(messageId: string, client: PaperClient): Promise<void
 }
 
 function selectWinners(participants: string[], count: number): string[] {
-    const shuffled = [...participants].sort(() => Math.random() - 0.5)
-    return shuffled.slice(0, Math.min(count, participants.length))
+    const arr = [...participants]
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[arr[i], arr[j]] = [arr[j]!, arr[i]!]
+    }
+    return arr.slice(0, Math.min(count, arr.length))
 }
