@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { Logger } from './logger'
+import { Logger } from './logger.js'
 
 /**
  * MongoDB 連線狀態代碼
