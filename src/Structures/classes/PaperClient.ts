@@ -1,6 +1,6 @@
 import { loadEvents } from '@/Structures/Handlers/eventHandler.js'
 import Giveaway from '@/Systems/Giveaway.js'
-import { ApiServer } from '@/api'
+import { ApiServer } from '@/api/index.js'
 import { Logger } from '@/libs/utils/logger.js'
 import type { CommandType } from '@/typings/command.js'
 import type { ButtonType, MenuType, ModalType } from '@/typings/component.js'
