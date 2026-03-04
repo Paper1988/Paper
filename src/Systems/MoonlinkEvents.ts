@@ -249,14 +249,11 @@ export function registerMoonlinkEvents(client: PaperClient): void {
 
     client.moonlink.on('trackException', async (player, track, error) => {
         try {
-            Logger.error('Track 播放發生異常:', error)
+            Logger.error('Track 播放發生異常:', error.stack)
+            handleMusicError(error, client, player, '播放歌曲時發生錯誤')
             const msg = `${emojis.outage} | 播放 [${track?.title ?? '未知歌曲'}] 時發生錯誤，已自動跳過`
             await sendQueueMessage(player, client, msg, 'Red')
-            if (player.queue.size > 0) {
-                player.skip()
-            } else {
-                player.stop()
-            }
+            player.skip()
         } catch (err) {
             Logger.error('處理 trackException 事件時發生錯誤:', err)
         }
