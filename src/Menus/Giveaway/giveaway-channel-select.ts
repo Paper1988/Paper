@@ -1,8 +1,11 @@
-import type { PaperClient } from '@/classes/PaperClient.js'
+import emojis from '@/libs/emoji/emoji.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import type { MenuType } from '@/typings/component.js'
 import {
     ActionRowBuilder,
+    ComponentBuilder,
     GuildMember,
+    LabelBuilder,
     MessageFlags,
     ModalBuilder,
     TextChannel,
@@ -21,7 +24,7 @@ export default {
 
         if (!channel) {
             return interaction.reply({
-                content: '<:warning:1265562532857380936> | 找不到指定的頻道！',
+                content: `${emojis.warning} | 找不到指定的頻道！`,
                 flags: MessageFlags.Ephemeral
             })
         }
@@ -35,7 +38,7 @@ export default {
                 .has('SendMessages')
         ) {
             return interaction.reply({
-                content: '<:warning:1265562532857380936> | 你沒有權限在該頻道發送訊息！',
+                content: `${emojis.warning} | 你沒有權限在該頻道發送訊息！`,
                 flags: MessageFlags.Ephemeral
             })
         }
@@ -44,52 +47,68 @@ export default {
             .setCustomId(`giveaway-modal/${selectedChannelId}`)
             .setTitle('創建抽獎')
 
-        const prizeInput = new TextInputBuilder()
-            .setCustomId('prize')
-            .setLabel('獎品名稱')
-            .setStyle(TextInputStyle.Short)
-            .setRequired(true)
-            .setPlaceholder('例如：Nitro、Steam遊戲')
+        const prizeInput = new TextInputBuilder({
+            customId: 'prize',
+            label: '獎品名稱',
+            style: TextInputStyle.Short,
+            required: true,
+            placeholder: '例如：Nitro、Steam遊戲'
+        })
 
-        const durationInput = new TextInputBuilder()
-            .setCustomId('duration')
+        const durationInput = new TextInputBuilder({
+            customId: 'duration',
+            label: '持續時間（分鐘）',
+            style: TextInputStyle.Short,
+            required: true,
+            placeholder: '輸入數字，例如：60'
+        })
+
+        const winnersInput = new TextInputBuilder({
+            customId: 'winners',
+            label: '得獎人數',
+            style: TextInputStyle.Short,
+            required: true,
+            placeholder: '輸入數字，例如：1'
+        })
+
+        const descriptionInput = new TextInputBuilder({
+            customId: 'description',
+            label: '描述（選填）',
+            style: TextInputStyle.Paragraph,
+            required: false,
+            placeholder: '輸入抽獎的詳細說明'
+        })
+
+        const requirementsInput = new TextInputBuilder({
+            customId: 'requirements',
+            label: '參加要求（選填）',
+            style: TextInputStyle.Paragraph,
+            required: false,
+            placeholder: '格式：\nrole:[身分組ID], blacklist:[身分組ID]\nage:[天數], server:[天數]'
+        })
+
+        const prizeLabel = new LabelBuilder().setLabel('獎品名稱').setTextInputComponent(prizeInput)
+        const durationLabel = new LabelBuilder()
             .setLabel('持續時間（分鐘）')
-            .setStyle(TextInputStyle.Short)
-            .setRequired(true)
-            .setPlaceholder('輸入數字，例如：60')
-
-        const winnersInput = new TextInputBuilder()
-            .setCustomId('winners')
+            .setTextInputComponent(durationInput)
+        const winnersLabel = new LabelBuilder()
             .setLabel('得獎人數')
-            .setStyle(TextInputStyle.Short)
-            .setRequired(true)
-            .setPlaceholder('輸入數字，例如：1')
-
-        const descriptionInput = new TextInputBuilder()
-            .setCustomId('description')
+            .setTextInputComponent(winnersInput)
+        const descriptionLabel = new LabelBuilder()
             .setLabel('描述（選填）')
-            .setStyle(TextInputStyle.Paragraph)
-            .setRequired(false)
-            .setPlaceholder('輸入抽獎的詳細說明')
-
-        const requirementsInput = new TextInputBuilder()
-            .setCustomId('requirements')
+            .setTextInputComponent(descriptionInput)
+        const requirementsLabel = new LabelBuilder()
             .setLabel('參加要求（選填）')
-            .setStyle(TextInputStyle.Paragraph)
-            .setRequired(false)
-            .setPlaceholder(
-                '格式：\nrole:[身分組ID], blacklist:[身分組ID]\nage:[天數], server:[天數]'
-            )
+            .setTextInputComponent(requirementsInput)
 
-        const rows = [
-            new ActionRowBuilder<TextInputBuilder>().addComponents(prizeInput),
-            new ActionRowBuilder<TextInputBuilder>().addComponents(durationInput),
-            new ActionRowBuilder<TextInputBuilder>().addComponents(winnersInput),
-            new ActionRowBuilder<TextInputBuilder>().addComponents(descriptionInput),
-            new ActionRowBuilder<TextInputBuilder>().addComponents(requirementsInput)
-        ]
+        modal.addLabelComponents([
+            prizeLabel,
+            durationLabel,
+            winnersLabel,
+            descriptionLabel,
+            requirementsLabel
+        ])
 
-        modal.addComponents(...rows)
         await interaction.showModal(modal)
     }
 } satisfies MenuType

@@ -1,4 +1,5 @@
 import emojis from '@/libs/emoji/emoji.js'
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import type { CommandType } from '@/typings/command.js'
 import {
     ChatInputCommandInteraction,
@@ -42,18 +43,19 @@ export default {
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral })
         const { options } = interaction
-        const guild = interaction.guild!
         const role = options.getRole('role')! as Role
         const target =
             (options.getMember('target')! as GuildMember) || (interaction.member! as GuildMember)
 
         const embed = new EmbedBuilder()
-            .setColor(`#${guild.roles.cache.get(role.id)!.colors.primaryColor.toString(16)}`)
+            .setColor(
+                `#${interaction.guild!.roles.cache.get(role.id)!.colors.primaryColor.toString(16)}`
+            )
             .setTitle('🎭 身分組管理 🎭')
 
         if (!role.editable || role.position === 0) {
             embed.setDescription(`${emojis.warning} | 我無法編輯身分組: **${role}** !`)
-            return await interaction.editReply({ embeds: [embed] })
+            return await interaction.editReply({ embeds: [embed] }).then(deleteMessageAfter)
         }
 
         embed.setDescription(
@@ -66,9 +68,6 @@ export default {
             ? await target.roles.remove(role)
             : await target.roles.add(role)
 
-        const message = await interaction.editReply({
-            embeds: [embed]
-        })
-        setTimeout(() => message.delete().catch(() => {}), 5000)
+        return interaction.editReply({ embeds: [embed] }).then(deleteMessageAfter)
     }
 } as CommandType

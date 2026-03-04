@@ -1,4 +1,5 @@
-import type { PaperClient } from '@/classes/PaperClient.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import { ButtonInteraction, EmbedBuilder, MessageFlags } from 'discord.js'
 
 export default {
@@ -57,10 +58,12 @@ export default {
                 .setColor('Red')
                 .setDescription(`<:xmark:1265562550947545089> | 發生錯誤: ${error.message}`)
 
-            await interaction.reply({
-                embeds: [errorEmbed],
-                flags: MessageFlags.Ephemeral
-            })
+            await interaction
+                .reply({
+                    embeds: [errorEmbed],
+                    flags: MessageFlags.Ephemeral
+                })
+                .then(deleteMessageAfter)
         }
     }
 }

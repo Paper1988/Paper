@@ -1,5 +1,7 @@
+import emojis from '@/libs/emoji/emoji.js'
 import Giveaway from '@/Structures/Schemas/Giveaway.js'
 import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import type { ButtonType } from '@/typings/component.js'
 import { ButtonInteraction, EmbedBuilder, GuildMember, MessageFlags } from 'discord.js'
 
@@ -25,7 +27,7 @@ export default {
         if (requiredRoles.length > 0) {
             const hasRequiredRole = requiredRoles.some((roleId) => member.roles.cache.has(roleId))
             if (!hasRequiredRole) {
-                errors.push('<:warning:1265562532857380936> | 你沒有參加此抽獎所需的身分組！')
+                errors.push(`${emojis.warning} | 你沒有參加此抽獎所需的身分組！`)
             }
         }
 
@@ -35,7 +37,7 @@ export default {
                 member.roles.cache.has(roleId)
             )
             if (hasBlacklistedRole) {
-                errors.push('<:warning:1265562532857380936> | 你有被禁止參加此抽獎的身分組！')
+                errors.push(`${emojis.warning} | 你有被禁止參加此抽獎的身分組！`)
             }
         }
 
@@ -43,7 +45,7 @@ export default {
             const accountAge = (Date.now() - member.user.createdTimestamp) / (1000 * 60 * 60 * 24)
             if (accountAge < giveaway.minAccountAge) {
                 errors.push(
-                    `<:warning:1265562532857380936> | 你的帳號年齡需要至少 ${giveaway.minAccountAge} 天！`
+                    `${emojis.warning} | 你的帳號年齡需要至少 ${giveaway.minAccountAge} 天！`
                 )
             }
         }
@@ -51,22 +53,24 @@ export default {
         if (giveaway.minServerTime) {
             const joinedTimestamp = member.joinedTimestamp
             if (!joinedTimestamp) {
-                errors.push('<:warning:1265562532857380936> | 無法獲取你的加入時間！')
+                errors.push(`${emojis.warning} | 無法獲取你的加入時間！`)
             } else {
                 const serverTime = (Date.now() - joinedTimestamp) / (1000 * 60 * 60 * 24)
                 if (serverTime < giveaway.minServerTime) {
                     errors.push(
-                        `<:warning:1265562532857380936> | 你需要在伺服器待滿 ${giveaway.minServerTime} 天！`
+                        `${emojis.warning} | 你需要在伺服器待滿 ${giveaway.minServerTime} 天！`
                     )
                 }
             }
         }
 
         if (errors.length > 0) {
-            return interaction.reply({
-                content: `<:outage:1265561329528471613> | 無法參加抽獎：\n${errors.join('\n')}`,
-                flags: MessageFlags.Ephemeral
-            })
+            return interaction
+                .reply({
+                    content: `${emojis.outage} | 無法參加抽獎：\n${errors.join('\n')}`,
+                    flags: MessageFlags.Ephemeral
+                })
+                .then(deleteMessageAfter)
         }
 
         if (giveaway.participants.includes(interaction.user.id)) {

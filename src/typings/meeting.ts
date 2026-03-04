@@ -55,6 +55,7 @@ export interface MeetingTimer {
     currentAgendaItemId?: string
     startedAt?: Date
     endsAt?: Date
+    lastNotifiedAt?: Date
 }
 
 export interface MeetingDoc {

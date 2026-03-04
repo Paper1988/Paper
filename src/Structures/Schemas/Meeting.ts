@@ -1,5 +1,5 @@
+import { ActionStatus, type MeetingDoc, MeetingStatus } from '@/typings/meeting.js'
 import mongoose from 'mongoose'
-import { type MeetingDoc, MeetingStatus, ActionStatus } from '@/typings/meeting.js'
 
 const agendaItemSchema = new mongoose.Schema(
     {
@@ -56,7 +56,8 @@ const meetingTimerSchema = new mongoose.Schema(
     {
         currentAgendaItemId: { type: String },
         startedAt: { type: Date },
-        endsAt: { type: Date }
+        endsAt: { type: Date },
+        lastNotifiedAt: { type: Date }
     },
     { _id: false }
 )
@@ -106,7 +107,6 @@ const meetingSchema = new mongoose.Schema<MeetingDoc>(
 // Indexes for performance
 meetingSchema.index({ guildId: 1, status: 1 })
 meetingSchema.index({ creatorId: 1, status: 1 })
-meetingSchema.index({ meetingId: 1 })
 
 // TTL index for auto-archiving ended meetings after 30 days
 meetingSchema.index(
@@ -118,17 +118,20 @@ meetingSchema.index(
 )
 
 // Update lastUpdatedAt on save
-meetingSchema.pre('save', function () {
+meetingSchema.pre('save', function (this: MeetingDoc) {
     this.lastUpdatedAt = new Date()
 })
 
 // Update lastUpdatedAt on update operations
-meetingSchema.pre(['updateOne', 'findOneAndUpdate'], function () {
-    this.set({ lastUpdatedAt: new Date() })
-})
+meetingSchema.pre(
+    ['updateOne', 'findOneAndUpdate'],
+    function (this: mongoose.Query<any, MeetingDoc>) {
+        this.set({ lastUpdatedAt: new Date() })
+    }
+)
 
 // Validation
-meetingSchema.pre('save', function () {
+meetingSchema.pre('save', function (this: MeetingDoc) {
     // Ensure agenda doesn't exceed max items
     if (this.agenda.length > 25) {
         throw new Error('議程項目不能超過 25 個')

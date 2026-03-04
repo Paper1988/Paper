@@ -1,5 +1,6 @@
 import Giveaway from '@/Structures/Schemas/Giveaway.js'
-import type { PaperClient } from '@/classes/PaperClient.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
+import { emojis } from '@/libs/utils'
 import { sendGiveawayNotification } from '@/libs/utils/sendGiveawayNotification.js'
 import { ButtonInteraction, EmbedBuilder, MessageFlags, TextChannel } from 'discord.js'
 
@@ -10,8 +11,8 @@ export default {
 
         if (interaction.user.id !== hosterId) {
             return interaction.reply({
-                content: '<:warning:1265562532857380936> | 只有抽獎主持人可以重新抽獎！',
-                ephemeral: true
+                content: `${emojis.warning} | 只有抽獎主持人可以重新抽獎！`,
+                flags: MessageFlags.Ephemeral
             })
         }
 
@@ -22,15 +23,15 @@ export default {
 
         if (!giveaway) {
             return interaction.reply({
-                content: '<:warning:1265562532857380936> | 找不到這個抽獎活動！',
-                ephemeral: true
+                content: `${emojis.warning} | 找不到這個抽獎活動！`,
+                flags: MessageFlags.Ephemeral
             })
         }
 
         if (giveaway.participants.length === 0) {
             return interaction.reply({
-                content: '<:warning:1265562532857380936> | 沒有人參加這個抽獎活動！',
-                ephemeral: true
+                content: `${emojis.warning} | 沒有人參加這個抽獎活動！`,
+                flags: MessageFlags.Ephemeral
             })
         }
 
@@ -66,7 +67,7 @@ export default {
         }
 
         return interaction.reply({
-            content: '<:correct:1265560254708711467> | 重新抽獎完成！',
+            content: `${emojis.correct} | 重新抽獎完成！`,
             flags: MessageFlags.Ephemeral
         })
     }

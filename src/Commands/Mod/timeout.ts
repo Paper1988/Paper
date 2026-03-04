@@ -1,3 +1,4 @@
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import type { CommandType } from '@/typings/command.js'
 import {
     ChatInputCommandInteraction,
@@ -65,9 +66,11 @@ export default {
             .setColor('Red')
 
         if (!user) {
-            return await interaction.editReply({
-                embeds: [errorsEmbed.setDescription('該名成員很可能已經離開伺服器了')]
-            })
+            return await interaction
+                .editReply({
+                    embeds: [errorsEmbed.setDescription('該名成員很可能已經離開伺服器了')]
+                })
+                .then(deleteMessageAfter)
         }
 
         const durationMs = ms(duration as StringValue)

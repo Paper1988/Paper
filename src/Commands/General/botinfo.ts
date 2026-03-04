@@ -10,7 +10,7 @@ import {
     version
 } from 'discord.js'
 
-import { PaperClient } from '@/classes/PaperClient.js'
+import { PaperClient } from '@/Structures/classes/PaperClient.js'
 import mongoose from 'mongoose'
 import os from 'os'
 
@@ -88,8 +88,7 @@ export default {
                         `<:library:1265560754241929289> **資料庫連線** ${status[mongoose.connection.readyState]}`,
                         `<:nodejs:1265561229624213636> **Node.js** \`${process.version}\``,
                         `<:djs:1265560315928772619> **Discord.js** \`${version}\``,
-                        `<:linkadd:1265560789503311915> **已連接語音頻道** \`${client.distube.voices.size}\``,
-                        `<:queue:1265561609632485478> **已創建音樂佇列** \`${client.distube.voices.queues.size}\``
+                        `<:queue:1265561609632485478> **正在播放** \`${client.moonlink?.players.playingPlayers}\``
                     ].join('\n'),
                     inline: true
                 },

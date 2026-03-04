@@ -1,4 +1,4 @@
-import type { PaperClient } from '@/classes/PaperClient.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import type { MenuType } from '@/typings/component.js'
 import {
     ActionRowBuilder,

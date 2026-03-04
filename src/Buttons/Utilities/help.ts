@@ -75,7 +75,7 @@ export default {
             .setColor('Blue')
             .setTitle('📚 Paper 指令導覽')
             .setDescription(
-                '歡迎使用 Paper！我是一個功能豐富的多功能機器人 🤖\n\n' +
+                '歡迎使用 Paper!\n\n' +
                     '**主要功能：**\n' +
                     '🎵 高品質音樂播放系統\n' +
                     '🎉 互動式抽獎活動\n' +

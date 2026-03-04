@@ -295,6 +295,32 @@ export class PollRepository {
         }, 0)
         return result ?? 0
     }
+
+    /**
+     * Get polls that are expiring (past their endsAt time but not yet closed)
+     */
+    static async getExpiringPolls(currentTime: Date): Promise<PollDoc[]> {
+        const result = await safeDbOperation(async () => {
+            return await Poll.find({
+                isClosed: false,
+                endsAt: { $exists: true, $lte: currentTime }
+            })
+        }, [])
+        return result ?? []
+    }
+
+    /**
+     * Get meeting channel ID for a meeting
+     */
+    static async getMeetingChannelId(meetingId: string): Promise<string | null> {
+        const result = await safeDbOperation(async () => {
+            // Import Meeting model to avoid circular dependency
+            const Meeting = (await import('@/Structures/Schemas/Meeting.js')).default
+            const meeting = await Meeting.findOne({ meetingId })
+            return meeting?.channelId || null
+        })
+        return result ?? null
+    }
 }
 
 export default PollRepository

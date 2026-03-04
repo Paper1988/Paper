@@ -1,21 +1,21 @@
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, User } from 'discord.js'
+import { MEETING_COLORS, MEETING_EMOJIS, MEETING_STRINGS } from '@/libs/meeting/constants.js'
 import {
-    type MeetingDoc,
-    type PollDoc,
-    MeetingStatus,
-    ActionStatus,
-    type PollResults
-} from '@/typings/meeting.js'
-import { MEETING_EMOJIS, MEETING_COLORS, MEETING_STRINGS } from '@/libs/meeting/constants.js'
-import {
-    formatDuration,
-    formatDateTime,
-    formatTimeRemaining,
+    calculatePollResults,
     createProgressBar,
-    truncateText,
-    calculatePollResults
+    formatDateTime,
+    formatDuration,
+    formatTimeRemaining,
+    truncateText
 } from '@/libs/meeting/utils.js'
 import PollRepository from '@/Systems/PollRepository.js'
+import {
+    ActionStatus,
+    MeetingStatus,
+    type MeetingDoc,
+    type PollDoc,
+    type PollResults
+} from '@/typings/meeting.js'
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, User } from 'discord.js'
 
 export interface MeetingSummary {
     polls: PollDoc[]
@@ -185,7 +185,7 @@ export class MeetingRenderer {
         if (meeting.status === MeetingStatus.SCHEDULED) {
             controlRow.addComponents(
                 new ButtonBuilder()
-                    .setCustomId(`meeting_start_${meeting.meetingId}`)
+                    .setCustomId(`meeting_start:${meeting.meetingId}`)
                     .setLabel(MEETING_STRINGS.BUTTONS.START_MEETING)
                     .setEmoji(MEETING_EMOJIS.START)
                     .setStyle(ButtonStyle.Success)
@@ -195,7 +195,7 @@ export class MeetingRenderer {
         if (meeting.status === MeetingStatus.IN_PROGRESS) {
             controlRow.addComponents(
                 new ButtonBuilder()
-                    .setCustomId(`meeting_end_${meeting.meetingId}`)
+                    .setCustomId(`meeting_end:${meeting.meetingId}`)
                     .setLabel(MEETING_STRINGS.BUTTONS.END_MEETING)
                     .setEmoji(MEETING_EMOJIS.END)
                     .setStyle(ButtonStyle.Danger)
@@ -204,7 +204,7 @@ export class MeetingRenderer {
 
         controlRow.addComponents(
             new ButtonBuilder()
-                .setCustomId(`meeting_checklist_${meeting.meetingId}`)
+                .setCustomId(`meeting_checklist:${meeting.meetingId}`)
                 .setLabel(MEETING_STRINGS.BUTTONS.VIEW_CHECKLIST)
                 .setEmoji(MEETING_EMOJIS.CHECKLIST)
                 .setStyle(ButtonStyle.Secondary)
@@ -214,7 +214,7 @@ export class MeetingRenderer {
         if (meeting.timers.currentAgendaItemId) {
             controlRow.addComponents(
                 new ButtonBuilder()
-                    .setCustomId(`meeting_timer_stop_${meeting.meetingId}`)
+                    .setCustomId(`meeting_timer_stop:${meeting.meetingId}`)
                     .setLabel(MEETING_STRINGS.BUTTONS.STOP_TIMER)
                     .setEmoji(MEETING_EMOJIS.PAUSE)
                     .setStyle(ButtonStyle.Secondary)
@@ -222,7 +222,7 @@ export class MeetingRenderer {
         } else {
             controlRow.addComponents(
                 new ButtonBuilder()
-                    .setCustomId(`meeting_timer_start_${meeting.meetingId}`)
+                    .setCustomId(`meeting_timer_start:${meeting.meetingId}`)
                     .setLabel(MEETING_STRINGS.BUTTONS.START_TIMER)
                     .setEmoji(MEETING_EMOJIS.TIMER)
                     .setStyle(ButtonStyle.Secondary)
@@ -235,24 +235,24 @@ export class MeetingRenderer {
         if (meeting.status !== MeetingStatus.ENDED) {
             const agendaRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
                 new ButtonBuilder()
-                    .setCustomId(`meeting_agenda_add_${meeting.meetingId}`)
+                    .setCustomId(`meeting_agenda_add:${meeting.meetingId}`)
                     .setLabel(MEETING_STRINGS.BUTTONS.ADD_AGENDA)
                     .setEmoji(MEETING_EMOJIS.ADD)
                     .setStyle(ButtonStyle.Primary),
                 new ButtonBuilder()
-                    .setCustomId(`meeting_agenda_edit_${meeting.meetingId}`)
+                    .setCustomId(`meeting_agenda_edit:${meeting.meetingId}`)
                     .setLabel(MEETING_STRINGS.BUTTONS.EDIT_AGENDA)
                     .setEmoji(MEETING_EMOJIS.EDIT)
                     .setStyle(ButtonStyle.Secondary)
                     .setDisabled(meeting.agenda.length === 0),
                 new ButtonBuilder()
-                    .setCustomId(`meeting_agenda_remove_${meeting.meetingId}`)
+                    .setCustomId(`meeting_agenda_remove:${meeting.meetingId}`)
                     .setLabel(MEETING_STRINGS.BUTTONS.REMOVE_AGENDA)
                     .setEmoji(MEETING_EMOJIS.REMOVE)
                     .setStyle(ButtonStyle.Secondary)
                     .setDisabled(meeting.agenda.length === 0),
                 new ButtonBuilder()
-                    .setCustomId(`meeting_poll_create_${meeting.meetingId}`)
+                    .setCustomId(`meeting_poll_create:${meeting.meetingId}`)
                     .setLabel(MEETING_STRINGS.BUTTONS.CREATE_POLL)
                     .setEmoji(MEETING_EMOJIS.POLL)
                     .setStyle(ButtonStyle.Primary)
@@ -264,23 +264,23 @@ export class MeetingRenderer {
         // Row 3: Notes and actions buttons
         const notesRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder()
-                .setCustomId(`meeting_note_add_${meeting.meetingId}`)
+                .setCustomId(`meeting_note_add:${meeting.meetingId}`)
                 .setLabel(MEETING_STRINGS.BUTTONS.ADD_NOTE)
                 .setEmoji(MEETING_EMOJIS.NOTE)
                 .setStyle(ButtonStyle.Secondary),
             new ButtonBuilder()
-                .setCustomId(`meeting_action_add_${meeting.meetingId}`)
+                .setCustomId(`meeting_action_add:${meeting.meetingId}`)
                 .setLabel(MEETING_STRINGS.BUTTONS.ADD_ACTION)
                 .setEmoji(MEETING_EMOJIS.ACTION)
                 .setStyle(ButtonStyle.Secondary),
             new ButtonBuilder()
-                .setCustomId(`meeting_action_view_${meeting.meetingId}`)
+                .setCustomId(`meeting_action_view:${meeting.meetingId}`)
                 .setLabel(MEETING_STRINGS.BUTTONS.VIEW_ACTIONS)
                 .setEmoji(MEETING_EMOJIS.VIEW)
                 .setStyle(ButtonStyle.Secondary)
                 .setDisabled(meeting.actions.length === 0),
             new ButtonBuilder()
-                .setCustomId(`meeting_export_${meeting.meetingId}`)
+                .setCustomId(`meeting_export:${meeting.meetingId}`)
                 .setLabel(MEETING_STRINGS.BUTTONS.EXPORT_SUMMARY)
                 .setEmoji(MEETING_EMOJIS.EXPORT)
                 .setStyle(ButtonStyle.Secondary)
@@ -302,13 +302,13 @@ export class MeetingRenderer {
                 // Yes/No buttons
                 const ynRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
                     new ButtonBuilder()
-                        .setCustomId(`poll_vote_yes_${poll.pollId}`)
+                        .setCustomId(`poll_vote_yes:${poll.pollId}`)
                         .setLabel('是')
                         .setEmoji(MEETING_EMOJIS.YES)
                         .setStyle(ButtonStyle.Success)
                         .setDisabled(poll.isClosed),
                     new ButtonBuilder()
-                        .setCustomId(`poll_vote_no_${poll.pollId}`)
+                        .setCustomId(`poll_vote_no:${poll.pollId}`)
                         .setLabel('否')
                         .setEmoji(MEETING_EMOJIS.NO)
                         .setStyle(ButtonStyle.Danger)

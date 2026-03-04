@@ -1,3 +1,4 @@
+import { emojis } from '@/libs/utils'
 import DB from '@/Structures/Schemas/AntiAlt.js'
 import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, TextChannel } from 'discord.js'
@@ -20,14 +21,14 @@ export default {
         ).catch((err) => console.log(err))
 
         const LogsSetup = new EmbedBuilder()
-            .setDescription('<:correct:1265560254708711467> | 成功設定日誌')
+            .setDescription(`${emojis.correct} | 成功設定日誌`)
             .setColor('#43b581')
 
         await (guild!.channels.cache.get(LogsChannel!.id)! as TextChannel)
             .send({ embeds: [LogsSetup] })
             .then(async (m) => {
                 await interaction.reply({
-                    content: '<:correct:1265560254708711467> | 完成!',
+                    content: `${emojis.correct} | 完成!`,
                     flags: MessageFlags.Ephemeral
                 })
                 setTimeout(() => {
@@ -36,8 +37,7 @@ export default {
             })
             .catch(() => {
                 return interaction.reply({
-                    content:
-                        '<:warning:1265562532857380936> | 無法設定日誌，可能是因為我沒有讀取那個頻道的權限!',
+                    content: `${emojis.warning} | 無法設定日誌頻道，請檢察機器人的權限!`,
                     flags: MessageFlags.Ephemeral
                 })
             })

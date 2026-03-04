@@ -1,5 +1,5 @@
 import DB from '@/Structures/Schemas/AntiAlt.js'
-import type { PaperClient } from '@/classes/PaperClient.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import type { EventType } from '@/typings/event'
 import { EmbedBuilder, GuildMember, TextChannel, Webhook } from 'discord.js'
 import ms from 'ms'
