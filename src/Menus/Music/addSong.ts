@@ -1,7 +1,7 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { MusicDbFetch, deleteMessageAfter } from '@/Systems/Music.js'
 import emojis from '@/libs/emoji/emoji.js'
-import { Logger } from '@/libs/utils/logger'
+import { Logger } from '@/libs/utils/logger.js'
 import type { MenuType } from '@/typings/component.js'
 import { GuildMember, MessageFlags, TextChannel, type AnySelectMenuInteraction } from 'discord.js'
 import type { Player, Track } from 'moonlink.js'

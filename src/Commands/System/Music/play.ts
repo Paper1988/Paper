@@ -1,7 +1,7 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { MusicDbFetch, deleteMessageAfter } from '@/Systems/Music.js'
 import emojis from '@/libs/emoji/emoji.js'
-import { Logger } from '@/libs/utils/logger'
+import { Logger } from '@/libs/utils/logger.js'
 import { cacheDel, cacheGetJson } from '@/libs/utils/redis.js'
 import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, TextChannel } from 'discord.js'

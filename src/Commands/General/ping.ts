@@ -1,4 +1,4 @@
-import type { PaperClient } from '@/Structures/classes/PaperClient'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js'
 
 export default {

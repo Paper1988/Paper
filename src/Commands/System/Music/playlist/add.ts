@@ -1,5 +1,5 @@
 import emojis from '@/libs/emoji/emoji.js'
-import { Logger } from '@/libs/utils/logger'
+import { Logger } from '@/libs/utils/logger.js'
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import Playlist from '@/Structures/Schemas/Playlist.js'
 import type { CommandType } from '@/typings/command.js'

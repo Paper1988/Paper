@@ -1,7 +1,7 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { deleteMessageAfter } from '@/Systems/Music.js'
 import emojis from '@/libs/emoji/emoji.js'
-import { Logger } from '@/libs/utils/logger'
+import { Logger } from '@/libs/utils/logger.js'
 import { ChatInputCommandInteraction, GuildMember, MessageFlags } from 'discord.js'
 import type { Player } from 'moonlink.js'
 

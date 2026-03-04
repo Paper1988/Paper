@@ -1,7 +1,6 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { deleteMessageAfter, MusicDbFetch } from '@/Systems/Music.js'
 import emojis from '@/libs/emoji/emoji.js'
-import { Logger } from '@/libs/utils/logger'
 import type { ButtonType } from '@/typings/component.js'
 import {
     ActionRowBuilder,
