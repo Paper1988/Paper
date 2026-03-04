@@ -1,5 +1,5 @@
+import type { IWeeklyStats } from '@/../types/weekStats.js'
 import { Schema, model } from 'mongoose'
-import type { IWeeklyStats } from '@/../types/weekStats'
 
 const commandUsageSchema = new Schema(
     {

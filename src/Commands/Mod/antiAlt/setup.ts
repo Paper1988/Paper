@@ -1,4 +1,4 @@
-import { emojis } from '@/libs/utils'
+import emojis from '@/libs/emoji/emoji.js'
 import DB from '@/Structures/Schemas/AntiAlt.js'
 import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, TextChannel } from 'discord.js'

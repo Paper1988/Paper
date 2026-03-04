@@ -1,6 +1,6 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
-import { Logger } from '@/libs/utils/logger'
+import { Logger } from '@/libs/utils/logger.js'
 import type { ModalType } from '@/typings/component.js'
 import {
     ActionRowBuilder,
