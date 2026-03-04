@@ -64,8 +64,8 @@ export default {
                 content: `**${track.title}** 已成功加入播放清單`,
                 flags: MessageFlags.Ephemeral
             })
-        } catch (error) {
-            Logger.error('將歌曲加入播放清單時發生錯誤:', error)
+        } catch (error: any) {
+            Logger.error('將歌曲加入播放清單時發生錯誤:', error.stack)
             await interaction.reply({
                 content: `${emojis.outage} | 將歌曲加入播放清單時發生錯誤`,
                 flags: MessageFlags.Ephemeral
