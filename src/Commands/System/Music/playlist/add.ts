@@ -1,5 +1,6 @@
-import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
+import { Logger } from '@/libs/utils/logger'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import Playlist from '@/Structures/Schemas/Playlist.js'
 import type { CommandType } from '@/typings/command.js'
 import {
@@ -11,7 +12,7 @@ import {
     StringSelectMenuBuilder,
     type APISelectMenuOption
 } from 'discord.js'
-import { Logger } from '@/libs/utils/logger'
+import type { Track } from 'moonlink.js'
 
 export default {
     data: new SlashCommandBuilder()
@@ -83,10 +84,7 @@ export default {
 
             const result = await client.moonlink.search({
                 query: searchQuery,
-                requester: interaction.user,
-                limit: 25,
-                source: 'youtube',
-                fallbackSources: ['spsearch', 'soundcloud']
+                requester: interaction.user
             })
 
             if (!result.tracks.length) {
@@ -102,15 +100,15 @@ export default {
 
             const options = result.tracks
                 .slice(0, 25)
-                .filter((track) => track.url)
-                .map((track) => {
+                .filter((track: Track) => track.uri)
+                .map((track: Track) => {
                     const label =
                         track.title.length > 100
                             ? track.title.substring(0, 97) + '...'
                             : track.title
                     return {
                         label,
-                        value: track.url!,
+                        value: track.uri,
                         description: track.author ? `${track.author}` : undefined
                     } as APISelectMenuOption
                 })
@@ -130,10 +128,10 @@ export default {
                 content: '請選擇要添加的歌曲：',
                 components: [row]
             })
-        } catch (error) {
-            Logger.error('搜尋歌曲時發生錯誤:', error)
+        } catch (error: any) {
+            Logger.error('搜尋歌曲時發生錯誤:', error.stack)
             await interaction.reply({
-                content: `${emojis.outage} | 搜尋歌曲時發生錯誤: ${error instanceof Error ? error.message : '未知錯誤'}`,
+                content: `${emojis.outage} | 搜尋歌曲時發生錯誤`,
                 flags: MessageFlags.Ephemeral
             })
         }
