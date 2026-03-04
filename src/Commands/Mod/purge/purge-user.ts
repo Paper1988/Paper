@@ -1,9 +1,11 @@
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import results from '@/Systems/PurgeFunction.js'
 import emojis from '@/libs/emoji/emoji.js'
 import {
     ChatInputCommandInteraction,
     Collection,
     Message,
+    MessageFlags,
     type PartialMessage,
     TextChannel
 } from 'discord.js'
@@ -16,10 +18,12 @@ export default {
         const channel = interaction.channel as TextChannel
         const fetch = await channel.messages.fetch({ limit: amount })
         if (fetch.size === 0) {
-            return interaction.reply({
-                content: `${emojis.warning} | 沒有訊息可以清除！`,
-                flags: 64
-            })
+            return interaction
+                .reply({
+                    content: `${emojis.warning} | 沒有訊息可以清除！`,
+                    flags: MessageFlags.Ephemeral
+                })
+                .then(deleteMessageAfter)
         }
         const user = interaction.options.getUser('user')
 

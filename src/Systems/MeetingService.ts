@@ -291,7 +291,7 @@ export class MeetingService {
      * Cast a vote in a poll
      */
     static async castVote(
-        interaction: ButtonInteraction,
+        interaction: ButtonInteraction | ChatInputCommandInteraction | StringSelectMenuInteraction,
         pollId: string,
         vote: { choice?: boolean; optionIds?: string[]; ranking?: string[] }
     ): Promise<void> {
@@ -338,7 +338,11 @@ export class MeetingService {
      * Check if user can manage meeting (creator or admin)
      */
     private static canManageMeeting(
-        interaction: ButtonInteraction | ChatInputCommandInteraction | StringSelectMenuInteraction | ModalSubmitInteraction,
+        interaction:
+            | ButtonInteraction
+            | ChatInputCommandInteraction
+            | StringSelectMenuInteraction
+            | ModalSubmitInteraction,
         meeting: MeetingDoc
     ): boolean {
         // Meeting creator can always manage
@@ -358,7 +362,11 @@ export class MeetingService {
      * Update meeting message with latest data
      */
     static async updateMeetingMessage(
-        interaction: ButtonInteraction | ChatInputCommandInteraction | StringSelectMenuInteraction | ModalSubmitInteraction,
+        interaction:
+            | ButtonInteraction
+            | ChatInputCommandInteraction
+            | StringSelectMenuInteraction
+            | ModalSubmitInteraction,
         meeting: MeetingDoc
     ): Promise<void> {
         try {
@@ -387,7 +395,11 @@ export class MeetingService {
      * Get meeting by message interaction
      */
     static async getMeetingFromInteraction(
-        interaction: ButtonInteraction | ChatInputCommandInteraction | StringSelectMenuInteraction | ModalSubmitInteraction,
+        interaction:
+            | ButtonInteraction
+            | ChatInputCommandInteraction
+            | StringSelectMenuInteraction
+            | ModalSubmitInteraction,
         meetingId: string
     ): Promise<MeetingDoc | null> {
         const meeting = await MeetingRepository.getMeetingById(meetingId)

@@ -2,6 +2,7 @@ import type { ButtonType } from '@/typings/component.js'
 import {
     ActionRowBuilder,
     ButtonInteraction,
+    LabelBuilder,
     ModalBuilder,
     TextInputBuilder,
     TextInputStyle
@@ -20,11 +21,12 @@ export default {
 
         const giveawayIdInput = new TextInputBuilder()
             .setCustomId('giveawayId')
-            .setLabel('抽獎 ID')
             .setStyle(TextInputStyle.Short)
             .setRequired(true)
 
-        modal.addComponents(new ActionRowBuilder<TextInputBuilder>().addComponents(giveawayIdInput))
+        const label = new LabelBuilder().setTextInputComponent(giveawayIdInput).setLabel('抽獎 ID')
+
+        modal.addLabelComponents(label)
 
         await interaction.showModal(modal)
     }

@@ -1,3 +1,5 @@
+import emojis from '@/libs/emoji/emoji.js'
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import type { CommandType } from '@/typings/command.js'
 import {
     ChatInputCommandInteraction,
@@ -64,7 +66,7 @@ export default {
             })
 
         const errorsEmbed = new EmbedBuilder()
-            .setTitle('<:warning:1265562532857380936> | 無法封鎖該名成員，因為')
+            .setTitle(`${emojis.warning} | 無法封鎖該名成員，因為`)
             .setColor('Red')
 
         if (!target) {
@@ -89,9 +91,11 @@ export default {
             await target.send({ embeds: [dmEmbed] })
         }
         await target.ban({ reason: reason }).catch((err) => {
-            interaction.editReply({
-                embeds: [errorsEmbed.setDescription('發生一個罕見的錯誤')]
-            })
+            interaction
+                .editReply({
+                    embeds: [errorsEmbed.setDescription('發生一個罕見的錯誤')]
+                })
+                .then(deleteMessageAfter)
             return console.log('錯誤發生 - 在 Ban.js', err)
         })
         const successEmbed = new EmbedBuilder()

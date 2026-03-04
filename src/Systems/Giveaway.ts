@@ -7,7 +7,7 @@ import {
     type MessageActionRowComponentBuilder
 } from 'discord.js'
 
-import { PaperClient } from '@/classes/PaperClient.js'
+import { PaperClient } from '@/Structures/classes/PaperClient.js'
 
 import { sendGiveawayNotification } from '@/libs/utils/sendGiveawayNotification.js'
 import giveawayModel from '@/Structures/Schemas/Giveaway.js'

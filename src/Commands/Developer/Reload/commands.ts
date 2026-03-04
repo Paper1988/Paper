@@ -1,4 +1,4 @@
-import type { PaperClient } from '@/classes/PaperClient.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { loadCommands } from '@/Structures/Handlers/commandHandler.js'
 import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, MessageFlags } from 'discord.js'

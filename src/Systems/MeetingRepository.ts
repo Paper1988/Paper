@@ -396,9 +396,46 @@ export class MeetingRepository {
                     $unset: {
                         'timers.currentAgendaItemId': '',
                         'timers.startedAt': '',
-                        'timers.endsAt': ''
+                        'timers.endsAt': '',
+                        'timers.lastNotifiedAt': ''
                     },
                     $set: { lastUpdatedAt: new Date() }
+                },
+                { new: true }
+            )
+        })
+        return result ?? null
+    }
+
+    /**
+     * Get all active meetings with running timers
+     */
+    static async getActiveMeetingsWithTimers(): Promise<MeetingDoc[]> {
+        const result = await safeDbOperation(async () => {
+            return await Meeting.find({
+                status: { $in: [MeetingStatus.IN_PROGRESS] },
+                'timers.startedAt': { $exists: true },
+                'timers.endsAt': { $exists: true }
+            })
+        }, [])
+        return result ?? []
+    }
+
+    /**
+     * Update timer notification timestamp
+     */
+    static async updateTimerNotification(
+        meetingId: string,
+        notificationTime: Date
+    ): Promise<MeetingDoc | null> {
+        const result = await safeDbOperation(async () => {
+            return await Meeting.findOneAndUpdate(
+                { meetingId },
+                {
+                    $set: {
+                        'timers.lastNotifiedAt': notificationTime,
+                        lastUpdatedAt: new Date()
+                    }
                 },
                 { new: true }
             )

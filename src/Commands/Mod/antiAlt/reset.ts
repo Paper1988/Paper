@@ -1,4 +1,5 @@
 import DB from '@/Structures/Schemas/AntiAlt.js'
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import { emojis } from '@/libs/utils/index.js'
 import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js'
@@ -15,7 +16,11 @@ export default {
         try {
             const { deletedCount } = await DB.deleteMany({ GuildID: guild!.id }).exec()
             if (!deletedCount) {
-                return interaction.reply({ content: `${emojis.warning} | 找不到數據` })
+                return interaction
+                    .reply({
+                        content: `${emojis.warning} | 無日誌頻道`
+                    })
+                    .then(deleteMessageAfter)
             }
             await interaction.reply({ embeds: [LogsReset] })
         } catch (err) {

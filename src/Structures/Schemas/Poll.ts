@@ -1,5 +1,5 @@
-import mongoose from 'mongoose'
 import { type PollDoc, PollType } from '@/typings/meeting.js'
+import mongoose from 'mongoose'
 
 const pollOptionSchema = new mongoose.Schema(
     {
@@ -22,7 +22,7 @@ const pollVoteSchema = new mongoose.Schema(
 const pollSchema = new mongoose.Schema<PollDoc>(
     {
         pollId: { type: String, required: true, unique: true },
-        meetingId: { type: String },
+        meetingId: { type: String, index: true },
         agendaItemId: { type: String },
         type: {
             type: String,
@@ -54,9 +54,10 @@ const pollSchema = new mongoose.Schema<PollDoc>(
 )
 
 // Indexes for performance
-pollSchema.index({ pollId: 1 })
-pollSchema.index({ meetingId: 1 })
+pollSchema.index({ messageId: 1 }, { unique: true, sparse: true })
+pollSchema.index({ meetingId: 1, agendaItemId: 1 })
 pollSchema.index({ agendaItemId: 1 })
+
 pollSchema.index({ isClosed: 1, endsAt: 1 })
 
 // TTL index for auto-cleanup of ended polls after 7 days
@@ -71,10 +72,10 @@ pollSchema.index(
 )
 
 // Ensure unique votes per user per poll
-pollSchema.index({ pollId: 1, 'votes.userId': 1 }, { unique: true, sparse: true })
+pollSchema.index({ pollId: 1, 'votes.userId': 1 }, { unique: true })
 
 // Validation
-pollSchema.pre('save', function () {
+pollSchema.pre('save', function (this: PollDoc) {
     // Validate votes based on poll type
     for (const vote of this.votes) {
         switch (this.type) {

@@ -1,3 +1,5 @@
+import emojis from '@/libs/emoji/emoji.js'
+import { deleteMessageAfter } from '@/Systems/Music.js'
 import type { CommandType } from '@/typings/command.js'
 import {
     ChatInputCommandInteraction,
@@ -59,14 +61,16 @@ export default {
 
         const errorsEmbed = new EmbedBuilder()
             .setAuthor({
-                name: '<:warning:1265562532857380936> | 無法踢出該名成員，因為'
+                name: `${emojis.warning} | 無法踢出該名成員，因為`
             })
             .setColor('Red')
 
         if (!target) {
-            return interaction.editReply({
-                embeds: [errorsEmbed.setDescription('所選成員很可能已經離開伺服器了')]
-            })
+            return interaction
+                .editReply({
+                    embeds: [errorsEmbed.setDescription('所選成員很可能已經離開伺服器了')]
+                })
+                .then(deleteMessageAfter)
         }
 
         if (!target.kickable) errorsArray.push('我的權限不夠大!')
@@ -76,9 +80,11 @@ export default {
         }
 
         if (errorsArray.length) {
-            return interaction.editReply({
-                embeds: [errorsEmbed.setDescription(errorsArray.join('\n'))]
-            })
+            return interaction
+                .editReply({
+                    embeds: [errorsEmbed.setDescription(errorsArray.join('\n'))]
+                })
+                .then(deleteMessageAfter)
         }
 
         try {
@@ -87,13 +93,13 @@ export default {
             return
         }
         await target.kick(reason).catch((err) => {
-            interaction.editReply({
-                embeds: [
-                    errorsEmbed.setDescription(
-                        '<:warning:1265562532857380936> | 發生一個不常見的錯誤，無法踢出成員'
-                    )
-                ]
-            })
+            interaction
+                .editReply({
+                    embeds: [
+                        errorsEmbed.setDescription(`${emojis.outage} | 發生未知錯誤，請協助回報!`)
+                    ]
+                })
+                .then(deleteMessageAfter)
             return console.log('錯誤發生 - 在 kick.js\n', err)
         })
 

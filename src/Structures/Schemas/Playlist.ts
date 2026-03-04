@@ -10,6 +10,9 @@ const playlistSchema = new Schema(
                 url: String,
                 duration: Number,
                 thumbnail: String,
+                author: {
+                    name: String
+                },
                 addedAt: { type: Date, default: Date.now }
             }
         ],
