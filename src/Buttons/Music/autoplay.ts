@@ -1,9 +1,10 @@
 import MusicDB from '@/Structures/Schemas/MusicDB.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { deleteMessageAfter } from '@/Systems/Music.js'
-import type { PaperClient } from '@/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
 import type { ButtonType } from '@/typings/component.js'
-import type { ButtonInteraction, GuildMember } from 'discord.js'
+import { type ButtonInteraction, type GuildMember } from 'discord.js'
+import type { Player } from 'moonlink.js'
 
 export default {
     id: 'autoplay',
@@ -18,39 +19,42 @@ export default {
                 .editReply({
                     content: `${emojis.warning} | 你必須待在語音頻道裡面才能使用音樂按鈕!`
                 })
-                .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                .then(deleteMessageAfter)
         }
 
-        const currentVoiceChannel = interaction.guild?.members.me?.voice.channelId
-        if (currentVoiceChannel && VoiceChannel.id !== currentVoiceChannel) {
-            return await interaction.editReply({
-                content: `${emojis.warning} | 我已經在語音頻道 - <#${currentVoiceChannel}> 裡播放音樂了`
-            })
-        }
-
-        const queue = client.distube.getQueue(VoiceChannel)
-        if (!queue) {
+        const currentPlayer = client.moonlink?.players.get(interaction.guildId!) as Player
+        if (currentPlayer?.voiceChannelId && VoiceChannel.id !== currentPlayer.voiceChannelId) {
             return await interaction
                 .editReply({
-                    content: `${emojis.outage} | 找不到歌曲或該歌曲已經播放完畢!`
+                    content: `${emojis.warning} | 我已經在語音頻道 - <#${currentPlayer.voiceChannelId}> 裡播放音樂了`
                 })
-                .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                .then(deleteMessageAfter)
         }
 
-        const Mode = queue.toggleAutoplay()
+        const player: Player = currentPlayer
+
+        if (!player)
+            return await interaction
+                .editReply({
+                    content: `${emojis.warning} | 找不到歌曲或該歌曲已經播放完畢!`
+                })
+                .then(deleteMessageAfter)
+
+        if (player.autoPlay) player.setAutoPlay(true)
+        else player.setAutoPlay(false)
 
         await MusicDB.findOneAndUpdate(
             { GuildID: guild.id },
-            { autoplayMode: Mode ? true : false },
-            { new: true, upsert: true }
+            { autoplayMode: player.autoPlay },
+            { returnDocument: 'after', upsert: true }
         )
 
         return await interaction
             .editReply({
                 content: `<:update:1265562455828987968> | 成功切換自動播放模式: ${
-                    Mode ? emojis.correct : emojis.xmark
+                    player.autoPlay ? emojis.correct : emojis.xmark
                 }`
             })
-            .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+            .then(deleteMessageAfter)
     }
 } satisfies ButtonType

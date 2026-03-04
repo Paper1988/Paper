@@ -43,6 +43,12 @@ export default {
                         label: '🎭 娛樂',
                         description: '顯示所有娛樂指令',
                         value: 'Fun'
+                    },
+
+                    {
+                        label: '📅 會議',
+                        description: '顯示會議管理和避免低效會議的指令',
+                        value: 'Meeting'
                     }
                 )
         )
@@ -220,6 +226,32 @@ export default {
             .setFooter({ text: '<>內為必填內容，[]內為選填內容' })
             .setTimestamp()
 
+        const meeting = new EmbedBuilder()
+            .setTitle('📅會議 Meeting - 避免低效會議')
+            .setColor('Blue')
+            .setDescription(
+                `
+                **基本會議管理:**
+                > </meeting create> 標題 時長(分鐘) [參與者] [時間] - 建立新會議和議程卡
+                > </meeting view> 會議ID - 查看會議詳情並更新显示
+                
+                **議程管理:**
+                > </meeting agenda add> 會議ID 標題 主題 預期結果 [負責人] [時間限制] - 新增議程項目
+                
+                **投票決策:**
+                > </meeting poll create> 類型(是非題/多選題/排序題) [會議ID] [選項] [持續時間] - 建立投票決策
+                
+                **筆記和行動:**
+                > </meeting note add> 會議ID 內容 - 新增會議筆記
+                > </meeting action add> 會議ID 描述 負責人 [截止日期] - 新增行動項目
+                
+                **互動功能:**
+                📋 點擊按鈕管理議程、投票、計時器、準備清單和行動項目
+                `
+            )
+            .setFooter({ text: '使用交互式按鈕管理會議，提高效率！' })
+            .setTimestamp()
+
         const value = interaction.values[0]
 
         switch (value) {
@@ -259,6 +291,14 @@ export default {
                 {
                     await interaction.update({
                         embeds: [fun],
+                        components: [helpMenu, inviteAndSupport, koFi, back]
+                    })
+                }
+                break
+            case 'Meeting':
+                {
+                    await interaction.update({
+                        embeds: [meeting],
                         components: [helpMenu, inviteAndSupport, koFi, back]
                     })
                 }

@@ -1,4 +1,4 @@
-import type { PaperClient } from '@/classes/PaperClient.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { loadFiles } from '@/Structures/Functions/fileLoader.js'
 import type { EventExecute, EventType } from '@/typings/event.js'
 import { Collection } from 'discord.js'

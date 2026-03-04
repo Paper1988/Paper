@@ -1,3 +1,8 @@
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
+import { deleteMessageAfter, MusicDbFetch } from '@/Systems/Music.js'
+import emojis from '@/libs/emoji/emoji.js'
+import { Logger } from '@/libs/utils/logger'
+import type { ButtonType } from '@/typings/component.js'
 import {
     ActionRowBuilder,
     ButtonBuilder,
@@ -6,14 +11,8 @@ import {
     EmbedBuilder,
     GuildMember
 } from 'discord.js'
-
 import Genius from 'genius-lyrics'
-const Client = new Genius.Client()
-
-import type { PaperClient } from '@/classes/PaperClient.js'
-import emojis from '@/libs/emoji/emoji.js'
-import { deleteMessageAfter } from '@/Systems/Music.js'
-import type { ButtonType } from '@/typings/component.js'
+import type { Player } from 'moonlink.js'
 
 export default {
     id: 'lyrics',
@@ -28,34 +27,46 @@ export default {
                 .editReply({
                     content: `${emojis.warning} | 你必須待在語音頻道裡面才能使用音樂按鈕!`
                 })
-                .then((msg) => deleteMessageAfter(msg, 10 * 1000))
+                .then(deleteMessageAfter)
         }
 
-        const currentVoiceChannel = interaction.guild?.members.me?.voice.channelId
-        if (currentVoiceChannel && VoiceChannel.id !== currentVoiceChannel) {
-            return await interaction.editReply({
-                content: `${emojis.warning} | 我已經在語音頻道 - <#${currentVoiceChannel}> 裡播放音樂了`
+        const Client = new Genius.Client()
+        const currentPlayer = client.moonlink?.players.get(interaction.guildId!) as Player
+        if (currentPlayer?.voiceChannelId && VoiceChannel.id !== currentPlayer.voiceChannelId) {
+            return await interaction
+                .editReply({
+                    content: `${emojis.warning} | 我已經在語音頻道 - <#${currentPlayer.voiceChannelId}> 裡播放音樂了`
+                })
+                .then(deleteMessageAfter)
+        }
+
+        const db = await MusicDbFetch(interaction.guild!)
+
+        let player: Player
+
+        if (!currentPlayer) {
+            player = client.moonlink!.players.create({
+                guildId: interaction.guild!.id,
+                voiceChannelId: VoiceChannel.id,
+                textChannelId: interaction.channel!.id,
+                autoLeave: true,
+                autoPlay: db.autoplay ?? false,
+                loop: db.repeatMode ?? 0,
+                volume: db.volume ?? 50
             })
+        } else {
+            player = currentPlayer
         }
 
-        const queue = client.distube.getQueue(VoiceChannel)
-        if (!queue) {
+        if (!player.playing)
             return await interaction
                 .editReply({
                     content: `${emojis.outage} | 找不到歌曲或該歌曲已經播放完畢!`
                 })
-                .then((msg) => deleteMessageAfter(msg, 10 * 1000))
-        }
-
-        const currentSong = queue.songs[0]
-        if (!currentSong) {
-            return await interaction.editReply({
-                content: `${emojis.outage} | 無法獲取當前歌曲信息！`
-            })
-        }
+                .then(deleteMessageAfter)
 
         await Client.songs
-            .search(currentSong.name ?? '')
+            .search(player.current?.title ?? '')
             .then(async (songs) => {
                 const song = songs[0]!
 
@@ -63,10 +74,10 @@ export default {
 
                 const Embed = new EmbedBuilder()
                     .setURL(song.url)
-                    .setTitle(currentSong.name!)
-                    .setAuthor({ name: currentSong.uploader?.name ?? '未知歌手' })
+                    .setTitle(player.current?.title ?? '')
+                    .setAuthor({ name: player.current?.author ?? '未知歌手' })
                     .setDescription(lyrics)
-                    .setImage(currentSong.thumbnail as string | null)
+                    .setImage(player.current?.thumbnail as string | null)
                     .setFooter({
                         text: '資料來源: Genius Lyrics',
                         iconURL:
@@ -91,7 +102,7 @@ export default {
                             new EmbedBuilder()
                                 .setColor('Red')
                                 .setDescription(
-                                    `<:loadingerror:1268935312751595622> | 找不到 \`${currentSong?.name}\` 的歌詞!`
+                                    `<:loadingerror:1268935312751595622> | 找不到 \`${player.current?.title}\` 的歌詞!`
                                 )
                                 .setFooter({
                                     text: '歌詞資料來源: Genius Lyrics',
@@ -100,11 +111,7 @@ export default {
                                 })
                         ]
                     })
-                    .then(() =>
-                        setTimeout(async () => {
-                            await interaction.deleteReply()
-                        }, 15 * 1000)
-                    )
+                    .then(deleteMessageAfter)
             })
     }
 } satisfies ButtonType

@@ -1,13 +1,15 @@
-import type { PaperClient } from '@/classes/PaperClient.js'
+import { MusicDbFetch, deleteMessageAfter } from '@/Systems/Music.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
+import emojis from '@/libs/emoji/emoji.js'
 import type { MenuType } from '@/typings/component.js'
-import { YouTubePlugin } from '@distube/youtube'
 import { GuildMember, MessageFlags, TextChannel, type AnySelectMenuInteraction } from 'discord.js'
+import type { Player, Track } from 'moonlink.js'
+import { Logger } from '@/libs/utils/logger'
 
 export default {
     id: 'addSong',
     async execute(interaction: AnySelectMenuInteraction, client: PaperClient) {
         const songUrl = interaction.values[0]
-        const yt = new YouTubePlugin()
 
         if (!interaction.member || !(interaction.member instanceof GuildMember)) {
             return interaction.reply({
@@ -23,17 +25,77 @@ export default {
             })
         }
 
-        await client.distube.play(interaction.member.voice.channel!, songUrl!, {
-            textChannel: interaction.channel,
-            member: interaction.member
-        })
+        const VoiceChannel = interaction.member.voice.channel
 
-        const songs = await yt.search(songUrl!, { limit: 1 })
-        const songDetails = songs[0]!
+        if (!VoiceChannel) {
+            return interaction.reply({
+                content: `${emojis.warning} | 請先加入語音頻道`,
+                flags: MessageFlags.Ephemeral
+            })
+        }
 
-        await interaction.reply({
-            content: `**${songDetails.name}** 已成功加入播放清單`,
-            flags: MessageFlags.Ephemeral
-        })
+        if (!client.moonlink) {
+            return interaction.reply({
+                content: `${emojis.outage} | 發生未知錯誤，無法添加音樂`,
+                flags: MessageFlags.Ephemeral
+            })
+        }
+
+        try {
+            const db = await MusicDbFetch(interaction.guild!)
+            const currentPlayer = client.moonlink.players.get(interaction.guildId!) as Player
+
+            let player: Player
+
+            if (!currentPlayer) {
+                player = client.moonlink.createPlayer({
+                    guildId: interaction.guildId!,
+                    voiceChannelId: VoiceChannel.id,
+                    textChannelId: interaction.channel.id,
+                    autoLeave: true,
+                    autoPlay: db.autoplay ?? false,
+                    loop: db.repeatMode ?? 'off',
+                    volume: db.volume ?? 50
+                })
+            } else {
+                player = currentPlayer
+            }
+
+            if (!player.connected) {
+                player.connect({ setDeaf: true })
+            }
+
+            const result = await client.moonlink.search({
+                query: songUrl!,
+                requester: interaction.user,
+                source: 'youtube',
+                fallbackSources: ['spsearch', 'soundcloud']
+            })
+
+            if (!result.tracks.length || !result.tracks[0]) {
+                return interaction.reply({
+                    content: `${emojis.warning} | 找不到相關的歌曲`,
+                    flags: MessageFlags.Ephemeral
+                })
+            }
+
+            const track = result.tracks[0]
+            player.queue.add(track)
+
+            if (!player.playing && !player.paused) {
+                await player.play()
+            }
+
+            await interaction.reply({
+                content: `**${track.title}** 已成功加入播放清單`,
+                flags: MessageFlags.Ephemeral
+            })
+        } catch (error) {
+            Logger.error('添加歌曲時發生錯誤:', error)
+            await interaction.reply({
+                content: `${emojis.outage} | 添加歌曲時發生錯誤: ${error instanceof Error ? error.message : '未知錯誤'}`,
+                flags: MessageFlags.Ephemeral
+            })
+        }
     }
 } satisfies MenuType

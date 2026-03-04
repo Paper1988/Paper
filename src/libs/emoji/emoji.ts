@@ -8,6 +8,8 @@ const emojis = {
     discord_loading: '<a:discord_loading:1342772648282689546>',
     update: '<:update:1265562455828987968>',
     backforward: '<:backforward:1265557186621345833>',
+    leftarrow: '<:leftarrow:1456302002341412978>',
+    rightarrow: '<:rightarrow:1265561736593801276>',
     play: '<:play:1265561505458294826>',
     pause: '<:pause:1265561390358331462>',
     frontforward: '<:frontforward:1265560424510787584>',
@@ -35,7 +37,8 @@ const emojis = {
     rightempty: '<:rightempty:1320325997203296276>',
     leftfull: '<:leftfull:1320326004631142412>',
     midfull: '<:midfull:1320326013523329035>',
-    rightfull: '<:rightfull:1320326021689638943>'
+    rightfull: '<:rightfull:1320326021689638943>',
+    disconnect: '<:disconnect:1265560278184235121>'
 }
 
 export default emojis

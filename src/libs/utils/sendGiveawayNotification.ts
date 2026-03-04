@@ -1,4 +1,4 @@
-import { PaperClient } from '@/classes/PaperClient.js'
+import { PaperClient } from '@/Structures/classes/PaperClient.js'
 import GiveawayNotification from '@/Structures/Schemas/GiveawayNotification.js'
 import type { FetchGuildOptions } from 'discord.js'
 

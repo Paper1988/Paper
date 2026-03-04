@@ -1,4 +1,4 @@
-import type { PaperClient } from '@/classes/PaperClient.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import {
     type AnySelectMenuInteraction,
     type ButtonInteraction,
@@ -8,41 +8,38 @@ import {
 type ButtonExecute = (
     interaction: ButtonInteraction,
     client: PaperClient,
-    args?: string[],
-    developer?: boolean
+    ...args: any[]
 ) => Promise<void | unknown>
 
 type MenuExecute = (
     interaction: AnySelectMenuInteraction,
     client: PaperClient,
-    args?: string[],
-    developer?: boolean
+    ...args: any[]
 ) => Promise<void | unknown>
 
 type ModalExecute = (
     interaction: ModalSubmitInteraction,
     client: PaperClient,
-    args?: string[],
-    developer?: boolean
+    ...args: any[]
 ) => Promise<void | unknown>
 
 export type ButtonType = {
     id: string
     execute: ButtonExecute
-    args?: string[]
+    args?: any[]
     developer?: boolean
 }
 
 export type MenuType = {
     id: string
     execute: MenuExecute
-    args?: string[]
+    args?: any[]
     developer?: boolean
 }
 
 export type ModalType = {
     id: string
     execute: ModalExecute
-    args?: string[]
+    args?: any[]
     developer?: boolean
 }
