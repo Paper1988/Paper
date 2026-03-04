@@ -44,22 +44,20 @@ export default {
 
         const embed = new EmbedBuilder()
             .setColor('Purple')
-            .setImage(queue.tracks[0]?.artworkUrl!)
+            .setImage(player.current?.artworkUrl!)
             .setTimestamp()
 
         if (player.current) {
             embed.setDescription(
-                `${emojis.queue} | 播放佇列\n**現在播放:** [${
-                    player.current.title
-                }](${player.current.uri}) | \` ${formatDuration(player.current.duration)} \``
+                `${emojis.queue} | 播放佇列\n**現在播放:** [${player.current.title}](${player.current.uri}) | \` ${formatDuration(player.current.duration)} \``
             )
+        } else {
+            embed.setDescription(`${emojis.queue} | 播放佇列\n**現在播放:** 暫無歌曲`)
         }
 
         if (player.queue.size > 0) {
             const tracks = player.queue.tracks.map((track, index) => {
-                return `**${index + 1}**. [${track.title}](${
-                    track.uri
-                }) | \` ${formatDuration(track.duration)} \``
+                return `**${index + 1}**. [${track.title}](${track.uri}) | \` ${formatDuration(track.duration)} \``
             })
 
             embed.addFields({
