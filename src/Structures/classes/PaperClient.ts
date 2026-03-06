@@ -56,13 +56,31 @@ export class PaperClient extends Client {
                         password: process.env.LAVALINK_PASSWORD!,
                         secure: true,
                         identifier: 'Main Node'
+                    },
+                    {
+                        host: process.env.LAVALINK_2_HOST!,
+                        port: Number(process.env.LAVALINK_2_PORT!),
+                        password: process.env.LAVALINK_2_PASSWORD!,
+                        secure: true,
+                        identifier: 'Backup Node'
                     }
                 ],
                 options: {
                     clientName: 'Paper/2.5.0',
                     node: {
+                        selectionStrategy: 'leastLoad',
                         autoMovePlayers: true,
-                        avoidUnhealthyNodes: true
+                        avoidUnhealthyNodes: true,
+                        maxCpuLoad: 80,
+                        maxMemoryUsage: 0.9,
+                        retryAmount: 10,
+                        retryDelay: 5000
+                    },
+                    defaultPlayer: {
+                        selfDeaf: true,
+                        selfMute: false,
+                        autoPlay: false,
+                        volume: 50
                     }
                 }
             })
