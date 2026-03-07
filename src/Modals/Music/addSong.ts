@@ -5,6 +5,7 @@ import type { ModalType } from '@/typings/component.js'
 import {
     ActionRowBuilder,
     EmbedBuilder,
+    MessageFlags,
     ModalSubmitInteraction,
     StringSelectMenuBuilder
 } from 'discord.js'
@@ -18,7 +19,7 @@ export default {
         if (!client.moonlink) {
             return interaction.reply({
                 content: `${emojis.outage} | 發生未知錯誤`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
 
@@ -35,7 +36,7 @@ export default {
             if (!result.tracks.length) {
                 return interaction.reply({
                     content: `${emojis.warning} | 找不到相關的歌曲`,
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 })
             }
 
@@ -57,7 +58,7 @@ export default {
             if (options.length === 0) {
                 return interaction.reply({
                     content: `${emojis.warning} | 找不到有效的歌曲`,
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 })
             }
 
@@ -78,7 +79,7 @@ export default {
             Logger.error('搜尋歌曲時發生錯誤:', error.stack)
             await interaction.reply({
                 content: `${emojis.outage} | 搜尋歌曲時發生錯誤`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
     }
