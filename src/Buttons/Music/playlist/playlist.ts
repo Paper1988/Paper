@@ -18,7 +18,7 @@ export default {
         const [_, action] = customId.split(':')
 
         const player = client.moonlink?.players.get(interaction.guildId!)!
-        const currentSong = player.queue.tracks[0]
+        const currentSong = player.current
 
         if (!player || !currentSong) {
             return await interaction
