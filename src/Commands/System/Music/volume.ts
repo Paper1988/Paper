@@ -1,7 +1,11 @@
 import emojis from '@/libs/emoji/emoji.js'
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import MusicDB from '@/Structures/Schemas/MusicDB.js'
-import { deleteMessageAfter, updateMusicPlayerStatus } from '@/Systems/Music.js'
+import {
+    deleteMessageAfter,
+    updateMusicPlayerStatus,
+    validateVoiceChannel
+} from '@/Systems/Music.js'
 import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, GuildMember, MessageFlags } from 'discord.js'
 import type { Player } from 'moonlink.js'
@@ -14,23 +18,17 @@ export default {
         const VoiceChannel = member.voice.channel!
         const Volume = options.getNumber('percent')!
 
-        if (!VoiceChannel) {
-            return await interaction.reply({
-                content: `${emojis.warning} | 你必須待在一個語音頻道裡面才能使用音樂指令!`,
-                flags: MessageFlags.Ephemeral
-            })
-        }
+        if (!(await validateVoiceChannel(interaction, client, VoiceChannel))) return
 
-        const currentPlayer = client.moonlink?.players.get(interaction.guildId!) as Player
-        if (currentPlayer?.voiceChannelId && VoiceChannel.id !== currentPlayer.voiceChannelId) {
+        const player = client.moonlink?.players.get(interaction.guildId!) as Player
+        if (!player || !player.current) {
             return await interaction
                 .reply({
-                    content: `${emojis.warning} | 我已經在語音頻道 - <#${currentPlayer.voiceChannelId}> 裡播放音樂了`
+                    content: `${emojis.warning} | 目前沒有正在播放的音樂!`,
+                    flags: MessageFlags.Ephemeral
                 })
                 .then(deleteMessageAfter)
         }
-
-        const player: Player = currentPlayer
 
         if (Volume > 1000 || Volume < 0) {
             return await interaction
