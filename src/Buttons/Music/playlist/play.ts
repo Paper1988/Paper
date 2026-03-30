@@ -1,10 +1,10 @@
 import Playlist from '@/Structures/Schemas/Playlist.js'
 import { PaperClient } from '@/Structures/classes/PaperClient.js'
-import { deleteMessageAfter, MusicDbFetch } from '@/Systems/Music.js'
+import { deleteMessageAfter, validateVoiceChannel } from '@/Systems/Music.js'
 import emojis from '@/libs/emoji/emoji.js'
 import { Logger } from '@/libs/utils/logger.js'
 import type { ButtonType } from '@/typings/component.js'
-import { ButtonInteraction, EmbedBuilder, GuildMember, MessageFlags, TextChannel } from 'discord.js'
+import { ButtonInteraction, GuildMember, MessageFlags } from 'discord.js'
 import type { Player, Track } from 'moonlink.js'
 
 export default {
@@ -20,32 +20,7 @@ export default {
             const member = interaction.member! as GuildMember
             const VoiceChannel = member.voice.channel!
 
-            if (!member.voice.channel) {
-                return await interaction
-                    .reply({
-                        content: `${emojis.warning} | 請先加入語音頻道`,
-                        flags: MessageFlags.Ephemeral
-                    })
-                    .then(deleteMessageAfter)
-            }
-
-            const permissions = member.voice.channel.permissionsFor(interaction.client.user)!
-            if (!permissions.has('Connect') || !permissions.has('Speak')) {
-                return await interaction
-                    .reply({
-                        content: '',
-                        embeds: [
-                            new EmbedBuilder()
-                                .setTitle('拒絕請求')
-                                .setDescription(
-                                    `${emojis.warning} | 我沒有權限進入 <#${VoiceChannel.id}>!`
-                                )
-                                .setColor('Red')
-                        ],
-                        flags: MessageFlags.Ephemeral
-                    })
-                    .then(deleteMessageAfter)
-            }
+            if (!(await validateVoiceChannel(interaction, client, VoiceChannel))) return
 
             const playlist = await Playlist.findOne({
                 userId: userId,
@@ -91,24 +66,16 @@ export default {
                     .then(deleteMessageAfter)
             }
 
-            const db = await MusicDbFetch(interaction.guild!)
-            const currentPlayer = client.moonlink.players.get(interaction.guildId!) as Player
+            const currentPlayer = client.moonlink?.players.get(interaction.guildId!) as Player
+            let player: Player | null = null
 
-            let player: Player
-
-            if (!currentPlayer) {
-                player = client.moonlink!.players.create({
-                    guildId: interaction.guild!.id,
-                    voiceChannelId: VoiceChannel.id,
-                    textChannelId: interaction.channel!.id,
-                    autoLeave: true,
-                    autoPlay: db.autoplay ?? false,
-                    loop: db.repeatMode ?? 0,
-                    volume: db.volume ?? 50
-                })
-            } else {
-                player = currentPlayer
-            }
+            !currentPlayer
+                ? (player = client.moonlink!.players.create({
+                      guildId: interaction.guild!.id,
+                      voiceChannelId: VoiceChannel.id,
+                      textChannelId: interaction.channel!.id
+                  }))
+                : (player = currentPlayer)
 
             if (!player.connected) {
                 player.connect({ selfDeaf: true })
@@ -121,8 +88,7 @@ export default {
                 try {
                     const result = await client.moonlink.search({
                         query: url,
-                        requester: interaction.user,
-                        source: 'youtube'
+                        requester: interaction.user
                     })
 
                     if (result.tracks.length > 0 && result.tracks[0]) {

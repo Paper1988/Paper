@@ -4,7 +4,9 @@ import emojis from '@/libs/emoji/emoji.js'
 import {
     ActionRowBuilder,
     ButtonBuilder,
+    ButtonInteraction,
     ButtonStyle,
+    ChatInputCommandInteraction,
     EmbedBuilder,
     Guild,
     InteractionResponse,
@@ -232,21 +234,18 @@ const generateMusicPlayerStatus = (
 
     const getProgressDisplay = () => {
         if (isLive) return '🔴 直播中'
-        if (completed) {
-            const duration = millisToDuration(songDuration)
-            return `\`${duration}\` - \`${duration}\``
-        }
         return `\`${millisToDuration(currentPosition)}\` - \`${millisToDuration(songDuration)}\``
     }
 
     const getRepeatModeText = () => {
         if (player.loop === 'off') return emojis.xmark
-        return player.loop === 'queue' ? '整個清單' : '單曲'
+        return player.loop === 'queue' ? '整個佇列' : '單曲'
     }
 
+    const barLength = track.sourceName === 'spotify' ? 21 : PROGRESS_BAR_LENGTH
     const progressBar = isLive
-        ? '🔴 ━━━━━━━━━━━━━━━━━━━━━━ 直播中'
-        : generateProgressBar(currentPosition, songDuration)
+        ? `🔴 ${'━'.repeat(barLength)} 直播中`
+        : generateProgressBar(currentPosition, songDuration, barLength)
 
     const voiceChannel = client.channels.cache.get(player.voiceChannelId) as
         | VoiceChannel
@@ -316,15 +315,23 @@ const deleteMessageAfter = (
     time = DEFAULT_DELETE_TIME
 ): void => {
     if (!msg) return
-    setTimeout(() => msg.delete(), time)
+    setTimeout(() => {
+        msg.delete().catch(() => {})
+    }, time)
 }
 
-async function MusicDbFetch(guild: Guild) {
-    const db = await MusicDB.findOne({ GuildID: guild.id })
+async function MusicDbFetch(guild: Guild | string) {
+    const db = await MusicDB.findOne({ GuildID: typeof guild === 'string' ? guild : guild.id })
+    let repeatMode: 'off' | 'track' | 'queue' = 'off'
 
-    let repeatMode: Player['loop'] = 'off'
+    if (!db)
+        return {
+            volume: 50,
+            repeatMode: repeatMode,
+            autoplay: false
+        }
 
-    switch (db?.repeatMode) {
+    switch (db.repeatMode) {
         case 0:
             repeatMode = 'off'
             break
@@ -333,13 +340,57 @@ async function MusicDbFetch(guild: Guild) {
             break
         case 2:
             repeatMode = 'queue'
+            break
     }
 
     return {
-        volume: db?.volume,
+        volume: db.volume,
         repeatMode: repeatMode,
-        autoplay: db?.autoplay
+        autoplay: db.autoplay
     }
+}
+
+/**
+ * 檢查語音頻道的相關條件
+ */
+async function validateVoiceChannel(
+    interaction: ChatInputCommandInteraction | ButtonInteraction,
+    client: PaperClient,
+    VoiceChannel: any
+): Promise<boolean> {
+    if (!VoiceChannel) {
+        await interaction
+            .editReply({ content: `${emojis.warning} | 你必須待在語音頻道裡面才能使用音樂指令!` })
+            .then(deleteMessageAfter)
+        return false
+    }
+
+    const currentPlayer = client.moonlink?.players.get(interaction.guildId!) as Player
+    if (currentPlayer?.voiceChannelId && VoiceChannel.id !== currentPlayer.voiceChannelId) {
+        await interaction
+            .editReply({
+                content: `${emojis.warning} | 我已經在語音頻道 - <#${currentPlayer.voiceChannelId}> 裡播放音樂了`
+            })
+            .then(deleteMessageAfter)
+        return false
+    }
+
+    if (!VoiceChannel.joinable) {
+        await interaction
+            .editReply({
+                content: '',
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle('拒絕請求')
+                        .setDescription(`${emojis.warning} | 我沒有權限進入 <#${VoiceChannel.id}>!`)
+                        .setColor('Red')
+                ]
+            })
+            .then(deleteMessageAfter)
+        return false
+    }
+
+    return true
 }
 
 export {
@@ -354,5 +405,6 @@ export {
     secondsToDuration,
     startProgressUpdater,
     stopProgressUpdater,
-    updateMusicPlayerStatus
+    updateMusicPlayerStatus,
+    validateVoiceChannel
 }

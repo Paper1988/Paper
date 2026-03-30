@@ -4,6 +4,7 @@ import {
     deleteMessageAfter,
     generateMusicPlayerStatus,
     millisToDuration,
+    MusicDbFetch,
     startProgressUpdater,
     stopProgressUpdater,
     updateMusicPlayerStatus
@@ -115,6 +116,9 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             if (player.data.queueEndTimeout) {
                 clearTimeout(player.data.queueEndTimeout as NodeJS.Timeout)
             }
+            const db = await MusicDbFetch(player.guildId)
+            player.setVolume(db.volume)
+            player.setLoop(db.repeatMode)
             const textChannel = client.channels.cache.get(player.textChannelId)
             const status = generateMusicPlayerStatus(player, client, track)
             if (textChannel && textChannel.isTextBased() && 'send' in textChannel) {
@@ -139,7 +143,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             case 'replaced':
                 try {
                     if (player.loop === 'off') {
-                        if (!player.queue.tracks[1] && !player.autoPlay) {
+                        if (!player.queue.tracks[0] && !player.autoPlay) {
                             // 無循環且沒有下一首歌：顯示完成狀態
                             await updateMusicPlayerStatus(player, client, true)
                         }
@@ -266,6 +270,49 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             clearPlayer(player)
         } catch (error) {
             Logger.error('處理 playerDestroy 事件時發生錯誤:', error)
+        }
+    })
+
+    client.moonlink.on('playerTriggeredPlay', async (player) => {
+        const db = await MusicDbFetch(player.guildId)
+        player.setVolume(db.volume)
+        player.setLoop(db.repeatMode)
+    })
+
+    client.moonlink.on('playerTriggeredPause', async (player) => {
+        await updateMusicPlayerStatus(player, client, false)
+    })
+
+    client.moonlink.on('playerTriggeredResume', async (player) => {
+        await updateMusicPlayerStatus(player, client, false)
+    })
+
+    /** ----- Auto Leave Event ----- */
+    client.moonlink.on('autoLeaved', async (player) => {
+        try {
+            const textChannelId = player.textChannelId
+            const channel = client.channels.cache.get(textChannelId)
+
+            Logger.info(`[AutoLeave] Player in guild ${player.guildId} has auto-leaved.`)
+
+            stopProgressUpdater(player)
+            clearPlayer(player)
+
+            if (channel && channel.isTextBased() && 'send' in channel) {
+                await channel
+                    .send({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setColor('Red')
+                                .setDescription(
+                                    `${emojis.disconnect} | 因為語音頻道空無一人，我先走囉！`
+                                )
+                        ]
+                    })
+                    .then(deleteMessageAfter)
+            }
+        } catch (error) {
+            Logger.error('處理 autoLeaved 事件時發生錯誤:', error)
         }
     })
 

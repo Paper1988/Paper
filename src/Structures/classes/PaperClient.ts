@@ -37,7 +37,17 @@ export class PaperClient extends Client {
 
     private initMoonlink() {
         // 驗證必要的環境變數
-        const requiredEnvVars = ['LAVALINK_HOST', 'LAVALINK_PORT', 'LAVALINK_PASSWORD']
+        const requiredEnvVars = [
+            'NODELINK_HOST',
+            'NODELINK_PORT',
+            'NODELINK_PASSWORD',
+            'LAVALINK_1_HOST',
+            'LAVALINK_1_PORT',
+            'LAVALINK_1_PASSWORD',
+            'LAVALINK_2_HOST',
+            'LAVALINK_2_PORT',
+            'LAVALINK_2_PASSWORD'
+        ]
         const missingVars = requiredEnvVars.filter((varName) => !process.env[varName])
 
         if (missingVars.length > 0) {
@@ -51,18 +61,25 @@ export class PaperClient extends Client {
             this.moonlink = new Manager({
                 nodes: [
                     {
-                        host: process.env.LAVALINK_HOST!,
-                        port: Number(process.env.LAVALINK_PORT!),
-                        password: process.env.LAVALINK_PASSWORD!,
+                        host: process.env.NODELINK_HOST!,
+                        port: Number(process.env.NODELINK_PORT!),
+                        password: process.env.NODELINK_PASSWORD!,
                         secure: true,
                         identifier: 'Main Node'
+                    },
+                    {
+                        host: process.env.LAVALINK_1_HOST!,
+                        port: Number(process.env.LAVALINK_1_PORT!),
+                        password: process.env.LAVALINK_1_PASSWORD!,
+                        secure: true,
+                        identifier: 'Free Node 1'
                     },
                     {
                         host: process.env.LAVALINK_2_HOST!,
                         port: Number(process.env.LAVALINK_2_PORT!),
                         password: process.env.LAVALINK_2_PASSWORD!,
                         secure: true,
-                        identifier: 'Backup Node'
+                        identifier: 'Free Node 2'
                     }
                 ],
                 options: {
@@ -80,7 +97,8 @@ export class PaperClient extends Client {
                         selfDeaf: true,
                         selfMute: false,
                         autoPlay: false,
-                        volume: 50
+                        volume: 50,
+                        autoLeave: true
                     }
                 }
             })
