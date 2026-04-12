@@ -1,12 +1,11 @@
 import { PaperClient } from '@/Structures/classes/PaperClient.js'
 import GiveawayNotification from '@/Structures/Schemas/GiveawayNotification.js'
-import type { FetchGuildOptions } from 'discord.js'
 
 export async function sendGiveawayNotification(
     client: PaperClient,
     type: string,
     giveaway: {
-        guildId: string | FetchGuildOptions
+        guildId: string
         prize: string
         endAt: number
         channelId: string
