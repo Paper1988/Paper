@@ -2,13 +2,13 @@ import { PaperClient } from '@/Structures/classes/PaperClient.js'
 import MusicController from '@/Systems/Music/MusicController.js'
 import MusicRenderer from '@/Systems/Music/MusicRenderer.js'
 import MusicRepository from '@/Systems/Music/MusicRepository.js'
+import { MusicStateManager } from '@/Systems/Music/MusicStateManager.js'
 import MusicUtils, { deleteMessageAfter } from '@/Systems/Music/MusicUtils.js'
 import emojis from '@/libs/emoji/emoji.js'
 import { Logger } from '@/libs/utils/logger.js'
 import { EmbedBuilder, Message } from 'discord.js'
 import { Track } from 'moonlink.js'
 import type { INode } from 'moonlink.js/dist/src/typings/Interfaces'
-import { MusicStateManager } from './Music/MusicStateManager'
 
 const DEBUG_WEBHOOK_ID = process.env.DEBUG_WEBHOOK_ID!
 const DEBUG_WEBHOOK_TOKEN = process.env.DEBUG_WEBHOOK_TOKEN!
