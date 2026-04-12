@@ -8,45 +8,35 @@ import GiveawayNotification from '@/Structures/Schemas/GiveawayNotification.js'
 import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
 import MusicDB from '@/Structures/Schemas/MusicDB.js'
 import type { EventType } from '@/typings/event'
-import { Guild } from 'discord.js'
-import mongoose from 'mongoose'
+import type { Guild } from 'discord.js'
+import type mongoose from 'mongoose'
+
+const CLEANUP_MODELS = [
+    MusicDB,
+    AntiAlt,
+    AFKSystem,
+    GiveawayDB,
+    GiveawayHistory,
+    GiveawayStats,
+    GiveawayNotification
+]
 
 export default {
     name: 'guildDelete',
-    async execute(client: PaperClient, guild: Guild) {
-        if (!client) return
+    async execute(_client: PaperClient, guild: Guild) {
         const deleteRecords = async (model: mongoose.Model<any>) => {
-            const record = await model.findOne({ GuildID: guild.id })
-            if (record) {
-                await model
-                    .deleteMany({ GuildID: guild.id })
-                    .exec()
-                    .then((count) => {
-                        Logger.info(
-                            `[event.guildDelete] 成功從資料庫 ${model.name} 刪除 ${count.deletedCount} 筆資料!`
-                        )
-                    })
-            } else {
-                await model
-                    .deleteMany({ guildId: guild.id })
-                    .exec()
-                    .then((count) => {
-                        Logger.info(
-                            `[event.guildDelete] 成功從資料庫 ${model.name} 刪除 ${count.deletedCount} 筆資料!`
-                        )
-                    })
+            const { deletedCount } = await model
+                .deleteMany({ $or: [{ GuildID: guild.id }, { guildId: guild.id }] })
+                .exec()
+
+            if (deletedCount > 0) {
+                Logger.info(
+                    `[event.guildDelete] 成功從資料庫 ${model.modelName} 刪除 ${deletedCount} 筆資料!`
+                )
             }
         }
 
-        await Promise.all([
-            deleteRecords(MusicDB),
-            deleteRecords(AntiAlt),
-            deleteRecords(AFKSystem),
-            deleteRecords(GiveawayDB),
-            deleteRecords(GiveawayHistory),
-            deleteRecords(GiveawayStats),
-            deleteRecords(GiveawayNotification)
-        ]).catch((err) => {
+        await Promise.all(CLEANUP_MODELS.map(deleteRecords)).catch((err) => {
             Logger.error('[event.guildDelete] 刪除資料庫資料時發生錯誤:', err)
         })
     }

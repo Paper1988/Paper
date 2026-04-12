@@ -26,12 +26,27 @@ import { Logger } from '@/libs/utils/logger.js'
 import type { EventType } from '@/typings/event.js'
 import * as Sentry from '@sentry/node'
 
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const RETRY_DELAY_MS = 5000
+const PRESENCE_INTERVAL_MS = 10 * 1000
+const DAY_MS = 24 * 60 * 60 * 1000
+const PRODUCTION_BOT_ID = '***REMOVED***'
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/** 將抽獎標記為已結束（含錯誤），集中管理避免重複 */
+const markGiveawayError = (messageId: string) =>
+    safeDbOperation(() =>
+        Giveaway.updateOne({ messageId }, { $set: { ended: true, hasError: true } })
+    )
+
+// ─── Event ────────────────────────────────────────────────────────────────────
+
 export default {
     name: Events.ClientReady,
     once: true,
     async execute(client: PaperClient) {
-        if (!client) return
-
         Sentry.setContext('client', {
             username: client.user?.username,
             id: client.user?.id,
@@ -55,7 +70,6 @@ export default {
         }
 
         mongoose.set('strictQuery', false)
-
         await connectToDB()
 
         try {
@@ -64,33 +78,68 @@ export default {
             Logger.error('Failed to start API server:', error)
         }
 
-        const dbHealthCheckInterval = setInterval(
-            async () => {
-                const healthStatus = await checkMongoDBHealth()
-                if (healthStatus.status !== 'healthy') {
-                    Logger.warn(`MongoDB 健康檢查失敗: ${healthStatus.details.readyStateDesc}`)
-                    if (healthStatus.details.error) {
-                        Logger.error(`錯誤詳情: ${healthStatus.details.error}`)
-                    }
-
-                    if (
-                        mongoose.connection.readyState !== 1 &&
-                        mongoose.connection.readyState !== 2
-                    ) {
-                        Logger.info('🔄 嘗試重新連線至 MongoDB...')
-                        connectToDB(0, 3).catch((err) =>
-                            Logger.error('健康檢查重連失敗:', err.stack)
-                        )
-                    }
-                } else {
-                    Logger.info(`MongoDB 健康檢查通過 (延遲: ${healthStatus.details.ping}ms)`)
+        // MongoDB 健康檢查（每 24 小時）
+        const dbHealthCheckInterval = setInterval(async () => {
+            const healthStatus = await checkMongoDBHealth()
+            if (healthStatus.status !== 'healthy') {
+                Logger.warn(`MongoDB 健康檢查失敗: ${healthStatus.details.readyStateDesc}`)
+                if (healthStatus.details.error) {
+                    Logger.error(`錯誤詳情: ${healthStatus.details.error}`)
                 }
-            },
-            24 * 60 * 60 * 1000
-        )
+                if (mongoose.connection.readyState !== 1 && mongoose.connection.readyState !== 2) {
+                    Logger.info('🔄 嘗試重新連線至 MongoDB...')
+                    connectToDB(0, 3).catch((err) =>
+                        Logger.error('健康檢查重連失敗:', err.stack)
+                    )
+                }
+            } else {
+                Logger.info(`MongoDB 健康檢查通過 (延遲: ${healthStatus.details.ping}ms)`)
+            }
+        }, DAY_MS)
 
+        // 抽獎到期檢查（每 24 小時）
+        const giveawayInterval = setInterval(async () => {
+            try {
+                if (mongoose.connection.readyState !== 1) {
+                    Logger.warn('MongoDB 連線未就緒，跳過定時任務...')
+                    return
+                }
+
+                const giveaways = await Giveaway.find({
+                    endAt: { $lt: new Date() },
+                    ended: false
+                }).maxTimeMS(20000)
+
+                Logger.info(`找到 ${giveaways.length} 個需要結束的抽獎活動`)
+
+                await Promise.all(
+                    giveaways.map(async (giveaway) => {
+                        try {
+                            await endGiveaway(giveaway.messageId, client)
+                            Logger.info(`成功結束抽獎活動: ${giveaway.messageId}`)
+                        } catch (error) {
+                            Logger.error(`結束抽獎活動時發生錯誤 (ID: ${giveaway.messageId}):`, error)
+                            await Giveaway.updateOne(
+                                { messageId: giveaway.messageId },
+                                { $set: { ended: true, hasError: true } }
+                            ).catch((dbError) => Logger.error('更新抽獎活動狀態失敗:', dbError))
+                        }
+                    })
+                )
+
+                if (global.gc) {
+                    global.gc()
+                    Logger.info('已執行垃圾回收')
+                }
+            } catch (mainError) {
+                Logger.error('定時任務執行時發生嚴重錯誤:', mainError)
+            }
+        }, DAY_MS)
+
+        // 關閉時清除所有定時器
         client.once('shutdown', () => {
-            if (dbHealthCheckInterval) clearInterval(dbHealthCheckInterval)
+            clearInterval(dbHealthCheckInterval)
+            clearInterval(giveawayInterval)
         })
 
         mongoose.connection.on('error', (error) => {
@@ -102,8 +151,9 @@ export default {
             await connectToDB().catch((err) => Logger.error('重連 MongoDB 失敗:', err.stack))
         })
 
-        if (client.user?.id === '***REMOVED***') {
-            const Embed = new EmbedBuilder()
+        // 只在正式機器人上發送 webhook 上線通知
+        if (client.user?.id === PRODUCTION_BOT_ID) {
+            const embed = new EmbedBuilder()
                 .setColor('Green')
                 .setDescription(`${client.user} 上線了!`)
                 .setTimestamp()
@@ -112,98 +162,57 @@ export default {
                 process.env.STARTUP_WEBHOOK_ID!,
                 process.env.STARTUP_WEBHOOK_TOKEN!
             )
-            await webhook.send({ embeds: [Embed] })
+            await webhook.send({ embeds: [embed] })
         }
 
-        setInterval(() => updatePresence(client), 10 * 1000)
-
-        setInterval(
-            async () => {
-                try {
-                    if (mongoose.connection.readyState !== 1) {
-                        Logger.warn('MongoDB 連線未就緒，跳過定時任務...')
-                        return
-                    }
-
-                    const giveaways = await Giveaway.find({
-                        endAt: { $lt: new Date() },
-                        ended: false
-                    }).maxTimeMS(20000)
-
-                    Logger.info(`找到 ${giveaways.length} 個需要結束的抽獎活動`)
-
-                    for (const giveaway of giveaways) {
-                        try {
-                            await endGiveaway(giveaway.messageId, client)
-                            Logger.info(`成功結束抽獎活動: ${giveaway.messageId}`)
-                        } catch (error) {
-                            Logger.error(
-                                `結束抽獎活動時發生錯誤 (ID: ${giveaway.messageId}):`,
-                                error
-                            )
-
-                            try {
-                                await Giveaway.updateOne(
-                                    { messageId: giveaway.messageId },
-                                    { $set: { ended: true, hasError: true } }
-                                )
-                            } catch (dbError) {
-                                Logger.error(`更新抽獎活動狀態失敗:`, dbError)
-                            }
-                        }
-                    }
-
-                    if (global.gc) {
-                        global.gc()
-                        Logger.info('已執行垃圾回收')
-                    }
-                } catch (mainError) {
-                    Logger.error('定時任務執行時發生嚴重錯誤:', mainError)
-                }
-            },
-            24 * 60 * 60 * 1000
-        )
+        setInterval(() => updatePresence(client), PRESENCE_INTERVAL_MS)
     }
 } satisfies EventType
 
-const connectToDB = async (retryCount = 0, maxRetries = 5): Promise<void> => {
-    try {
-        dns.setDefaultResultOrder('ipv4first')
+// ─── DB Connection ────────────────────────────────────────────────────────────
 
-        if (process.env.DATABASE_URI?.startsWith('mongodb+srv://')) {
-            dns.setServers(['8.8.8.8', '8.8.4.4']) // 使用 Google DNS
-        }
+/** 使用 for loop 取代遞迴，避免多次重試時的 call stack 增長 */
+const connectToDB = async (startRetry = 0, maxRetries = 5): Promise<void> => {
+    for (let attempt = startRetry; attempt <= maxRetries; attempt++) {
+        try {
+            dns.setDefaultResultOrder('ipv4first')
 
-        await mongoose.connect(process.env.DATABASE_URI!, {
-            dbName: 'Js',
-            connectTimeoutMS: 30000,
-            socketTimeoutMS: 45000,
-            serverSelectionTimeoutMS: 30000,
-            heartbeatFrequencyMS: 10000,
-            maxPoolSize: 10,
-            retryWrites: true,
-            retryReads: true
-        })
-        Logger.info(`成功連結到 MongoDB ${mongoose.connection.db!.databaseName}!`)
-    } catch (error) {
-        Logger.error(`MongoDB 連線失敗 (嘗試 ${retryCount + 1}/${maxRetries}):`, error)
+            if (process.env.DATABASE_URI?.startsWith('mongodb+srv://')) {
+                dns.setServers(['8.8.8.8', '8.8.4.4']) // Google Public DNS
+            }
 
-        console.error('完整錯誤:', JSON.stringify(error, null, 2))
-        if (error instanceof Error) {
-            console.error('錯誤訊息:', error.message)
-            console.error('錯誤堆疊:', error.stack)
-        }
+            await mongoose.connect(process.env.DATABASE_URI!, {
+                dbName: 'Js',
+                connectTimeoutMS: 30000,
+                socketTimeoutMS: 45000,
+                serverSelectionTimeoutMS: 30000,
+                heartbeatFrequencyMS: 10000,
+                maxPoolSize: 10,
+                retryWrites: true,
+                retryReads: true
+            })
 
-        if (retryCount < maxRetries) {
-            Logger.info(`🔄 ${5000}ms 後重試連線...`)
-            await new Promise((resolve) => setTimeout(resolve, 5000))
-            await connectToDB(retryCount + 1, maxRetries)
-        } else {
-            Logger.error(`已達最大重試次數 (${maxRetries})，無法連接到 MongoDB`)
-            // 可以在這裡處理無法連線的情況，例如傳送通知或優雅地關閉 Bot
+            Logger.info(`成功連結到 MongoDB ${mongoose.connection.db!.databaseName}!`)
+            return
+        } catch (error) {
+            Logger.error(`MongoDB 連線失敗 (嘗試 ${attempt + 1}/${maxRetries}):`, error)
+
+            if (error instanceof Error) {
+                Logger.error(`錯誤訊息: ${error.message}`)
+                Logger.error(`錯誤堆疊: ${error.stack}`)
+            }
+
+            if (attempt < maxRetries) {
+                Logger.info(`🔄 ${RETRY_DELAY_MS}ms 後重試連線...`)
+                await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
+            } else {
+                Logger.error(`已達最大重試次數 (${maxRetries})，無法連接到 MongoDB`)
+            }
         }
     }
 }
+
+// ─── Giveaway ─────────────────────────────────────────────────────────────────
 
 async function endGiveaway(messageId: string, client: PaperClient): Promise<void> {
     const giveaway = await safeDbOperation(() =>
@@ -219,98 +228,87 @@ async function endGiveaway(messageId: string, client: PaperClient): Promise<void
         const channel = await client.channels.fetch(giveaway.channelId)
         if (!channel?.isTextBased()) {
             Logger.warn(`找不到頻道或頻道不是文字頻道: ${giveaway.channelId}`)
-            await safeDbOperation(() =>
-                Giveaway.updateOne({ messageId }, { $set: { ended: true, hasError: true } })
-            )
+            await markGiveawayError(messageId)
             return
         }
 
         const message = await channel.messages.fetch(giveaway.messageId)
         if (!message) {
             Logger.warn(`找不到訊息: ${giveaway.messageId}`)
-            await safeDbOperation(() =>
-                Giveaway.updateOne({ messageId }, { $set: { ended: true, hasError: true } })
-            )
+            await markGiveawayError(messageId)
+            return
+        }
+
+        // 提早 guard：沒有 embed 就無法處理
+        if (message.embeds.length === 0) {
+            Logger.warn('訊息中沒有嵌入內容')
+            await markGiveawayError(messageId)
             return
         }
 
         const winners = selectWinners(giveaway.participants, giveaway.winnerCount)
         const winnerMentions = winners.map((id) => `<@${id}>`).join(', ') || '沒有人參加抽獎'
+        const originalDesc = message.embeds[0]?.data.description?.split('\n\n')[0] ?? ''
 
-        if (message.embeds.length > 0) {
-            const originalDesc = message.embeds[0]?.data.description?.split('\n\n')[0] ?? ''
+        const endEmbed = EmbedBuilder.from(message.embeds[0]!)
+            .setColor('Green')
+            .setDescription(originalDesc + `\n\n<:person:1265561455529562154> | 得獎者：${winnerMentions}`)
 
-            const endEmbed = EmbedBuilder.from(message.embeds[0]!)
-                .setColor('Green')
-                .setDescription(
-                    originalDesc + `\n\n<:person:1265561455529562154> | 得獎者：${winnerMentions}`
-                )
+        const endButtons = new ActionRowBuilder<ButtonBuilder>().addComponents(
+            new ButtonBuilder()
+                .setCustomId('giveaway-join')
+                .setLabel('抽獎已結束')
+                .setEmoji('<:wave:1320296301862191104>')
+                .setStyle(ButtonStyle.Secondary)
+                .setDisabled(true),
+            new ButtonBuilder()
+                .setCustomId(`giveaway-reroll/${giveaway.hostedBy}`)
+                .setLabel('重新抽獎')
+                .setEmoji('🎲')
+                .setStyle(ButtonStyle.Primary)
+            // .setDisabled(false) 是預設值，不需要顯式設定
+        )
 
-            const endButtons = new ActionRowBuilder<ButtonBuilder>().addComponents(
-                new ButtonBuilder()
-                    .setCustomId('giveaway-join')
-                    .setLabel('抽獎已結束')
-                    .setEmoji('<:wave:1320296301862191104>')
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(true),
-                new ButtonBuilder()
-                    .setCustomId(`giveaway-reroll/${giveaway.hostedBy}`)
-                    .setLabel('重新抽獎')
-                    .setEmoji('🎲')
-                    .setStyle(ButtonStyle.Primary)
-                    .setDisabled(false)
-            )
+        await message.edit({ embeds: [endEmbed], components: [endButtons] })
 
-            await message.edit({
-                embeds: [endEmbed],
-                components: [endButtons]
+        // channel 已在上方確認為 isTextBased()，可安全 cast
+        if (winners.length > 0) {
+            await (channel as TextChannel).send({
+                content: `<:tada:1265562251981750272> 抽獎結束！\n恭喜 ${winnerMentions} 獲得 **${giveaway.prize}**！`,
+                allowedMentions: { users: winners }
             })
-            if (winners.length > 0 && channel?.isTextBased()) {
-                const textChannel = channel as TextChannel
-                await textChannel.send({
-                    content: `<:tada:1265562251981750272> 抽獎結束！\n恭喜 ${winnerMentions} 獲得 **${giveaway.prize}**！`,
-                    allowedMentions: { users: winners }
-                })
-            }
-        } else {
-            Logger.warn('訊息中沒有嵌入內容')
-            await safeDbOperation(() =>
-                Giveaway.updateOne({ messageId }, { $set: { ended: true, hasError: true } })
-            )
-            return
         }
 
         giveaway.ended = true
         await safeDbOperation(() => giveaway.save())
 
         await safeDbOperation(async () => {
-            const existingStats = await GiveawayStats.findOne({
-                guildId: giveaway.guildId
-            }).maxTimeMS(10000)
-            const stats: any = existingStats ?? new GiveawayStats({ guildId: giveaway.guildId })
+            const existingStats = await GiveawayStats.findOne({ guildId: giveaway.guildId }).maxTimeMS(10000)
+            const stats = existingStats ?? new GiveawayStats({ guildId: giveaway.guildId })
+
             stats.activeGiveaways = Math.max(0, (stats.activeGiveaways ?? 0) - 1)
             stats.totalWinners += winners.length
 
-            for (const winnerId of winners) {
-                // +1 因為本次抽獎的 GiveawayHistory 尚未存入，countDocuments 查不到這次
-                const winHistory =
-                    (await GiveawayHistory.countDocuments({
+            // 並行查詢每位得獎者的歷史勝場數（+1 因為本次 GiveawayHistory 尚未存入）
+            const winHistories = await Promise.all(
+                winners.map(async (id) => {
+                    const count = await GiveawayHistory.countDocuments({
                         guildId: giveaway.guildId,
-                        winners: winnerId
-                    }).maxTimeMS(10000)) + 1
+                        winners: id
+                    }).maxTimeMS(10000)
+                    return { id, count: count + 1 }
+                })
+            )
 
-                const currentMostWon = stats.mostWonUser
-                if (!currentMostWon || winHistory > (currentMostWon.count ?? 0)) {
-                    stats.mostWonUser = {
-                        userId: winnerId,
-                        count: winHistory
-                    }
+            for (const { id, count } of winHistories) {
+                if (!stats.mostWonUser || count > (stats.mostWonUser.count ?? 0)) {
+                    stats.mostWonUser = { userId: id, count }
                 }
             }
 
             await stats.save()
 
-            const history = new GiveawayHistory({
+            await new GiveawayHistory({
                 guildId: giveaway.guildId,
                 giveawayId: giveaway.messageId,
                 prize: giveaway.prize,
@@ -323,20 +321,19 @@ async function endGiveaway(messageId: string, client: PaperClient): Promise<void
                     minAccountAge: giveaway.minAccountAge,
                     minServerTime: giveaway.minServerTime
                 }
-            })
-
-            await history.save()
+            }).save()
         })
 
         Logger.info(`成功結束抽獎活動: ${messageId}，有 ${winners.length} 個獲獎者`)
     } catch (error) {
         Logger.error(`處理抽獎活動時發生錯誤 (ID: ${messageId}):`, error)
-        await safeDbOperation(() =>
-            Giveaway.updateOne({ messageId }, { $set: { ended: true, hasError: true } })
-        )
+        await markGiveawayError(messageId)
     }
 }
 
+// ─── Utils ────────────────────────────────────────────────────────────────────
+
+/** Fisher-Yates shuffle，隨機選出獲獎者 */
 function selectWinners(participants: string[], count: number): string[] {
     const arr = [...participants]
     for (let i = arr.length - 1; i > 0; i--) {

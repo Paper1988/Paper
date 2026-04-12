@@ -1,3 +1,5 @@
+import emojis from '@/libs/emoji/emoji.js'
+import { Profile } from 'discord-arts'
 import {
     AttachmentBuilder,
     ChatInputCommandInteraction,
@@ -6,8 +8,6 @@ import {
     MessageFlags,
     SlashCommandBuilder
 } from 'discord.js'
-
-import { profileImage } from 'discord-arts'
 
 function addSuffix(number: number) {
     if (number % 100 >= 11 && number % 100 <= 13) return '第' + number + '位'
@@ -62,7 +62,7 @@ export default {
         ),
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.reply({
-            content: '<a:discord1792loading:1212016238839070791> | 載入中......',
+            content: `${emojis.discord_loading} | 載入中......`,
             flags: MessageFlags.Ephemeral
         })
 
@@ -83,7 +83,7 @@ export default {
         try {
             const fetchedMembers = await interaction.guild!.members.fetch()
 
-            const profileBuffer = await profileImage(member!.id)
+            const profileBuffer = await Profile(member.id)
 
             const imageAttachment = new AttachmentBuilder(profileBuffer, {
                 name: 'profile.png'
