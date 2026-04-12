@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb'
 
 async function removeDuplicates() {
-    const uri = '***REMOVED***'
+    const uri = process.env.DATABASE_URI as string
     const client = new MongoClient(uri)
 
     try {
