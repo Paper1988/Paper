@@ -10,7 +10,7 @@ export default {
     async execute(interaction: ChatInputCommandInteraction, client: PaperClient) {
         const { options } = interaction
         const member = interaction.member! as GuildMember
-        const VoiceChannel = member.voice.channel
+        const VoiceChannel = member.voice.channel!
 
         const position = options.getNumber('position')!
 
