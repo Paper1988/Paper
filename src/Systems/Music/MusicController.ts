@@ -7,10 +7,9 @@ import {
     ChatInputCommandInteraction,
     EmbedBuilder,
     TextChannel,
-    VoiceChannel
+    type VoiceBasedChannel
 } from 'discord.js'
 import { Player, Track } from 'moonlink.js'
-import type { clearPlayer } from '../Music'
 
 // ==================== MusicController ====================
 
@@ -108,7 +107,7 @@ export class MusicController {
     static async validateVoiceChannel(
         interaction: ChatInputCommandInteraction | ButtonInteraction,
         client: PaperClient,
-        voiceChannel: VoiceChannel | null | undefined
+        voiceChannel: VoiceBasedChannel | null | undefined
     ): Promise<boolean> {
         if (!voiceChannel) {
             await interaction
