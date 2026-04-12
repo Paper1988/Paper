@@ -5,11 +5,10 @@
         "moduleResolution": "Bundler",
         "outDir": "dist",
         "rootDir": "src",
-        "baseUrl": ".",
         "paths": {
-            "@/*": ["src/*"],
+            "@/*": ["./src/*"],
             "@types/*": ["./types/*"],
-            "@classes/*": ["src/Structures/classes/*"]
+            "@classes/*": ["./src/Structures/classes/*"]
         },
         "typeRoots": ["./node_modules/@types", "./types"],
         "allowJs": true,
