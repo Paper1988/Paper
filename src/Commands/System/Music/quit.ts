@@ -15,7 +15,7 @@ export default {
 
         const player = client.moonlink?.players.get(interaction.guildId!) as Player
 
-        await player.disconnect()
+        await player.destroy()
 
         await interaction
             .reply({
