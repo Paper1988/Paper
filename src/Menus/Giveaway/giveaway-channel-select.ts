@@ -49,7 +49,6 @@ export default {
 
         const prizeInput = new TextInputBuilder({
             customId: 'prize',
-            label: '獎品名稱',
             style: TextInputStyle.Short,
             required: true,
             placeholder: '例如：Nitro、Steam遊戲'
@@ -57,7 +56,6 @@ export default {
 
         const durationInput = new TextInputBuilder({
             customId: 'duration',
-            label: '持續時間（分鐘）',
             style: TextInputStyle.Short,
             required: true,
             placeholder: '輸入數字，例如：60'
@@ -65,7 +63,6 @@ export default {
 
         const winnersInput = new TextInputBuilder({
             customId: 'winners',
-            label: '得獎人數',
             style: TextInputStyle.Short,
             required: true,
             placeholder: '輸入數字，例如：1'
@@ -73,7 +70,6 @@ export default {
 
         const descriptionInput = new TextInputBuilder({
             customId: 'description',
-            label: '描述（選填）',
             style: TextInputStyle.Paragraph,
             required: false,
             placeholder: '輸入抽獎的詳細說明'
@@ -81,7 +77,6 @@ export default {
 
         const requirementsInput = new TextInputBuilder({
             customId: 'requirements',
-            label: '參加要求（選填）',
             style: TextInputStyle.Paragraph,
             required: false,
             placeholder: '格式：\nrole:[身分組ID], blacklist:[身分組ID]\nage:[天數], server:[天數]'

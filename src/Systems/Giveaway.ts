@@ -1,3 +1,9 @@
+import { sendGiveawayNotification } from '@/libs/utils/sendGiveawayNotification.js'
+import { PaperClient } from '@/Structures/classes/PaperClient.js'
+import giveawayModel from '@/Structures/Schemas/Giveaway.js'
+import GiveawayHistory from '@/Structures/Schemas/GiveawayHistory.js'
+import GiveawayNotification from '@/Structures/Schemas/GiveawayNotification.js'
+import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
 import {
     ActionRowBuilder,
     ButtonBuilder,
@@ -6,14 +12,6 @@ import {
     type FetchGuildOptions,
     type MessageActionRowComponentBuilder
 } from 'discord.js'
-
-import { PaperClient } from '@/Structures/classes/PaperClient.js'
-
-import { sendGiveawayNotification } from '@/libs/utils/sendGiveawayNotification.js'
-import giveawayModel from '@/Structures/Schemas/Giveaway.js'
-import GiveawayHistory from '@/Structures/Schemas/GiveawayHistory.js'
-import GiveawayNotification from '@/Structures/Schemas/GiveawayNotification.js'
-import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
 
 class GiveawayManagerWithOwnDatabase {
     private client: PaperClient
