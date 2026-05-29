@@ -63,10 +63,11 @@ class GiveawayManagerWithOwnDatabase {
 
         const nonBotMembers = members.filter((member) => !member.user.bot)
         for (const [userId] of nonBotMembers) {
-            new GiveawayNotification({
-                guildId: guild.id,
-                userId: userId
-            })
+            await GiveawayNotification.findOneAndUpdate(
+                { guildId: guild.id, userId: userId },
+                { $set: {} }, // 如果有需要，可以在這裡更新其他欄位
+                { upsert: true } // 如果不存在，就建立一筆新的
+            )
         }
 
         for (const [userId] of nonBotMembers) {
