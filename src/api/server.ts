@@ -2,7 +2,7 @@ import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { aggregateWeeklyStats } from '@/jobs/weeklyAggregation.js'
 import { Logger } from '@/libs/utils/logger.js'
 import fastifyCors from '@fastify/cors'
-import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify'
+import Fastify, { type FastifyInstance, type FastifyRequest } from 'fastify'
 
 export class ApiServer {
     private fastify: FastifyInstance
@@ -149,11 +149,9 @@ export class ApiServer {
                         return reply.code(501).send({ message: 'Giveaway manager 未初始化' })
                     }
 
-                    const giveaway = giveawayManager.giveaways.find(
-                        (g: any) => g.messageId === messageId && g.guildId === guildId
-                    )
+                    const giveaway = giveawayManager.giveaways.get(messageId)
 
-                    if (!giveaway) {
+                    if (!giveaway || giveaway.guildId !== guildId) {
                         return reply.code(404).send({ message: '找不到抽獎活動' })
                     }
 
