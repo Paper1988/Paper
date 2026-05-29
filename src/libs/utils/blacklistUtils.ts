@@ -1,6 +1,26 @@
 import BlackListGuild from '@/Structures/Schemas/BlacklistGuild.js'
 import BlackListUser from '@/Structures/Schemas/BlacklistUser.js'
+import { cacheGetJson, cacheSetJsonWithTTL } from '@/libs/utils/redis.js'
 import { type Interaction, EmbedBuilder } from 'discord.js'
+
+type BlacklistCacheEntry = {
+    Reason?: string
+    Time?: number
+} | null
+
+const BLACKLIST_CACHE_TTL_SECONDS = 60
+
+async function getCachedBlacklistEntry(
+    key: string,
+    loader: () => Promise<BlacklistCacheEntry>
+): Promise<BlacklistCacheEntry> {
+    const cached = await cacheGetJson<BlacklistCacheEntry | { miss: true }>(key)
+    if (cached) return 'miss' in cached ? null : cached
+
+    const entry = await loader()
+    cacheSetJsonWithTTL(key, entry ?? { miss: true }, BLACKLIST_CACHE_TTL_SECONDS).catch(() => {})
+    return entry
+}
 
 /**
  * 檢查用戶或伺服器是否在黑名單中
@@ -9,8 +29,16 @@ export async function checkBlacklist(interaction: Interaction): Promise<boolean>
     if (!interaction.guild) return false
 
     const [GuildData, UserData] = await Promise.all([
-        BlackListGuild.findOne({ Guild: interaction.guild.id }),
-        BlackListUser.findOne({ User: interaction.user.id })
+        getCachedBlacklistEntry(`blacklist:guild:${interaction.guild.id}`, () =>
+            BlackListGuild.findOne({ Guild: interaction.guild!.id }, { Reason: 1, Time: 1 })
+                .lean<BlacklistCacheEntry>()
+                .exec()
+        ),
+        getCachedBlacklistEntry(`blacklist:user:${interaction.user.id}`, () =>
+            BlackListUser.findOne({ User: interaction.user.id }, { Reason: 1, Time: 1 })
+                .lean<BlacklistCacheEntry>()
+                .exec()
+        )
     ])
 
     if (GuildData || UserData) {
