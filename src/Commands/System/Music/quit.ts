@@ -19,7 +19,7 @@ export default {
 
         await interaction
             .reply({
-                content: '<:leave:1265560726240497684> | 成功離開語音頻道!',
+                content: '<:leave:1265560726240497684> | 成功退出語音頻道!',
                 flags: MessageFlags.Ephemeral
             })
             .then(deleteMessageAfter)
