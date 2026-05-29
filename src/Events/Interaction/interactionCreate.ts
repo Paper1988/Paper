@@ -95,13 +95,16 @@ async function handleSlashCommand(interaction: ChatInputCommandInteraction, clie
         cooldownMap.set(key, now)
         // 自動清除過期條目，防止 cooldownMap 無限增長
         setTimeout(() => cooldownMap.delete(key), COOLDOWN_MS)
-        await recordUsage(interaction)
+        void recordUsage(interaction)
     }
 
+    const subCommandGroup = interaction.options.getSubcommandGroup(false)
     const subCommand = interaction.options.getSubcommand(false)
     if (subCommand) {
-        // Map.get() 是同步的，不需要 await
-        const subCommandFile = client.subCommands.get(`${interaction.commandName}.${subCommand}`)
+        const key = subCommandGroup
+            ? `${interaction.commandName}.${subCommandGroup}.${subCommand}`
+            : `${interaction.commandName}.${subCommand}`
+        const subCommandFile = client.subCommands.get(key)
         if (!subCommandFile) {
             return interactionUtils.sendErrorResponse(interaction, CONFIG.MESSAGES.COMMAND_NOT_FOUND)
         }
