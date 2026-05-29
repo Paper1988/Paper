@@ -6,4 +6,8 @@ const commandUsageSchema = new Schema({
     timestamp: { type: Date, default: Date.now }
 })
 
+commandUsageSchema.index({ timestamp: 1 })
+commandUsageSchema.index({ timestamp: 1, command: 1 })
+commandUsageSchema.index({ timestamp: 1, userId: 1 })
+
 export default model('CommandUsage', commandUsageSchema)
