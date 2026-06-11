@@ -56,7 +56,7 @@ export class MusicRenderer {
                 'skip',
                 emojis.frontforward,
                 ButtonStyle.Secondary,
-                player.autoPlay ? false : player.queue.tracks.length <= 1
+                player.autoPlay ? false : player.queue.tracks.length < 1
             ),
             createButton('shuffle', emojis.shuffle, ButtonStyle.Secondary)
         ])
