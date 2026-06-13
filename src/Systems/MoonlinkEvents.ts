@@ -6,7 +6,7 @@ import { MusicStateManager } from '@/Systems/Music/MusicStateManager.js'
 import MusicUtils, { deleteMessageAfter } from '@/Systems/Music/MusicUtils.js'
 import emojis from '@/libs/emoji/emoji.js'
 import { Logger } from '@/libs/utils/logger.js'
-import { EmbedBuilder, Message } from 'discord.js'
+import { EmbedBuilder, Message, TextChannel } from 'discord.js'
 import { Track } from 'moonlink.js'
 import type { INode } from 'moonlink.js/dist/src/typings/Interfaces'
 
@@ -63,14 +63,30 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             const db = await MusicRepository.fetchGuildSettings(player.guildId)
             player.setVolume(db.volume)
             player.setLoop(db.repeatMode)
-            const textChannel = client.channels.cache.get(player.textChannelId)
+            const textChannel = client.channels.cache.get(player.textChannelId) as
+                | TextChannel
+                | undefined
             const status = MusicRenderer.buildPlayerStatus(player, client, track)
             if (textChannel && textChannel.isTextBased() && 'send' in textChannel) {
-                await textChannel
-                    .send(status)
-                    .then((msg: Message) =>
-                        MusicStateManager.setControllerMessageId(player, msg.id)
-                    )
+                const controllerMessageId = MusicStateManager.getControllerMessageId(player)
+                let controllerMessage: Message | undefined
+
+                if (controllerMessageId) {
+                    try {
+                        controllerMessage = await textChannel.messages.fetch(controllerMessageId)
+                        await controllerMessage.edit(status)
+                    } catch {
+                        MusicStateManager.resetControllerMessageId(player)
+                    }
+                }
+
+                if (!controllerMessage) {
+                    await textChannel
+                        .send(status)
+                        .then((msg: Message) =>
+                            MusicStateManager.setControllerMessageId(player, msg.id)
+                        )
+                }
 
                 MusicController.startProgressUpdater(player, client)
             }
@@ -87,10 +103,12 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             case 'cleanup':
             case 'replaced':
                 try {
+                    let shouldClearPlayer = false
                     if (player.loop === 'off') {
                         if (!player.queue.tracks[0] && !player.autoPlay) {
                             // 無循環且沒有下一首歌：顯示完成狀態
                             await MusicController.updatePlayerStatus(player, client, true)
+                            shouldClearPlayer = true
                         }
                         // else：有下一首或有自動播放，由 trackStart 建立新的播放器狀態
                     } else if (player.loop === 'track') {
@@ -102,12 +120,12 @@ export function registerMoonlinkEvents(client: PaperClient): void {
                             // 佇列中只有一首歌：保持播放器狀態（因為會循環播放同一首）
                             await MusicController.updatePlayerStatus(player, client, false)
                         } else {
-                            // 佇列中有多首歌：清除播放器狀態（下一首歌會自動播放）
-                            await MusicController.updatePlayerStatus(player, client, true)
+                            // 佇列中有多首歌：保留控制訊息，下一首歌開始時直接編輯同一則訊息
+                            await MusicController.updatePlayerStatus(player, client, false)
                         }
                     }
                     MusicController.stopProgressUpdater(player)
-                    MusicController.clearPlayer(player)
+                    if (shouldClearPlayer) MusicController.clearPlayer(player)
                 } catch (error) {
                     MusicUtils.handleMusicError(error, client, player, '發生未知錯誤')
                 }
@@ -116,9 +134,9 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             case 'stopped':
                 try {
                     MusicController.stopProgressUpdater(player)
-                    MusicController.clearPlayer(player)
                     if (player.queue.tracks.length === 0 && !player.autoPlay) {
                         await MusicController.updatePlayerStatus(player, client, true)
+                        MusicController.clearPlayer(player)
                         MusicController.scheduleAutoLeave(player, client)
                     } else {
                         await MusicController.updatePlayerStatus(player, client, false)
