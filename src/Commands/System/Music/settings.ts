@@ -38,7 +38,7 @@ export default {
 
         switch (options.getString('options')) {
             case 'skip':
-                if (!queue.tracks[1] && !player.autoPlay) {
+                if (!queue.tracks[0] && !player.autoPlay) {
                     return interaction.reply({
                         content: `${emojis.outage} | 這是最後一首歌了!`
                     })

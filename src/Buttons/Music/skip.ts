@@ -27,7 +27,7 @@ export default {
                 .then(deleteMessageAfter)
         }
 
-        if (!player.queue.tracks[1] && !player.autoPlay) {
+        if (!player.queue.tracks[0] && !player.autoPlay) {
             return await interaction
                 .editReply({
                     content: `${emojis.outage} | 這是最後一首歌了!`
