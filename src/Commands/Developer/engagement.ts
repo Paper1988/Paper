@@ -1,10 +1,11 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js'
 import CommandUsage from '@/Structures/Schemas/commandUsage.js'
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 
 export default {
+    developer: true,
     data: new SlashCommandBuilder()
         .setName('engagement')
-        .setDescription('分析用戶參與度和使用模式')
+        .setDescription('(僅限開發人員)')
         .addStringOption((option) =>
             option
                 .setName('period')
@@ -16,7 +17,6 @@ export default {
                     { name: '過去4週', value: 'month' }
                 )
         ),
-    developer: true,
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply()
 

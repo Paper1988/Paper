@@ -1,15 +1,16 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js'
-import WeeklyStats from '@/Structures/Schemas/weeklyStats.js'
 import CommandUsage from '@/Structures/Schemas/commandUsage.js'
+import WeeklyStats from '@/Structures/Schemas/weeklyStats.js'
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 
 export default {
+    developer: true,
     data: new SlashCommandBuilder()
         .setName('stats')
-        .setDescription('顯示最近一週的使用統計')
+        .setDescription('(僅限開發人員)')
         .addStringOption((option) =>
             option
                 .setName('period')
-                .setDescription('選擇統計期間')
+                .setDescription('...')
                 .setRequired(false)
                 .addChoices(
                     { name: '本週', value: 'current' },
@@ -17,7 +18,6 @@ export default {
                     { name: '過去4週', value: 'month' }
                 )
         ),
-    developer: true,
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply()
 

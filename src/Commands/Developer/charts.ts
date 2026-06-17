@@ -1,11 +1,12 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js'
-import WeeklyStats from '@/Structures/Schemas/weeklyStats.js'
 import CommandUsage from '@/Structures/Schemas/commandUsage.js'
+import WeeklyStats from '@/Structures/Schemas/weeklyStats.js'
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 
 export default {
+    developer: true,
     data: new SlashCommandBuilder()
         .setName('charts')
-        .setDescription('生成統計數據的視覺化圖表')
+        .setDescription('(僅限開發人員)')
         .addStringOption((option) =>
             option
                 .setName('type')
@@ -30,7 +31,6 @@ export default {
                     { name: '過去4週', value: 'month' }
                 )
         ),
-    developer: true,
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply()
 

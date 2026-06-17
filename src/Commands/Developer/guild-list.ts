@@ -6,16 +6,14 @@ import {
     ChatInputCommandInteraction,
     Client,
     EmbedBuilder,
-    type MessageActionRowComponentBuilder,
     MessageFlags,
-    SlashCommandBuilder
+    SlashCommandBuilder,
+    type MessageActionRowComponentBuilder
 } from 'discord.js'
 
 export default {
     developer: true,
-    data: new SlashCommandBuilder()
-        .setName('guildlist')
-        .setDescription('顯示機器人的伺服器排行(僅限開發人員)'),
+    data: new SlashCommandBuilder().setName('guildlist').setDescription('(僅限開發人員)'),
     async execute(interaction: ChatInputCommandInteraction, client: Client) {
         const guilds = client.guilds.cache.sort((a, b) => b.memberCount - a.memberCount).first(10)
 

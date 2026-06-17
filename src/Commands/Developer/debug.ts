@@ -35,8 +35,8 @@ function getMusicNodeInfo(client: PaperClient): string {
 }
 
 export default {
-    data: new SlashCommandBuilder().setName('debug').setDescription('Show debug information'),
     developer: true,
+    data: new SlashCommandBuilder().setName('debug').setDescription('(僅限開發人員)'),
     async execute(interaction: ChatInputCommandInteraction, client: PaperClient) {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 

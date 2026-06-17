@@ -1,15 +1,16 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js'
-import WeeklyStats from '@/Structures/Schemas/weeklyStats.js'
 import CommandUsage from '@/Structures/Schemas/commandUsage.js'
+import WeeklyStats from '@/Structures/Schemas/weeklyStats.js'
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 
 export default {
+    developer: true,
     data: new SlashCommandBuilder()
         .setName('trends')
-        .setDescription('顯示統計趨勢分析和比較')
+        .setDescription('(僅限開發人員)')
         .addStringOption((option) =>
             option
                 .setName('period')
-                .setDescription('選擇比較期間')
+                .setDescription('...')
                 .setRequired(true)
                 .addChoices(
                     { name: '本週 vs 上週', value: 'week' },
@@ -17,7 +18,6 @@ export default {
                     { name: '過去8週趨勢', value: 'quarter' }
                 )
         ),
-    developer: true,
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply()
 
