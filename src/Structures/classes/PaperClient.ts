@@ -23,15 +23,10 @@ export class PaperClient extends Client {
 
     constructor(options: ClientOptions) {
         super(options)
-
         this.setMaxListeners(50)
-
         Giveaway(this)
-
         this.initErrorHandling()
-
         this.initMoonlink()
-
         loadEvents(this)
     }
 
@@ -41,12 +36,18 @@ export class PaperClient extends Client {
             'NODELINK_HOST',
             'NODELINK_PORT',
             'NODELINK_PASSWORD',
-            'LAVALINK_1_HOST',
-            'LAVALINK_1_PORT',
-            'LAVALINK_1_PASSWORD',
-            'LAVALINK_2_HOST',
-            'LAVALINK_2_PORT',
-            'LAVALINK_2_PASSWORD'
+            'NODELINK_1_HOST',
+            'NODELINK_1_PORT',
+            'NODELINK_1_PASSWORD',
+            'NODELINK_2_HOST',
+            'NODELINK_2_PORT',
+            'NODELINK_2_PASSWORD',
+            'NODELINK_3_HOST',
+            'NODELINK_3_PORT',
+            'NODELINK_3_PASSWORD',
+            'NODELINK_4_HOST',
+            'NODELINK_4_PORT',
+            'NODELINK_4_PASSWORD'
         ]
         const missingVars = requiredEnvVars.filter((varName) => !process.env[varName])
 
@@ -68,18 +69,32 @@ export class PaperClient extends Client {
                         identifier: 'Main Node'
                     },
                     {
-                        host: process.env.LAVALINK_1_HOST!,
-                        port: Number(process.env.LAVALINK_1_PORT!),
-                        password: process.env.LAVALINK_1_PASSWORD!,
+                        host: process.env.NODELINK_1_HOST!,
+                        port: Number(process.env.NODELINK_1_PORT!),
+                        password: process.env.NODELINK_1_PASSWORD!,
                         secure: true,
                         identifier: 'Free Node 1'
                     },
                     {
-                        host: process.env.LAVALINK_2_HOST!,
-                        port: Number(process.env.LAVALINK_2_PORT!),
-                        password: process.env.LAVALINK_2_PASSWORD!,
+                        host: process.env.NODELINK_2_HOST!,
+                        port: Number(process.env.NODELINK_2_PORT!),
+                        password: process.env.NODELINK_2_PASSWORD!,
                         secure: true,
                         identifier: 'Free Node 2'
+                    },
+                    {
+                        host: process.env.NODELINK_3_HOST!,
+                        port: Number(process.env.NODELINK_3_PORT!),
+                        password: process.env.NODELINK_3_PASSWORD!,
+                        secure: true,
+                        identifier: 'Free Node 3'
+                    },
+                    {
+                        host: process.env.NODELINK_4_HOST!,
+                        port: Number(process.env.NODELINK_4_PORT!),
+                        password: process.env.NODELINK_4_PASSWORD!,
+                        secure: true,
+                        identifier: 'Free Node 4'
                     }
                 ],
                 options: {
