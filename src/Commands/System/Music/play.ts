@@ -153,7 +153,7 @@ async function validateSearchResult(
         return false
     }
 
-    if (result.loadType === 'error') {
+    if (result.isError || result.loadType === 'error') {
         Logger.error('搜尋發生錯誤:', result.exception?.message ?? 'Unknown error')
         await interaction
             .editReply({ content: `${emojis.outage} | 發生未知錯誤，請稍後再試!` })
@@ -168,7 +168,7 @@ async function validateSearchResult(
  * 將歌曲加入播放清單
  */
 function addTracksToQueue(player: Player, result: SearchResult): void {
-    if (result.loadType === 'playlist') {
+    if (result.isPlaylist || result.loadType === 'playlist') {
         player.queue.add(result.tracks)
     } else {
         const track = result.tracks[0]
