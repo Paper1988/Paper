@@ -24,14 +24,37 @@ export default {
                 .then(deleteMessageAfter)
         }
 
-        const Time = options.getNumber('time')!
+        const position = options.getString('time')!
 
-        await player.seek(Time)
-        await interaction
-            .reply({
-                content: `<:rightarrow:1265561736593801276> | 成功跳至 **\`${secondsToDuration(Time)}\`**`
+        let milliseconds: number | undefined
+
+        if (position.includes(':')) {
+            const [minutes, seconds] = position.split(':')
+            if (!minutes || !seconds)
+                return interaction.reply({
+                    content: `${emojis.warning} | 無效的時間格式!`,
+                    flags: MessageFlags.Ephemeral
+                })
+            milliseconds = (parseInt(minutes!) * 60 + parseInt(seconds!)) * 1000
+        } else {
+            if (!position)
+                return interaction.reply({
+                    content: `${emojis.warning} | 無效的時間格式!`,
+                    flags: MessageFlags.Ephemeral
+                })
+            milliseconds = parseInt(position) * 1000
+        }
+
+        if (milliseconds === undefined || isNaN(milliseconds))
+            return interaction.reply({
+                content: `${emojis.warning} | 無效的時間格式!`,
+                flags: MessageFlags.Ephemeral
             })
-            .then(deleteMessageAfter)
+
+        await player.seek(milliseconds)
+        return interaction.reply({
+            content: `<:rightarrow:1265561736593801276> | 成功跳至 **\`${secondsToDuration(milliseconds)}\`**`
+        })
     }
 } as SubCommandType
 

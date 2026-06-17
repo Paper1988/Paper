@@ -98,13 +98,16 @@ export default {
                         .setNameLocalization('zh-TW', '時間')
                         .setNameLocalization('ja', '時間')
                         .setDescription(
-                            'Please provide the time (in seconds, e.g., 120 for 2 minutes)'
+                            'Please provide the time (format: mm:ss or seconds, e.g., "02:00", "00:30", "120")'
                         )
                         .setDescriptionLocalization(
                             'zh-TW',
-                            '請提供時間（以秒為單位，例如: 120，即2分鐘）'
+                            '請提供時間（格式：mm:ss 或 秒數，例如：「02:00」, 「00:30」, 「120」）'
                         )
-                        .setDescriptionLocalization('ja', '時間（秒単位、例: 120は2分）')
+                        .setDescriptionLocalization(
+                            'ja',
+                            '時間（形式：mm:ss または 秒数、例：「02:00」, 「00:30」, 「120」）'
+                        )
                         .setRequired(true)
                 )
         )
