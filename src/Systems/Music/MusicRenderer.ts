@@ -127,7 +127,7 @@ export class MusicRenderer {
 
         const barLength = track.sourceName === 'spotify' ? 21 : PROGRESS_BAR_LENGTH
         const progressBar = isLive
-            ? `🔴 ${'━'.repeat(barLength)} 直播中`
+            ? `🔴 直播中`
             : MusicUtils.generateProgressBar(currentPosition, songDuration, barLength)
 
         const voiceChannel = client.channels.cache.get(player.voiceChannelId) as
