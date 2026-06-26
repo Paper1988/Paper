@@ -92,7 +92,7 @@ export default {
                 .setDescription('Jump to a specific time in the song')
                 .setDescriptionLocalization('zh-TW', '跳到歌曲中的某個時間點')
                 .setDescriptionLocalization('ja', '曲の特定の時間にジャンプ')
-                .addNumberOption((options) =>
+                .addStringOption((options) =>
                     options
                         .setName('time')
                         .setNameLocalization('zh-TW', '時間')
