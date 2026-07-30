@@ -1,9 +1,19 @@
-import { describe, it, before, after } from 'mocha'
 import { expect } from 'chai'
-import { cacheSetJsonWithTTL, cacheGetJson, cacheDel } from '@/libs/utils/redis.js'
+import dotenv from 'dotenv'
+import fs from 'fs'
+import IORedis from 'ioredis'
+import { after, before, describe, it } from 'mocha'
+
+if (fs.existsSync('.env.local')) {
+    dotenv.config({ path: '.env.local' })
+} else {
+    dotenv.config()
+}
+
+const { cacheSetJsonWithTTL, cacheSetRawWithTTL, cacheGetJson, cacheDel, cacheDisconnect } =
+    await import('@/libs/utils/redis.js')
 
 describe('Redis Cache Tests', function () {
-    // 增加超時時間，因為網路連線可能較慢
     this.timeout(10000)
 
     const testKey = 'test:mocha'
@@ -13,24 +23,48 @@ describe('Redis Cache Tests', function () {
         nested: { value: 123 }
     }
 
-    // 測試前清理
+    const testKeys = new Set<string>([testKey])
+    let usingRealRedis = false
+
+    function trackKey(key: string): string {
+        testKeys.add(key)
+        return key
+    }
+
     before(async function () {
-        console.log('清理測試環境...')
+        if (process.env.REDIS_URL) {
+            const client = new IORedis(process.env.REDIS_URL, {
+                maxRetriesPerRequest: 1,
+                connectTimeout: 5000
+            })
+            try {
+                await client.ping()
+                usingRealRedis = true
+            } catch {
+                usingRealRedis = false
+            } finally {
+                await client.quit().catch(() => {})
+            }
+        }
+
+        console.log(
+            usingRealRedis
+                ? '使用 Redis 後端執行測試'
+                : 'Redis 不可用，使用 InMemoryCache 後端執行測試'
+        )
+
         await cacheDel(testKey).catch(() => {})
     })
 
-    // 測試後清理
     after(async function () {
-        console.log('清理測試數據...')
-        await cacheDel(testKey).catch(() => {})
+        await Promise.all([...testKeys].map((key) => cacheDel(key).catch(() => {})))
+        await cacheDisconnect()
     })
 
     describe('基本功能測試', function () {
         it('應該能成功寫入和讀取 JSON 數據', async function () {
-            // 寫入數據
-            await cacheSetJsonWithTTL(testKey, testData, 300) // 5分鐘 TTL
+            await cacheSetJsonWithTTL(testKey, testData, 300)
 
-            // 讀取數據
             const result = await cacheGetJson(testKey)
 
             expect(result).to.deep.equal(testData)
@@ -42,45 +76,53 @@ describe('Redis Cache Tests', function () {
         })
 
         it('應該能刪除數據', async function () {
-            // 先寫入
-            await cacheSetJsonWithTTL(testKey + ':delete', { test: 'delete' }, 60)
+            const key = trackKey(testKey + ':delete')
 
-            // 確認存在
-            let result = await cacheGetJson(testKey + ':delete')
+            await cacheSetJsonWithTTL(key, { test: 'delete' }, 60)
+
+            let result = await cacheGetJson(key)
             expect(result).to.not.be.null
 
-            // 刪除
-            await cacheDel(testKey + ':delete')
+            await cacheDel(key)
 
-            // 確認已刪除
-            result = await cacheGetJson(testKey + ':delete')
+            result = await cacheGetJson(key)
             expect(result).to.be.null
         })
     })
 
     describe('數據類型測試', function () {
         it('應該能處理字符串', async function () {
+            const key = trackKey(testKey + ':string')
             const testString = 'Hello Redis'
-            await cacheSetJsonWithTTL(testKey + ':string', testString, 60)
-            const result = await cacheGetJson(testKey + ':string')
+
+            await cacheSetJsonWithTTL(key, testString, 60)
+            const result = await cacheGetJson(key)
+
             expect(result).to.equal(testString)
         })
 
         it('應該能處理數字', async function () {
+            const key = trackKey(testKey + ':number')
             const testNumber = 12345
-            await cacheSetJsonWithTTL(testKey + ':number', testNumber, 60)
-            const result = await cacheGetJson(testKey + ':number')
+
+            await cacheSetJsonWithTTL(key, testNumber, 60)
+            const result = await cacheGetJson(key)
+
             expect(result).to.equal(testNumber)
         })
 
         it('應該能處理陣列', async function () {
+            const key = trackKey(testKey + ':array')
             const testArray = [1, 2, 'three', { four: 4 }]
-            await cacheSetJsonWithTTL(testKey + ':array', testArray, 60)
-            const result = await cacheGetJson(testKey + ':array')
+
+            await cacheSetJsonWithTTL(key, testArray, 60)
+            const result = await cacheGetJson(key)
+
             expect(result).to.deep.equal(testArray)
         })
 
         it('應該能處理複雜物件', async function () {
+            const key = trackKey(testKey + ':complex')
             const complexObject = {
                 id: 1,
                 user: { name: 'John', age: 30 },
@@ -90,94 +132,121 @@ describe('Redis Cache Tests', function () {
                     version: '1.0'
                 }
             }
-            await cacheSetJsonWithTTL(testKey + ':complex', complexObject, 60)
-            const result = await cacheGetJson(testKey + ':complex')
+
+            await cacheSetJsonWithTTL(key, complexObject, 60)
+            const result = await cacheGetJson(key)
+
             expect(result).to.deep.equal(complexObject)
+        })
+    })
+
+    describe('業務用法測試', function () {
+        it('應該能快取 blacklist 的 miss 哨兵值', async function () {
+            const key = trackKey('blacklist:user:test-user')
+            const missEntry = { miss: true as const }
+
+            await cacheSetJsonWithTTL(key, missEntry, 60)
+
+            const cached = await cacheGetJson<{ miss: true } | { Reason?: string }>(key)
+
+            expect(cached).to.deep.equal(missEntry)
+            expect(cached && 'miss' in cached).to.be.true
+        })
+
+        it('應該能快取 blacklist 命中資料', async function () {
+            const key = trackKey('blacklist:guild:test-guild')
+            const entry = { Reason: 'spam', Time: Date.now() }
+
+            await cacheSetJsonWithTTL(key, entry, 60)
+
+            const cached = await cacheGetJson<{ Reason?: string; Time?: number }>(key)
+
+            expect(cached).to.deep.equal(entry)
+            expect(cached && 'miss' in cached).to.be.false
+        })
+
+        it('應該能快取 music track 資料', async function () {
+            const key = trackKey('music:track:test-user:test-search')
+            const track = {
+                title: 'Test Track',
+                author: 'Test Artist',
+                uri: 'https://example.com/track'
+            }
+
+            await cacheSetJsonWithTTL(key, track, 60)
+
+            let cached = await cacheGetJson<typeof track>(key)
+            expect(cached).to.deep.equal(track)
+
+            await cacheDel(key)
+            cached = await cacheGetJson<typeof track>(key)
+            expect(cached).to.be.null
         })
     })
 
     describe('TTL 測試', function () {
         it('應該能設定短 TTL', async function () {
-            // 設定 1 秒 TTL
-            await cacheSetJsonWithTTL(testKey + ':ttl', { test: 'ttl' }, 1)
+            const key = trackKey(testKey + ':ttl')
 
-            // 立即讀取應該存在
-            let result = await cacheGetJson(testKey + ':ttl')
+            await cacheSetJsonWithTTL(key, { test: 'ttl' }, 1)
+
+            let result = await cacheGetJson(key)
             expect(result).to.not.be.null
 
-            // 等待 1.5 秒後應該過期
             await new Promise((resolve) => setTimeout(resolve, 1500))
-            result = await cacheGetJson(testKey + ':ttl')
+
+            result = await cacheGetJson(key)
             expect(result).to.be.null
         })
     })
 
     describe('錯誤處理測試', function () {
         it('應該能處理無效的 JSON', async function () {
-            // 這個測試需要直接操作 Redis client
-            // 如果你的 utils 有暴露 client，可以這樣測試
-            try {
-                // 模擬損壞的 JSON
-                const result = await cacheGetJson('invalid:json:key')
-                expect(result).to.be.null // 應該返回 null 而不是拋錯
-            } catch (error) {
-                // 如果拋錯，確保是預期的錯誤
-                expect(error).to.exist
-            }
+            const key = trackKey(testKey + ':invalid-json')
+
+            await cacheSetRawWithTTL(key, '{not-json', 60)
+
+            const result = await cacheGetJson(key)
+
+            expect(result).to.be.null
         })
     })
 
     describe('連線測試', function () {
-        it('應該能成功連接到 Redis', async function () {
-            // 嘗試執行一個簡單操作來確認連線
-            const pingKey = testKey + ':ping'
+        it('應該能成功執行快取讀寫', async function () {
+            const pingKey = trackKey(testKey + ':ping')
             const pingData = { ping: 'pong', time: Date.now() }
 
-            try {
-                await cacheSetJsonWithTTL(pingKey, pingData, 10)
-                const result = await cacheGetJson(pingKey)
+            await cacheSetJsonWithTTL(pingKey, pingData, 10)
+            const result = await cacheGetJson(pingKey)
 
-                expect(result).to.deep.equal(pingData)
+            expect(result).to.deep.equal(pingData)
+
+            if (usingRealRedis) {
                 console.log('✓ Redis 連線成功')
-
-                // 清理
-                await cacheDel(pingKey)
-            } catch (error: any) {
-                console.error('✗ Redis 連線失敗:', error.message)
-                throw error
+            } else {
+                console.log('✓ InMemoryCache 後備模式運作正常')
             }
         })
 
         it('應該能處理多個並發請求', async function () {
-            const promises: any[] = []
             const testCount = 10
 
-            // 創建多個並發請求
-            for (let i = 0; i < testCount; i++) {
-                const key = `${testKey}:concurrent:${i}`
-                const data = { index: i, value: `test-${i}` }
+            const results = await Promise.all(
+                Array.from({ length: testCount }, async (_, i) => {
+                    const key = trackKey(`${testKey}:concurrent:${i}`)
+                    const data = { index: i, value: `test-${i}` }
 
-                promises.push(
-                    cacheSetJsonWithTTL(key, data, 60).then(() =>
-                        cacheGetJson(key).then((result) => ({
-                            key,
-                            expected: data,
-                            actual: result
-                        }))
-                    )
-                )
-            }
+                    await cacheSetJsonWithTTL(key, data, 60)
+                    const actual = await cacheGetJson(key)
 
-            const results = await Promise.all(promises)
+                    return { key, expected: data, actual }
+                })
+            )
 
-            // 驗證所有結果
             results.forEach(({ key, expected, actual }) => {
                 expect(actual).to.deep.equal(expected, `Failed for key: ${key}`)
             })
-
-            // 清理
-            const cleanupPromises = results.map(({ key }) => cacheDel(key))
-            await Promise.all(cleanupPromises)
         })
     })
 })
