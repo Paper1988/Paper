@@ -1,4 +1,3 @@
-import { cronJob } from '@/jobs/index.js'
 import { Logger } from '@/libs/utils/logger.js'
 import { PaperClient } from '@/Structures/classes/PaperClient.js'
 import * as Sentry from '@sentry/node'
@@ -20,13 +19,6 @@ Sentry.init({
 
 Logger.info('正在初始化機器人...')
 Logger.info(`Node.js 版本: ${process.version}`)
-
-try {
-    cronJob.startJobs()
-    Logger.info('已啟動排程')
-} catch (error) {
-    Logger.error('無法啟動排程', error)
-}
 
 let client: PaperClient
 
@@ -57,6 +49,14 @@ try {
 } catch (error) {
     Logger.error('機器人啟動失敗:', error)
     process.exit(1)
+}
+
+import { cronJob } from '@/jobs/index.js'
+try {
+    cronJob.startJobs()
+    Logger.info('已啟動排程')
+} catch (error) {
+    Logger.error('無法啟動排程', error)
 }
 
 export default client!
