@@ -103,6 +103,19 @@ class CacheManager {
 
         return this.client
     }
+
+    async disconnect(): Promise<void> {
+        if (!this.client) return
+
+        if (this.client instanceof InMemoryCache) {
+            this.client.destroy()
+        } else {
+            const redis = this.client as IORedis
+            await redis.quit().catch(() => redis.disconnect())
+        }
+
+        this.client = null
+    }
 }
 
 // 單例實例
@@ -120,6 +133,19 @@ export async function cacheSetJsonWithTTL(
     try {
         const payload = JSON.stringify(value)
         await getClient().setex(key, ttlSeconds, payload)
+    } catch (error) {
+        Logger.error('快取寫入失敗:', error)
+        throw error
+    }
+}
+
+export async function cacheSetRawWithTTL(
+    key: string,
+    rawValue: string,
+    ttlSeconds: number
+): Promise<void> {
+    try {
+        await getClient().setex(key, ttlSeconds, rawValue)
     } catch (error) {
         Logger.error('快取寫入失敗:', error)
         throw error
@@ -145,4 +171,8 @@ export async function cacheDel(key: string): Promise<void> {
         Logger.error('快取刪除失敗:', error)
         throw error
     }
+}
+
+export async function cacheDisconnect(): Promise<void> {
+    await cacheManager.disconnect()
 }
