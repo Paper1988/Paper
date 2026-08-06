@@ -1,5 +1,5 @@
 allowBuilds:
-  '@discordjs/opus': false
+  '@discordjs/opus': true
   canvas: true
   esbuild: true
   node-opus: true
