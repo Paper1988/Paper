@@ -32,23 +32,7 @@ export class PaperClient extends Client {
 
     private initMoonlink() {
         // 驗證必要的環境變數
-        const requiredEnvVars = [
-            'NODELINK_HOST',
-            'NODELINK_PORT',
-            'NODELINK_PASSWORD',
-            'NODELINK_1_HOST',
-            'NODELINK_1_PORT',
-            'NODELINK_1_PASSWORD',
-            'NODELINK_2_HOST',
-            'NODELINK_2_PORT',
-            'NODELINK_2_PASSWORD',
-            'NODELINK_3_HOST',
-            'NODELINK_3_PORT',
-            'NODELINK_3_PASSWORD',
-            'NODELINK_4_HOST',
-            'NODELINK_4_PORT',
-            'NODELINK_4_PASSWORD'
-        ]
+        const requiredEnvVars = ['NODELINK_HOST', 'NODELINK_PORT', 'NODELINK_PASSWORD']
         const missingVars = requiredEnvVars.filter((varName) => !process.env[varName])
 
         if (missingVars.length > 0) {
