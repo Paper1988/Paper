@@ -1,5 +1,6 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
-import { Collection, Events, REST } from 'discord.js'
+import type { Collection, REST } from 'discord.js'
+import { Events } from 'discord.js'
 
 export type EventExecute = (client: PaperClient, ...args: any[]) => Promise<void> | void
 
