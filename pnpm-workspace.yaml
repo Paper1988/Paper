@@ -1,8 +1,8 @@
 allowBuilds:
-  '@discordjs/opus': true
-  canvas: true
+  '@discordjs/opus': false
+  canvas: false
   esbuild: true
-  node-opus: true
+  node-opus: false
   ref: true
   sharp: true
   unrs-resolver: true
