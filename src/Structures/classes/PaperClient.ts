@@ -51,34 +51,6 @@ export class PaperClient extends Client {
                         password: process.env.NODELINK_PASSWORD!,
                         secure: true,
                         identifier: 'Main Node'
-                    },
-                    {
-                        host: process.env.NODELINK_1_HOST!,
-                        port: Number(process.env.NODELINK_1_PORT!),
-                        password: process.env.NODELINK_1_PASSWORD!,
-                        secure: true,
-                        identifier: 'Free Node 1'
-                    },
-                    {
-                        host: process.env.NODELINK_2_HOST!,
-                        port: Number(process.env.NODELINK_2_PORT!),
-                        password: process.env.NODELINK_2_PASSWORD!,
-                        secure: true,
-                        identifier: 'Free Node 2'
-                    },
-                    {
-                        host: process.env.NODELINK_3_HOST!,
-                        port: Number(process.env.NODELINK_3_PORT!),
-                        password: process.env.NODELINK_3_PASSWORD!,
-                        secure: true,
-                        identifier: 'Free Node 3'
-                    },
-                    {
-                        host: process.env.NODELINK_4_HOST!,
-                        port: Number(process.env.NODELINK_4_PORT!),
-                        password: process.env.NODELINK_4_PASSWORD!,
-                        secure: true,
-                        identifier: 'Free Node 4'
                     }
                 ],
                 options: {
