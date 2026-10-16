@@ -1,389 +1,223 @@
-# Paper 📄
+# Paper
 
-Paper 是一隻以 **TypeScript + discord.js v14** 開發的多功能 Discord 機器人，整合了 **音樂播放、抽獎系統、管理工具、實用功能、娛樂功能**，並額外提供一個可供 Dashboard 或外部服務串接的 API Server。
+**A TypeScript-based Discord application exploring modular architecture, event-driven systems, and service integration.**
 
-> 目前專案採用 ESM、TypeScript、pnpm，並使用動態載入的方式管理指令、事件、按鈕、選單與 Modal。
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Discord.js](https://img.shields.io/badge/Discord.js-5865F2?style=flat&logo=discord&logoColor=white)](https://discord.js.org/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
 
----
+Paper is a personal software project built with TypeScript and Discord.js. It brings together music playback, community utilities, persistent data, background jobs, and an HTTP API within a modular application.
 
-## Features
+Rather than treating a Discord bot as a collection of commands, this project explores how multiple subsystems can coexist in a single application, with an emphasis on code organization, asynchronous execution, and integration between external services.
 
-- 🎵 **Music System**
-  - 使用 `moonlink.js` 作為播放器核心
-  - 支援多節點音樂節點配置
-  - 提供佇列、暫停、繼續、跳過、清空佇列等控制 API
+## Overview
 
-- 🎉 **Giveaway System**
-  - 抽獎建立、結束、重抽
-  - MongoDB 持久化儲存
-  - 定時檢查到期抽獎並自動結束
-  - 抽獎歷史與統計資料整理
+Paper is developed as a long-running application with several interconnected components:
 
-- 🛠️ **Utility / Moderation / Fun**
-  - 多用途指令架構
-  - 支援 Slash Commands、子指令、Context Menu
-  - 可擴充按鈕、下拉選單、Modal 互動
+- A Discord client responsible for events, commands, and interactions.
+- A modular command and event system.
+- A music subsystem powered by Moonlink.js.
+- MongoDB-backed data persistence.
+- Redis-based caching.
+- An HTTP API built with Fastify.
+- Background jobs and scheduled tasks.
+- Error monitoring and operational health checks.
 
-- 🌐 **Built-in API Server**
-  - 健康檢查
-  - Bot 狀態查詢
-  - 可管理伺服器清單查詢
-  - Giveaway 與 Music 控制端點
-  - 適合串接 Web Dashboard 或後端服務
+These components provide a practical environment for exploring the engineering challenges that arise when a small application grows into a system with multiple responsibilities.
 
-- 📊 **Observability / Stability**
-  - Sentry 錯誤追蹤
-  - Webhook 錯誤通知
-  - MongoDB 健康檢查與重連機制
-  - 排程任務啟動與背景作業管理
+## Engineering Highlights
 
----
+### Modular Application Architecture
 
-## Tech Stack
+Paper separates major responsibilities into dedicated modules instead of placing application logic in a single entry point.
 
-- **Language:** TypeScript
-- **Runtime:** Node.js
-- **Package Manager:** pnpm
-- **Discord Library:** discord.js v14
-- **Music:** moonlink.js / Lavalink-compatible nodes
-- **Database:** MongoDB + Mongoose
-- **Cache / Queue:** Redis
-- **API Server:** Fastify
-- **Monitoring:** Sentry
+Commands, events, handlers, shared functions, and subsystem implementations are organized independently. This structure helps keep related logic discoverable and makes individual components easier to inspect and maintain.
 
----
+### Event-Driven Execution
 
-## Project Structure
+Discord interactions and gateway events form a central part of the application's execution model.
 
-```bash
+The event-oriented design separates the occurrence of an event from the logic that handles it, allowing different application features to respond to Discord events without concentrating all behavior in one large module.
+
+### Music Subsystem
+
+The music subsystem integrates Moonlink.js with the Discord client to support music-related functionality.
+
+It introduces additional coordination requirements beyond ordinary command handling, including player state, queue operations, asynchronous events, and interactions with external audio nodes.
+
+### Persistent State and Caching
+
+Paper integrates MongoDB and Redis for different data-management responsibilities.
+
+- **MongoDB:** Persistent application data and document-oriented storage.
+- **Redis:** Cache storage for data that benefits from fast access.
+
+Keeping persistence and caching as distinct concerns provides an opportunity to examine data lifecycle, cache consistency, failure handling, and the trade-offs between availability and correctness.
+
+### HTTP API Integration
+
+Fastify provides an HTTP interface for selected application operations and status information.
+
+The API creates a boundary between Discord-specific functionality and HTTP-based access patterns, while introducing additional engineering considerations around request validation, authorization, error handling, and service exposure.
+
+### Background Jobs and Operational Monitoring
+
+Scheduled jobs and health checks support tasks that do not belong directly inside an individual command handler.
+
+The project also integrates Sentry-related monitoring components, providing an entry point for examining error reporting and the operational needs of a long-running Node.js application.
+
+## Technology Stack
+
+| Technology | Role |
+|---|---|
+| TypeScript | Application language and static typing |
+| Node.js | JavaScript runtime |
+| Discord.js | Discord API integration |
+| Moonlink.js | Music player and node integration |
+| Fastify | HTTP API server |
+| MongoDB | Persistent data storage |
+| Mongoose | MongoDB object modeling |
+| Redis / ioredis | Caching and Redis connectivity |
+| Sentry | Error monitoring integration |
+| pnpm | Package management |
+| Mocha / Chai | Test infrastructure |
+
+## Architecture
+
+The application is organized around feature modules, shared infrastructure, and dedicated subsystems.
+
+```text
 src/
-├─ api/                  # Fastify API server
-├─ Commands/             # Slash commands / context menus / subcommands
-├─ Events/               # Discord events
-├─ Structures/
-│  ├─ classes/           # PaperClient and core classes
-│  ├─ Functions/         # File loader and helpers
-│  └─ Handlers/          # Command / event / button / menu / modal loaders
-├─ Systems/              # Music, giveaway, and other system modules
-├─ jobs/                 # Cron jobs / scheduled tasks
-├─ libs/                 # Utility functions and shared helpers
-└─ index.ts              # Entry point
+├── api/                  # HTTP API
+├── Commands/             # Discord command modules
+├── Events/               # Discord and application events
+├── Structures/
+│   └── classes/          # Core application classes
+├── Functions/            # Shared functions
+├── Handlers/             # Module and interaction handlers
+├── Schemas/              # Data schemas
+├── Systems/              # Application subsystems
+├── jobs/                 # Scheduled and background jobs
+├── libs/                 # Shared libraries and integrations
+├── typings/              # TypeScript type definitions
+├── __test__/              # Test files
+└── index.ts              # Application entry point
 ```
 
----
+*The directory tree represents the intended high-level organization. Individual modules may evolve as the application develops.*
 
-## How it works
+### Design Principles
 
-Paper 啟動時會做這些事：
+**Separation of concerns**
 
-1. 載入 `.env.local` 或 `.env`
-2. 初始化 Sentry
-3. 啟動排程任務
-4. 建立自訂的 `PaperClient`
-5. 載入 Discord Events
-6. 在 `ready` 時動態載入：
-   - Commands
-   - Buttons
-   - Menus
-   - Modals
-7. 初始化 Moonlink 音樂節點
-8. 連線 MongoDB
-9. 啟動 Fastify API Server
+Command handling, event processing, API routing, persistence, and background tasks have distinct organizational boundaries.
 
-整體設計偏向模組化，新增功能時通常只要把檔案放到對應資料夾即可被載入，不用一直手動改中央註冊表，蠻香。
+**Reusable infrastructure**
 
----
+Shared handlers, utility functions, and application classes reduce the need to duplicate common infrastructure across features.
 
-## Installation
+**Integration-oriented design**
 
-### 1. Clone the repository
+The application coordinates multiple libraries and services, making interface boundaries and failure behavior important parts of the overall design.
+
+**Incremental evolution**
+
+The modular structure provides room to refine individual components without requiring every feature to be reorganized at once.
+
+## Development
+
+Paper uses TypeScript, Node.js, and pnpm.
+
+### Prerequisites
+
+- Node.js
+- pnpm
+- A Discord application and bot token for runtime execution
+- MongoDB and Redis instances for the corresponding integrations
+- Any additional service credentials required by the enabled features
+
+### Installation
+
+Clone the repository and install its dependencies:
 
 ```bash
 git clone https://github.com/Paper1988/Paper.git
 cd Paper
-```
-
-### 2. Install dependencies
-
-```bash
 pnpm install
 ```
 
-### 3. Configure environment variables
+Configure the required environment variables for your local environment before starting the application.
 
-建立 `.env` 或 `.env.local`
+### Available Scripts
 
-```env
-# Discord
-DISCORD_TOKEN=
-TEST_TOKEN=
+| Command | Description |
+|---|---|
+| `pnpm dev` | Run the application in development mode with file watching |
+| `pnpm build` | Compile TypeScript and resolve configured path aliases |
+| `pnpm start` | Start the compiled application |
+| `pnpm build:watch` | Watch and recompile TypeScript sources |
+| `pnpm format` | Format project files with Prettier |
+| `pnpm format:check` | Check formatting without applying changes |
+| `pnpm lint:fix` | Run ESLint with automatic fixes |
+| `pnpm test` | Build the project and run the configured Mocha test suite |
+| `pnpm test:redis` | Build the project and run the Redis-specific test file |
 
-# Database
-DATABASE_URI=
+The test scripts compile the project before executing tests. Tests that depend on external services may also require the corresponding services to be available.
 
-# Redis
-REDIS_URL=
+## Engineering Considerations
 
-# Sentry
-SENTRY_DSN=
+A project involving asynchronous events, persistent storage, caching, and external services presents several useful areas for continued engineering work.
 
-# Error / startup webhooks
-ANTICRASH_WEBHOOK_URL=
-STARTUP_WEBHOOK_ID=
-STARTUP_WEBHOOK_TOKEN=
+### Reliability
 
-# API
-PORT=3001
-GO_API_URL=http://localhost:8080
+- Define predictable startup and shutdown behavior.
+- Handle connection failures and reconnection scenarios.
+- Avoid race conditions during initialization.
+- Make background task failures observable.
 
-# Music nodes
-NODELINK_HOST=
-NODELINK_PORT=
-NODELINK_PASSWORD=
+### Type Safety
 
-LAVALINK_1_HOST=
-LAVALINK_1_PORT=
-LAVALINK_1_PASSWORD=
+- Prefer explicit types for application boundaries.
+- Avoid unnecessary escape hatches such as `any`.
+- Keep shared interfaces consistent across the Discord client, API, and subsystem implementations.
 
-LAVALINK_2_HOST=
-LAVALINK_2_PORT=
-LAVALINK_2_PASSWORD=
-```
+### API Security
 
-> 如果音樂節點相關環境變數沒有設好，音樂功能會被停用，但機器人本體仍可繼續運作。
+- Apply authentication and authorization where required.
+- Validate incoming request parameters and payloads.
+- Limit access to state-changing operations.
+- Review network exposure and cross-origin policies independently.
 
----
+### Testing
 
-## Development
+- Add unit tests for isolated application logic.
+- Test failure paths as well as successful execution.
+- Cover interactions with persistence and caching.
+- Verify API behavior, validation, and authorization.
 
-### Start in development mode
+These areas are part of the ongoing engineering considerations for the project. Their inclusion here should not be interpreted as a claim that every item has already been fully implemented or verified.
 
-```bash
-pnpm dev
-```
+## Future Improvements
 
-### Build project
+Potential areas for further development include:
 
-```bash
-pnpm build
-```
+- Strengthening API authentication and authorization.
+- Improving startup sequencing and graceful shutdown.
+- Expanding test coverage for critical application paths.
+- Improving type safety across subsystem boundaries.
+- Adding more explicit validation and error-handling conventions.
+- Documenting architectural decisions and operational behavior.
+- Integrating automated checks into a continuous integration workflow.
 
-### Start built project
+The goal is not simply to add more features, but to improve the clarity, reliability, and maintainability of the existing system.
 
-```bash
-pnpm start
-```
+## Project Scope
 
-### Format code
+Paper is a personal development project and an ongoing engineering exercise.
 
-```bash
-pnpm format
-```
-
-### Check formatting
-
-```bash
-pnpm format:check
-```
-
-### Fix lint issues
-
-```bash
-pnpm lint:fix
-```
-
-### Run tests
-
-```bash
-pnpm test
-```
-
----
-
-## API Endpoints
-
-內建 API Server 預設會啟動在 `0.0.0.0:${PORT}`。
-
-### Health check
-
-```http
-GET /health
-```
-
-### Bot status
-
-```http
-GET /api/bot-status
-```
-
-### Get guilds manageable by a user
-
-```http
-GET /api/guilds?userId=<discord_user_id>
-```
-
-也可以從 request header 傳入：
-
-```http
-x-discord-id: <discord_user_id>
-```
-
-### Get a guild detail
-
-```http
-GET /api/guilds/:guildId
-```
-
-### Force end a giveaway
-
-```http
-POST /api/guilds/:guildId/giveaways/:messageId/end
-```
-
-### Reroll a giveaway
-
-```http
-POST /api/guilds/:guildId/giveaways/:messageId/reroll
-```
-
-### Get current music queue
-
-```http
-GET /api/guilds/:guildId/music/queue
-```
-
-### Skip current track
-
-```http
-POST /api/guilds/:guildId/music/skip
-```
-
-### Pause music
-
-```http
-POST /api/guilds/:guildId/music/pause
-```
-
-### Resume music
-
-```http
-POST /api/guilds/:guildId/music/resume
-```
-
-### Clear queue / destroy player
-
-```http
-DELETE /api/guilds/:guildId/music/queue
-```
-
----
-
-## Command System
-
-Paper 的指令系統支援：
-
-- Slash Commands
-- Subcommands
-- Subcommand Groups
-- Context Menus
-
-所有指令都會在啟動時自動掃描 `Commands` 資料夾並載入。  
-如果是一般指令，會放進 `client.commands`。  
-如果是子指令，則會依結構放進 `client.subCommands`。  
-Context Menu 則會另外註冊。
-
-這種結構的好處是：
-
-- 擴充新指令很方便
-- 不容易把主檔案搞成義大利麵 🍝
-- 指令與互動元件能各自分工
-
----
-
-## Music System
-
-音樂系統使用 `moonlink.js`，並支援多個節點：
-
-- Main Node
-- Free Node 1
-- Free Node 2
-
-節點策略包含：
-
-- `leastLoad`
-- `autoMovePlayers`
-- `avoidUnhealthyNodes`
-- retry 機制
-- 預設自動離開與預設音量
-
-如果你有自己的 Lavalink / NodeLink 節點，可以直接透過環境變數接進來。
-
----
-
-## Giveaway System
-
-抽獎系統具備：
-
-- 抽獎持久化儲存
-- 自動到期結束
-- 重抽功能
-- 得獎者公告
-- Giveaway 統計資料
-- 歷史記錄保存
-
-系統也會定期檢查 MongoDB 健康狀況，避免抽獎跑到一半直接失憶，這種事情很地獄。
-
----
-
-## Error Handling
-
-Paper 內建多層錯誤處理：
-
-- `unhandledRejection`
-- `uncaughtException`
-- Discord client `error`
-- Sentry
-- Webhook error reporting
-
-當機器人發生未捕捉錯誤時，會嘗試把 stack trace 傳到指定 webhook，方便除錯。
-
----
-
-## Scripts
-
-```json
-{
-  "dev": "tsx watch src/index.ts",
-  "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
-  "start": "node dist/index.js",
-  "format": "prettier --write .",
-  "format:check": "prettier --check .",
-  "lint:fix": "eslint ./src --ext .ts --fix",
-  "test": "mocha dist/**/*.test.js --timeout 10000"
-}
-```
-
----
-
-## Roadmap
-
-- [ ] 更完整的 Dashboard 整合
-- [ ] 更完整的權限與 guild config 管理
-- [ ] 更完整的模組文件化
-- [ ] Docker / deployment setup 文件
-- [ ] 指令分類與使用範例補齊
-
----
+This repository documents the project's architecture, implementation choices, and technical direction. It is not intended to serve as a hosted service or a promise of support for independent deployments.
 
 ## License
 
-MIT License
-
----
-
-## Author
-
-**Paper1988**
-
-如果你喜歡這個專案，歡迎幫我點個 Star ⭐  
-也歡迎拿去參考架構，但拜託不要把 bug 也一起複製走，bug 不是附贈貼紙。
+This project is distributed under the MIT License. See [LICENSE](LICENSE) for details.
