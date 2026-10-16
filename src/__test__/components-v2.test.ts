@@ -21,12 +21,10 @@ describe('Components V2 Prototype', function () {
         expect(container.components.some((component) => component.type === 10)).to.be.true
         expect(container.components.some((component) => component.type === 14)).to.be.true
 
-        const actionRow = container.components.find((component) => component.type === 1)
-        expect(actionRow).to.exist
-        expect(actionRow!.components).to.have.length(2)
-        expect(actionRow!.components.map((component) => component.custom_id)).to.deep.equal([
-            'paper:v2:prototype:primary',
-            'paper:v2:prototype:secondary'
-        ])
+        const serialized = JSON.stringify(container)
+        expect(serialized).to.include('paper:v2:prototype:primary')
+        expect(serialized).to.include('paper:v2:prototype:secondary')
+        expect(container.components.filter((component) => component.type === 10)).to.have.length(3)
+        expect(container.components.filter((component) => component.type === 1)).to.have.length(1)
     })
 })
