@@ -9,6 +9,7 @@ import {
     StringSelectMenuBuilder,
     TextDisplayBuilder,
 } from 'discord.js'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 
 export default {
     data: new SlashCommandBuilder()
@@ -28,7 +29,43 @@ export default {
                 .setDescriptionLocalization('ja', '特定のコマンド情報を表示')
                 .setRequired(false),
         ),
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction, client: PaperClient) {
+        const requestedCommand = interaction.options.getString('command')?.trim().replace(/^\\/+/, '').toLowerCase()
+
+        if (requestedCommand) {
+            const command = client.commands.get(requestedCommand)
+            const container = new ContainerBuilder().setAccentColor(0xA3A3A3)
+
+            if (!command?.data) {
+                container.addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        '# 找不到這個指令\\n' +
+                        `目前找不到 \`/${requestedCommand}\`。請確認指令名稱，或使用下方分類瀏覽功能。`,
+                    ),
+                )
+            } else {
+                const data = command.data.toJSON()
+                const options = data.options?.map((option) => {
+                    const required = 'required' in option && option.required ? '必填' : '選填'
+                    return `• \` ${option.name} \` · ${option.description}（${required}）`
+                }).join('\\n')
+                container.addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        `# /${data.name}\\n` +
+                        `${data.description || '此指令尚未提供說明。'}\\n\\n` +
+                        (options ? `## 可用參數\\n${options}\\n\\n` : '') +
+                        '使用 `/help` 不填指令名稱，即可瀏覽所有功能分類。',
+                    ),
+                )
+            }
+
+            await interaction.reply({
+                components: [container],
+                flags: MessageFlags.IsComponentsV2,
+            })
+            return
+        }
+
         const helpMenu = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
             new StringSelectMenuBuilder()
                 .setCustomId('helpMenu')
