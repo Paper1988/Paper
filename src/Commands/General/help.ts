@@ -24,9 +24,9 @@ export default {
                 .setName('command')
                 .setNameLocalization('zh-TW', '指令')
                 .setNameLocalization('ja', 'コマンド')
-                .setDescription('View specific command information')
-                .setDescriptionLocalization('zh-TW', '查看特定指令的資訊')
-                .setDescriptionLocalization('ja', '特定のコマンド情報を表示')
+                .setDescription('Look up a command by name, e.g. botinfo')
+                .setDescriptionLocalization('zh-TW', '輸入指令名稱查看用途與參數，例如 botinfo')
+                .setDescriptionLocalization('ja', 'コマンド名を入力して使い方と引数を確認します')
                 .setRequired(false),
         ),
     async execute(interaction: ChatInputCommandInteraction, client: PaperClient) {
