@@ -25,7 +25,7 @@ interface MinecraftServerResponse {
 
 const ACCENT_COLOR = 0xA3A3A3
 const REFRESH_CUSTOM_ID = 'mcstats:refresh'
-const REFRESH_TIMEOUT_MS = 5 * 60 * 1000
+const REFRESH_TIMEOUT_MS = 15 * 60 * 1000
 
 function divider() {
     return new SeparatorBuilder()
@@ -143,23 +143,22 @@ export default {
             components: [loadingContainer],
         })
 
+        let currentContainer: ContainerBuilder
+
         try {
             const data = await fetchServerStatus(normalizedIp)
-            await interaction.editReply({
-                components: [buildServerInfo(normalizedIp, data), buildRefreshRow()],
-            })
+            currentContainer = buildServerInfo(normalizedIp, data)
         } catch (error) {
             console.error('[mcstats] Failed to fetch server status:', error)
-            await interaction.editReply({
-                components: [
-                    buildContainer(
-                        '查詢失敗',
-                        `目前無法取得 \`${normalizedIp}\` 的狀態，可能是查詢服務暫時無法使用。請稍後再試。`,
-                    ),
-                    buildRefreshRow(),
-                ],
-            })
+            currentContainer = buildContainer(
+                '查詢失敗',
+                `目前無法取得 \`${normalizedIp}\` 的狀態，可能是查詢服務暫時無法使用。請稍後再試。`,
+            )
         }
+
+        await interaction.editReply({
+            components: [currentContainer, buildRefreshRow()],
+        })
 
         const message = await interaction.fetchReply()
         const collector = message.createMessageComponentCollector({
@@ -173,19 +172,18 @@ export default {
 
             try {
                 const data = await fetchServerStatus(normalizedIp)
+                currentContainer = buildServerInfo(normalizedIp, data)
                 await interaction.editReply({
-                    components: [buildServerInfo(normalizedIp, data), buildRefreshRow()],
+                    components: [currentContainer, buildRefreshRow()],
                 })
             } catch (error) {
                 console.error('[mcstats] Failed to refresh server status:', error)
+                currentContainer = buildContainer(
+                    '刷新失敗',
+                    `暫時無法更新 \`${normalizedIp}\` 的狀態，請稍後再試。`,
+                )
                 await interaction.editReply({
-                    components: [
-                        buildContainer(
-                            '刷新失敗',
-                            `暫時無法更新 \`${normalizedIp}\` 的狀態，請稍後再試。`,
-                        ),
-                        buildRefreshRow(),
-                    ],
+                    components: [currentContainer, buildRefreshRow()],
                 })
             }
         })
@@ -193,10 +191,7 @@ export default {
         collector.on('end', async () => {
             try {
                 await interaction.editReply({
-                    components: [
-                        ...(await getFinalComponents(interaction, normalizedIp)),
-                        buildRefreshRow(true),
-                    ],
+                    components: [currentContainer, buildRefreshRow(true)],
                 })
             } catch {
                 // The original interaction may have expired or the message may have been deleted.
@@ -205,14 +200,3 @@ export default {
     },
 }
 
-async function getFinalComponents(
-    interaction: ChatInputCommandInteraction,
-    ip: string,
-): Promise<ContainerBuilder[]> {
-    try {
-        const data = await fetchServerStatus(ip)
-        return [buildServerInfo(ip, data)]
-    } catch {
-        return [buildContainer('查詢已結束', `已停止更新 \`${ip}\` 的狀態。`)]
-    }
-}
