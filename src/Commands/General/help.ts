@@ -23,8 +23,8 @@ export default {
     async execute(interaction: ChatInputCommandInteraction, client: PaperClient) {
         const requestedCommand = interaction.options.getString('command')?.trim().replace(/^\/+/, '').toLowerCase()
         const response = requestedCommand
-            ? buildHelpCommand(client, requestedCommand)
-            : buildHelpHome(client)
+            ? buildHelpCommand(client, requestedCommand, interaction.locale)
+            : buildHelpHome(client, interaction.locale)
 
         await interaction.reply(response)
     },
