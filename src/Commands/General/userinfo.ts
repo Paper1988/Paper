@@ -118,20 +118,19 @@ export default {
             flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2,
         })
 
-        const target = interaction.options.getMember('member') ?? interaction.member
-        if (!target || !('user' in target) || !('roles' in target)) {
+        if (!interaction.guild) {
             const errorContainer = new ContainerBuilder()
                 .setAccentColor(0xA3A3A3)
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        '# 無法取得使用者資料\n請在伺服器中使用此指令，並確認目標使用者仍在伺服器內。',
+                        '# 無法取得使用者資料\n請在伺服器中使用此指令。',
                     ),
                 )
             return interaction.editReply({ components: [errorContainer] })
         }
 
-        const member = target as GuildMember
-        if (member.user.bot) {
+        const targetUser = interaction.options.getUser('member') ?? interaction.user
+        if (targetUser.bot) {
             const errorContainer = new ContainerBuilder()
                 .setAccentColor(0xA3A3A3)
                 .addTextDisplayComponents(
@@ -144,9 +143,10 @@ export default {
 
         try {
             const [profileBuffer, fetchedUser] = await Promise.all([
-                Profile(member.id),
-                member.user.fetch(),
+                Profile(targetUser.id),
+                targetUser.fetch(),
             ])
+            const member = await interaction.guild.members.fetch(targetUser.id)
             const profileAttachment = new AttachmentBuilder(profileBuffer, {
                 name: 'profile.png',
             })
