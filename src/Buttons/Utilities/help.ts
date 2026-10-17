@@ -6,7 +6,7 @@ export default {
     id: 'helpBack',
     async execute(interaction: ButtonInteraction, client: PaperClient) {
         if (interaction.customId !== 'helpBack') return
-        const response = buildHelpHome(client)
+        const response = buildHelpHome(client, interaction.locale)
         await interaction.update({ components: response.components })
     },
 }
