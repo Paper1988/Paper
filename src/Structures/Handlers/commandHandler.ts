@@ -87,7 +87,7 @@ export async function loadCommands(client: PaperClient): Promise<void> {
                     continue
                 }
 
-                const commandPath = file.replace(/\\\\/g, '/')
+                const commandPath = file.replace(/\\/g, '/')
                 const commandLocation = commandPath.split('/Commands/')[1]?.split('/') ?? []
                 const rootCategory = commandLocation[0]
                 const nestedCategory = commandLocation[1]
