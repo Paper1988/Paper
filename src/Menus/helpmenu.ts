@@ -4,18 +4,14 @@ import {
     ButtonStyle,
     ContainerBuilder,
     EmbedBuilder,
-    MessageFlags,
     StringSelectMenuBuilder,
     StringSelectMenuInteraction,
     TextDisplayBuilder,
-    type ActionRowBuilder,
-    type ButtonBuilder,
-    type StringSelectMenuBuilder as StringSelectMenuBuilderType,
 } from 'discord.js'
 
 function buildHelpContainer(
     embeds: EmbedBuilder[],
-    rows: ActionRowBuilder<ButtonBuilder | StringSelectMenuBuilderType>[],
+    rows: (ActionRowBuilder<ButtonBuilder> | ActionRowBuilder<StringSelectMenuBuilder>)[],
 ) {
     const container = new ContainerBuilder().setAccentColor(0xA3A3A3)
 
