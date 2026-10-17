@@ -40,6 +40,21 @@ function getCommandData(command: HelpCommand) {
     return command.data!.toJSON() as ReturnType<SlashCommandBuilder['toJSON']>
 }
 
+type LocalizedCommandData = {
+    name: string
+    description?: string
+    name_localizations?: Record<string, string | null>
+    description_localizations?: Record<string, string | null>
+}
+
+function localizedName(data: LocalizedCommandData, locale: string): string {
+    return data.name_localizations?.[locale] || data.name
+}
+
+function localizedDescription(data: LocalizedCommandData, locale: string): string {
+    return data.description_localizations?.[locale] || data.description || 'No description provided.'
+}
+
 function buildCategoryMenu(client: PaperClient, selected?: HelpCategory) {
     const menu = new StringSelectMenuBuilder()
         .setCustomId('helpCategoryMenu')
@@ -58,7 +73,7 @@ function buildCategoryMenu(client: PaperClient, selected?: HelpCategory) {
 }
 
 
-function buildCommandSelect(client: PaperClient, category: HelpCategory, selected?: string) {
+function buildCommandSelect(client: PaperClient, category: HelpCategory, locale: string, selected?: string) {
     const commands = getCommands(client, category).slice(0, 25)
     const menu = new StringSelectMenuBuilder()
         .setCustomId('helpCommandMenu')
@@ -67,8 +82,8 @@ function buildCommandSelect(client: PaperClient, category: HelpCategory, selecte
             commands.map((command) => {
                 const data = getCommandData(command)
                 return {
-                    label: data.name.slice(0, 100),
-                    description: (data.description || '查看指令用途與參數').slice(0, 100),
+                    label: localizedName(data, locale).slice(0, 100),
+                    description: localizedDescription(data, locale).slice(0, 100),
                     value: `command:${data.name}`,
                     ...(selected === data.name ? { default: true } : {}),
                 }
@@ -83,7 +98,7 @@ function buildHomeButton() {
     )
 }
 
-function buildCommandButtons(category: HelpCategory, page: number, commands: HelpCommand[]) {
+function buildCommandButtons(category: HelpCategory, page: number, commands: HelpCommand[], locale: string) {
     const start = page * COMMANDS_PER_PAGE
     const visible = commands.slice(start, start + COMMANDS_PER_PAGE)
     const rows: ActionRowBuilder<ButtonBuilder>[] = []
@@ -95,7 +110,7 @@ function buildCommandButtons(category: HelpCategory, page: number, commands: Hel
             row.addComponents(
                 new ButtonBuilder()
                     .setCustomId(`helpCommand:${name}`)
-                    .setLabel(`/${name}`.slice(0, 80))
+                    .setLabel(`/${localizedName(getCommandData(command), locale)}`.slice(0, 80))
                     .setStyle(ButtonStyle.Secondary),
             )
         }
@@ -127,7 +142,7 @@ function buildCommandButtons(category: HelpCategory, page: number, commands: Hel
     return rows
 }
 
-function buildDetailContainer(client: PaperClient, commandName: string) {
+function buildDetailContainer(client: PaperClient, commandName: string, locale: string) {
     const command = getCommands(client).find((item) => item.data!.name === commandName)
     const container = new ContainerBuilder().setAccentColor(ACCENT)
 
@@ -152,30 +167,33 @@ function buildDetailContainer(client: PaperClient, commandName: string) {
     const options = 'options' in data && Array.isArray(data.options) ? data.options as HelpOption[] : []
     const renderOptions = (items: HelpOption[], parent = ''): string[] =>
         items.flatMap((option) => {
-            const path = parent ? `${parent} ${option.name}` : option.name
+            const optionData = option as HelpOption & LocalizedCommandData
+            const optionName = localizedName(optionData, locale)
+            const optionDescription = localizedDescription(optionData, locale)
+            const path = parent ? `${parent} ${optionName}` : optionName
             if (option.type === 1 || option.type === 2) {
-                const line = `• \`/${data.name} ${path}\` · ${option.description || '尚未提供說明'}`
+                const line = `• \`/${localizedName(data, locale)} ${path}\` · ${optionDescription}`
                 return [line, ...(option.options?.length ? renderOptions(option.options, path).map((child) => `  ${child}`) : [])]
             }
-            const required = option.required ? '必填' : '選填'
-            return [`• \`${option.name}\` · ${option.description || '尚未提供說明'}（${required}）`]
+            const required = option.required ? (locale === 'ja' ? '必須' : locale === 'zh-TW' ? '必填' : 'Required') : (locale === 'ja' ? '任意' : locale === 'zh-TW' ? '選填' : 'Optional')
+            return [`• \`${optionName}\` · ${optionDescription}（${required}）`]
         })
     const optionLines = renderOptions(options)
     const category = command.helpCategory!
     container.addTextDisplayComponents(
         new TextDisplayBuilder().setContent(
-            `# /${data.name}\n${data.description || '此指令尚未提供說明。'}\n\n` +
+            `# /${localizedName(data, locale)}\n${localizedDescription(data, locale)}\n\n` +
             (optionLines.length ? `## 可用參數\n${optionLines.join('\n')}\n\n` : '') +
             `-# ${HELP_CATEGORIES[category].emoji} ${HELP_CATEGORIES[category].label} · ${getCommands(client, category).length} 個指令`,
         ),
     )
-    container.addActionRowComponents(buildCommandSelect(client, category, commandName))
+    container.addActionRowComponents(buildCommandSelect(client, category, locale, commandName))
     container.addActionRowComponents(buildCategoryMenu(client, category))
     container.addActionRowComponents(buildHomeButton())
     return container
 }
 
-export function buildHelpHome(client: PaperClient): InteractionReplyOptions {
+export function buildHelpHome(client: PaperClient, locale = 'en-US'): InteractionReplyOptions {
     const commands = getCommands(client)
     const categoryMenu = buildCategoryMenu(client)
     const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${client.user!.id}&permissions=1644971945463&scope=bot%20applications.commands`
@@ -199,7 +217,7 @@ export function buildHelpHome(client: PaperClient): InteractionReplyOptions {
     return { components: [container], flags: MessageFlags.IsComponentsV2 }
 }
 
-export function buildHelpCategory(client: PaperClient, category: HelpCategory, page = 0): InteractionReplyOptions {
+export function buildHelpCategory(client: PaperClient, category: HelpCategory, page = 0, locale = 'en-US'): InteractionReplyOptions {
     const meta = HELP_CATEGORIES[category]
     const commands = getCommands(client, category)
     const pageCount = Math.max(1, Math.ceil(commands.length / COMMANDS_PER_PAGE))
@@ -216,30 +234,30 @@ export function buildHelpCategory(client: PaperClient, category: HelpCategory, p
         )
         .addActionRowComponents(buildCategoryMenu(client, category))
 
-    for (const row of buildCommandButtons(category, currentPage, commands)) {
+    for (const row of buildCommandButtons(category, currentPage, commands, locale)) {
         container.addActionRowComponents(row)
     }
     container.addActionRowComponents(buildHomeButton())
     return { components: [container], flags: MessageFlags.IsComponentsV2 }
 }
 
-export function buildHelpCommand(client: PaperClient, commandName: string): InteractionReplyOptions {
-    return { components: [buildDetailContainer(client, commandName)], flags: MessageFlags.IsComponentsV2 }
+export function buildHelpCommand(client: PaperClient, commandName: string, locale = 'en-US'): InteractionReplyOptions {
+    return { components: [buildDetailContainer(client, commandName, locale)], flags: MessageFlags.IsComponentsV2 }
 }
 
-export function buildHelpPage(client: PaperClient, categoryName: string, pageText: string): InteractionReplyOptions {
+export function buildHelpPage(client: PaperClient, categoryName: string, pageText: string, locale = 'en-US'): InteractionReplyOptions {
     const category = categoryName as HelpCategory
     if (!(category in HELP_CATEGORIES)) return buildHelpHome(client)
     const page = Number.parseInt(pageText, 10)
-    return buildHelpCategory(client, category, Number.isFinite(page) ? page : 0)
+    return buildHelpCategory(client, category, Number.isFinite(page) ? page : 0, locale)
 }
 
-export function buildHelpSelection(client: PaperClient, value: string): InteractionReplyOptions {
+export function buildHelpSelection(client: PaperClient, value: string, locale = 'en-US'): InteractionReplyOptions {
     if (value.startsWith('category:')) {
-        return buildHelpCategory(client, value.slice('category:'.length) as HelpCategory)
+        return buildHelpCategory(client, value.slice('category:'.length) as HelpCategory, 0, locale)
     }
     if (value.startsWith('command:')) {
-        return buildHelpCommand(client, value.slice('command:'.length))
+        return buildHelpCommand(client, value.slice('command:'.length), locale)
     }
     return buildHelpHome(client)
 }
