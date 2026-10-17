@@ -142,11 +142,25 @@ function buildDetailContainer(client: PaperClient, commandName: string) {
     }
 
     const data = getCommandData(command)
-    const options = 'options' in data && Array.isArray(data.options) ? data.options : []
-    const optionLines = options.map((option) => {
-        const required = 'required' in option && option.required ? '必填' : '選填'
-        return `• \`${option.name}\` · ${option.description || '尚未提供說明'}（${required}）`
-    })
+    type HelpOption = {
+        name: string
+        description?: string
+        required?: boolean
+        type?: number
+        options?: HelpOption[]
+    }
+    const options = 'options' in data && Array.isArray(data.options) ? data.options as HelpOption[] : []
+    const renderOptions = (items: HelpOption[], parent = ''): string[] =>
+        items.flatMap((option) => {
+            const path = parent ? `${parent} ${option.name}` : option.name
+            if (option.type === 1 || option.type === 2) {
+                const line = `• \`/${data.name} ${path}\` · ${option.description || '尚未提供說明'}`
+                return [line, ...(option.options?.length ? renderOptions(option.options, path).map((child) => `  ${child}`) : [])]
+            }
+            const required = option.required ? '必填' : '選填'
+            return [`• \`${option.name}\` · ${option.description || '尚未提供說明'}（${required}）`]
+        })
+    const optionLines = renderOptions(options)
     const category = command.helpCategory!
     container.addTextDisplayComponents(
         new TextDisplayBuilder().setContent(
