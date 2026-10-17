@@ -38,11 +38,11 @@ export function buildComponentsV2Prototype(): MessageCreateOptions {
         .addActionRowComponents(
             new ActionRowBuilder<ButtonBuilder>().addComponents(
                 new ButtonBuilder()
-                    .setCustomId('paper:v2:prototype:primary')
+                    .setCustomId('paper-v2-prototype:primary')
                     .setLabel('Primary action')
                     .setStyle(ButtonStyle.Primary),
                 new ButtonBuilder()
-                    .setCustomId('paper:v2:prototype:secondary')
+                    .setCustomId('paper-v2-prototype:secondary')
                     .setLabel('Secondary')
                     .setStyle(ButtonStyle.Secondary),
             ),
