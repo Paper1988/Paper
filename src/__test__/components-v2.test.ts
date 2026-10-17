@@ -14,17 +14,26 @@ describe('Components V2 Prototype', function () {
     })
 
     it('應該包含容器、文字、分隔線與兩個按鈕', function () {
-        const payload = buildComponentsV2Prototype()
-        const container = payload.components[0].toJSON()
+        const component = payloadComponent(buildComponentsV2Prototype().components)
+        const container = JSON.parse(JSON.stringify(component)) as {
+            type: number
+            components: Array<{ type: number }>
+        }
 
         expect(container.type).to.equal(17)
-        expect(container.components.some((component) => component.type === 10)).to.be.true
-        expect(container.components.some((component) => component.type === 14)).to.be.true
+        expect(container.components.some((item) => item.type === 10)).to.be.true
+        expect(container.components.some((item) => item.type === 14)).to.be.true
 
         const serialized = JSON.stringify(container)
         expect(serialized).to.include('paper-v2-prototype:primary')
         expect(serialized).to.include('paper-v2-prototype:secondary')
-        expect(container.components.filter((component) => component.type === 10)).to.have.length(3)
-        expect(container.components.filter((component) => component.type === 1)).to.have.length(1)
+        expect(container.components.filter((item) => item.type === 10)).to.have.length(3)
+        expect(container.components.filter((item) => item.type === 1)).to.have.length(1)
     })
 })
+
+function payloadComponent(components: ReturnType<typeof buildComponentsV2Prototype>['components']) {
+    const component = components?.[0]
+    if (!component) throw new Error('Expected a Components V2 container')
+    return component
+}
