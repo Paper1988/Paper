@@ -45,7 +45,8 @@ export default {
                 )
             } else {
                 const data = command.data.toJSON()
-                const options = data.options?.map((option) => {
+                const commandOptions = 'options' in data && Array.isArray(data.options) ? data.options : []
+                const options = commandOptions.map((option) => {
                     const required = 'required' in option && option.required ? '必填' : '選填'
                     return `• \`${option.name}\` · ${option.description}（${required}）`
                 }).join('\n')
