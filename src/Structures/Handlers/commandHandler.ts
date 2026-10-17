@@ -87,6 +87,23 @@ export async function loadCommands(client: PaperClient): Promise<void> {
                     continue
                 }
 
+                const commandPath = file.replace(/\\\\/g, '/')
+                const commandLocation = commandPath.split('/Commands/')[1]?.split('/') ?? []
+                const rootCategory = commandLocation[0]
+                const nestedCategory = commandLocation[1]
+
+                if (rootCategory === 'General' || rootCategory === 'System' && nestedCategory === 'AFK') {
+                    command.helpCategory = 'General'
+                } else if (rootCategory === 'Mod') {
+                    command.helpCategory = 'Moderation'
+                } else if (rootCategory === 'Fun') {
+                    command.helpCategory = 'Fun'
+                } else if (rootCategory === 'System' && nestedCategory === 'Music') {
+                    command.helpCategory = 'Music'
+                } else if (rootCategory === 'System' && nestedCategory === 'Giveaway') {
+                    command.helpCategory = 'Giveaway'
+                }
+
                 client.commands.set(command.data.name, command)
                 commandsArray.push(command.data)
                 commands.push({ Command: command.data.name, Status: '✅' })
