@@ -42,7 +42,7 @@ function getCommandData(command: HelpCommand) {
 
 function buildCategoryMenu(client: PaperClient, selected?: HelpCategory) {
     const menu = new StringSelectMenuBuilder()
-        .setCustomId('helpMenu')
+        .setCustomId('helpCategoryMenu')
         .setPlaceholder(selected ? `分類：${HELP_CATEGORIES[selected].label} · 切換分類` : '選擇一個分類')
         .addOptions(
             Object.entries(HELP_CATEGORIES)
@@ -61,7 +61,7 @@ function buildCategoryMenu(client: PaperClient, selected?: HelpCategory) {
 function buildCommandSelect(client: PaperClient, category: HelpCategory, selected?: string) {
     const commands = getCommands(client, category).slice(0, 25)
     const menu = new StringSelectMenuBuilder()
-        .setCustomId('helpMenu')
+        .setCustomId('helpCommandMenu')
         .setPlaceholder('選擇同分類指令')
         .addOptions(
             commands.map((command) => {
