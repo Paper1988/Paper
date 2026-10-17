@@ -7,7 +7,7 @@ import {
     SeparatorBuilder,
     SeparatorSpacingSize,
     TextDisplayBuilder,
-    type MessageCreateOptions,
+    type InteractionReplyOptions,
 } from 'discord.js'
 
 /**
@@ -17,7 +17,7 @@ import {
  * a real Discord channel. Components V2 messages must not include legacy
  * `content` or `embeds` fields.
  */
-export function buildComponentsV2Prototype(): MessageCreateOptions {
+export function buildComponentsV2Prototype(): InteractionReplyOptions {
     const container = new ContainerBuilder()
         .setAccentColor(0x5865f2)
         .addTextDisplayComponents(
