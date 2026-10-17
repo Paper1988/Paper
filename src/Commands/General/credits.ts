@@ -1,8 +1,9 @@
 import {
     ChatInputCommandInteraction,
-    EmbedBuilder,
+    ContainerBuilder,
     MessageFlags,
-    SlashCommandBuilder
+    SlashCommandBuilder,
+    TextDisplayBuilder,
 } from 'discord.js'
 
 export default {
@@ -14,16 +15,22 @@ export default {
         .setDescriptionLocalization('zh-TW', '檢視版權資訊')
         .setDescriptionLocalization('ja', '著作権情報を表示'),
     async execute(interaction: ChatInputCommandInteraction) {
-        const embed = new EmbedBuilder().setTitle('版權提供者').addFields(
-            {
-                name: 'Icons圖標',
-                value: 'https://discord.gg/9AtkECMX2P'
-            },
-            {
-                name: '音樂歌詞來源',
-                value: 'https://genius.com'
-            }
-        )
-        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral })
-    }
+        const container = new ContainerBuilder()
+            .setAccentColor(0xA3A3A3)
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(
+                    '# Credits\n' +
+                        'Paper · 版權與來源\n\n' +
+                        '**圖示資源**\n' +
+                        'https://discord.gg/9AtkECMX2P\n\n' +
+                        '**音樂歌詞來源**\n' +
+                        'https://genius.com',
+                ),
+            )
+
+        await interaction.reply({
+            components: [container],
+            flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+        })
+    },
 }
