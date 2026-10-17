@@ -22,8 +22,8 @@ describe('Components V2 Prototype', function () {
         expect(container.components.some((component) => component.type === 14)).to.be.true
 
         const serialized = JSON.stringify(container)
-        expect(serialized).to.include('paper:v2:prototype:primary')
-        expect(serialized).to.include('paper:v2:prototype:secondary')
+        expect(serialized).to.include('paper-v2-prototype:primary')
+        expect(serialized).to.include('paper-v2-prototype:secondary')
         expect(container.components.filter((component) => component.type === 10)).to.have.length(3)
         expect(container.components.filter((component) => component.type === 1)).to.have.length(1)
     })
