@@ -1,45 +1,98 @@
-import emojis from '@/libs/emoji/emoji.js'
 import { Profile } from 'discord-arts'
+import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import {
     AttachmentBuilder,
     ChatInputCommandInteraction,
-    EmbedBuilder,
+    ContainerBuilder,
     GuildMember,
+    MediaGalleryBuilder,
+    MediaGalleryItemBuilder,
     MessageFlags,
-    SlashCommandBuilder
+    SeparatorBuilder,
+    SeparatorSpacingSize,
+    SlashCommandBuilder,
+    TextDisplayBuilder,
 } from 'discord.js'
 
-function addSuffix(number: number) {
-    if (number % 100 >= 11 && number % 100 <= 13) return '第' + number + '位'
+const divider = () =>
+    new SeparatorBuilder()
+        .setDivider(true)
+        .setSpacing(SeparatorSpacingSize.Small)
 
-    switch (number % 10) {
-        case 1:
-            return '第' + number + '位'
-        case 2:
-            return '第' + number + '位'
-        case 3:
-            return '第' + number + '位'
-    }
+function formatDate(timestamp: number | null): string {
+    if (timestamp === null) return '未知'
+    return `<t:${Math.floor(timestamp / 1000)}:D> · <t:${Math.floor(timestamp / 1000)}:R>`
 }
 
-function addBadges(badgeNames: string[]) {
-    if (!badgeNames.length) return ['<:xmark:1265562550947545089>']
-    const badgeMap = {
+function formatBadges(badgeNames: string[]): string {
+    const badgeMap: Record<string, string> = {
         ActiveDeveloper: '<:activedeveloper:1201841218586152990>',
         BugHunterLevel1: '<:discordbughunter1:1201841226681438238>',
         BugHunterLevel2: '<:discordbughunter2:1201841229281898536>',
         PremiumEarlySupporter: '<:discordearlysupporter:1201841232125362196>',
         Partner: '<:discordpartner:1201841240371367936>',
         Staff: '<:discordstaff:1201841242431033394>',
-        HypeSquadOnlineHouse1: '<:hypesquadbravery:1201841247875235920>', // bravery
-        HypeSquadOnlineHouse2: '<:hypesquadbrilliance:1201841250987409408>', // brilliance
-        HypeSquadOnlineHouse3: '<:hypesquadbalance:1201841246390468629>', // balance
+        HypeSquadOnlineHouse1: '<:hypesquadbravery:1201841247875235920>',
+        HypeSquadOnlineHouse2: '<:hypesquadbrilliance:1201841250987409408>',
+        HypeSquadOnlineHouse3: '<:hypesquadbalance:1201841246390468629>',
         Hypesquad: '<:hypesquadevents:1201841254380601364>',
         CertifiedModerator: '<:discordmod:1201841233711079424>',
-        VerifiedDeveloper: '<:discordbotdev:1201841223250223105>'
+        VerifiedDeveloper: '<:discordbotdev:1201841223250223105>',
     }
 
-    return badgeNames.map((badgeName) => badgeMap[badgeName] || '❔')
+    const badges = badgeNames.map((name) => badgeMap[name] ?? '❔')
+    return badges.length ? badges.join(' ') : '無公開徽章'
+}
+
+function buildUserInfo(
+    member: GuildMember,
+    profileAttachmentUrl: string,
+    bannerUrl: string | null,
+): ContainerBuilder {
+    const user = member.user
+    const roles = member.roles.cache
+        .filter((role) => role.id !== member.guild.id)
+        .sort((a, b) => b.position - a.position)
+        .first(3)
+    const topRoles = roles.length ? roles.map((role) => role.toString()).join(' ') : '無其他身分組'
+    const badges = formatBadges(user.flags?.toArray() ?? [])
+    const joinedAt = formatDate(member.joinedTimestamp)
+    const createdAt = formatDate(user.createdTimestamp)
+    const boosterStatus = member.premiumSince ? '是' : '否'
+
+    return new ContainerBuilder()
+        .setAccentColor(0xA3A3A3)
+        .addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(
+                `# ${user.globalName ?? user.username}\n` +
+                `@${user.username} · 使用者資訊\n\n` +
+                `**使用者 ID** · \`${user.id}\`\n` +
+                `**帳號建立** · ${createdAt}\n` +
+                `**加入伺服器** · ${joinedAt}`,
+            ),
+        )
+        .addSeparatorComponents(divider())
+        .addMediaGalleryComponents(
+            new MediaGalleryBuilder().addItems(
+                new MediaGalleryItemBuilder().setURL(profileAttachmentUrl),
+            ),
+        )
+        .addSeparatorComponents(divider())
+        .addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(
+                '## 伺服器資料\n' +
+                `**最高身分組**\n${topRoles}\n\n` +
+                `**Nitro 伺服器加成** · ${boosterStatus}\n` +
+                `**公開徽章** · ${badges}`,
+            ),
+        )
+        .addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(
+                bannerUrl
+                    ? `[查看使用者橫幅](${bannerUrl})`
+                    : '此使用者沒有可公開顯示的橫幅。',
+            ),
+        )
 }
 
 export default {
@@ -58,117 +111,65 @@ export default {
                 .setDescription('Choose a user')
                 .setDescriptionLocalization('zh-TW', '選擇一個用戶')
                 .setDescriptionLocalization('ja', 'ユーザーを選択')
-                .setRequired(false)
+                .setRequired(false),
         ),
-    async execute(interaction: ChatInputCommandInteraction) {
-        await interaction.reply({
-            content: `${emojis.discord_loading} | 載入中......`,
-            flags: MessageFlags.Ephemeral
+    async execute(interaction: ChatInputCommandInteraction, _client: PaperClient) {
+        await interaction.deferReply({
+            flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2,
         })
 
-        const member =
-            (interaction.options.getMember('member') as GuildMember) || interaction.member
+        const target = interaction.options.getMember('member') ?? interaction.member
+        if (!target || !('user' in target) || !('roles' in target)) {
+            const errorContainer = new ContainerBuilder()
+                .setAccentColor(0xA3A3A3)
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        '# 無法取得使用者資料\n請在伺服器中使用此指令，並確認目標使用者仍在伺服器內。',
+                    ),
+                )
+            return interaction.editReply({ components: [errorContainer] })
+        }
 
-        if (member!.user.bot) {
-            return interaction.editReply({
-                content: '',
-                embeds: [
-                    new EmbedBuilder()
-                        .setColor('Red')
-                        .setDescription('<:warning:1265562532857380936> | 機器人無法使用此功能!')
-                ]
-            })
+        const member = target as GuildMember
+        if (member.user.bot) {
+            const errorContainer = new ContainerBuilder()
+                .setAccentColor(0xA3A3A3)
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        '# 暫不支援機器人帳號\n目前的個人資料卡只支援一般使用者。',
+                    ),
+                )
+            return interaction.editReply({ components: [errorContainer] })
         }
 
         try {
-            const fetchedMembers = await interaction.guild!.members.fetch()
-
-            const profileBuffer = await Profile(member.id)
-
-            const imageAttachment = new AttachmentBuilder(profileBuffer, {
-                name: 'profile.png'
+            const [profileBuffer, fetchedUser] = await Promise.all([
+                Profile(member.id),
+                member.user.fetch(),
+            ])
+            const profileAttachment = new AttachmentBuilder(profileBuffer, {
+                name: 'profile.png',
             })
+            const container = buildUserInfo(
+                member,
+                'attachment://profile.png',
+                fetchedUser.bannerURL(),
+            )
 
-            const joinPosition =
-                Array.from(
-                    fetchedMembers.sort((a, b) => a.joinedTimestamp! - b.joinedTimestamp!).keys()
-                ).indexOf(member.id) + 1
-
-            const topRoles = member.roles.cache
-                .sort((a, b) => b.position - a.position)
-                .map((role) => role)
-                .slice(0, 3)
-
-            const userBadges = member.user.flags!.toArray()
-
-            const joinTime = Math.floor(member.joinedTimestamp! / 1000)
-            const createdTime = Math.floor(member.user.createdTimestamp! / 1000)
-
-            const Booster = member.premiumSince
-                ? '<:discordboost7:1201841221899915325>'
-                : '<:xmark:1265562550947545089>'
-
-            const Embed = new EmbedBuilder()
-                .setAuthor({
-                    name: `${member.user.tag}`,
-                    iconURL: member.displayAvatarURL()
-                })
-                .setColor(member.displayColor)
-                .setDescription(
-                    `<:newmember:1265561140075954186>在 <t:${joinTime}:D>，${member.user.username}成為${addSuffix(
-                        joinPosition
-                    )}加入這個伺服器的人`
+            return interaction.editReply({
+                components: [container],
+                files: [profileAttachment],
+            })
+        } catch (error) {
+            const errorContainer = new ContainerBuilder()
+                .setAccentColor(0xA3A3A3)
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        '# 無法載入使用者資料\n資料服務暫時沒有回應，請稍後再試。如果問題持續發生，請使用 `/feedback` 回報。',
+                    ),
                 )
-                .setImage('attachment://profile.png')
-                .setThumbnail(member.displayAvatarURL({ size: 512 }))
-                .addFields([
-                    {
-                        name: '<:award:1265557167453372459>徽章',
-                        value: `${addBadges(userBadges).join('')}`,
-                        inline: true
-                    },
-                    {
-                        name: '<:nitroboost:1265561191103856661>加成',
-                        value: `${Booster}`,
-                        inline: true
-                    },
-                    {
-                        name: '<:owner:1265561364693258383>最高權限的身分組',
-                        value: `${topRoles.join('').replace(`<@${interaction.guildId}>`, '')}`,
-                        inline: false
-                    },
-                    {
-                        name: '<:clock:1265560238137016372>帳號創建時間',
-                        value: `<t:${createdTime}:R>`,
-                        inline: true
-                    },
-                    {
-                        name: '<:clock:1265560238137016372>帳號加入時間',
-                        value: `<t:${joinTime}:R>`,
-                        inline: true
-                    },
-                    {
-                        name: '<:id:1265560530462969978>帳號ID',
-                        value: `\`${member.id}\``,
-                        inline: false
-                    },
-                    {
-                        name: '<:jpg:1265560632644735007>橫幅',
-                        value: `[連結](${(await member.user.fetch()).bannerURL() || '無'})`,
-                        inline: true
-                    }
-                ])
-
-            return await interaction.editReply({
-                content: '',
-                embeds: [Embed],
-                files: [imageAttachment]
-            })
-        } catch (err) {
-            await interaction.editReply({
-                content: '<:warning:1265562532857380936> | 發生錯誤，請協助回報!'
-            })
-            throw err
+            await interaction.editReply({ components: [errorContainer] })
+            throw error
         }
-    }
+    },
 }
