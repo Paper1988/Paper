@@ -5,6 +5,7 @@ import {
     ContainerBuilder,
     MessageFlags,
     StringSelectMenuBuilder,
+    SlashCommandBuilder,
     TextDisplayBuilder,
     type InteractionReplyOptions,
 } from 'discord.js'
@@ -13,7 +14,7 @@ import type { CommandType } from '@/typings/command.js'
 
 export const HELP_CATEGORIES = {
     General: { label: '功能', emoji: '🔧', description: '一般工具與機器人資訊' },
-    Moderation: { label: '管理', emoji: '🔒', description: '伺服器管理與 moderation 工具' },
+    Moderation: { label: '管理', emoji: '🔒', description: '伺服器管理工具' },
     Music: { label: '音樂', emoji: '🎶', description: '音樂播放與播放清單' },
     Giveaway: { label: '抽獎', emoji: '🎁', description: '抽獎活動與通知' },
     Fun: { label: '娛樂', emoji: '🎭', description: '遊戲與互動指令' },
@@ -36,7 +37,7 @@ function getCommands(client: PaperClient, category?: HelpCategory): HelpCommand[
 }
 
 function getCommandData(command: HelpCommand) {
-    return command.data!.toJSON()
+    return command.data!.toJSON() as ReturnType<SlashCommandBuilder['toJSON']>
 }
 
 function buildCategoryMenu(client: PaperClient, selected?: HelpCategory) {
