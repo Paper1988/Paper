@@ -320,4 +320,8 @@ export class ApiServer {
             throw err
         }
     }
+    
+    async close(): Promise<void> {
+        await this.fastify.close()
+    }
 }
