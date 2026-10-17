@@ -114,8 +114,18 @@ export default {
                 .setRequired(false),
         ),
     async execute(interaction: ChatInputCommandInteraction, _client: PaperClient) {
-        await interaction.deferReply({
+        // Discord requires the Components V2 flag on the initial message.
+        // A deferred response cannot reliably establish that flag, so reply with
+        // a small V2 loading container before doing the slower profile work.
+        const loadingContainer = new ContainerBuilder()
+            .setAccentColor(0xA3A3A3)
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent('# 正在載入使用者資料…'),
+            )
+
+        await interaction.reply({
             flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2,
+            components: [loadingContainer],
         })
 
         if (!interaction.guild) {
@@ -169,7 +179,7 @@ export default {
                     ),
                 )
             await interaction.editReply({ components: [errorContainer] })
-            throw error
+            console.error('[userinfo] Failed to build user profile:', error)
         }
     },
 }
