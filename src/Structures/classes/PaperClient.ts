@@ -147,6 +147,12 @@ export class PaperClient extends Client {
         await this.apiServer.start()
     }
 
+    async stopApiServer(): Promise<void> {
+        if (!this.apiServer) return
+        await this.apiServer.close()
+        this.apiServer = null
+    }
+
     async start({ Production = process.env.NODE_ENV! === 'production' } = {}) {
         Logger.info(
             `>>> Starting Paper Bot in ${Production ? 'Production' : 'Development'} mode...`
