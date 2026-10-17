@@ -1,4 +1,11 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js'
+import {
+    ChannelType,
+    ChatInputCommandInteraction,
+    ContainerBuilder,
+    MessageFlags,
+    SlashCommandBuilder,
+    TextDisplayBuilder,
+} from 'discord.js'
 
 export default {
     data: new SlashCommandBuilder()
@@ -8,82 +15,78 @@ export default {
         .setDescription('Get information about the server')
         .setDescriptionLocalization('zh-TW', '取得伺服器資訊')
         .setDescriptionLocalization('ja', 'サーバー情報を取得します'),
-    execute(interaction: ChatInputCommandInteraction) {
-        const { guild } = interaction
-
-        const {
-            createdTimestamp,
-            ownerId,
-            description,
-            members,
-            memberCount,
-            emojis,
-            stickers,
-            channels
-        } = guild!
-
-        const Embed = new EmbedBuilder()
-            .setColor('Purple')
-            .setAuthor({
-                name: guild!.name,
-                iconURL: guild!.iconURL()!
+    async execute(interaction: ChatInputCommandInteraction) {
+        const guild = interaction.guild
+        if (!guild) {
+            await interaction.reply({
+                content: '此指令只能在伺服器內使用。',
+                flags: MessageFlags.Ephemeral,
             })
-            .setImage(guild!.bannerURL({ size: 1024 }))
-            .setThumbnail(guild!.iconURL())
-            .addFields(
-                {
-                    name: '<:generalinfo:1265560439002234986> | 一般資訊',
-                    value: `
-					<:edit:1265560348392685648>伺服器名稱: **${guild!.name}**
-					<:clock:1265560238137016372>創建時間: <t:${Math.floor(createdTimestamp / 1000)}:R>
-					<:owner:1265561364693258383>擁有者: <@${ownerId}>
+            return
+        }
 
-					<:quote:1265561651890094112>伺服器敘述: ${description || '<:xmark:1265562550947545089>'}
-					`
-                },
-                {
-                    name: '<:people:1265561435220611196> | 用戶統計',
-                    value: `
-					<:people:1265561435220611196>成員數量: \`${members.cache.filter((m) => !m.user.bot).size}\`
-					<:bot:1265560174215827527>機器人: \`${members.cache.filter((m) => m.user.bot).size}\`
-					共計: \`${memberCount}\`
-					`
-                },
-                {
-                    name: '<:channel:1265560212824260609> | 頻道統計',
-                    value: `
-          <:links:1265560833619001345>類別: \`${channels.cache.filter((c) => c.type === 4).toJSON().length}\`
-					<:channel:1265560212824260609>文字: \`${channels.cache.filter((c) => c.type === 0).toJSON().length}\`
-					<:speaker:1265561928533807146>語音: \`${channels.cache.filter((c) => c.type === 2).toJSON().length}\`
-					<:thread:1265562376795586611>討論串: \`${
-                        channels.cache.filter((c) => c.type === 10 && 11 && 12).toJSON().length
-                    }\`
-          <:forum:1265560396933234729>論壇: \`${channels.cache.filter((c) => c.type === 15).toJSON().length}\`
-					<:stage:1265562066060578929>舞台: \`${channels.cache.filter((c) => c.type === 13).size}\`
-					共計: \`${channels.cache.size}\`
-					`
-                },
-                {
-                    name: '<:addreaction:1265557152953798747> | 表情符號 & 貼圖統計',
-                    value: `
-					<:gif:1265560455552831560>GIF貼圖: \`${emojis.cache.filter((e) => e.animated).size}\`
-					<:image:1265560565108179035>一般貼圖: \`${emojis.cache.filter((e) => !e.animated).size}\`
-					<:sticker:1265562184541278270>貼圖: \`${stickers.cache.size}\`
-					共計: \`${stickers.cache.size + emojis.cache.size}\`
-					`
-                },
-                {
-                    name: '<:star:1265562160512372858> | NITRO 統計',
-                    value: `
-          <:role:1265561763529887804>身分組: \`${guild!.roles.cache.size}\`
-					<:nitroboost:1265561191103856661>加成等級: \`${guild!.premiumTier}\`
-					<:nitro:1265561159436865749>加成次數: \`${guild!.premiumSubscriptionCount}\`
-					<:discordnitro:1265560300757717023>加成者數量: \`${members.cache.filter((m) => m.premiumSince).size}\`
-					`
-                }
+        const channels = guild.channels.cache
+        const members = guild.members.cache
+        const textChannels = channels.filter(
+            (channel) =>
+                channel.type === ChannelType.GuildText ||
+                channel.type === ChannelType.GuildAnnouncement ||
+                channel.type === ChannelType.GuildForum,
+        ).size
+        const voiceChannels = channels.filter(
+            (channel) =>
+                channel.type === ChannelType.GuildVoice ||
+                channel.type === ChannelType.GuildStageVoice,
+        ).size
+        const threads = channels.filter(
+            (channel) =>
+                channel.type === ChannelType.PublicThread ||
+                channel.type === ChannelType.PrivateThread ||
+                channel.type === ChannelType.AnnouncementThread,
+        ).size
+        const humans = members.filter((member) => !member.user.bot).size
+        const bots = members.filter((member) => member.user.bot).size
+        const createdAt = Math.floor(guild.createdTimestamp / 1000)
+        const bannerUrl = guild.bannerURL({ size: 1024 })
+
+        const container = new ContainerBuilder()
+            .setAccentColor(0xA3A3A3)
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(
+                    `# ${guild.name}\n` +
+                        'Server overview · 伺服器資訊\n' +
+                        `建立於 <t:${createdAt}:D> (<t:${createdAt}:R>)`,
+                ),
             )
-            .setTimestamp()
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(
+                    '## 基本資料\n' +
+                        `**擁有者** · <@${guild.ownerId}>\n` +
+                        `**伺服器 ID** · \`${guild.id}\`\n` +
+                        `**伺服器描述** · ${guild.description || '尚未設定'}` +
+                        (bannerUrl ? `\n**伺服器橫幅** · [查看橫幅](${bannerUrl})` : ''),
+                ),
+            )
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(
+                    '## 成員\n' +
+                        `**總成員** · ${guild.memberCount}  |  **快取使用者** · ${humans}  |  **快取機器人** · ${bots}\n` +
+                        `**身分組** · ${guild.roles.cache.size}  |  **伺服器加成** · 等級 ${guild.premiumTier} · ${guild.premiumSubscriptionCount ?? 0} 次`,
+                ),
+            )
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(
+                    '## 頻道與素材\n' +
+                        `**文字／公告／論壇** · ${textChannels}  |  **語音／舞台** · ${voiceChannels}\n` +
+                        `**討論串** · ${threads}  |  **頻道快取總數** · ${channels.size}\n` +
+                        `**表情符號** · ${guild.emojis.cache.size}  |  **貼圖** · ${guild.stickers.cache.size}\n` +
+                        '-# 成員與頻道分類統計依目前快取計算，可能不等於完整實際數量。',
+                ),
+            )
 
-        interaction.reply({ embeds: [Embed] })
-    }
+        await interaction.reply({
+            components: [container],
+            flags: MessageFlags.IsComponentsV2,
+        })
+    },
 }
