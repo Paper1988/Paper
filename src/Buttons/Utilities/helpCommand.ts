@@ -7,7 +7,7 @@ export default {
     async execute(interaction: ButtonInteraction, client: PaperClient, args: string[]) {
         const commandName = args[0]
         if (!commandName) return
-        const response = buildHelpCommand(client, commandName)
+        const response = buildHelpCommand(client, commandName, interaction.locale)
         await interaction.update({ components: response.components })
     },
 }
