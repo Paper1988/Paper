@@ -39,13 +39,13 @@ function getCommandData(command: HelpCommand) {
     return command.data!.toJSON()
 }
 
-function buildCategoryMenu(selected?: HelpCategory) {
+function buildCategoryMenu(client: PaperClient, selected?: HelpCategory) {
     const menu = new StringSelectMenuBuilder()
         .setCustomId('helpMenu')
         .setPlaceholder(selected ? `分類：${HELP_CATEGORIES[selected].label} · 切換分類` : '選擇一個分類')
         .addOptions(
             Object.entries(HELP_CATEGORIES)
-                .filter(([key]) => getCategoryCount(key as HelpCategory) > 0)
+                .filter(([key]) => getCommands(client, key as HelpCategory).length > 0)
                 .map(([key, category]) => ({
                     label: `${category.emoji} ${category.label}`,
                     description: category.description,
@@ -56,11 +56,6 @@ function buildCategoryMenu(selected?: HelpCategory) {
     return new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(menu)
 }
 
-let activeClient: PaperClient | undefined
-
-function getCategoryCount(category: HelpCategory) {
-    return activeClient ? getCommands(activeClient, category).length : 0
-}
 
 function buildCommandSelect(client: PaperClient, category: HelpCategory, selected?: string) {
     const commands = getCommands(client, category).slice(0, 25)
@@ -160,15 +155,14 @@ function buildDetailContainer(client: PaperClient, commandName: string) {
         ),
     )
     container.addActionRowComponents(buildCommandSelect(client, category, commandName))
-    container.addActionRowComponents(buildCategoryMenu(category))
+    container.addActionRowComponents(buildCategoryMenu(client, category))
     container.addActionRowComponents(buildHomeButton())
     return container
 }
 
 export function buildHelpHome(client: PaperClient): InteractionReplyOptions {
-    activeClient = client
     const commands = getCommands(client)
-    const categoryMenu = buildCategoryMenu()
+    const categoryMenu = buildCategoryMenu(client)
     const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${client.user!.id}&permissions=1644971945463&scope=bot%20applications.commands`
     const links = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder().setLabel('邀請 Paper').setStyle(ButtonStyle.Link).setURL(inviteUrl),
@@ -206,7 +200,7 @@ export function buildHelpCategory(client: PaperClient, category: HelpCategory, p
                     : '目前這個分類沒有可顯示的指令。'),
             ),
         )
-        .addActionRowComponents(buildCategoryMenu(category))
+        .addActionRowComponents(buildCategoryMenu(client, category))
 
     for (const row of buildCommandButtons(category, currentPage, commands)) {
         container.addActionRowComponents(row)
