@@ -3,9 +3,11 @@ import {
     ButtonBuilder,
     ButtonStyle,
     ChatInputCommandInteraction,
-    EmbedBuilder,
+    ContainerBuilder,
+    MessageFlags,
     SlashCommandBuilder,
-    StringSelectMenuBuilder
+    StringSelectMenuBuilder,
+    TextDisplayBuilder,
 } from 'discord.js'
 
 export default {
@@ -24,90 +26,60 @@ export default {
                 .setDescription('View specific command information')
                 .setDescriptionLocalization('zh-TW', '查看特定指令的資訊')
                 .setDescriptionLocalization('ja', '特定のコマンド情報を表示')
-                .setRequired(false)
+                .setRequired(false),
         ),
     async execute(interaction: ChatInputCommandInteraction) {
-        await interaction.deferReply()
         const helpMenu = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
             new StringSelectMenuBuilder()
                 .setCustomId('helpMenu')
                 .setPlaceholder('選擇一個分類')
                 .addOptions(
-                    {
-                        label: '🔧功能',
-                        description: '顯示所有功能指令',
-                        value: 'General'
-                    },
-
-                    {
-                        label: '🔒管理',
-                        description: '顯示所有管理指令(只有管理員和版主等人可以使用)',
-                        value: 'Moderation'
-                    },
-
-                    {
-                        label: '🎶音樂',
-                        description: '顯示所有音樂指令',
-                        value: 'Music'
-                    },
-
-                    {
-                        label: '🎁抽獎',
-                        description: '顯示所有抽獎指令',
-                        value: 'Giveaway'
-                    },
-
-                    {
-                        label: '🎭 娛樂',
-                        description: '顯示所有娛樂指令',
-                        value: 'Fun'
-                    }
-                )
+                    { label: '🔧 功能', description: '顯示所有功能指令', value: 'General' },
+                    { label: '🔒 管理', description: '管理員與版主可用的指令', value: 'Moderation' },
+                    { label: '🎶 音樂', description: '顯示所有音樂指令', value: 'Music' },
+                    { label: '🎁 抽獎', description: '顯示所有抽獎指令', value: 'Giveaway' },
+                    { label: '🎭 娛樂', description: '顯示所有娛樂指令', value: 'Fun' },
+                    { label: '📅 會議', description: '會議管理與效率工具', value: 'Meeting' },
+                ),
         )
 
-        const inviteAndSupport = new ActionRowBuilder<ButtonBuilder>().addComponents([
-            new ButtonBuilder()
-                .setLabel('邀請我')
-                .setStyle(ButtonStyle.Link)
-                .setURL(
-                    'https://discord.com/api/oauth2/authorize?client_id=***REMOVED***&permissions=1644971945463&scope=bot%20applications.commands'
-                ),
-            new ButtonBuilder()
-                .setLabel('支援伺服器')
-                .setStyle(ButtonStyle.Link)
-                .setURL('https://discord.gg/6qCTEer4pT')
-        ])
-
-        const koFi = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${interaction.client.user.id}&permissions=1644971945463&scope=bot%20applications.commands`
+        const inviteAndSupport = new ActionRowBuilder<ButtonBuilder>().addComponents(
+            new ButtonBuilder().setLabel('邀請 Paper').setStyle(ButtonStyle.Link).setURL(inviteUrl),
+            new ButtonBuilder().setLabel('支援伺服器').setStyle(ButtonStyle.Link).setURL('https://discord.gg/6qCTEer4pT'),
+        )
+        const support = new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder()
                 .setLabel('請我喝杯咖啡')
                 .setEmoji('<:kofi:1308733627496009738>')
                 .setStyle(ButtonStyle.Link)
-                .setURL('https://ko-fi.com/paper1988')
+                .setURL('https://ko-fi.com/paper1988'),
         )
 
-        const Embed = new EmbedBuilder()
-            .setColor('Blue')
-            .setTitle('📚 Paper 指令導覽')
-            .setDescription(
-                '歡迎使用 Paper！我是一個功能豐富的多功能機器人 🤖\n\n' +
-                    '**主要功能：**\n' +
-                    '🎵 高品質音樂播放系統\n' +
-                    '🎉 互動式抽獎活動\n' +
-                    '🛡️ 完善的伺服器管理工具\n' +
-                    '🎮 有趣的娛樂指令\n' +
-                    '🌐 實用的工具功能\n\n' +
-                    '**使用方式：**\n' +
-                    '• 在下方選單選擇想了解的分類\n' +
-                    '• 所有指令皆支援斜線指令 `/`\n' +
-                    '• 需要協助可以加入支援伺服器'
+        const container = new ContainerBuilder()
+            .setAccentColor(0xA3A3A3)
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(
+                    '# Paper / 指令導覽\n' +
+                    'Music · Utilities · Community\n\n' +
+                    'Paper 將音樂、伺服器管理與社群互動整合在同一個地方。選擇下方分類，查看各項指令與使用方式。',
+                ),
             )
-            .setFooter({ text: '選擇下方分類以查看詳細指令說明' })
-            .setTimestamp()
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(
+                    '## 快速開始\n' +
+                    '**01**  從分類選單選擇功能\n' +
+                    '**02**  使用 Discord 斜線指令 `/`\n' +
+                    '**03**  需要協助時，前往支援伺服器',
+                ),
+            )
+            .addActionRowComponents(helpMenu)
+            .addActionRowComponents(inviteAndSupport)
+            .addActionRowComponents(support)
 
-        await interaction.editReply({
-            embeds: [Embed],
-            components: [helpMenu, inviteAndSupport, koFi]
+        await interaction.reply({
+            components: [container],
+            flags: MessageFlags.IsComponentsV2,
         })
-    }
+    },
 }
