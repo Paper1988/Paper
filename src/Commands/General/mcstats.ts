@@ -60,7 +60,7 @@ function buildServerInfo(
         `**版本** · ${data.version?.name_clean || data.version?.name || '未知'}`,
         `**在線玩家** · ${typeof data.players?.online === 'number' && typeof data.players?.max === 'number'
             ? `${data.players.online.toLocaleString()} / ${data.players.max.toLocaleString()}`
-            : '目前無法取得'`,
+			: '目前無法取得'},`
     ]
 
     const motd = data.motd?.clean?.trim()
