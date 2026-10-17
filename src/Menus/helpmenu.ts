@@ -19,7 +19,7 @@ function buildHelpContainer(
         const data = embed.toJSON()
         const content = [
             data.title ? `## ${data.title}` : '',
-            data.description ?? '',
+            data.description?.replace(/^[ \t]+/gm, '').trim() ?? '',
             data.footer?.text ? `-# ${data.footer.text}` : '',
         ].filter(Boolean).join('\n\n')
 
