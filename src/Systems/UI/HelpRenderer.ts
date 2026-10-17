@@ -82,8 +82,8 @@ function buildCommandSelect(client: PaperClient, category: HelpCategory, locale:
             commands.map((command) => {
                 const data = getCommandData(command)
                 return {
-                    label: localizedName(data, locale).slice(0, 100),
-                    description: localizedDescription(data, locale).slice(0, 100),
+                    label: localizedName(data as unknown as LocalizedCommandData, locale).slice(0, 100),
+                    description: localizedDescription(data as unknown as LocalizedCommandData, locale).slice(0, 100),
                     value: `command:${data.name}`,
                     ...(selected === data.name ? { default: true } : {}),
                 }
