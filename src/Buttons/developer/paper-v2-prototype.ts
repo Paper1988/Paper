@@ -1,9 +1,10 @@
 import { ButtonInteraction, MessageFlags } from 'discord.js'
+import { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { interactionUtils } from '@/libs/utils/interactionUtils.js'
 
 export default {
     id: 'paper-v2-prototype',
-    async execute(interaction: ButtonInteraction, _client: unknown, args: string[]) {
+    async execute(interaction: ButtonInteraction, _client: PaperClient, args: string[]) {
         if (!interactionUtils.isDeveloper(interaction.user.id)) {
             await interactionUtils.sendDeveloperError(interaction)
             return
