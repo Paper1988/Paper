@@ -112,7 +112,7 @@ function buildCommandButtons(category: HelpCategory, page: number, commands: Hel
                 .setStyle(ButtonStyle.Secondary)
                 .setDisabled(page <= 0),
             new ButtonBuilder()
-                .setCustomId(`helpPage:${category}:${Math.min(pageCount - 1, page + 1)}`)
+                .setCustomId(`helpPageInfo:${category}:${page}`)
                 .setLabel(`第 ${page + 1} / ${pageCount} 頁`)
                 .setStyle(ButtonStyle.Secondary)
                 .setDisabled(true),
