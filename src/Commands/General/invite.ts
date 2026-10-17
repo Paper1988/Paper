@@ -22,7 +22,7 @@ export default {
         const actions = new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder()
                 .setURL(
-                    'https://discord.com/api/oauth2/authorize?client_id=***REMOVED***&permissions=1644971945463&scope=bot%20applications.commands',
+                    `https://discord.com/api/oauth2/authorize?client_id=${client.user!.id}&permissions=1644971945463&scope=bot%20applications.commands`,
                 )
                 .setLabel('邀請 Paper')
                 .setStyle(ButtonStyle.Link),
