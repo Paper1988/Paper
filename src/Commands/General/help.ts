@@ -80,7 +80,7 @@ export default {
                 ),
         )
 
-        const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${interaction.client.user.id}&permissions=1644971945463&scope=bot%20applications.commands`
+        const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${interaction.client.user!.id}&permissions=1644971945463&scope=bot%20applications.commands`
         const inviteAndSupport = new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder().setLabel('邀請 Paper').setStyle(ButtonStyle.Link).setURL(inviteUrl),
             new ButtonBuilder().setLabel('支援伺服器').setStyle(ButtonStyle.Link).setURL('https://discord.gg/6qCTEer4pT'),
