@@ -21,7 +21,7 @@ function buildHelpContainer(
             data.title ? `## ${data.title}` : '',
             data.description ?? '',
             data.footer?.text ? `-# ${data.footer.text}` : '',
-        ].filter(Boolean).join('\\n\\n')
+        ].filter(Boolean).join('\n\n')
 
         if (content) container.addTextDisplayComponents(new TextDisplayBuilder().setContent(content))
     }
