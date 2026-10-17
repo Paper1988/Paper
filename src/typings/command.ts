@@ -24,6 +24,7 @@ export type CommandType = {
     data?: SlashCommandBuilder | ContextMenuCommandBuilder
     subCommand?: boolean
     developer?: boolean
+    helpCategory?: 'General' | 'Moderation' | 'Music' | 'Giveaway' | 'Fun'
     execute: execute
     autocomplete?: execute
 } & ChatInputApplicationCommandData
