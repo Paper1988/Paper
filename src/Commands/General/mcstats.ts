@@ -56,11 +56,14 @@ function buildServerInfo(
 ): ContainerBuilder {
     const editionLabel = edition === 'java' ? 'Java Edition' : 'Bedrock Edition'
 
+    const playerCount =
+        typeof data.players?.online === 'number' && typeof data.players?.max === 'number'
+            ? `${data.players.online.toLocaleString()} / ${data.players.max.toLocaleString()}`
+            : '目前無法取得'
+
     const details = [
         `**版本** · ${data.version?.name_clean || data.version?.name || '未知'}`,
-        `**在線玩家** · ${typeof data.players?.online === 'number' && typeof data.players?.max === 'number'
-            ? `${data.players.online.toLocaleString()} / ${data.players.max.toLocaleString()}`
-			: '目前無法取得'},`
+        `**在線玩家** · ${playerCount}`,
     ]
 
     const motd = data.motd?.clean?.trim()
