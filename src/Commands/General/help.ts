@@ -30,7 +30,7 @@ export default {
                 .setRequired(false),
         ),
     async execute(interaction: ChatInputCommandInteraction, client: PaperClient) {
-        const requestedCommand = interaction.options.getString('command')?.trim().replace(/^\\/+/, '').toLowerCase()
+        const requestedCommand = interaction.options.getString('command')?.trim().replace(/^\/+/, '').toLowerCase()
 
         if (requestedCommand) {
             const command = client.commands.get(requestedCommand)
@@ -47,7 +47,7 @@ export default {
                 const data = command.data.toJSON()
                 const options = data.options?.map((option) => {
                     const required = 'required' in option && option.required ? '必填' : '選填'
-                    return `• \` ${option.name} \` · ${option.description}（${required}）`
+                    return `• \`${option.name}\` · ${option.description}（${required}）`
                 }).join('\n')
                 container.addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
