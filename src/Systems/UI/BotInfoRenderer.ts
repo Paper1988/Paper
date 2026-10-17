@@ -9,7 +9,6 @@ import {
 
 export interface BotInfoViewModel {
     username: string
-    avatarUrl: string
     userId: string
     createdTimestamp: number
     owner: string
