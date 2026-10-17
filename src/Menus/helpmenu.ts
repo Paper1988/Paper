@@ -2,10 +2,37 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
+    ContainerBuilder,
     EmbedBuilder,
+    MessageFlags,
     StringSelectMenuBuilder,
-    StringSelectMenuInteraction
+    StringSelectMenuInteraction,
+    TextDisplayBuilder,
+    type ActionRowBuilder,
+    type ButtonBuilder,
+    type StringSelectMenuBuilder as StringSelectMenuBuilderType,
 } from 'discord.js'
+
+function buildHelpContainer(
+    embeds: EmbedBuilder[],
+    rows: ActionRowBuilder<ButtonBuilder | StringSelectMenuBuilderType>[],
+) {
+    const container = new ContainerBuilder().setAccentColor(0xA3A3A3)
+
+    for (const embed of embeds) {
+        const data = embed.toJSON()
+        const content = [
+            data.title ? `## ${data.title}` : '',
+            data.description ?? '',
+            data.footer?.text ? `-# ${data.footer.text}` : '',
+        ].filter(Boolean).join('\\n\\n')
+
+        if (content) container.addTextDisplayComponents(new TextDisplayBuilder().setContent(content))
+    }
+
+    for (const row of rows) container.addActionRowComponents(row)
+    return container
+}
 
 export default {
     id: 'helpMenu',
@@ -258,48 +285,42 @@ export default {
             case 'General':
                 {
                     await interaction.update({
-                        embeds: [Public],
-                        components: [helpMenu, inviteAndSupport, koFi, back]
+                        components: [buildHelpContainer([Public], [helpMenu, inviteAndSupport, koFi, back])],
                     })
                 }
                 break
             case 'Moderation':
                 {
                     await interaction.update({
-                        embeds: [mod],
-                        components: [helpMenu, inviteAndSupport, koFi, back]
+                        components: [buildHelpContainer([mod], [helpMenu, inviteAndSupport, koFi, back])],
                     })
                 }
                 break
             case 'Music':
                 {
                     await interaction.update({
-                        embeds: [musicInfo, music, playlist],
-                        components: [helpMenu, inviteAndSupport, koFi, back]
+                        components: [buildHelpContainer([musicInfo, music, playlist], [helpMenu, inviteAndSupport, koFi, back])],
                     })
                 }
                 break
             case 'Giveaway':
                 {
                     await interaction.update({
-                        embeds: [giveawayInfo, giveaway],
-                        components: [helpMenu, inviteAndSupport, koFi, back]
+                        components: [buildHelpContainer([giveawayInfo, giveaway], [helpMenu, inviteAndSupport, koFi, back])],
                     })
                 }
                 break
             case 'Fun':
                 {
                     await interaction.update({
-                        embeds: [fun],
-                        components: [helpMenu, inviteAndSupport, koFi, back]
+                        components: [buildHelpContainer([fun], [helpMenu, inviteAndSupport, koFi, back])],
                     })
                 }
                 break
             case 'Meeting':
                 {
                     await interaction.update({
-                        embeds: [meeting],
-                        components: [helpMenu, inviteAndSupport, koFi, back]
+                        components: [buildHelpContainer([meeting], [helpMenu, inviteAndSupport, koFi, back])],
                     })
                 }
                 break
