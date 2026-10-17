@@ -37,10 +37,7 @@ const divider = () =>
         .setDivider(true)
         .setSpacing(SeparatorSpacingSize.Small)
 
-/**
- * Render bot information with the Paper Editorial × Monochrome UI.
- * Keep the content grouped by user intent: identity, runtime, and footprint.
- */
+/** Compact Editorial × Monochrome bot information panel. */
 export function buildBotInfoMessage(info: BotInfoViewModel): InteractionReplyOptions {
     const createdAt = Math.floor(info.createdTimestamp / 1000)
     const uptime = info.uptimeTimestamp
@@ -55,47 +52,35 @@ export function buildBotInfoMessage(info: BotInfoViewModel): InteractionReplyOpt
         .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
                 `# ${info.username}\n` +
-                    'Paper · 機器人資訊\n' +
-                    `帳號建立於 <t:${createdAt}:D> · <t:${createdAt}:R>`,
+                    `Paper · 機器人資訊 · 建立於 <t:${createdAt}:D> (<t:${createdAt}:R>)`,
             ),
         )
         .addSeparatorComponents(divider())
         .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-                '## 身分資料\n' +
-                    `**用戶 ID**\n\`${info.userId}\`\n` +
-                    `**擁有者**\n${info.owner}\n` +
-                    `**驗證狀態**\n${info.verified ? '已驗證' : '未驗證'}\n` +
-                    `**應用程式標籤**\n${tags}\n` +
-                    `**可用指令**\n${info.commandCount}`,
+                '## 基本資料\n' +
+                    `**ID** · \`${info.userId}\`  |  **擁有者** · ${info.owner}\n` +
+                    `**驗證** · ${info.verified ? '已驗證' : '未驗證'}  |  **指令** · ${info.commandCount}\n` +
+                    `**標籤** · ${tags}`,
             ),
         )
         .addSeparatorComponents(divider())
         .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-                '## 執行狀態\n' +
-                    `**延遲** · ${info.ping} ms\n` +
-                    `**上線時間** · ${uptime}\n` +
-                    `**作業系統** · ${info.operatingSystem}\n` +
-                    `**CPU** · ${info.cpu}\n` +
-                    `**系統記憶體使用率** · ${info.memoryUsagePercentage.toFixed(1)}%\n` +
-                    `**資料庫** · ${info.databaseStatus}\n` +
-                    `**Node.js** · ${info.nodeVersion}\n` +
-                    `**Discord.js** · ${info.discordJsVersion}\n` +
-                    `**播放中的播放器** · ${info.activePlayers}`,
+                '## 運作狀態\n' +
+                    `**Ping** · ${info.ping} ms  |  **上線** · ${uptime}\n` +
+                    `**資料庫** · ${info.databaseStatus}  |  **記憶體** · ${info.memoryUsagePercentage.toFixed(1)}%\n` +
+                    `**音樂播放器** · ${info.activePlayers} 個\n` +
+                    `-# ${info.operatingSystem} · CPU: ${info.cpu} · Node.js ${info.nodeVersion} · Discord.js ${info.discordJsVersion}`,
             ),
         )
         .addSeparatorComponents(divider())
         .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-                '## 快取與規模\n' +
-                    `**伺服器** · ${info.guildCount}\n` +
-                    `**使用者** · ${info.cachedUserCount}\n` +
-                    `**表情符號** · ${info.cachedEmojiCount}\n` +
-                    `**文字／論壇頻道** · ${info.textChannelCount}\n` +
-                    `**語音／舞台頻道** · ${info.voiceChannelCount}\n` +
-                    `**討論串** · ${info.threadCount}\n\n` +
-                    '-# 部分數據來自目前快取，可能與實際總數不同。',
+                '## 規模（快取）\n' +
+                    `**伺服器** · ${info.guildCount}  |  **使用者** · ${info.cachedUserCount}\n` +
+                    `**文字／論壇頻道** · ${info.textChannelCount}  |  **語音／舞台頻道** · ${info.voiceChannelCount}\n` +
+                    '-# 統計來自目前快取，可能與實際總數不同。',
             ),
         )
 
