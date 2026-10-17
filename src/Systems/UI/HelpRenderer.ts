@@ -172,7 +172,7 @@ function buildDetailContainer(client: PaperClient, commandName: string, locale: 
             const optionDescription = localizedDescription(optionData, locale)
             const path = parent ? `${parent} ${optionName}` : optionName
             if (option.type === 1 || option.type === 2) {
-                const line = `• \`/${localizedName(data, locale)} ${path}\` · ${optionDescription}`
+                const line = `• \`/${localizedName(data as unknown as LocalizedCommandData, locale)} ${path}\` · ${optionDescription}`
                 return [line, ...(option.options?.length ? renderOptions(option.options, path).map((child) => `  ${child}`) : [])]
             }
             const required = option.required ? (locale === 'ja' ? '必須' : locale === 'zh-TW' ? '必填' : 'Required') : (locale === 'ja' ? '任意' : locale === 'zh-TW' ? '選填' : 'Optional')
@@ -182,7 +182,7 @@ function buildDetailContainer(client: PaperClient, commandName: string, locale: 
     const category = command.helpCategory!
     container.addTextDisplayComponents(
         new TextDisplayBuilder().setContent(
-            `# /${localizedName(data, locale)}\n${localizedDescription(data, locale)}\n\n` +
+            `# /${localizedName(data as unknown as LocalizedCommandData, locale)}\n${localizedDescription(data as unknown as LocalizedCommandData, locale)}\n\n` +
             (optionLines.length ? `## 可用參數\n${optionLines.join('\n')}\n\n` : '') +
             `-# ${HELP_CATEGORIES[category].emoji} ${HELP_CATEGORIES[category].label} · ${getCommands(client, category).length} 個指令`,
         ),
