@@ -40,7 +40,7 @@ describe('Bot Info Renderer', function () {
         expect(payload).to.not.have.property('embeds')
     })
 
-    it('應按身分、執行狀態與快取規模分組顯示資訊', function () {
+    it('應按基本資料、運作狀態與快取規模分組顯示資訊', function () {
         const payload = buildBotInfoMessage(sampleInfo)
         const container = JSON.parse(JSON.stringify(payload.components?.[0])) as {
             type: number
@@ -52,10 +52,10 @@ describe('Bot Info Renderer', function () {
             .join('\n')
 
         expect(container.type).to.equal(17)
-        expect(text).to.include('身分資料')
-        expect(text).to.include('執行狀態')
-        expect(text).to.include('快取與規模')
-        expect(text).to.include('系統記憶體使用率')
-        expect(text).to.include('部分數據來自目前快取')
+        expect(text).to.include('基本資料')
+        expect(text).to.include('運作狀態')
+        expect(text).to.include('規模（快取）')
+        expect(text).to.include('記憶體')
+        expect(text).to.include('統計來自目前快取，可能與實際總數不同。')
     })
 })
