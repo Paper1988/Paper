@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'node:crypto'
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { aggregateWeeklyStats } from '@/jobs/weeklyAggregation.js'
 import { Logger } from '@/libs/utils/logger.js'
@@ -12,6 +13,7 @@ export class ApiServer {
         this.client = client
         this.fastify = Fastify({ logger: true })
         this.setupCors()
+        this.setupAuthentication()
         this.setupRoutes()
     }
 
@@ -20,6 +22,45 @@ export class ApiServer {
             origin: [process.env.GO_API_URL ?? 'http://localhost:8080'],
             methods: ['GET', 'POST', 'PUT', 'DELETE'],
             credentials: true
+        })
+    }
+
+
+    /**
+     * Restrict internal API routes to trusted server-to-server callers.
+     *
+     * Configure PAPER_API_SECRET on this service and send the same value from
+     * the Go API in the Authorization: Bearer <secret> header.
+     * Health and public bot-status endpoints intentionally remain public.
+     */
+    private setupAuthentication() {
+        this.fastify.addHook('onRequest', async (request, reply) => {
+            if (request.method === 'OPTIONS') return
+
+            const publicPaths = new Set(['/health', '/api/bot-status'])
+            if (publicPaths.has(request.url.split('?')[0] ?? '')) return
+
+            const expectedSecret = process.env.PAPER_API_SECRET
+            if (!expectedSecret) {
+                this.fastify.log.error('PAPER_API_SECRET is not configured')
+                return reply.code(503).send({ message: 'API authentication is not configured' })
+            }
+
+            const authorization = request.headers.authorization
+            const suppliedSecret =
+                typeof authorization === 'string' && authorization.startsWith('Bearer ')
+                    ? authorization.slice('Bearer '.length)
+                    : ''
+
+            const expected = Buffer.from(expectedSecret)
+            const supplied = Buffer.from(suppliedSecret)
+
+            if (
+                supplied.length !== expected.length ||
+                !timingSafeEqual(supplied, expected)
+            ) {
+                return reply.code(401).send({ message: 'Unauthorized' })
+            }
         })
     }
 
