@@ -7,7 +7,7 @@ export default {
     async execute(interaction: ButtonInteraction, client: PaperClient, args: string[]) {
         const [category, page] = args
         if (!category || page === undefined) return
-        const response = buildHelpPage(client, category, page)
+        const response = buildHelpPage(client, category, page, interaction.locale)
         await interaction.update({ components: response.components })
     },
 }
