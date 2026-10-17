@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Paper geometric mark</title>
+  <desc id="desc">A monochrome geometric mark built from three editorial blocks and a corner cut.</desc>
+  <g fill="currentColor">
+    <path d="M28 20h47l25 25v63H28V20Zm10 10v68h52V49L71 30H38Z" fill-rule="evenodd"/>
+    <rect x="43" y="43" width="18" height="18" rx="2"/>
+    <rect x="67" y="43" width="11" height="18" rx="2"/>
+    <rect x="43" y="67" width="35" height="8" rx="2"/>
+    <rect x="43" y="81" width="25" height="7" rx="2"/>
+  </g>
+</svg>
