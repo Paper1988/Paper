@@ -43,8 +43,8 @@ function getCommandData(command: HelpCommand) {
 type LocalizedCommandData = {
     name: string
     description?: string
-    name_localizations?: Record<string, string | null>
-    description_localizations?: Record<string, string | null>
+    name_localizations?: Record<string, string | null> | null
+    description_localizations?: Record<string, string | null> | null
 }
 
 function localizedName(data: LocalizedCommandData, locale: string): string {
