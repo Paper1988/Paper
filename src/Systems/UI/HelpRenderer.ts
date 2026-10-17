@@ -185,7 +185,6 @@ export function buildHelpHome(client: PaperClient): InteractionReplyOptions {
 }
 
 export function buildHelpCategory(client: PaperClient, category: HelpCategory, page = 0): InteractionReplyOptions {
-    activeClient = client
     const meta = HELP_CATEGORIES[category]
     const commands = getCommands(client, category)
     const pageCount = Math.max(1, Math.ceil(commands.length / COMMANDS_PER_PAGE))
@@ -210,7 +209,6 @@ export function buildHelpCategory(client: PaperClient, category: HelpCategory, p
 }
 
 export function buildHelpCommand(client: PaperClient, commandName: string): InteractionReplyOptions {
-    activeClient = client
     return { components: [buildDetailContainer(client, commandName)], flags: MessageFlags.IsComponentsV2 }
 }
 
