@@ -36,7 +36,7 @@ export default {
     async execute(interaction: ChatInputCommandInteraction) {
         const search = interaction.options.getString('query', true).trim()
 
-        await interaction.deferReply()
+        await interaction.deferReply({ flags: MessageFlags.IsComponentsV2 })
 
         try {
             const data = await mal.getInfoFromName(search)
@@ -74,21 +74,17 @@ export default {
                 )
             }
 
-            const components = [container]
-            if (data.url) {
-                components.push(
-                    new ActionRowBuilder<ButtonBuilder>().addComponents(
-                        new ButtonBuilder()
-                            .setStyle(ButtonStyle.Link)
-                            .setURL(data.url)
-                            .setLabel('查看更多'),
-                    ) as unknown as ContainerBuilder,
-                )
-            }
+            const linkRow = data.url
+                ? new ActionRowBuilder<ButtonBuilder>().addComponents(
+                      new ButtonBuilder()
+                          .setStyle(ButtonStyle.Link)
+                          .setURL(data.url)
+                          .setLabel('查看更多'),
+                  )
+                : null
 
             await interaction.editReply({
-                components,
-                flags: MessageFlags.IsComponentsV2,
+                components: linkRow ? [container, linkRow] : [container],
             })
         } catch (error) {
             console.error('[anime] Failed to fetch anime information:', error)
@@ -103,7 +99,6 @@ export default {
                             ),
                         ),
                 ],
-                flags: MessageFlags.IsComponentsV2,
             })
         }
     },
