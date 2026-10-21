@@ -69,7 +69,8 @@ function buildServerInfo(
     const motd = data.motd?.clean?.trim()
     if (motd) {
         const safeMotd = motd.length > 300 ? `${motd.slice(0, 297)}…` : motd
-        details.push(`**伺服器公告**\n${safeMotd.replace(/([\\\\`*_{}\[\]()#+\-.!|>])/g, '\\$1')}`)
+        const formattedMotd = safeMotd.replace(/```/g, 'ˋˋˋ')
+        details.push(`**伺服器公告**\n\`\`\`text\n${formattedMotd}\n\`\`\``)
     }
 
     return new ContainerBuilder()
