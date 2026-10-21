@@ -21,6 +21,15 @@ async function gracefulShutdown(client: PaperClient): Promise<void> {
     Logger.warn('收到開發者指令，開始安全關閉 Paper...')
 
     const cleanupTasks: Array<[string, () => Promise<unknown>]> = [
+        [
+            'Moonlink 音樂播放器',
+            async () => {
+                if (!client.moonlink) return
+                for (const player of [...client.moonlink.players.all]) {
+                    player.destroy('shutdown')
+                }
+            },
+        ],
         ['API Server', () => client.stopApiServer()],
         ['MongoDB', () => mongoose.disconnect()],
         ['Sentry', () => Sentry.close(2_000)],
