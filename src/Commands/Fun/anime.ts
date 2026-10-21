@@ -3,10 +3,17 @@ import {
     ButtonBuilder,
     ButtonStyle,
     ChatInputCommandInteraction,
-    EmbedBuilder,
-    SlashCommandBuilder
+    ContainerBuilder,
+    MediaGalleryBuilder,
+    MediaGalleryItemBuilder,
+    MessageFlags,
+    SlashCommandBuilder,
+    TextDisplayBuilder,
 } from 'discord.js'
 import mal from 'mal-scraper'
+
+const ACCENT_COLOR = 0xA3A3A3
+const MAX_SYNOPSIS_LENGTH = 3_500
 
 export default {
     data: new SlashCommandBuilder()
@@ -24,37 +31,80 @@ export default {
                 .setDescription('Please enter the anime name')
                 .setDescriptionLocalization('zh-TW', '請輸入動漫名稱')
                 .setDescriptionLocalization('ja', 'アニメ名を入力してください')
-                .setRequired(true)
+                .setRequired(true),
         ),
     async execute(interaction: ChatInputCommandInteraction) {
-        const search = interaction.options.getString('query')!
+        const search = interaction.options.getString('query', true).trim()
+
         await interaction.deferReply()
-        await mal.getInfoFromName(search).then(async (data) => {
-            const embed = new EmbedBuilder()
-                .setTitle(data.title)
-                .setDescription(data.synopsis!)
-                .setAuthor({ name: `動漫搜尋結果: ${search}` })
-                .setImage(data.picture!)
-                .setColor('#5865F2')
-                .addFields(
-                    { name: '英文標題', value: `${data.englishTitle || '無'}` },
-                    { name: '類型', value: `${data.type || '無'}` },
-                    { name: '集數', value: `${data.episodes || '無'}` },
-                    { name: '分數', value: `${data.score || '無'}` },
-                    { name: '分級', value: `${data.rating || '無'}` },
-                    { name: '上映', value: `${data.aired || '無'}` }
+
+        try {
+            const data = await mal.getInfoFromName(search)
+            const synopsis = data.synopsis?.trim() || '目前沒有可用的劇情簡介。'
+            const description =
+                synopsis.length > MAX_SYNOPSIS_LENGTH
+                    ? `${synopsis.slice(0, MAX_SYNOPSIS_LENGTH - 1)}…`
+                    : synopsis
+
+            const details = [
+                `**英文標題** · ${data.englishTitle || '無'}`,
+                `**類型** · ${data.type || '無'}`,
+                `**集數** · ${data.episodes || '無'}`,
+                `**分數** · ${data.score || '無'}`,
+                `**分級** · ${data.rating || '無'}`,
+                `**上映日期** · ${data.aired || '無'}`,
+            ]
+
+            const container = new ContainerBuilder()
+                .setAccentColor(ACCENT_COLOR)
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        `# ${data.title || search}\n` +
+                            `搜尋結果 · ${search}\n\n` +
+                            `**劇情簡介**\n${description}\n\n` +
+                            details.join('\n'),
+                    ),
                 )
-                .setFooter({
-                    text: `由 ${interaction.user.username} 查詢`,
-                    iconURL: interaction.user.displayAvatarURL({
-                        size: 2048
-                    })
-                })
-                .setTimestamp()
-            const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-                new ButtonBuilder().setStyle(ButtonStyle.Link).setURL(data.url).setLabel('查看更多')
-            )
-            await interaction.followUp({ embeds: [embed], components: [row] })
-        })
-    }
+
+            if (data.picture) {
+                container.addMediaGalleryComponents(
+                    new MediaGalleryBuilder().addItems(
+                        new MediaGalleryItemBuilder().setURL(data.picture),
+                    ),
+                )
+            }
+
+            const components = [container]
+            if (data.url) {
+                components.push(
+                    new ActionRowBuilder<ButtonBuilder>().addComponents(
+                        new ButtonBuilder()
+                            .setStyle(ButtonStyle.Link)
+                            .setURL(data.url)
+                            .setLabel('查看更多'),
+                    ) as unknown as ContainerBuilder,
+                )
+            }
+
+            await interaction.editReply({
+                components,
+                flags: MessageFlags.IsComponentsV2,
+            })
+        } catch (error) {
+            console.error('[anime] Failed to fetch anime information:', error)
+            await interaction.editReply({
+                components: [
+                    new ContainerBuilder()
+                        .setAccentColor(ACCENT_COLOR)
+                        .addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent(
+                                '# 找不到動漫資訊\n' +
+                                    `無法取得「${search}」的搜尋結果，請確認名稱或稍後再試。`,
+                            ),
+                        ),
+                ],
+                flags: MessageFlags.IsComponentsV2,
+            })
+        }
+    },
 }
