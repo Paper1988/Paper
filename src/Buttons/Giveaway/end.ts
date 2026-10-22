@@ -23,6 +23,8 @@ export default {
             .setCustomId('giveawayId')
             .setStyle(TextInputStyle.Short)
             .setRequired(true)
+            .setMaxLength(20)
+            .setPlaceholder('從「進行中的活動」清單複製活動 ID')
 
         const label = new LabelBuilder().setTextInputComponent(giveawayIdInput).setLabel('抽獎 ID')
 
