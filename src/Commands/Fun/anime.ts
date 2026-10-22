@@ -10,10 +10,40 @@ import {
     SlashCommandBuilder,
     TextDisplayBuilder,
 } from 'discord.js'
-import mal from 'mal-scraper'
 
+const API_BASE_URL = 'https://api.tenrai.org/v1'
 const ACCENT_COLOR = 0xA3A3A3
 const MAX_SYNOPSIS_LENGTH = 3_500
+
+interface AnimeSearchResult {
+    title?: string | null
+    title_english?: string | null
+    synopsis?: string | null
+    type?: string | null
+    episodes?: number | null
+    score?: number | null
+    rating?: string | null
+    url?: string | null
+    images?: {
+        jpg?: {
+            large_image_url?: string | null
+            image_url?: string | null
+        } | null
+    } | null
+    aired?: {
+        string?: string | null
+    } | null
+}
+
+interface AnimeSearchResponse {
+    data?: AnimeSearchResult[]
+}
+
+function createMessage(content: string) {
+    return new ContainerBuilder()
+        .setAccentColor(ACCENT_COLOR)
+        .addTextDisplayComponents(new TextDisplayBuilder().setContent(content))
+}
 
 export default {
     data: new SlashCommandBuilder()
@@ -36,40 +66,69 @@ export default {
     async execute(interaction: ChatInputCommandInteraction) {
         const search = interaction.options.getString('query', true).trim()
 
-        await interaction.deferReply({ flags: MessageFlags.IsComponentsV2 })
+        // Acknowledge with a real Components V2 message. IsComponentsV2 must be
+        // set on the initial response, not added later through deferReply/editReply.
+        await interaction.reply({
+            components: [createMessage('# 正在搜尋動漫…\n請稍候，正在查詢資料庫。')],
+            flags: MessageFlags.IsComponentsV2,
+        })
 
         try {
-            const data = await mal.getInfoFromName(search)
+            const url = new URL(`${API_BASE_URL}/anime`)
+            url.searchParams.set('q', search)
+            url.searchParams.set('limit', '1')
+            url.searchParams.set('sfw-strict', '')
+
+            const response = await fetch(url, {
+                headers: { Accept: 'application/json' },
+                signal: AbortSignal.timeout(8_000),
+            })
+
+            if (!response.ok) {
+                throw new Error(`Tenrai API returned HTTP ${response.status}`)
+            }
+
+            const payload = (await response.json()) as AnimeSearchResponse
+            const data = payload.data?.[0]
+
+            if (!data) {
+                await interaction.editReply({
+                    components: [
+                        createMessage(
+                            '# 找不到動漫資訊\n' +
+                                `找不到「${search}」的搜尋結果，請嘗試使用日文或英文名稱。`,
+                        ),
+                    ],
+                })
+                return
+            }
+
             const synopsis = data.synopsis?.trim() || '目前沒有可用的劇情簡介。'
             const description =
                 synopsis.length > MAX_SYNOPSIS_LENGTH
                     ? `${synopsis.slice(0, MAX_SYNOPSIS_LENGTH - 1)}…`
                     : synopsis
-
             const details = [
-                `**英文標題** · ${data.englishTitle || '無'}`,
+                `**英文標題** · ${data.title_english || '無'}`,
                 `**類型** · ${data.type || '無'}`,
-                `**集數** · ${data.episodes || '無'}`,
-                `**分數** · ${data.score || '無'}`,
+                `**集數** · ${data.episodes ?? '無'}`,
+                `**分數** · ${data.score ?? '無'}`,
                 `**分級** · ${data.rating || '無'}`,
-                `**上映日期** · ${data.aired || '無'}`,
+                `**上映日期** · ${data.aired?.string || '無'}`,
             ]
 
-            const container = new ContainerBuilder()
-                .setAccentColor(ACCENT_COLOR)
-                .addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(
-                        `# ${data.title || search}\n` +
-                            `搜尋結果 · ${search}\n\n` +
-                            `**劇情簡介**\n${description}\n\n` +
-                            details.join('\n'),
-                    ),
-                )
+            const container = createMessage(
+                `# ${data.title || search}\n` +
+                    `搜尋結果 · ${search}\n\n` +
+                    `**劇情簡介**\n${description}\n\n` +
+                    details.join('\n'),
+            )
+            const imageUrl = data.images?.jpg?.large_image_url || data.images?.jpg?.image_url
 
-            if (data.picture) {
+            if (imageUrl) {
                 container.addMediaGalleryComponents(
                     new MediaGalleryBuilder().addItems(
-                        new MediaGalleryItemBuilder().setURL(data.picture),
+                        new MediaGalleryItemBuilder().setURL(imageUrl),
                     ),
                 )
             }
@@ -90,14 +149,10 @@ export default {
             console.error('[anime] Failed to fetch anime information:', error)
             await interaction.editReply({
                 components: [
-                    new ContainerBuilder()
-                        .setAccentColor(ACCENT_COLOR)
-                        .addTextDisplayComponents(
-                            new TextDisplayBuilder().setContent(
-                                '# 找不到動漫資訊\n' +
-                                    `無法取得「${search}」的搜尋結果，請確認名稱或稍後再試。`,
-                            ),
-                        ),
+                    createMessage(
+                        '# 暫時無法取得動漫資訊\n' +
+                            '動漫資料服務目前無法回應，請稍後再試。',
+                    ),
                 ],
             })
         }
