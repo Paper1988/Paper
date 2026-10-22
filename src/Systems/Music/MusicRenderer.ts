@@ -42,56 +42,56 @@ export class MusicRenderer {
         const row1 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([
             createButton(
                 'autoplay',
-                '♾️',
+                emojis.update,
                 player.autoPlay ? ButtonStyle.Success : ButtonStyle.Secondary
             ),
             createButton(
                 'previous',
-                '⏮️',
+                emojis.backforward,
                 ButtonStyle.Secondary,
                 player.previous.length === 0
             ),
             createButton(
                 'togglePause',
-                player.paused ? '▶️' : '⏸️',
+                player.paused ? emojis.play : emojis.pause,
                 player.paused ? ButtonStyle.Primary : ButtonStyle.Secondary
             ),
             createButton(
                 'skip',
-                '⏭️',
+                emojis.frontforward,
                 ButtonStyle.Secondary,
                 player.autoPlay ? false : player.queue.tracks.length < 1
             ),
-            createButton('shuffle', '🔀', ButtonStyle.Secondary)
+            createButton('shuffle', emojis.shuffle, ButtonStyle.Secondary)
         ])
 
         const row2 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([
             createButton(
                 'loop',
-                '🔁',
+                player.loop === 'track' ? emojis.looponce : emojis.loop2,
                 player.loop !== 'off' ? ButtonStyle.Success : ButtonStyle.Secondary
             ),
             createButton(
                 'volumeDown',
-                '🔉',
+                emojis.speaker_low,
                 ButtonStyle.Secondary,
                 player.volume <= VOLUME_MIN
             ),
-            createButton('stop', '⏹️', ButtonStyle.Danger),
+            createButton('stop', emojis.stop, ButtonStyle.Danger),
             createButton(
                 'volumeUp',
-                '🔊',
+                emojis.speaker,
                 ButtonStyle.Secondary,
                 player.volume >= VOLUME_MAX
             ),
-            createButton('related', '✨', ButtonStyle.Secondary)
+            createButton('related', emojis.spark, ButtonStyle.Secondary)
         ])
 
         const row3 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([
-            createButton('queue', '📜', ButtonStyle.Secondary),
-            createButton('addSong', '➕', ButtonStyle.Secondary),
-            createButton('lyrics', '🎤', ButtonStyle.Secondary),
-            createButton('playlist:save', '💾', ButtonStyle.Secondary)
+            createButton('queue', emojis.queue, ButtonStyle.Secondary),
+            createButton('addSong', emojis.add, ButtonStyle.Secondary),
+            createButton('lyrics', emojis.music, ButtonStyle.Secondary),
+            createButton('playlist:save', emojis.playlist, ButtonStyle.Secondary)
         ])
 
         return [row1, row2, row3]
