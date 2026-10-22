@@ -164,16 +164,19 @@ export class MusicRenderer {
             `-# 語音頻道 · ${voiceChannel?.name ?? '未知頻道'}`
         ].join('\n'))
 
-        const panel = new ContainerBuilder()
-            .setAccentColor(0xA3A3A3)
-            .addSectionComponents(
+        const panel = new ContainerBuilder().setAccentColor(0xA3A3A3)
+
+        if (track.thumbnail) {
+            panel.addSectionComponents(
                 new SectionBuilder()
                     .addTextDisplayComponents(songDetails)
-                    .setThumbnailAccessory(
-                        new ThumbnailBuilder().setURL(track.thumbnail || client.user!.displayAvatarURL())
-                    )
+                    .setThumbnailAccessory(new ThumbnailBuilder().setURL(track.thumbnail))
             )
-            .addTextDisplayComponents(metadata)
+        } else {
+            panel.addTextDisplayComponents(songDetails)
+        }
+
+        panel.addTextDisplayComponents(metadata)
 
         return {
             components: completed ? [panel] : [panel, ...MusicRenderer.buildButtons(player)],
