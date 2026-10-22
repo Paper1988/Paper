@@ -25,69 +25,69 @@ export class MusicRenderer {
     static buildButtons(player: Player) {
         const createButton = (
             customId: string,
-            emoji: string,
+            label: string,
             style: ButtonStyle,
             disabled = false
         ) =>
             new ButtonBuilder()
                 .setCustomId(customId)
-                .setEmoji(emoji)
+                .setLabel(label)
                 .setStyle(style)
                 .setDisabled(disabled)
 
         const row1 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([
             createButton(
                 'autoplay',
-                emojis.update,
+                '自動播放',
                 player.autoPlay ? ButtonStyle.Success : ButtonStyle.Secondary
             ),
             createButton(
                 'previous',
-                emojis.backforward,
+                '上一首',
                 ButtonStyle.Secondary,
                 player.previous.length === 0
             ),
             createButton(
                 'togglePause',
-                player.paused ? emojis.play : emojis.pause,
+                player.paused ? '繼續播放' : '暫停',
                 player.paused ? ButtonStyle.Primary : ButtonStyle.Secondary
             ),
             createButton(
                 'skip',
-                emojis.frontforward,
+                '下一首',
                 ButtonStyle.Secondary,
                 player.autoPlay ? false : player.queue.tracks.length < 1
             ),
-            createButton('shuffle', emojis.shuffle, ButtonStyle.Secondary)
+            createButton('shuffle', '隨機播放', ButtonStyle.Secondary)
         ])
 
         const row2 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([
             createButton(
                 'loop',
-                emojis.loop2,
+                '循環模式',
                 player.loop !== 'off' ? ButtonStyle.Success : ButtonStyle.Secondary
             ),
             createButton(
                 'volumeDown',
-                emojis.speaker_low,
+                '音量 −',
                 ButtonStyle.Secondary,
                 player.volume <= VOLUME_MIN
             ),
-            createButton('stop', emojis.stop, ButtonStyle.Danger),
+            createButton('stop', '停止播放', ButtonStyle.Danger),
             createButton(
                 'volumeUp',
-                emojis.speaker,
+                '音量 +',
                 ButtonStyle.Secondary,
                 player.volume >= VOLUME_MAX
             ),
-            createButton('related', emojis.add, ButtonStyle.Secondary)
+            createButton('related', '推薦歌曲', ButtonStyle.Secondary)
         ])
 
         const row3 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([
-            createButton('queue', emojis.queue, ButtonStyle.Secondary),
-            createButton('addSong', emojis.friend, ButtonStyle.Secondary),
-            createButton('lyrics', emojis.list, ButtonStyle.Secondary),
-            createButton('playlist:save', emojis.download, ButtonStyle.Secondary)
+            createButton('queue', '播放佇列', ButtonStyle.Secondary),
+            createButton('addSong', '加入歌曲', ButtonStyle.Secondary),
+            createButton('lyrics', '歌詞', ButtonStyle.Secondary),
+            createButton('playlist:save', '儲存歌單', ButtonStyle.Secondary)
         ])
 
         return [row1, row2, row3]
