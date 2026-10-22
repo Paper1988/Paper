@@ -61,9 +61,9 @@ async function fetchJson<T>(url: string, provider: string): Promise<T> {
     try {
         const response = await fetch(url, {
             method: 'GET',
-            headers: provider === 'Nekos.best'
-                ? { 'User-Agent': 'Paper Discord Bot (https://github.com/Paper1988/Paper)' }
-                : undefined,
+            ...(provider === 'Nekos.best'
+                ? { headers: { 'User-Agent': 'Paper Discord Bot (https://github.com/Paper1988/Paper)' } }
+                : {}),
             signal: controller.signal,
         })
 
