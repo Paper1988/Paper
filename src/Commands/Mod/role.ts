@@ -1,15 +1,20 @@
 import emojis from '@/libs/emoji/emoji.js'
-import { deleteMessageAfter } from '@/Systems/Music.js'
 import type { CommandType } from '@/typings/command.js'
 import {
     ChatInputCommandInteraction,
-    EmbedBuilder,
+    ContainerBuilder,
     GuildMember,
     MessageFlags,
     PermissionFlagsBits,
     Role,
-    SlashCommandBuilder
+    SlashCommandBuilder,
+    TextDisplayBuilder
 } from 'discord.js'
+
+const buildResult = (message: string, color = 0xA3A3A3) =>
+    new ContainerBuilder()
+        .setAccentColor(color)
+        .addTextDisplayComponents(new TextDisplayBuilder().setContent(message))
 
 export default {
     data: new SlashCommandBuilder()
@@ -42,32 +47,96 @@ export default {
         ),
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral })
-        const { options } = interaction
-        const role = options.getRole('role')! as Role
-        const target =
-            (options.getMember('target')! as GuildMember) || (interaction.member! as GuildMember)
 
-        const embed = new EmbedBuilder()
-            .setColor(
-                `#${interaction.guild!.roles.cache.get(role.id)!.colors.primaryColor.toString(16)}`
-            )
-            .setTitle('🎭 身分組管理 🎭')
-
-        if (!role.editable || role.position === 0) {
-            embed.setDescription(`${emojis.warning} | 我無法編輯身分組: **${role}** !`)
-            return await interaction.editReply({ embeds: [embed] }).then(deleteMessageAfter)
+        const guild = interaction.guild
+        if (!guild) {
+            return interaction.editReply({
+                components: [buildResult(`${emojis.warning} | 此指令只能在伺服器中使用。`)],
+                flags: MessageFlags.IsComponentsV2
+            })
         }
 
-        embed.setDescription(
-            target.roles.cache.has(role.id)
-                ? `${emojis.correct} | 成功從 ${target} 身上移除 **${role}**`
-                : `${emojis.correct} | 成功添加身分組: **${role}** 至 ${target} 身上`
-        )
+        const role = interaction.options.getRole('role', true) as Role
+        const targetUser = interaction.options.getUser('user') ?? interaction.user
 
-        target.roles.cache.has(role.id)
-            ? await target.roles.remove(role)
-            : await target.roles.add(role)
+        try {
+            const [target, actor] = await Promise.all([
+                guild.members.fetch(targetUser.id),
+                guild.members.fetch(interaction.user.id)
+            ])
 
-        return interaction.editReply({ embeds: [embed] }).then(deleteMessageAfter)
+            if (!role.editable || role.position === 0) {
+                return interaction.editReply({
+                    components: [
+                        buildResult(
+                            `${emojis.warning} | 我無法編輯身分組：**${role.name}**`,
+                            0xED4245
+                        )
+                    ],
+                    flags: MessageFlags.IsComponentsV2
+                })
+            }
+
+            if (
+                interaction.user.id !== guild.ownerId &&
+                role.position >= actor.roles.highest.position
+            ) {
+                return interaction.editReply({
+                    components: [
+                        buildResult(
+                            `${emojis.warning} | 你無法管理與自己最高身分組同級或更高的身分組。`,
+                            0xED4245
+                        )
+                    ],
+                    flags: MessageFlags.IsComponentsV2
+                })
+            }
+
+            if (
+                target.id !== actor.id &&
+                interaction.user.id !== guild.ownerId &&
+                target.roles.highest.position >= actor.roles.highest.position
+            ) {
+                return interaction.editReply({
+                    components: [
+                        buildResult(
+                            `${emojis.warning} | 你無法管理最高身分組與自己同級或更高的成員。`,
+                            0xED4245
+                        )
+                    ],
+                    flags: MessageFlags.IsComponentsV2
+                })
+            }
+
+            const hasRole = target.roles.cache.has(role.id)
+            if (hasRole) {
+                await target.roles.remove(role)
+            } else {
+                await target.roles.add(role)
+            }
+
+            return interaction.editReply({
+                components: [
+                    buildResult(
+                        hasRole
+                            ? `${emojis.correct} | 已從 ${target} 移除身分組 **${role.name}**。`
+                            : `${emojis.correct} | 已將身分組 **${role.name}** 指派給 ${target}。`,
+                        role.color || 0xA3A3A3
+                    )
+                ],
+                flags: MessageFlags.IsComponentsV2
+            })
+        } catch (error) {
+            console.error('[Role Command] Failed to update role:', error)
+            return interaction.editReply({
+                components: [
+                    buildResult(
+                        `${emojis.outage} | 身分組操作失敗，請確認機器人具有「管理身分組」權限，且機器人的最高身分組高於目標身分組。`,
+                        0xED4245
+                    )
+                ],
+                flags: MessageFlags.IsComponentsV2
+            })
+        }
     }
-} as CommandType
+} satisfies CommandType
