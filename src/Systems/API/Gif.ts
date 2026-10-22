@@ -5,7 +5,7 @@ const REQUEST_TIMEOUT_MS = 8_000
 const NEKOS_BEST_ENDPOINTS = {
     pat: 'pat',
     hug: 'hug',
-    kill: 'kill',
+    kill: 'yeet',
     kiss: 'kiss',
     bite: 'bite',
     dance: 'dance',
@@ -17,7 +17,7 @@ const NEKOS_BEST_ENDPOINTS = {
     wink: 'wink',
     highfive: 'highfive',
     handhold: 'handhold',
-    glomp: 'glomp',
+    glomp: 'hug',
     poke: 'poke',
     nom: 'nom',
 } as const
