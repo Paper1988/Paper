@@ -23,7 +23,7 @@ export default {
         const executor = interaction.user
 
         await interaction.reply({
-            components: [createMessage(`# 哭哭\\n${executor} 心情有點難過…\\n\\n正在尋找合適的 GIF…`)],
+            components: [createMessage(`# 哭哭\n${executor} 心情有點難過…\n\n正在尋找合適的 GIF…`)],
             flags: MessageFlags.IsComponentsV2,
         })
 
@@ -33,7 +33,7 @@ export default {
                 throw new Error('GIF API returned an invalid URL')
             }
 
-            const container = createMessage(`# 哭哭\\n${executor} 忍不住哭了出來。`).addMediaGalleryComponents(
+            const container = createMessage(`# 哭哭\n${executor} 忍不住哭了出來。`).addMediaGalleryComponents(
                 new MediaGalleryBuilder().addItems(
                     new MediaGalleryItemBuilder().setURL(gifUrl),
                 ),
@@ -42,7 +42,7 @@ export default {
         } catch (error) {
             console.error('[gif.cry] Failed to fetch GIF:', error)
             await interaction.editReply({
-                components: [createMessage('# 哭哭\\nGIF 暫時找不到了，請稍後再試。')],
+                components: [createMessage('# 哭哭\nGIF 暫時找不到了，請稍後再試。')],
             })
         }
     },
