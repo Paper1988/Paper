@@ -150,7 +150,9 @@ export class ApiServer {
                     return reply.code(400).send({ message: 'userId is required' })
                 }
 
-                const member = guild.members.cache.get(userId)
+                const member =
+                    guild.members.cache.get(userId) ??
+                    (await guild.members.fetch(userId).catch(() => null))
                 const canManageGuild =
                     guild.ownerId === userId ||
                     Boolean(
