@@ -47,6 +47,9 @@ export default {
 
         setTimeout(async () => {
             try {
+                const reply = await interaction.fetchReply()
+                if (reply.components.length === 0) return
+
                 await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
