@@ -27,13 +27,14 @@ export default {
             .setFooter({ text: '此操作會立即讓 Bot 離線。' })
 
         const ownerId = interaction.user.id
+        const expiresAt = Date.now() + CONFIRM_TIMEOUT_MS
         const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder()
-                .setCustomId(`shutdown:confirm:${ownerId}`)
+                .setCustomId(`shutdown:confirm:${ownerId}:${expiresAt}`)
                 .setLabel('確認關機')
                 .setStyle(ButtonStyle.Danger),
             new ButtonBuilder()
-                .setCustomId(`shutdown:cancel:${ownerId}`)
+                .setCustomId(`shutdown:cancel:${ownerId}:${expiresAt}`)
                 .setLabel('取消')
                 .setStyle(ButtonStyle.Secondary),
         )
@@ -56,12 +57,12 @@ export default {
                     components: [
                         new ActionRowBuilder<ButtonBuilder>().addComponents(
                             new ButtonBuilder()
-                                .setCustomId(`shutdown:confirm:${ownerId}`)
+                                .setCustomId(`shutdown:confirm:${ownerId}:${expiresAt}`)
                                 .setLabel('確認關機')
                                 .setStyle(ButtonStyle.Danger)
                                 .setDisabled(true),
                             new ButtonBuilder()
-                                .setCustomId(`shutdown:cancel:${ownerId}`)
+                                .setCustomId(`shutdown:cancel:${ownerId}:${expiresAt}`)
                                 .setLabel('取消')
                                 .setStyle(ButtonStyle.Secondary)
                                 .setDisabled(true),
