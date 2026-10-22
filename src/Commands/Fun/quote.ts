@@ -76,7 +76,7 @@ export default {
                     ? `**出處** · ${attribution.slice(0, 250)}`
                     : '**出處** · 未知',
                 `**分類** · ${categoryLabel}`,
-                '[語錄來源 · 言雅 Elegant TW](https://elegant.tw/)',
+                '語錄來源 · [言雅 Elegant TW](https://elegant.tw/)',
             ].join('\n')
 
             await interaction.editReply({ components: [createMessage(content)] })
