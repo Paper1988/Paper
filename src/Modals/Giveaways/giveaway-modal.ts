@@ -6,6 +6,7 @@ import {
     ButtonBuilder,
     ButtonStyle,
     EmbedBuilder,
+    MessageFlags,
     ModalSubmitInteraction,
     TextChannel
 } from 'discord.js'
@@ -17,185 +18,199 @@ interface RequirementOptions {
     minServerTime?: number
 }
 
+const ACCENT_COLOR = 0xA3A3A3
+const MAX_DURATION_MINUTES = 525600
+
+function parseRequirements(input: string): RequirementOptions {
+    const options: RequirementOptions = {}
+
+    for (const line of input.split(/\r?\n/)) {
+        const match = line.trim().match(/^(role|blacklist|age|server)\s*:\s*(.+)$/i)
+        if (!match) continue
+
+        const rawKey = match[1]!.toLowerCase()
+        const value = match[2]!.trim()
+
+        if (rawKey === 'role' || rawKey === 'blacklist') {
+            const ids = value
+                .split(/[\s,]+/)
+                .map((id) => id.replace(/^<@&(\d+)>$/, '$1'))
+                .filter(Boolean)
+
+            if (ids.some((id) => !/^\d{17,20}$/.test(id))) {
+                throw new Error('身分組請填寫 Discord 身分組 ID，或使用身分組提及格式。')
+            }
+
+            if (rawKey === 'role') options.requiredRoles = [...new Set(ids)]
+            else options.blacklistedRoles = [...new Set(ids)]
+            continue
+        }
+
+        const days = Number(value)
+        if (!Number.isInteger(days) || days < 0 || days > 36500) {
+            throw new Error(
+                (rawKey === 'age' ? '帳號年齡' : '伺服器停留時間') +
+                    '必須是 0 至 36500 的整數天數。'
+            )
+        }
+
+        if (rawKey === 'age') options.minAccountAge = days
+        else options.minServerTime = days
+    }
+
+    return options
+}
+
 export default {
     id: 'giveaway-modal',
     async execute(interaction: ModalSubmitInteraction, client: PaperClient) {
-        await interaction.message!.delete()
-        await interaction.deferReply()
-        const [_, channelId] = interaction.customId.split('/')
-        const channel = (await client.channels.fetch(channelId!)) as TextChannel
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 
-        if (!channel) {
+        const channelId = interaction.customId.split('/')[1]
+        if (!channelId) {
+            return interaction.editReply({ content: '無法辨識發布頻道，請重新建立抽獎。' })
+        }
+
+        const channel = await client.channels.fetch(channelId)
+        if (!channel || !(channel instanceof TextChannel)) {
+            return interaction.editReply({ content: '找不到指定的文字頻道，請重新建立抽獎。' })
+        }
+
+        const prize = interaction.fields.getTextInputValue('prize').trim()
+        const duration = Number(interaction.fields.getTextInputValue('duration').trim())
+        const winners = Number(interaction.fields.getTextInputValue('winners').trim())
+        const description = interaction.fields.getTextInputValue('description').trim()
+        const requirements = interaction.fields.getTextInputValue('requirements').trim()
+
+        if (!prize) {
+            return interaction.editReply({ content: '請填寫獎品名稱。' })
+        }
+
+        if (!Number.isInteger(duration) || duration < 1 || duration > MAX_DURATION_MINUTES) {
             return interaction.editReply({
-                content: '<:warning:1265562532857380936> | 找不到指定的頻道！'
+                content: '活動時間必須是 1 至 525600 分鐘之間的整數（最多一年）。'
             })
         }
 
-        const prize = interaction.fields.getTextInputValue('prize')
-        const duration = parseInt(interaction.fields.getTextInputValue('duration'))
-        const winners = parseInt(interaction.fields.getTextInputValue('winners'))
-        const description = interaction.fields.getTextInputValue('description')!
-        const requirements = interaction.fields.getTextInputValue('requirements')!
-
-        // 解析要求
-        const requirementOptions: RequirementOptions = {}
-        if (requirements) {
-            requirements.split(',').forEach((req) => {
-                const [key, value] = req.trim().split(':')
-                if (key && value) {
-                    switch (key.toLowerCase()) {
-                        case 'role':
-                            requirementOptions.requiredRoles = value.split(' ')
-                            break
-                        case 'blacklist':
-                            requirementOptions.blacklistedRoles = value.split(' ')
-                            break
-                        case 'age':
-                            requirementOptions.minAccountAge = parseInt(value)
-                            break
-                        case 'server':
-                            requirementOptions.minServerTime = parseInt(value)
-                            break
-                    }
-                }
-            })
+        if (!Number.isInteger(winners) || winners < 1 || winners > 100) {
+            return interaction.editReply({ content: '得獎人數必須是 1 至 100 之間的整數。' })
         }
 
-        if (isNaN(duration) || duration < 1) {
+        let requirementOptions: RequirementOptions
+        try {
+            requirementOptions = parseRequirements(requirements)
+        } catch (error) {
             return interaction.editReply({
-                content: '<:warning:1265562532857380936> | 持續時間必須是有效的數字且大於0！'
+                content: error instanceof Error ? error.message : '參加條件格式不正確，請檢查後重試。'
             })
         }
 
-        if (isNaN(winners) || winners < 1) {
-            return interaction.editReply({
-                content: '<:warning:1265562532857380936> | 得獎人數必須是有效的數字且大於0！'
-            })
-        }
+        const startAt = new Date()
+        const endAt = new Date(startAt.getTime() + duration * 60_000)
+        const endTimestamp = Math.floor(endAt.getTime() / 1000)
+        const requirementLines = [
+            '需要身分組：' +
+                (requirementOptions.requiredRoles?.length
+                    ? requirementOptions.requiredRoles.map((id) => '<@&' + id + '>').join(', ')
+                    : '無'),
+            '排除身分組：' +
+                (requirementOptions.blacklistedRoles?.length
+                    ? requirementOptions.blacklistedRoles.map((id) => '<@&' + id + '>').join(', ')
+                    : '無'),
+            '最低帳號年齡：' +
+                (requirementOptions.minAccountAge ? requirementOptions.minAccountAge + ' 天' : '無'),
+            '最低伺服器停留時間：' +
+                (requirementOptions.minServerTime ? requirementOptions.minServerTime + ' 天' : '無')
+        ]
 
         const giveawayEmbed = new EmbedBuilder()
-            .setColor('Gold')
-            .setTitle('<:tada:1265562251981750272> | 抽獎活動')
-            .setDescription(
-                `
-                <:gift:1265560472409735181> | 獎品：**${prize}**
-                <:people:1265561435220611196> | 參加人數：0
-                <:clock:1265560238137016372> | 結束時間：<t:${Math.floor((Date.now() + duration * 60000) / 1000)}:R>
-                <:richpresent:1265561713969987676> | 描述：${description ? `${description}` : '無'}
-            `
-            )
+            .setColor(ACCENT_COLOR)
+            .setTitle('🎁 抽獎活動')
+            .setDescription([
+                '## ' + prize,
+                description || '參加活動並等待結束，即有機會獲得獎品。',
+                '',
+                '**參加人數** · 0',
+                '**得獎名額** · ' + winners,
+                '**截止時間** · <t:' + endTimestamp + ':F>（<t:' + endTimestamp + ':R>）'
+            ].join('\n'))
             .addFields({
-                name: '<:warning:1265562532857380936> | 參加條件',
-                value:
-                    `> <:person:1265561455529562154> 需要身分組：${requirementOptions.requiredRoles?.length ? requirementOptions.requiredRoles.map((r) => `<@&${r}>`).join(', ') : '無'}\n` +
-                    `> <:person:1265561455529562154> 黑名單身分組：${requirementOptions.blacklistedRoles?.length ? requirementOptions.blacklistedRoles.map((r) => `<@&${r}>`).join(', ') : '無'}\n` +
-                    `> <:calendar:1265560204414816287> 最小帳號年齡：${requirementOptions.minAccountAge ? `${requirementOptions.minAccountAge} 天` : '無'}\n` +
-                    `> <:calendar:1265560204414816287> 最小伺服器時間：${requirementOptions.minServerTime ? `${requirementOptions.minServerTime} 天` : '無'}`
+                name: '參加條件',
+                value: requirementLines.map((line) => '• ' + line).join('\n')
             })
             .setAuthor({
-                name: `主持人：${interaction.user.tag}`,
+                name: interaction.user.username,
                 iconURL: interaction.user.displayAvatarURL()
             })
-            .setFooter({
-                text: `得獎人數：${winners} 位`,
-                iconURL: interaction.guild!.iconURL()!
-            })
-            .setTimestamp()
+            .setFooter({ text: 'Paper Giveaway · 點擊下方按鈕即可參加或退出' })
 
         const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder()
                 .setCustomId('giveaway-join')
                 .setLabel('參加抽獎')
-                .setEmoji('<:wave:1320296301862191104>')
+                .setEmoji('🎟️')
                 .setStyle(ButtonStyle.Primary),
             new ButtonBuilder()
-                .setCustomId(`giveaway-reroll/${interaction.user.id}`)
+                .setCustomId('giveaway-reroll/' + interaction.user.id)
                 .setLabel('重新抽獎')
                 .setEmoji('🎲')
                 .setStyle(ButtonStyle.Secondary)
                 .setDisabled(true)
         )
 
+        let messageId: string | undefined
         try {
             const message = await channel.send({
                 embeds: [giveawayEmbed],
-                components: [buttons]
+                components: [buttons],
+                allowedMentions: { parse: [] }
             })
+            messageId = message.id
 
-            // 創建抽獎資料
-            const giveawayData = {
+            await client.giveawaysManager.saveGiveaway(message.id, {
                 messageId: message.id,
-                channelId: channel.id,
                 guildId: channel.guild.id,
-                startAt: Date.now(),
-                endAt: Date.now() + duration * 60000,
-                ended: false,
+                channelId: channel.id,
+                startAt: startAt.getTime(),
+                endAt: endAt.getTime(),
                 winnerCount: winners,
                 prize,
-                hostedBy: interaction.user.id,
-                participants: [],
-                description,
-                winners: [],
-                ...requirementOptions
+                hostedBy: interaction.user.id
+            })
+
+            const stats = await GiveawayStats.findOneAndUpdate(
+                { guildId: interaction.guildId },
+                {
+                    $inc: { totalGiveaways: 1, activeGiveaways: 1, totalPrizes: 1 },
+                    $setOnInsert: { totalParticipants: 0, totalWinners: 0 }
+                },
+                { upsert: true, new: true, setDefaultsOnInsert: true }
+            )
+
+            const hostedCount = await Giveaway.countDocuments({
+                guildId: interaction.guildId,
+                hostedBy: interaction.user.id
+            })
+            if (!stats.mostActiveHoster?.userId || hostedCount >= (stats.mostActiveHoster.count ?? 0)) {
+                stats.mostActiveHoster = { userId: interaction.user.id, count: hostedCount }
+                await stats.save()
             }
 
-            // 儲存到資料庫
-            await client.giveawaysManager.saveGiveaway(message.id, giveawayData)
-
-            // 設定結束計時器
-            setTimeout(() => {
-                client.giveawaysManager.end(message.id).catch(console.error)
-            }, duration * 60000)
-
-            // 更新統計資料
-            let stats = await GiveawayStats.findOne({ guildId: interaction.guildId })
-            if (!stats) {
-                stats = new GiveawayStats({
-                    guildId: interaction.guildId,
-                    totalGiveaways: 0,
-                    activeGiveaways: 0,
-                    totalPrizes: 0,
-                    totalParticipants: 0,
-                    totalWinners: 0
-                })
-            }
-
-            stats.totalGiveaways++
-            stats.activeGiveaways++
-            stats.totalPrizes++
-
-            // 更新最活躍主持人
-            if (!stats.mostActiveHoster || !stats.mostActiveHoster.userId) {
-                stats.mostActiveHoster = {
-                    userId: interaction.user.id,
-                    count: 1
-                }
-            } else if (stats.mostActiveHoster.userId === interaction.user.id) {
-                stats.mostActiveHoster.count!++
-            } else {
-                const currentCount = stats.mostActiveHoster.count
-                const userHostCount = await Giveaway.countDocuments({
-                    guildId: interaction.guildId,
-                    hostedBy: interaction.user.id
-                })
-
-                if (userHostCount + 1 > currentCount!) {
-                    stats.mostActiveHoster = {
-                        userId: interaction.user.id,
-                        count: userHostCount + 1
-                    }
-                }
-            }
-
-            await stats.save()
-
-            await interaction.editReply({
-                content: `<:correct:1265560254708711467> | 抽獎活動已在 ${channel} 創建成功！`
+            return interaction.editReply({
+                content:
+                    '抽獎已建立並發布至 ' + channel + '.\n' +
+                    '[前往活動](https://discord.com/channels/' +
+                    channel.guild.id + '/' + channel.id + '/' + message.id + ')'
             })
         } catch (error) {
-            console.error('創建抽獎時發生錯誤:', error)
-            await interaction.editReply({
-                content: '<:warning:1265562532857380936> | 創建抽獎時發生錯誤！'
+            console.error('建立抽獎失敗：', error)
+
+            if (messageId) {
+                await channel.messages.delete(messageId).catch(() => null)
+            }
+
+            return interaction.editReply({
+                content: '建立抽獎時發生錯誤，沒有完成活動建立。請稍後再試。'
             })
         }
     }
