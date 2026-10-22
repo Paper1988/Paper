@@ -215,7 +215,11 @@ export default {
 
             if (messageId && !giveawaySaved) {
                 const persisted = await Giveaway.exists({ messageId }).catch(() => null)
-                if (!persisted) await channel.messages.delete(messageId).catch(() => null)
+                if (persisted) {
+                    client.giveawaysManager.scheduleEnd(messageId, endAt.getTime() - Date.now())
+                } else {
+                    await channel.messages.delete(messageId).catch(() => null)
+                }
             }
 
             if (giveawaySaved) {
