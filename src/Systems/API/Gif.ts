@@ -108,7 +108,6 @@ export async function getGifUrl(action: GifAction): Promise<string> {
         ]
         : [
             { name: 'Nekos.best', fetch: () => getNekosBestGifUrl(action) },
-            { name: 'Gifukai', fetch: () => getGifukaiGifUrl(action) },
         ]
 
     const errors: string[] = []
