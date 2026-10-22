@@ -196,7 +196,7 @@ export default {
                 .setName('handhold')
                 .setNameLocalization('zh-TW', '牽手')
                 .setNameLocalization('ja', '手をつなぐ')
-                .setDescription('Hold someone's hand!')
+                .setDescription('Hold someone\'s hand!')
                 .setDescriptionLocalization('zh-TW', '牽起某人的手')
                 .setDescriptionLocalization('ja', '誰かと手をつなぐ')
                 .addUserOption((option) =>
