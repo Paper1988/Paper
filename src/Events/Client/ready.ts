@@ -286,6 +286,7 @@ async function endGiveaway(messageId: string, client: PaperClient): Promise<void
             const stats = existingStats ?? new GiveawayStats({ guildId: giveaway.guildId })
 
             stats.activeGiveaways = Math.max(0, (stats.activeGiveaways ?? 0) - 1)
+            stats.totalParticipants += giveaway.participants.length
             stats.totalWinners += winners.length
 
             // 並行查詢每位得獎者的歷史勝場數（+1 因為本次 GiveawayHistory 尚未存入）
@@ -311,7 +312,7 @@ async function endGiveaway(messageId: string, client: PaperClient): Promise<void
                 guildId: giveaway.guildId,
                 giveawayId: giveaway.messageId,
                 prize: giveaway.prize,
-                hosterId: giveaway.hostedBy,
+                hostedBy: giveaway.hostedBy,
                 winners,
                 participantCount: giveaway.participants.length,
                 endTime: giveaway.endAt,
