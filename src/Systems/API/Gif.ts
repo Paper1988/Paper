@@ -23,9 +23,7 @@ export async function getGifUrl(action: GifAction): Promise<string> {
 
     try {
         const response = await fetch(`${API_BASE_URL}/${ENDPOINTS[action]}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: '{}',
+            method: 'GET',
             signal: controller.signal,
         })
 
