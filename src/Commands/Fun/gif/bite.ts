@@ -25,14 +25,14 @@ export default {
 
         if (target.id === executor.id) {
             return interaction.reply({
-                components: [createMessage('# 不可以咬自己！\\n換個對象吧。')],
+                components: [createMessage('# 不可以咬自己！\n換個對象吧。')],
                 flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
             })
         }
 
         await interaction.reply({
             components: [
-                createMessage(`# 咬咬\\n${executor} ${target}\\n\\n正在尋找合適的 GIF…`),
+                createMessage(`# 咬咬\n${executor} ${target}\n\n正在尋找合適的 GIF…`),
             ],
             flags: MessageFlags.IsComponentsV2,
         })
@@ -44,7 +44,7 @@ export default {
             }
 
             const container = createMessage(
-                `# 咬咬\\n${executor} 咬了一口 ${target}。`,
+                `# 咬咬\n${executor} 咬了一口 ${target}。`,
             ).addMediaGalleryComponents(
                 new MediaGalleryBuilder().addItems(
                     new MediaGalleryItemBuilder().setURL(gifUrl),
@@ -57,7 +57,7 @@ export default {
             await interaction.editReply({
                 components: [
                     createMessage(
-                        `# 咬咬\\nGIF 暫時找不到了，請稍後再試。`,
+                        `# 咬咬\nGIF 暫時找不到了，請稍後再試。`,
                     ),
                 ],
             })
