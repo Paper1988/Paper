@@ -31,7 +31,6 @@ import * as Sentry from '@sentry/node'
 const RETRY_DELAY_MS = 5000
 const PRESENCE_INTERVAL_MS = 10 * 1000
 const DAY_MS = 24 * 60 * 60 * 1000
-const PRODUCTION_BOT_ID = '***REMOVED***'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -54,10 +53,10 @@ export default {
         })
 
         await Promise.all([
-            loadCommands(client),
-            loadButtons(client),
-            loadModals(client),
-            loadMenus(client)
+            await loadCommands(client),
+            await loadButtons(client),
+            await loadModals(client),
+            await loadMenus(client)
         ])
 
         if (client.moonlink && client.user?.id) {
@@ -152,7 +151,7 @@ export default {
         })
 
         // 只在正式機器人上發送 webhook 上線通知
-        if (client.user?.id === PRODUCTION_BOT_ID) {
+        if (client.user?.id === process.env.CLIENTID) {
             const embed = new EmbedBuilder()
                 .setColor('Green')
                 .setDescription(`${client.user} 上線了!`)
