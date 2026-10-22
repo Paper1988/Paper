@@ -9,6 +9,16 @@ const ENDPOINTS = {
     bite: 'bite',
     dance: 'dance',
     punch: 'bonk',
+    wave: 'wave',
+    smile: 'smile',
+    blush: 'blush',
+    cry: 'cry',
+    wink: 'wink',
+    highfive: 'highfive',
+    handhold: 'handhold',
+    glomp: 'glomp',
+    poke: 'poke',
+    nom: 'nom',
 } as const
 
 export type GifAction = keyof typeof ENDPOINTS
