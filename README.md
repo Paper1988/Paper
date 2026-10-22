@@ -11,6 +11,12 @@ Paper is a personal software project built with TypeScript and Discord.js. It br
 
 Rather than treating a Discord bot as a collection of commands, this project explores how multiple subsystems can coexist in a single application, with an emphasis on code organization, asynchronous execution, and integration between external services.
 
+## Project Status
+
+Paper has been in continuous development since early 2024, accumulating over 750 commits across its lifetime. It began as a JavaScript project and was later migrated in full to TypeScript, reflecting a deliberate shift toward stronger type guarantees and a more maintainable codebase.
+
+The project is treated as a long-running system rather than a finished artifact, and is maintained on an ongoing basis.
+
 ## Overview
 
 Paper is developed as a long-running application with several interconnected components:
@@ -165,6 +171,16 @@ Configure the required environment variables for your local environment before s
 
 The test scripts compile the project before executing tests. Tests that depend on external services may also require the corresponding services to be available.
 
+## Engineering Focus
+
+Beyond its feature set, Paper is primarily an exercise in building and maintaining a multi-subsystem application over time. The project puts the following into practice:
+
+- **Service integration** — coordinating Discord.js, a Moonlink.js music subsystem, MongoDB, Redis, and a Fastify HTTP API within a single runtime.
+- **Separation of concerns** — commands, events, handlers, persistence, and background jobs are organized as independent modules rather than a single entry point.
+- **Data lifecycle management** — distinct responsibilities for persistent storage (MongoDB / Mongoose) and caching (Redis / ioredis).
+- **Operational awareness** — scheduled jobs, health checks, and Sentry-based error monitoring for a long-running process.
+- **Codebase maintainability** — a full JavaScript-to-TypeScript migration, enforced formatting and linting (Prettier, ESLint), and a Mocha / Chai test setup.
+
 ## Engineering Considerations
 
 A project involving asynchronous events, persistent storage, caching, and external services presents several useful areas for continued engineering work.
@@ -198,7 +214,7 @@ A project involving asynchronous events, persistent storage, caching, and extern
 
 These areas are part of the ongoing engineering considerations for the project. Their inclusion here should not be interpreted as a claim that every item has already been fully implemented or verified.
 
-## Future Improvements
+## Planned Improvements
 
 Potential areas for further development include:
 
@@ -211,6 +227,19 @@ Potential areas for further development include:
 - Integrating automated checks into a continuous integration workflow.
 
 The goal is not simply to add more features, but to improve the clarity, reliability, and maintainability of the existing system.
+
+## Current Capabilities
+
+The following are already implemented and form the working foundation of the project:
+
+- **Multi-service integration** — Discord.js, a Moonlink.js music subsystem, MongoDB, Redis, and a Fastify HTTP API running within a single application.
+- **Modular architecture** — commands, events, handlers, subsystems, and background jobs organized as independent modules.
+- **Persistence and caching** — MongoDB (via Mongoose) for persistent data and Redis (via ioredis) as a distinct caching layer.
+- **Scheduled and background jobs** — tasks that run outside individual command handlers.
+- **Error monitoring** — Sentry integration for a long-running process.
+- **TypeScript codebase** — migrated in full from an earlier JavaScript implementation.
+- **Tooling and quality** — enforced linting and formatting (ESLint, Prettier), a Mocha / Chai test setup, and pnpm-based dependency management.
+- **Secret hygiene** — environment configuration via `.env.example`, with no credentials committed to the repository.
 
 ## Project Scope
 
