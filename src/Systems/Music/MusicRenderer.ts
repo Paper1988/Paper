@@ -137,7 +137,7 @@ export class MusicRenderer {
         return {
             embeds: [
                 new EmbedBuilder()
-                    .setColor(player.paused ? 'Orange' : 'Green')
+                    .setColor(completed ? 0xA3A3A3 : player.paused ? 0xFAA61A : 0x57F287)
                     .setDescription(
                         `${emojis.music} | [${track.title}](${track.uri}) - \` ${MusicUtils.millisToDuration(songDuration)} \``
                     )
