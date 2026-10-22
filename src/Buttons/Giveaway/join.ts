@@ -82,7 +82,7 @@ export default {
                 .description!.split('\n')
                 .map((line) => {
                     if (line.includes('參加人數')) {
-                        return `<:people:1265561435220611196> | 參加人數：${giveaway.participants.length}`
+                        return `**參加人數** · ${giveaway.participants.length}`
                     }
                     return line
                 })
