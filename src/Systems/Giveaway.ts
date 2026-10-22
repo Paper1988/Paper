@@ -203,12 +203,16 @@ class GiveawayManagerWithOwnDatabase {
         return winners
     }
 
-    selectWinners(participants: string | any[], count: number) {
-        const shuffled = [...participants].sort(() => Math.random() - 0.5)
-        return shuffled.slice(0, Math.min(count, participants.length))
+    selectWinners(participants: string[], count: number): string[] {
+        const shuffled = [...participants]
+        for (let index = shuffled.length - 1; index > 0; index--) {
+            const swapIndex = Math.floor(Math.random() * (index + 1))
+            ;[shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex]!, shuffled[index]!]
+        }
+        return shuffled.slice(0, Math.min(count, shuffled.length))
     }
 
-    async reroll(messageId: any) {
+    async reroll(messageId: string) {
         const giveaway = await giveawayModel.findOne({ messageId, ended: true })
         if (!giveaway) return null
 
