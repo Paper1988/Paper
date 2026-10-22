@@ -61,7 +61,7 @@ function createRefreshButton() {
         new ButtonBuilder()
             .setCustomId('giveaway-refresh-stats')
             .setLabel('重新整理')
-            .setEmoji('↻')
+            .setEmoji('🔄')
             .setStyle(ButtonStyle.Secondary)
     )
 }
