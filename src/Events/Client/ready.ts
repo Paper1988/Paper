@@ -247,7 +247,7 @@ async function endGiveaway(messageId: string, client: PaperClient): Promise<void
 
         const winners = selectWinners(giveaway.participants, giveaway.winnerCount)
         const winnerMentions = winners.map((id) => `<@${id}>`).join(', ') || '沒有人參加抽獎'
-        const originalDesc = message.embeds[0]?.data.description?.split('\n\n')[0] ?? ''
+        const originalDesc = message.embeds[0]?.data.description ?? ''
 
         const endEmbed = EmbedBuilder.from(message.embeds[0]!)
             .setColor('Green')
