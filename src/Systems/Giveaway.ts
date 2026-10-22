@@ -39,9 +39,26 @@ class GiveawayManagerWithOwnDatabase {
 
     scheduleEnd(messageId: string, delay: number) {
         if (delay <= 0) {
-            return this.end(messageId)
+            void this.end(messageId).catch((error) =>
+                console.error('結束抽獎時發生錯誤:', error)
+            )
+            return
         }
-        setTimeout(() => this.end(messageId), Math.min(delay, 2 ** 31 - 1))
+
+        const maxTimeout = 2 ** 31 - 1
+        const timeoutDelay = Math.min(delay, maxTimeout)
+        const timeout = setTimeout(() => {
+            const remaining = delay - timeoutDelay
+            if (remaining > 0) {
+                this.scheduleEnd(messageId, remaining)
+                return
+            }
+
+            void this.end(messageId).catch((error) =>
+                console.error('結束抽獎時發生錯誤:', error)
+            )
+        }, timeoutDelay)
+        timeout.unref?.()
     }
 
     async saveGiveaway(
