@@ -2,8 +2,6 @@ import emojis from '@/libs/emoji/emoji.js'
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import type { MenuType } from '@/typings/component.js'
 import {
-    ActionRowBuilder,
-    ComponentBuilder,
     GuildMember,
     LabelBuilder,
     MessageFlags,
@@ -18,91 +16,74 @@ export default {
     id: 'giveaway-channel-select',
     async execute(interaction: AnySelectMenuInteraction, client: PaperClient) {
         const selectedChannelId = interaction.values[0]
-        const channel = await client.channels.fetch(selectedChannelId!)
-
-        if (!('channels' in interaction)) return
-
-        if (!channel) {
+        if (!selectedChannelId) {
             return interaction.reply({
-                content: `${emojis.warning} | 找不到指定的頻道！`,
+                content: `${emojis.warning} | 請先選擇要發布抽獎的頻道。`,
                 flags: MessageFlags.Ephemeral
             })
         }
 
+        const channel = await client.channels.fetch(selectedChannelId)
         if (
-            !interaction.member ||
+            !channel ||
             !(interaction.member instanceof GuildMember) ||
             !(channel instanceof TextChannel) ||
-            !(channel satisfies TextChannel)
-                .permissionsFor(interaction.member satisfies GuildMember)
-                .has('SendMessages')
+            !channel.permissionsFor(interaction.member).has('SendMessages')
         ) {
             return interaction.reply({
-                content: `${emojis.warning} | 你沒有權限在該頻道發送訊息！`,
+                content: `${emojis.warning} | 找不到頻道，或你沒有在該頻道發送訊息的權限。`,
                 flags: MessageFlags.Ephemeral
             })
         }
 
         const modal = new ModalBuilder()
             .setCustomId(`giveaway-modal/${selectedChannelId}`)
-            .setTitle('創建抽獎')
+            .setTitle('建立抽獎活動')
 
-        const prizeInput = new TextInputBuilder({
-            customId: 'prize',
-            style: TextInputStyle.Short,
-            required: true,
-            placeholder: '例如：Nitro、Steam遊戲'
-        })
+        const prizeInput = new TextInputBuilder()
+            .setCustomId('prize')
+            .setStyle(TextInputStyle.Short)
+            .setRequired(true)
+            .setMaxLength(100)
+            .setPlaceholder('例如：Discord Nitro、Steam 遊戲')
 
-        const durationInput = new TextInputBuilder({
-            customId: 'duration',
-            style: TextInputStyle.Short,
-            required: true,
-            placeholder: '輸入數字，例如：60'
-        })
+        const durationInput = new TextInputBuilder()
+            .setCustomId('duration')
+            .setStyle(TextInputStyle.Short)
+            .setRequired(true)
+            .setMaxLength(6)
+            .setPlaceholder('分鐘，例如：60')
 
-        const winnersInput = new TextInputBuilder({
-            customId: 'winners',
-            style: TextInputStyle.Short,
-            required: true,
-            placeholder: '輸入數字，例如：1'
-        })
+        const winnersInput = new TextInputBuilder()
+            .setCustomId('winners')
+            .setStyle(TextInputStyle.Short)
+            .setRequired(true)
+            .setMaxLength(3)
+            .setPlaceholder('正整數，例如：1')
 
-        const descriptionInput = new TextInputBuilder({
-            customId: 'description',
-            style: TextInputStyle.Paragraph,
-            required: false,
-            placeholder: '輸入抽獎的詳細說明'
-        })
+        const descriptionInput = new TextInputBuilder()
+            .setCustomId('description')
+            .setStyle(TextInputStyle.Paragraph)
+            .setRequired(false)
+            .setMaxLength(1000)
+            .setPlaceholder('補充獎品資訊或活動說明')
 
-        const requirementsInput = new TextInputBuilder({
-            customId: 'requirements',
-            style: TextInputStyle.Paragraph,
-            required: false,
-            placeholder: '格式：\nrole:[身分組ID], blacklist:[身分組ID]\nage:[天數], server:[天數]'
-        })
+        const requirementsInput = new TextInputBuilder()
+            .setCustomId('requirements')
+            .setStyle(TextInputStyle.Paragraph)
+            .setRequired(false)
+            .setMaxLength(500)
+            .setPlaceholder(
+                '每行一項，例如：\nrole: 123456789012345678\nblacklist: 234567890123456789\nage: 7\nserver: 3'
+            )
 
-        const prizeLabel = new LabelBuilder().setLabel('獎品名稱').setTextInputComponent(prizeInput)
-        const durationLabel = new LabelBuilder()
-            .setLabel('持續時間（分鐘）')
-            .setTextInputComponent(durationInput)
-        const winnersLabel = new LabelBuilder()
-            .setLabel('得獎人數')
-            .setTextInputComponent(winnersInput)
-        const descriptionLabel = new LabelBuilder()
-            .setLabel('描述（選填）')
-            .setTextInputComponent(descriptionInput)
-        const requirementsLabel = new LabelBuilder()
-            .setLabel('參加要求（選填）')
-            .setTextInputComponent(requirementsInput)
-
-        modal.addLabelComponents([
-            prizeLabel,
-            durationLabel,
-            winnersLabel,
-            descriptionLabel,
-            requirementsLabel
-        ])
+        modal.addLabelComponents(
+            new LabelBuilder().setLabel('獎品名稱').setTextInputComponent(prizeInput),
+            new LabelBuilder().setLabel('活動時間（分鐘）').setTextInputComponent(durationInput),
+            new LabelBuilder().setLabel('得獎人數').setTextInputComponent(winnersInput),
+            new LabelBuilder().setLabel('活動說明（選填）').setTextInputComponent(descriptionInput),
+            new LabelBuilder().setLabel('參加條件（選填）').setTextInputComponent(requirementsInput)
+        )
 
         await interaction.showModal(modal)
     }
