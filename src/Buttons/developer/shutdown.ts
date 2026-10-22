@@ -1,5 +1,6 @@
 import { ButtonInteraction, EmbedBuilder } from 'discord.js'
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
+import { interactionUtils } from '@/libs/utils/index.js'
 import { Logger } from '@/libs/utils/logger.js'
 import * as Sentry from '@sentry/node'
 import cron from 'node-cron'
@@ -53,12 +54,31 @@ export default {
         client: PaperClient,
         args: string[] = [],
     ) {
-        const [action, ownerId] = args
+        const [action, ownerId, expiresAtRaw] = args
+        const expiresAt = Number(expiresAtRaw)
+
+        if (!interactionUtils.isDeveloper(interaction.user.id)) {
+            await interactionUtils.sendDeveloperError(interaction)
+            return
+        }
 
         if (!ownerId || interaction.user.id !== ownerId) {
             await interaction.reply({
                 content: '這組關機確認按鈕不屬於你。',
                 ephemeral: true,
+            })
+            return
+        }
+
+        if (!Number.isFinite(expiresAt) || Date.now() > expiresAt) {
+            await interaction.update({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor(0xA3A3A3)
+                        .setTitle('確認已逾時')
+                        .setDescription('沒有執行關機，Paper 會繼續運作。'),
+                ],
+                components: [],
             })
             return
         }
