@@ -4,9 +4,10 @@ import {
     ButtonBuilder,
     ButtonStyle,
     ChatInputCommandInteraction,
-    EmbedBuilder,
+    ContainerBuilder,
     MessageFlags,
-    PermissionsBitField
+    PermissionsBitField,
+    TextDisplayBuilder
 } from 'discord.js'
 
 const ACCENT_COLOR = 0xA3A3A3
@@ -21,15 +22,22 @@ export default {
             })
         }
 
-        const panel = new EmbedBuilder()
-            .setColor(ACCENT_COLOR)
-            .setTitle('抽獎管理')
-            .setDescription(
-                '建立活動、查看進度，或管理已發布的抽獎。\n\n' +
-                '**建立活動**\n設定獎品、結束時間與參加條件。\n\n' +
-                '**活動管理**\n查看進行中的抽獎、統計資料，或手動結束活動。'
+        const panel = new ContainerBuilder()
+            .setAccentColor(ACCENT_COLOR)
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent([
+                    '# 抽獎管理',
+                    '建立活動、查看進度，或管理已發布的抽獎。',
+                    '',
+                    '### 建立活動',
+                    '設定獎品、結束時間與參加條件。',
+                    '',
+                    '### 活動管理',
+                    '查看進行中的抽獎、統計資料，或手動結束活動。',
+                    '',
+                    '-# Paper Giveaway · 此管理介面僅自己可見'
+                ].join('\n'))
             )
-            .setFooter({ text: 'Paper Giveaway · 管理介面僅自己可見' })
 
         const actions = new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder()
@@ -52,9 +60,8 @@ export default {
         )
 
         await interaction.reply({
-            embeds: [panel],
-            components: [actions],
-            flags: MessageFlags.Ephemeral
+            components: [panel, actions],
+            flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2
         })
     }
 } satisfies SubCommandType
