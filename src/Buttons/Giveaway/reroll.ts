@@ -44,7 +44,7 @@ export default {
         const resultLine = `🎯 得獎者：${winnerMentions || '無'}`
         const description = /得獎者：.+/.test(currentDescription)
             ? currentDescription.replace(/得獎者：.+/, resultLine)
-            : currentDescription + `\\n\\n${resultLine}`
+            : currentDescription + `\n\n${resultLine}`
         embed.setDescription(description)
 
         await interaction.message.edit({ embeds: [embed] })
