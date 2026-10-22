@@ -26,13 +26,13 @@ export default {
 
         if (target.id === executor.id) {
             return interaction.reply({
-                components: [createMessage('# 飛撲\\n不能飛撲自己啦！換個對象吧。')],
+                components: [createMessage('# 飛撲\n不能飛撲自己啦！換個對象吧。')],
                 flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
             })
         }
 
         await interaction.reply({
-            components: [createMessage(`# 飛撲\\n${executor} 對 ${target} 做出動作…\\n\\n正在尋找合適的 GIF…`)],
+            components: [createMessage(`# 飛撲\n${executor} 對 ${target} 做出動作…\n\n正在尋找合適的 GIF…`)],
             flags: MessageFlags.IsComponentsV2,
         })
 
@@ -42,7 +42,7 @@ export default {
                 throw new Error('GIF API returned an invalid URL')
             }
 
-            const container = createMessage(`# 飛撲\\n${executor} 飛撲過去抱住了${target}。`).addMediaGalleryComponents(
+            const container = createMessage(`# 飛撲\n${executor} 飛撲過去抱住了${target}。`).addMediaGalleryComponents(
                 new MediaGalleryBuilder().addItems(
                     new MediaGalleryItemBuilder().setURL(gifUrl),
                 ),
@@ -51,7 +51,7 @@ export default {
         } catch (error) {
             console.error('[gif.glomp] Failed to fetch GIF:', error)
             await interaction.editReply({
-                components: [createMessage('# 飛撲\\nGIF 暫時找不到了，請稍後再試。')],
+                components: [createMessage('# 飛撲\nGIF 暫時找不到了，請稍後再試。')],
             })
         }
     },
