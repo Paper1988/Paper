@@ -159,6 +159,7 @@ export default {
         )
 
         let messageId: string | undefined
+        let giveawaySaved = false
         try {
             const message = await channel.send({
                 embeds: [giveawayEmbed],
@@ -182,6 +183,7 @@ export default {
                 ...requirementOptions
             }
             await client.giveawaysManager.saveGiveaway(message.id, giveawayData)
+            giveawaySaved = true
 
             const stats = await GiveawayStats.findOneAndUpdate(
                 { guildId: interaction.guildId },
@@ -203,19 +205,26 @@ export default {
 
             return interaction.editReply({
                 content:
-                    '抽獎已建立並發布至 ' + channel + '.\n' +
+                    '抽獎已建立並發布至 ' + channel + '\n' +
                     '[前往活動](https://discord.com/channels/' +
                     channel.guild.id + '/' + channel.id + '/' + message.id + ')'
             })
         } catch (error) {
             console.error('建立抽獎失敗：', error)
 
-            if (messageId) {
-                await channel.messages.delete(messageId).catch(() => null)
+            if (messageId && !giveawaySaved) {
+                const persisted = await Giveaway.exists({ messageId }).catch(() => null)
+                if (!persisted) await channel.messages.delete(messageId).catch(() => null)
+            }
+
+            if (giveawaySaved) {
+                return interaction.editReply({
+                    content: '抽獎已發布，但統計資料更新失敗。活動仍可正常參加。'
+                })
             }
 
             return interaction.editReply({
-                content: '建立抽獎時發生錯誤，沒有完成活動建立。請稍後再試。'
+                content: '建立抽獎時發生錯誤，請稍後再試。如果活動訊息已出現，請先查看進行中的活動清單。'
             })
         }
     }
