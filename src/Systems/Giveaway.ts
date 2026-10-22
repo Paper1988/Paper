@@ -106,7 +106,7 @@ class GiveawayManagerWithOwnDatabase {
         const endEmbed = EmbedBuilder.from(message.embeds[0]!)
             .setColor('Green')
             .setDescription(
-                message.embeds[0]!.data.description!.split('\n\n')[0] +
+                (message.embeds[0]!.data.description ?? '') +
                     `\n\n🎯 得獎者：${winnerMentions}`
             )
 
