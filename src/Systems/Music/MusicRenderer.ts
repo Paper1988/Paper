@@ -137,56 +137,57 @@ export class MusicRenderer {
         return {
             embeds: [
                 new EmbedBuilder()
-                    .setColor(player.paused ? 'Orange' : 'Green')
+                    .setColor(0xA3A3A3)
+                    .setTitle(track.title)
+                    .setURL(track.uri)
                     .setDescription(
-                        `${emojis.music} | [${track.title}](${track.uri}) - \` ${MusicUtils.millisToDuration(songDuration)} \``
+                        [
+                            `**${track.author || '未知作者'}**`,
+                            '',
+                            progressBar,
+                            getProgressDisplay()
+                        ].join('\\n')
                     )
                     .setAuthor({
-                        name: client.users.cache.get(track.requester)?.username ?? '未知用戶',
+                        name: player.paused ? '正在暫停' : isLive ? '正在直播' : '正在播放',
                         iconURL:
                             client.users.cache.get(track.requester)?.displayAvatarURL() ?? undefined
                     })
                     .addFields(
                         {
-                            name: `${emojis.speaker}音量`,
+                            name: '音量',
                             value: `\`${player.volume}%\``,
                             inline: true
                         },
                         {
-                            name: `${emojis.loop1}重複播放`,
+                            name: '播放模式',
                             value: getRepeatModeText(),
                             inline: true
                         },
                         {
-                            name: `${emojis.update}自動播放`,
-                            value: player.autoPlay ? emojis.correct : emojis.xmark,
+                            name: '自動播放',
+                            value: player.autoPlay ? '開啟' : '關閉',
                             inline: true
                         },
                         {
-                            name: `${emojis.clock}進度`,
-                            value: getProgressDisplay(),
+                            name: '佇列',
+                            value: `\`${player.queue.tracks.length} 首待播\``,
                             inline: true
                         },
                         {
-                            name: `${emojis.people}作者`,
-                            value: `\`${track.author || '無'}\``,
+                            name: '點播者',
+                            value: client.users.cache.get(track.requester)?.username ?? '未知用戶',
                             inline: true
                         },
                         {
-                            name: `${emojis.playlist}播放清單`,
-                            value: `\`${player.queue.tracks.length + 1} 首歌曲\``,
+                            name: '狀態',
+                            value: player.paused ? '已暫停' : '播放中',
                             inline: true
-                        },
-                        {
-                            name: '進度條',
-                            value: progressBar
                         }
                     )
-                    .setImage(track.sourceName === 'youtube' ? track.thumbnail : null)
-                    .setThumbnail(track.sourceName === 'spotify' ? track.thumbnail : null)
-                    .setTimestamp()
+                    .setThumbnail(track.thumbnail || null)
                     .setFooter({
-                        text: `在 ${voiceChannel?.name ?? '未知頻道'} 中播放`
+                        text: `語音頻道 · ${voiceChannel?.name ?? '未知頻道'}`
                     })
             ],
             components: completed ? [] : MusicRenderer.buildButtons(player)
