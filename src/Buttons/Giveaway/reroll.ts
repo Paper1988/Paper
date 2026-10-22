@@ -40,10 +40,11 @@ export default {
 
         // 更新嵌入訊息
         const embed = EmbedBuilder.from(interaction.message.embeds[0]!)
-        const description = embed.data.description!.replace(
-            /🎯 得獎者：.+/,
-            `🎯 得獎者：${winnerMentions}`
-        )
+        const currentDescription = embed.data.description ?? ''
+        const resultLine = `🎯 得獎者：${winnerMentions || '無'}`
+        const description = /得獎者：.+/.test(currentDescription)
+            ? currentDescription.replace(/得獎者：.+/, resultLine)
+            : currentDescription + `\\n\\n${resultLine}`
         embed.setDescription(description)
 
         await interaction.message.edit({ embeds: [embed] })
