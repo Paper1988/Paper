@@ -1,6 +1,5 @@
 import emojis from '@/libs/emoji/emoji.js'
 import Giveaway from '@/Structures/Schemas/Giveaway.js'
-import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
 import { deleteMessageAfter } from '@/Systems/Music.js'
 import type { ButtonType } from '@/typings/component.js'
 import { ButtonInteraction, EmbedBuilder, GuildMember, MessageFlags } from 'discord.js'
@@ -97,14 +96,6 @@ export default {
         } else {
             giveaway.participants.push(interaction.user.id)
             await giveaway.save()
-
-            const stats = await GiveawayStats.findOne({
-                guildId: interaction.guildId
-            })
-            if (stats) {
-                stats.totalParticipants++
-                await stats.save()
-            }
 
             const embed = EmbedBuilder.from(interaction.message.embeds[0]!)
             const description = embed.data
