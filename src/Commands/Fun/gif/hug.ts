@@ -25,26 +25,26 @@ export default {
 
         if (target.id === executor.id) {
             return interaction.reply({
-                components: [createMessage('# 不可以擁抱自己！\\n換個對象吧。')],
+                components: [createMessage('# 不可以擁抱自己！\n換個對象吧。')],
                 flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
             })
         }
 
         await interaction.reply({
             components: [
-                createMessage(`# 抱抱\\n${executor} ${target}\\n\\n正在尋找合適的 GIF…`),
+                createMessage(`# 抱抱\n${executor} ${target}\n\n正在尋找合適的 GIF…`),
             ],
             flags: MessageFlags.IsComponentsV2,
         })
 
         try {
-            const gifUrl = await rga.getGif('hug')
+            const gifUrl = await rga.getGif('cuddle')
             if (typeof gifUrl !== 'string' || !URL.canParse(gifUrl) || !/^https?:$/.test(new URL(gifUrl).protocol)) {
                 throw new Error('GIF API returned an invalid URL')
             }
 
             const container = createMessage(
-                `# 抱抱\\n${executor} 給了 ${target} 一個大大的擁抱。`,
+                `# 抱抱\n${executor} 給了 ${target} 一個大大的擁抱。`,
             ).addMediaGalleryComponents(
                 new MediaGalleryBuilder().addItems(
                     new MediaGalleryItemBuilder().setURL(gifUrl),
@@ -57,7 +57,7 @@ export default {
             await interaction.editReply({
                 components: [
                     createMessage(
-                        `# 抱抱\\nGIF 暫時找不到了，請稍後再試。`,
+                        `# 抱抱\nGIF 暫時找不到了，請稍後再試。`,
                     ),
                 ],
             })
