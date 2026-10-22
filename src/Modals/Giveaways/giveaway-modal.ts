@@ -167,7 +167,7 @@ export default {
             })
             messageId = message.id
 
-            await client.giveawaysManager.saveGiveaway(message.id, {
+            const giveawayData = {
                 messageId: message.id,
                 guildId: channel.guild.id,
                 channelId: channel.id,
@@ -175,8 +175,13 @@ export default {
                 endAt: endAt.getTime(),
                 winnerCount: winners,
                 prize,
-                hostedBy: interaction.user.id
-            })
+                hostedBy: interaction.user.id,
+                participants: [] as string[],
+                winners: [] as string[],
+                description,
+                ...requirementOptions
+            }
+            await client.giveawaysManager.saveGiveaway(message.id, giveawayData)
 
             const stats = await GiveawayStats.findOneAndUpdate(
                 { guildId: interaction.guildId },
