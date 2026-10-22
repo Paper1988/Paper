@@ -62,7 +62,6 @@
         "node-cron": "^4.6.0",
         "os-utils": "^0.0.14",
         "pidusage": "^4.0.1",
-        "random-gif-api": "^1.2.0",
         "uuid": "^13.0.2"
     },
     "devDependencies": {
