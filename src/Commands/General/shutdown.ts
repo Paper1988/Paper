@@ -7,7 +7,6 @@ import {
     MessageFlags,
     SlashCommandBuilder,
 } from 'discord.js'
-import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 
 const CONFIRM_TIMEOUT_MS = 30_000
 
@@ -18,7 +17,7 @@ export default {
         .setNameLocalization('zh-TW', '安全關機')
         .setDescription('Safely shut down the Paper bot')
         .setDescriptionLocalization('zh-TW', '安全關閉 Paper Discord Bot'),
-    async execute(interaction: ChatInputCommandInteraction, _client: PaperClient) {
+    async execute(interaction: ChatInputCommandInteraction) {
         const confirmation = new EmbedBuilder()
             .setColor(0xA3A3A3)
             .setTitle('安全關閉 Paper')
