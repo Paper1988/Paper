@@ -66,11 +66,7 @@ export class MusicRenderer {
         ])
 
         const row2 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([
-            createButton(
-                'loop',
-                player.loop === 'track' ? emojis.looponce : emojis.loop2,
-                player.loop !== 'off' ? ButtonStyle.Success : ButtonStyle.Secondary
-            ),
+            createButton('loop', emojis.loop2, player.loop !== 'off' ? ButtonStyle.Success : ButtonStyle.Secondary),
             createButton(
                 'volumeDown',
                 emojis.speaker_low,
@@ -84,14 +80,14 @@ export class MusicRenderer {
                 ButtonStyle.Secondary,
                 player.volume >= VOLUME_MAX
             ),
-            createButton('related', emojis.spark, ButtonStyle.Secondary)
+            createButton('related', emojis.add, ButtonStyle.Secondary)
         ])
 
         const row3 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([
             createButton('queue', emojis.queue, ButtonStyle.Secondary),
-            createButton('addSong', emojis.add, ButtonStyle.Secondary),
-            createButton('lyrics', emojis.music, ButtonStyle.Secondary),
-            createButton('playlist:save', emojis.playlist, ButtonStyle.Secondary)
+            createButton('addSong', emojis.friend, ButtonStyle.Secondary),
+            createButton('lyrics', emojis.list, ButtonStyle.Secondary),
+            createButton('playlist:save', emojis.download, ButtonStyle.Secondary)
         ])
 
         return [row1, row2, row3]
@@ -127,11 +123,11 @@ export class MusicRenderer {
 
         const getProgressDisplay = () => {
             if (isLive) return '🔴 直播中'
-            return `\x60${MusicUtils.millisToDuration(currentPosition)}\x60 / \x60${MusicUtils.millisToDuration(songDuration)}\x60`
+            return `\x60${MusicUtils.millisToDuration(currentPosition)}\x60 - \x60${MusicUtils.millisToDuration(songDuration)}\x60`
         }
 
         const getRepeatModeText = () => {
-            if (player.loop === 'off') return '關閉'
+            if (player.loop === 'off') return emojis.xmark
             return player.loop === 'queue' ? '整個佇列' : '單曲'
         }
 
@@ -143,28 +139,26 @@ export class MusicRenderer {
         const voiceChannel = client.channels.cache.get(player.voiceChannelId) as
             | VoiceChannel
             | undefined
-        const requester = client.users.cache.get(track.requester)?.username ?? '未知用戶'
-        const status = player.paused ? '已暫停' : isLive ? '直播中' : '播放中'
+        const requester = client.users.cache.get(track.requester)
+        const repeatMode = getRepeatModeText()
+        const playlistCount = player.queue.tracks.length + 1
 
         const songDetails = new TextDisplayBuilder().setContent([
-            `## [${track.title}](${track.uri})`,
-            `**${track.author || '未知作者'}**`,
-            '',
-            progressBar,
-            getProgressDisplay()
+            `## ${emojis.music} [${track.title}](${track.uri}) - ${MusicUtils.millisToDuration(songDuration)}`,
+            `**${track.author || '無'}**`
         ].join('\n'))
 
+        // Keep the original compact field-style grouping inside the Components V2 container.
         const metadata = new TextDisplayBuilder().setContent([
-            `**音量**  ${player.volume}%`,
-            `**播放模式**  ${getRepeatModeText()}`,
-            `**自動播放**  ${player.autoPlay ? '開啟' : '關閉'}`,
-            `**佇列**  ${player.queue.tracks.length} 首待播`,
-            `**點播者**  ${requester}`,
-            `**狀態**  ${status}`,
-            `-# 語音頻道 · ${voiceChannel?.name ?? '未知頻道'}`
+            `${emojis.speaker} **音量** \`${player.volume}%\`　 ${emojis.loop1} **重複播放** ${repeatMode}　 ${emojis.update} **自動播放** ${player.autoPlay ? emojis.correct : emojis.xmark}`,
+            `${emojis.clock} **進度** ${getProgressDisplay()}　 ${emojis.people} **作者** \`${track.author || '無'}\`　 ${emojis.playlist} **播放清單** \`${playlistCount} 首歌曲\``,
+            '',
+            '**進度條**',
+            progressBar,
+            `-# 在 ${voiceChannel?.name ?? '未知頻道'} 中播放`
         ].join('\n'))
 
-        const panel = new ContainerBuilder().setAccentColor(0xA3A3A3)
+        const panel = new ContainerBuilder().setAccentColor(player.paused ? 0xFAA61A : 0x57F287)
 
         if (track.thumbnail) {
             panel.addSectionComponents(
