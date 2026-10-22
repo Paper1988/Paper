@@ -25,7 +25,7 @@ export default {
 
         await interaction.reply({
             components: [
-                createMessage(`# 跳舞\\n${executor} 正在準備跳舞…\\n\\n正在尋找合適的 GIF…`),
+                createMessage(`# 跳舞\n${executor} 正在準備跳舞…\n\n正在尋找合適的 GIF…`),
             ],
             flags: MessageFlags.IsComponentsV2,
         })
@@ -37,7 +37,7 @@ export default {
             }
 
             const container = createMessage(
-                `# 跳舞\\n${executor} 跳了一支舞。`,
+                `# 跳舞\n${executor} 跳了一支舞。`,
             ).addMediaGalleryComponents(
                 new MediaGalleryBuilder().addItems(
                     new MediaGalleryItemBuilder().setURL(gifUrl),
@@ -50,7 +50,7 @@ export default {
             await interaction.editReply({
                 components: [
                     createMessage(
-                        `# 跳舞\\nGIF 暫時找不到了，請稍後再試。`,
+                        `# 跳舞\nGIF 暫時找不到了，請稍後再試。`,
                     ),
                 ],
             })
