@@ -184,6 +184,7 @@ export default {
             }
             await client.giveawaysManager.saveGiveaway(message.id, giveawayData)
             giveawaySaved = true
+            client.giveawaysManager.scheduleEnd(message.id, endAt.getTime() - Date.now())
 
             const stats = await GiveawayStats.findOneAndUpdate(
                 { guildId: interaction.guildId },
