@@ -6,61 +6,54 @@ import {
     ButtonBuilder,
     ButtonInteraction,
     ButtonStyle,
-    EmbedBuilder,
-    MessageFlags
+    ContainerBuilder,
+    MessageFlags,
+    TextDisplayBuilder
 } from 'discord.js'
 
 const ACCENT_COLOR = 0xA3A3A3
 
-async function createStatsEmbed(guildId: string | null) {
+async function createStatsPanel(guildId: string | null) {
     const stats = await GiveawayStats.findOne({ guildId })
     const recentHistory = await GiveawayHistory.find({ guildId })
         .sort({ createdAt: -1 })
         .limit(5)
 
-    const embed = new EmbedBuilder()
-        .setColor(ACCENT_COLOR)
-        .setTitle('抽獎統計')
-        .setDescription('此伺服器的活動概況')
-        .addFields(
-            { name: '總活動', value: String(stats?.totalGiveaways ?? 0), inline: true },
-            { name: '進行中', value: String(stats?.activeGiveaways ?? 0), inline: true },
-            { name: '參與人次', value: String(stats?.totalParticipants ?? 0), inline: true },
-            { name: '獎品數', value: String(stats?.totalPrizes ?? 0), inline: true },
-            { name: '得獎人次', value: String(stats?.totalWinners ?? 0), inline: true }
-        )
+    const lines = [
+        '# 抽獎統計',
+        '此伺服器的活動概況',
+        '',
+        '**總活動** · ' + (stats?.totalGiveaways ?? 0),
+        '**進行中** · ' + (stats?.activeGiveaways ?? 0),
+        '**參與人次** · ' + (stats?.totalParticipants ?? 0),
+        '**獎品數** · ' + (stats?.totalPrizes ?? 0),
+        '**得獎人次** · ' + (stats?.totalWinners ?? 0)
+    ]
 
     if (stats?.mostActiveHoster?.userId) {
-        embed.addFields({
-            name: '最活躍主持人',
-            value: '<@' + stats.mostActiveHoster.userId + '> · ' + (stats.mostActiveHoster.count ?? 0) + ' 次',
-            inline: true
-        })
+        lines.push('', '**最活躍主持人** · <@' + stats.mostActiveHoster.userId + '>（' + (stats.mostActiveHoster.count ?? 0) + ' 次）')
     }
 
     if (stats?.mostWonUser?.userId) {
-        embed.addFields({
-            name: '最多次得獎',
-            value: '<@' + stats.mostWonUser.userId + '> · ' + (stats.mostWonUser.count ?? 0) + ' 次',
-            inline: true
-        })
+        lines.push('**最多次得獎** · <@' + stats.mostWonUser.userId + '>（' + (stats.mostWonUser.count ?? 0) + ' 次）')
     }
 
+    lines.push('', '## 最近結束的活動')
     if (recentHistory.length > 0) {
-        embed.addFields({
-            name: '最近結束的活動',
-            value: recentHistory.map((item) => {
-                const winners = item.winners.length
-                    ? item.winners.map((id) => '<@' + id + '>').join(', ')
-                    : '無得獎者'
-                return '**' + item.prize + '** · ' + winners
-            }).join('\n').slice(0, 1024)
-        })
+        for (const item of recentHistory) {
+            const winners = item.winners.length
+                ? item.winners.map((id) => '<@' + id + '>').join(', ')
+                : '無得獎者'
+            lines.push('**' + item.prize + '** · ' + winners)
+        }
     } else {
-        embed.addFields({ name: '最近結束的活動', value: '尚無活動紀錄。' })
+        lines.push('尚無活動紀錄。')
     }
 
-    return embed.setFooter({ text: 'Paper Giveaway' })
+    lines.push('', '-# Paper Giveaway')
+    return new ContainerBuilder()
+        .setAccentColor(ACCENT_COLOR)
+        .addTextDisplayComponents(new TextDisplayBuilder().setContent(lines.join('\n').slice(0, 4000)))
 }
 
 function createRefreshButton() {
@@ -77,9 +70,8 @@ export default {
     id: 'giveaway-stats',
     async execute(interaction: ButtonInteraction) {
         await interaction.reply({
-            embeds: [await createStatsEmbed(interaction.guildId)],
-            components: [createRefreshButton()],
-            flags: MessageFlags.Ephemeral
+            components: [await createStatsPanel(interaction.guildId), createRefreshButton()],
+            flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2
         })
     }
 } satisfies ButtonType
