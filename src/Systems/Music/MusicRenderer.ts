@@ -146,7 +146,7 @@ export class MusicRenderer {
                             '',
                             progressBar,
                             getProgressDisplay()
-                        ].join('\\n')
+                        ].join('\n')
                     )
                     .setAuthor({
                         name: player.paused ? '正在暫停' : isLive ? '正在直播' : '正在播放',
