@@ -136,6 +136,9 @@ node_modules
 .replit
 replit.nix
 
+.specstory/
+.vscode/
+
 /.upm
 
 node_modules
