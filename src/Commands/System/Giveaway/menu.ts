@@ -9,49 +9,52 @@ import {
     PermissionsBitField
 } from 'discord.js'
 
+const ACCENT_COLOR = 0xA3A3A3
+
 export default {
     subCommand: 'giveaway.menu',
     async execute(interaction: ChatInputCommandInteraction) {
-        if (!interaction.memberPermissions!.has(PermissionsBitField.Flags.ManageGuild)) {
+        if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.ManageGuild)) {
             return interaction.reply({
-                content:
-                    '<:warning:1265562532857380936> | 你需要管理伺服器的權限才能使用抽獎系統！',
+                content: '你需要「管理伺服器」權限才能管理抽獎活動。',
                 flags: MessageFlags.Ephemeral
             })
         }
 
-        const giveawayEmbed = new EmbedBuilder()
-            .setColor('Purple')
-            .setTitle('<:gift:1265560472409735181> | 抽獎系統')
-            .setDescription('請選擇要執行的操作：')
-            .setTimestamp()
+        const panel = new EmbedBuilder()
+            .setColor(ACCENT_COLOR)
+            .setTitle('抽獎管理')
+            .setDescription(
+                '建立活動、查看進度，或管理已發布的抽獎。\n\n' +
+                '**建立活動**\n設定獎品、結束時間與參加條件。\n\n' +
+                '**活動管理**\n查看進行中的抽獎、統計資料，或手動結束活動。'
+            )
+            .setFooter({ text: 'Paper Giveaway · 管理介面僅自己可見' })
 
-        const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        const actions = new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder()
                 .setCustomId('giveaway-create')
-                .setLabel('創建抽獎')
+                .setLabel('建立抽獎')
                 .setStyle(ButtonStyle.Primary)
-                .setEmoji('<:tada:1265562251981750272>'),
+                .setEmoji('🎁'),
             new ButtonBuilder()
                 .setCustomId('giveaway-list')
-                .setLabel('查看列表')
-                .setStyle(ButtonStyle.Secondary)
-                .setEmoji('<:list:1265560873876062340>'),
+                .setLabel('進行中的活動')
+                .setStyle(ButtonStyle.Secondary),
             new ButtonBuilder()
                 .setCustomId('giveaway-stats')
-                .setLabel('統計資訊')
-                .setStyle(ButtonStyle.Secondary)
-                .setEmoji('<:richpresent:1265561713969987676>'),
+                .setLabel('活動統計')
+                .setStyle(ButtonStyle.Secondary),
             new ButtonBuilder()
                 .setCustomId('giveaway-end')
-                .setLabel('結束抽獎')
+                .setLabel('結束活動')
                 .setStyle(ButtonStyle.Danger)
-                .setEmoji('<:stop:1265562218498363422>')
         )
 
         await interaction.reply({
-            embeds: [giveawayEmbed],
-            components: [buttons]
+            embeds: [panel],
+            components: [actions],
+            flags: MessageFlags.Ephemeral
         })
     }
-} as SubCommandType
+} satisfies SubCommandType
