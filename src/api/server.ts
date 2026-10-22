@@ -163,7 +163,7 @@ export class ApiServer {
                 reply.code(200).send({ ok: true })
             } catch (err) {
                 Logger.error(err as Error)
-                reply.code(500).send({ ok: false, error: err })
+                reply.code(500).send({ ok: false, error: 'Internal server error' })
             }
         })
 
