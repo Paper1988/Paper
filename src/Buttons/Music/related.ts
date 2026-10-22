@@ -1,5 +1,6 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
-import { deleteMessageAfter, updateMusicPlayerStatus, validateVoiceChannel } from '@/Systems/Music.js'
+import { deleteMessageAfter, validateVoiceChannel } from '@/Systems/Music.js'
+import MusicController from '@/Systems/Music/MusicController.js'
 import emojis from '@/libs/emoji/emoji.js'
 import type { ButtonType } from '@/typings/component.js'
 import { ButtonInteraction, EmbedBuilder, GuildMember, MessageFlags } from 'discord.js'
@@ -10,12 +11,12 @@ const RECOMMENDATION_LIMIT = 5
 export default {
     id: 'related',
     async execute(interaction: ButtonInteraction, client: PaperClient) {
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral })
+
         const member = interaction.member! as GuildMember
         const voiceChannel = member.voice.channel
 
         if (!(await validateVoiceChannel(interaction, client, voiceChannel))) return
-
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 
         const player = client.moonlink?.players.get(interaction.guildId!) as Player | undefined
         const currentTrack = player?.current
@@ -54,7 +55,7 @@ export default {
 
             player.queue.add(recommendations)
             if (!player.playing && !player.paused) await player.play()
-            await updateMusicPlayerStatus(client, interaction.guildId!)
+            await MusicController.updatePlayerStatus(player, client)
 
             const embed = new EmbedBuilder()
                 .setColor(0xA3A3A3)
