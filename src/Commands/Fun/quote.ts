@@ -6,27 +6,27 @@ import {
     TextDisplayBuilder,
 } from 'discord.js'
 
-const API_URL = 'https://v1.hitokoto.cn/'
+const API_URL = 'https://v0.elegant.tw/'
 const ACCENT_COLOR = 0xA3A3A3
 
-const CATEGORIES = [
-    { name: '動漫', value: 'a', label: '動漫' },
-    { name: '漫畫', value: 'b', label: '漫畫' },
-    { name: '遊戲', value: 'c', label: '遊戲' },
-    { name: '文學', value: 'd', label: '文學' },
-    { name: '原創', value: 'e', label: '原創' },
-    { name: '網路', value: 'f', label: '網路' },
-    { name: '搞笑', value: 'j', label: '搞笑' },
-    { name: '隨機', value: 'all', label: '隨機' },
-] as const
+const CATEGORIES: Record<number, string> = {
+    1: '日本動漫',
+    2: '遊戲',
+    3: '歐美卡通',
+    4: '電影',
+    5: '影集',
+    6: '網路',
+    7: '諺語',
+    8: '文學',
+    9: '毒雞湯',
+}
 
-interface HitokotoResponse {
+interface ElegantQuoteResponse {
     id?: number
-    uuid?: string
-    hitokoto?: string
-    type?: string
-    from?: string
-    from_who?: string | null
+    sentence?: string
+    category?: number
+    cite?: string | null
+    author?: string | null
 }
 
 function createMessage(content: string) {
@@ -40,28 +40,9 @@ export default {
         .setName('quote')
         .setNameLocalization('zh-TW', '語錄')
         .setNameLocalization('ja', '名言')
-        .setDescription('Get a random quote')
-        .setDescriptionLocalization('zh-TW', '取得一句隨機語錄')
-        .setDescriptionLocalization('ja', 'ランダムな名言を取得')
-        .addStringOption((option) =>
-            option
-                .setName('category')
-                .setNameLocalization('zh-TW', '分類')
-                .setNameLocalization('ja', 'カテゴリー')
-                .setDescription('Choose a quote category')
-                .setDescriptionLocalization('zh-TW', '選擇語錄分類')
-                .setDescriptionLocalization('ja', '名言のカテゴリーを選択')
-                .addChoices(
-                    { name: '隨機', name_localizations: { 'zh-TW': '隨機', ja: 'ランダム' }, value: 'all' },
-                    { name: '動漫', name_localizations: { 'zh-TW': '動漫', ja: 'アニメ' }, value: 'a' },
-                    { name: '漫畫', name_localizations: { 'zh-TW': '漫畫', ja: '漫画' }, value: 'b' },
-                    { name: '遊戲', name_localizations: { 'zh-TW': '遊戲', ja: 'ゲーム' }, value: 'c' },
-                    { name: '文學', name_localizations: { 'zh-TW': '文學', ja: '文学' }, value: 'd' },
-                    { name: '原創', name_localizations: { 'zh-TW': '原創', ja: 'オリジナル' }, value: 'e' },
-                    { name: '網路', name_localizations: { 'zh-TW': '網路', ja: 'インターネット' }, value: 'f' },
-                    { name: '搞笑', name_localizations: { 'zh-TW': '搞笑', ja: '面白い' }, value: 'j' },
-                ),
-        ),
+        .setDescription('Get a random Traditional Chinese quote')
+        .setDescriptionLocalization('zh-TW', '取得一句繁體中文語錄')
+        .setDescriptionLocalization('ja', 'ランダムな名言を取得'),
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.reply({
             components: [createMessage('# 今日語錄\n正在尋找一句值得收藏的話…')],
@@ -69,37 +50,34 @@ export default {
         })
 
         try {
-            const category = interaction.options.getString('category') ?? 'all'
-            const url = new URL(API_URL)
-            if (category !== 'all') url.searchParams.set('c', category)
-
-            const response = await fetch(url, {
+            const response = await fetch(API_URL, {
                 headers: { Accept: 'application/json' },
                 signal: AbortSignal.timeout(8_000),
             })
 
-            if (!response.ok) throw new Error(`Hitokoto API returned HTTP ${response.status}`)
+            if (!response.ok) throw new Error(`Elegant TW API returned HTTP ${response.status}`)
 
-            const quote = (await response.json()) as HitokotoResponse
-            if (typeof quote.hitokoto !== 'string' || !quote.hitokoto.trim()) {
-                throw new Error('Hitokoto API returned an empty quote')
+            const quote = (await response.json()) as ElegantQuoteResponse
+            if (typeof quote.sentence !== 'string' || !quote.sentence.trim()) {
+                throw new Error('Elegant TW API returned an empty quote')
             }
 
-            const attribution = [
-                quote.from_who?.trim(),
-                quote.from?.trim(),
-            ].filter(Boolean).join(' · ')
-            const categoryLabel = CATEGORIES.find((item) => item.value === category)?.label ?? '隨機'
+            const attribution = [quote.author?.trim(), quote.cite?.trim()]
+                .filter((value): value is string => Boolean(value))
+                .join(' · ')
+            const categoryLabel = typeof quote.category === 'number'
+                ? CATEGORIES[quote.category] ?? '其他'
+                : '語錄'
             const content = [
-                '# 一言',
-                `> ${quote.hitokoto.slice(0, 1_500)}`,
+                '# 今日語錄',
+                `> ${quote.sentence.slice(0, 1_500)}`,
                 '',
-                attribution ? `**出處** · ${attribution.slice(0, 250)}` : '**出處** · 未知',
+                attribution
+                    ? `**出處** · ${attribution.slice(0, 250)}`
+                    : '**出處** · 未知',
                 `**分類** · ${categoryLabel}`,
-                quote.uuid && URL.canParse(`https://hitokoto.cn?uuid=${quote.uuid}`)
-                    ? `[查看語錄來源](https://hitokoto.cn?uuid=${quote.uuid})`
-                    : '',
-            ].filter(Boolean).join('\n')
+                '[語錄來源 · 言雅 Elegant TW](https://elegant.tw/)',
+            ].join('\n')
 
             await interaction.editReply({ components: [createMessage(content)] })
         } catch (error) {
