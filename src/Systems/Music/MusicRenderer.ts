@@ -139,7 +139,6 @@ export class MusicRenderer {
         const voiceChannel = client.channels.cache.get(player.voiceChannelId) as
             | VoiceChannel
             | undefined
-        const requester = client.users.cache.get(track.requester)
         const repeatMode = getRepeatModeText()
         const playlistCount = player.queue.tracks.length + 1
 
