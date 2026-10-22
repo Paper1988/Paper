@@ -18,6 +18,7 @@ function createListPanel(giveaways: Awaited<ReturnType<typeof Giveaway.find>>) {
         '**' + (index + 1) + '. ' + giveaway.prize + '**',
         '參加人數：' + giveaway.participants.length + ' · 得獎名額：' + giveaway.winnerCount,
         '截止：<t:' + Math.floor(giveaway.endAt.getTime() / 1000) + ':R> · 主持人：<@' + giveaway.hostedBy + '>',
+        '活動 ID：`' + giveaway.messageId + '`',
         '[前往活動](https://discord.com/channels/' + giveaway.guildId + '/' + giveaway.channelId + '/' + giveaway.messageId + ')'
     ].join('\n')).join('\n\n')
 
