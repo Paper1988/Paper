@@ -8,7 +8,7 @@ import {
     SlashCommandBuilder,
     TextDisplayBuilder,
 } from 'discord.js'
-import rga from 'random-gif-api'
+import { getGifUrl } from '@/Systems/API/Gif.js'
 
 const ACCENT_COLOR = 0xA3A3A3
 
@@ -41,7 +41,7 @@ export default {
         })
 
         try {
-            const gifUrl = await rga.getGif('pat')
+            const gifUrl = await getGifUrl('pat')
             if (typeof gifUrl !== 'string' || !URL.canParse(gifUrl)) {
                 throw new Error('GIF API returned an invalid URL')
             }
