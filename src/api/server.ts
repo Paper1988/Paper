@@ -126,7 +126,13 @@ export class ApiServer {
 
         this.fastify.get(
             '/api/guilds/:guildId',
-            async (request: FastifyRequest<{ Params: { guildId: string } }>, reply) => {
+            async (
+                request: FastifyRequest<{
+                    Params: { guildId: string }
+                    Querystring: { userId?: string }
+                }>,
+                reply
+            ) => {
                 if (!this.client.isReady()) {
                     return reply.code(503).send({ message: '機器人尚未上線' })
                 }
@@ -136,6 +142,29 @@ export class ApiServer {
 
                 if (!guild) {
                     return reply.code(404).send({ message: '在快取中找不到伺服器' })
+                }
+
+                const userId =
+                    (request.headers['x-discord-id'] as string | undefined) ?? request.query.userId
+                if (!userId) {
+                    return reply.code(400).send({ message: 'userId is required' })
+                }
+
+                const member = guild.members.cache.get(userId)
+                const canManageGuild =
+                    guild.ownerId === userId ||
+                    Boolean(
+                        member?.permissions.has([
+                            'ManageGuild',
+                            'ManageRoles',
+                            'ManageChannels',
+                            'ManageMessages',
+                            'Administrator'
+                        ])
+                    )
+
+                if (!canManageGuild) {
+                    return reply.code(403).send({ message: '無權管理此伺服器' })
                 }
 
                 reply.send({
@@ -223,6 +252,11 @@ export class ApiServer {
                     const giveawayManager = (this.client as any).giveawayManager
                     if (!giveawayManager) {
                         return reply.code(501).send({ message: 'Giveaway manager 未初始化' })
+                    }
+
+                    const giveaway = giveawayManager.giveaways.get(messageId)
+                    if (!giveaway || giveaway.guildId !== guildId) {
+                        return reply.code(404).send({ message: '找不到抽獎活動' })
                     }
 
                     const winners = await giveawayManager.reroll(messageId)
