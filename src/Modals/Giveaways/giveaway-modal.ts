@@ -198,7 +198,7 @@ export default {
                 guildId: interaction.guildId,
                 hostedBy: interaction.user.id
             })
-            if (!stats.mostActiveHoster?.userId || hostedCount >= (stats.mostActiveHoster.count ?? 0)) {
+            if (stats && (!stats.mostActiveHoster?.userId || hostedCount >= (stats.mostActiveHoster.count ?? 0))) {
                 stats.mostActiveHoster = { userId: interaction.user.id, count: hostedCount }
                 await stats.save()
             }
