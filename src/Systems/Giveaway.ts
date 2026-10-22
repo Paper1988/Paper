@@ -13,6 +13,24 @@ import {
     type MessageActionRowComponentBuilder
 } from 'discord.js'
 
+interface GiveawayCreationData {
+    guildId: string
+    prize: string
+    startAt: number
+    endAt: number
+    channelId: string
+    messageId: string
+    winnerCount: number
+    hostedBy: string
+    participants: string[]
+    winners: string[]
+    description?: string
+    requiredRoles?: string[]
+    blacklistedRoles?: string[]
+    minAccountAge?: number
+    minServerTime?: number
+}
+
 class GiveawayManagerWithOwnDatabase {
     private client: PaperClient
     private giveaways: Map<string, any>
@@ -61,17 +79,7 @@ class GiveawayManagerWithOwnDatabase {
         timeout.unref?.()
     }
 
-    async saveGiveaway(
-        messageId: string,
-        giveawayData: {
-            guildId: string
-            prize: string
-            endAt: number
-            channelId: string
-            messageId: string
-            winners: string[]
-        }
-    ) {
+    async saveGiveaway(messageId: string, giveawayData: GiveawayCreationData) {
         const giveaway = await giveawayModel.create(giveawayData)
         this.giveaways.set(messageId, giveaway)
 
