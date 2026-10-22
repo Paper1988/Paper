@@ -283,9 +283,6 @@ importers:
       pidusage:
         specifier: ^4.0.1
         version: 4.0.1
-      random-gif-api:
-        specifier: ^1.2.0
-        version: 1.2.0
       uuid:
         specifier: ^13.0.2
         version: 13.0.2
@@ -3608,10 +3605,6 @@ packages:
 
   quick-format-unescaped@4.0.4:
     resolution: {integrity: sha512-tYC1Q1hgyRuHgloV/YXs2w15unPVh8qfu/qCTfhTYamaw7fyhumKa2yGpdSo87vY32rIclj+4fWYQXUMs9EHvg==}
-
-  random-gif-api@1.2.0:
-    resolution: {integrity: sha512-kr9F0syJPXH5Jc9ABt0QkEaGOmPpVxyM0n/UIBFQsbeIzs4dAD1WOXSyzWzNcKeSLAmXfBa6ZJrd0QQQwR9/+g==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -7757,10 +7750,6 @@ snapshots:
   queue-microtask@1.2.3: {}
 
   quick-format-unescaped@4.0.4: {}
-
-  random-gif-api@1.2.0:
-    dependencies:
-      node-fetch: 2.6.1
 
   randombytes@2.1.0:
     dependencies:
