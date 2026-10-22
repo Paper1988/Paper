@@ -163,7 +163,7 @@ export default {
             const container = buildUserInfo(
                 member,
                 'attachment://profile.png',
-                fetchedUser.bannerURL(),
+                fetchedUser.bannerURL()!,
             )
 
             return interaction.editReply({
