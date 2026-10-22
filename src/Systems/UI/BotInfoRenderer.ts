@@ -48,7 +48,7 @@ export function buildBotInfoMessage(info: BotInfoViewModel): InteractionReplyOpt
         : '無'
 
     const container = new ContainerBuilder()
-        .setAccentColor(0x171717)
+        .setAccentColor(0xA3A3A3)
         .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
                 `# ${info.username}\n` +
