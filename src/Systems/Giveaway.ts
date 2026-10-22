@@ -163,7 +163,7 @@ class GiveawayManagerWithOwnDatabase {
 
         const stats = await GiveawayStats.findOne({ guildId: giveaway.guildId })
         if (stats) {
-            stats.activeGiveaways--
+            stats.activeGiveaways = Math.max(0, stats.activeGiveaways - 1)
             stats.totalParticipants += giveaway.participants.length
             stats.totalWinners += winners.length
 
