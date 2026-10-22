@@ -1,26 +1,66 @@
 import type { SubCommandType } from '@/typings/command.js'
-import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js'
+import {
+    ChatInputCommandInteraction,
+    ContainerBuilder,
+    MediaGalleryBuilder,
+    MediaGalleryItemBuilder,
+    MessageFlags,
+    TextDisplayBuilder,
+} from 'discord.js'
 import rga from 'random-gif-api'
+
+const ACCENT_COLOR = 0xA3A3A3
+
+function createMessage(content: string) {
+    return new ContainerBuilder()
+        .setAccentColor(ACCENT_COLOR)
+        .addTextDisplayComponents(new TextDisplayBuilder().setContent(content))
+}
 
 export default {
     subCommand: 'gif.kiss',
     async execute(interaction: ChatInputCommandInteraction) {
-        const Target = interaction.options.getUser('member')!
-        const Executer = interaction.user
-        const data = await rga.getGif('kiss')
-        const kissEmbed = new EmbedBuilder()
-            .setColor('#000000')
-            .setDescription(`**${Executer} 親了一下 ${Target}**`)
-            .setImage(data)
-            .setTimestamp()
+        const executor = interaction.user
+        const target = interaction.options.getUser('member', true)
 
-        if (Target.id === Executer.id) {
-            const Response = new EmbedBuilder()
-                .setColor('#000000')
-                .setDescription('<:outage:1265561329528471613> | 你不能親吻你自己！')
-            return await interaction.reply({ embeds: [Response] })
-        } else {
-            await interaction.reply({ embeds: [kissEmbed] })
+        if (target.id === executor.id) {
+            return interaction.reply({
+                components: [createMessage('# 不可以親吻自己！\\n換個對象吧。')],
+                flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+            })
         }
-    }
+
+        await interaction.reply({
+            components: [
+                createMessage(`# 親親\\n${executor} ${target}\\n\\n正在尋找合適的 GIF…`),
+            ],
+            flags: MessageFlags.IsComponentsV2,
+        })
+
+        try {
+            const gifUrl = await rga.getGif('kiss')
+            if (typeof gifUrl !== 'string' || !URL.canParse(gifUrl) || !/^https?:$/.test(new URL(gifUrl).protocol)) {
+                throw new Error('GIF API returned an invalid URL')
+            }
+
+            const container = createMessage(
+                `# 親親\\n${executor} 親了一下 ${target}。`,
+            ).addMediaGalleryComponents(
+                new MediaGalleryBuilder().addItems(
+                    new MediaGalleryItemBuilder().setURL(gifUrl),
+                ),
+            )
+
+            await interaction.editReply({ components: [container] })
+        } catch (error) {
+            console.error('[gif.kiss] Failed to fetch GIF:', error)
+            await interaction.editReply({
+                components: [
+                    createMessage(
+                        `# 親親\\nGIF 暫時找不到了，請稍後再試。`,
+                    ),
+                ],
+            })
+        }
+    },
 } as SubCommandType
