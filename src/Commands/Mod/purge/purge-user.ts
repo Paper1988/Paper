@@ -30,8 +30,14 @@ export default {
         const filtered: Collection<string, Message<boolean>> = fetch.filter(
             (m: Message) => m.author.id === user?.id
         )
+        if (filtered.size === 0) {
+            return interaction.reply({
+                content: `${emojis.warning} | 找不到該使用者可清除的訊息。`,
+                flags: MessageFlags.Ephemeral
+            })
+        }
         const deletedMessages: Collection<string, Message<boolean> | PartialMessage | undefined> =
             await channel.bulkDelete(filtered, true)
-        results(deletedMessages, interaction, '清除指定使用者訊息')
+        results(deletedMessages, interaction, `清除指定使用者訊息：${user?.tag ?? user?.id ?? '未知使用者'}`)
     }
 }
