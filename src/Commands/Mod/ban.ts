@@ -48,6 +48,7 @@ export default {
         const reason = options.getString('reason')!
 
         const errorsArray: string[] = []
+        const guildIcon = guild!.iconURL() ?? undefined
 
         const dmEmbed = new EmbedBuilder()
             .setColor('Green')
@@ -60,8 +61,8 @@ export default {
             )
             .setImage(target?.user.displayAvatarURL() ?? member.user.displayAvatarURL())
             .setFooter({
-                iconURL: guild!.iconURL()!,
-                text: `${guild!.name}`
+                text: guild!.name,
+                ...(guildIcon ? { iconURL: guildIcon } : {})
             })
 
         const errorsEmbed = new EmbedBuilder()
@@ -76,7 +77,10 @@ export default {
 
         if (!target.bannable) errorsArray.push('我的權限不夠大!')
 
-        if (interaction.guild?.ownerId !== interaction.user.id && member.roles.highest.position <= target.roles.highest.position) {
+        if (
+            interaction.guild?.ownerId !== interaction.user.id &&
+            member.roles.highest.position <= target.roles.highest.position
+        ) {
             errorsArray.push('所選成員的權限比你高!')
         }
 
@@ -107,8 +111,8 @@ export default {
         })
         const successEmbed = new EmbedBuilder()
             .setAuthor({
-                name: `${guild!.name}`,
-                iconURL: guild!.iconURL()!
+                name: guild!.name,
+                ...(guildIcon ? { iconURL: guildIcon } : {})
             })
             .setColor('Green')
             .setDescription(`被封鎖的成員: ${target}\n操作的管理員: ${member}\n原因: ${reason}`)
