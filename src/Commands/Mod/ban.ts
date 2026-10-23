@@ -58,7 +58,7 @@ export default {
                     `\n原因: ${reason}`
                 ].join('\n')
             )
-            .setImage(target.user.displayAvatarURL())
+            .setImage(target?.user.displayAvatarURL() ?? member.user.displayAvatarURL())
             .setFooter({
                 iconURL: guild!.iconURL()!,
                 text: `${guild!.name}`
