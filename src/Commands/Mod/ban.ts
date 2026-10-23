@@ -1,4 +1,5 @@
 import emojis from '@/libs/emoji/emoji.js'
+import { sendModeratorLog } from '@/Systems/ModeratorLog.js'
 import { deleteMessageAfter } from '@/Systems/Music.js'
 import type { CommandType } from '@/typings/command.js'
 import {
@@ -88,15 +89,23 @@ export default {
         }
 
         if (!target.user.bot) {
-            await target.send({ embeds: [dmEmbed] })
+            // A failed DM must not prevent the moderation action.
+            await target.send({ embeds: [dmEmbed] }).catch(() => null)
         }
-        await target.ban({ reason: reason }).catch((err) => {
-            interaction
-                .editReply({
-                    embeds: [errorsEmbed.setDescription('發生一個罕見的錯誤')]
-                })
-                .then(deleteMessageAfter)
-            return console.log('錯誤發生 - 在 Ban.js', err)
+
+        try {
+            await target.ban({ reason })
+        } catch (error) {
+            console.error('[Ban Command] Failed to ban member:', error)
+            return interaction.editReply({
+                embeds: [errorsEmbed.setDescription('封禁失敗，請確認 Paper 的權限與身分組階級。')]
+            })
+        }
+
+        await sendModeratorLog(interaction, {
+            action: '封禁成員',
+            target: `${target.user.tag} (${target.id})`,
+            reason
         })
         const successEmbed = new EmbedBuilder()
             .setAuthor({
