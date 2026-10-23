@@ -32,6 +32,6 @@ export default {
         )
         const deletedMessages: Collection<string, Message<boolean> | PartialMessage | undefined> =
             await channel.bulkDelete(filtered, true)
-        results(deletedMessages, interaction)
+        results(deletedMessages, interaction, '清除指定使用者訊息')
     }
 }
