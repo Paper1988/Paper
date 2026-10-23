@@ -77,7 +77,7 @@ export default {
 
         if (!target.bannable) errorsArray.push('我的權限不夠大!')
 
-        if (member.roles.highest.position < target.roles.highest.position) {
+        if (interaction.guild?.ownerId !== interaction.user.id && member.roles.highest.position <= target.roles.highest.position) {
             errorsArray.push('所選成員的權限比你高!')
         }
 
