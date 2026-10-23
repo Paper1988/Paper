@@ -1,4 +1,5 @@
 import { deleteMessageAfter } from '@/Systems/Music.js'
+import { sendModeratorLog } from '@/Systems/ModeratorLog.js'
 import type { CommandType } from '@/typings/command.js'
 import {
     ChatInputCommandInteraction,
@@ -93,10 +94,20 @@ export default {
             })
         }
 
-        await user.timeout(durationMs, reason).catch(async () => {
-            return await interaction.editReply({
-                embeds: [errorsEmbed.setDescription('時間不能小於0!')]
+        try {
+            await user.timeout(durationMs, reason)
+        } catch (error) {
+            console.error('[Timeout Command] Failed to timeout member:', error)
+            return interaction.editReply({
+                embeds: [errorsEmbed.setDescription('禁言失敗，請確認 Paper 的權限與身分組階級。')]
             })
+        }
+
+        await sendModeratorLog(interaction, {
+            action: '禁言成員',
+            target: `${user.user.tag} (${user.id})`,
+            reason,
+            details: [`時長：${ms(durationMs, { long: true })}`]
         })
 
         const successEmbed = new EmbedBuilder()
