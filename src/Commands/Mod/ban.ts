@@ -6,8 +6,7 @@ import {
     EmbedBuilder,
     GuildMember,
     PermissionFlagsBits,
-    SlashCommandBuilder,
-    User
+    SlashCommandBuilder
 } from 'discord.js'
 
 export default {
@@ -59,7 +58,7 @@ export default {
                     `\n原因: ${reason}`
                 ].join('\n')
             )
-            .setImage(`${(member!.user as User).displayAvatarURL()}`)
+            .setImage(target.user.displayAvatarURL())
             .setFooter({
                 iconURL: guild!.iconURL()!,
                 text: `${guild!.name}`
