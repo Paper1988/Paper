@@ -1,4 +1,5 @@
 import type { CommandType } from '@/typings/command.js'
+import { sendModeratorLog } from '@/Systems/ModeratorLog.js'
 import {
     ChatInputCommandInteraction,
     EmbedBuilder,
@@ -125,17 +126,18 @@ export default {
         if (timestamp) embed.setTimestamp()
 
         if (!ping) {
-            await interaction.reply({
-                embeds: [embed]
-            })
+            await interaction.reply({ embeds: [embed] })
         } else {
             await interaction.reply({
-                content: `${ping === '@everyone' ? '@everyone' : '@here'}`,
+                content: ping,
                 embeds: [embed],
-                allowedMentions: {
-                    parse: ['everyone']
-                }
+                allowedMentions: { parse: ['everyone'] }
             })
         }
+
+        await sendModeratorLog(interaction, {
+            action: '發布公告',
+            details: [`標題：${title ?? '未命名'}`, `公告頻道：<#${interaction.channelId}>`, `標註：${ping ?? '無'}`]
+        })
     }
 } as CommandType
