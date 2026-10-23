@@ -1,5 +1,5 @@
 import GuildConfig from '@/Structures/Schemas/GuildConfig.js'
-import type { ChatInputCommandInteraction, ButtonInteraction } from 'discord.js'
+import type { ButtonInteraction, ChatInputCommandInteraction } from 'discord.js'
 import { EmbedBuilder, TextChannel } from 'discord.js'
 
 type ModeratorInteraction = ChatInputCommandInteraction | ButtonInteraction
@@ -31,12 +31,16 @@ export async function sendModeratorLog(
         const channel = await guild.channels.fetch(config.moderatorLogChannel).catch(() => null)
         if (!channel?.isTextBased() || channel.isDMBased()) return
 
+        const commandName = interaction.isChatInputCommand()
+            ? `/${interaction.commandName}`
+            : '/unban'
+
         const embed = new EmbedBuilder()
             .setColor(0xA3A3A3)
             .setTitle(entry.action.slice(0, 256))
             .addFields(
                 { name: '執行者', value: `${interaction.user} (\`${interaction.user.id}\`)`, inline: true },
-                { name: '指令', value: `/\${interaction.isChatInputCommand() ? interaction.commandName : 'unban'}\`, inline: true },
+                { name: '指令', value: commandName, inline: true },
                 { name: '頻道', value: interaction.channel ? `<#${interaction.channel.id}>` : '未知', inline: true }
             )
             .setTimestamp()
