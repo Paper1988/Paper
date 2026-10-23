@@ -1,4 +1,5 @@
 import emojis from '@/libs/emoji/emoji.js'
+import { sendModeratorLog } from '@/Systems/ModeratorLog.js'
 import DB from '@/Structures/Schemas/AntiAlt.js'
 import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, TextChannel } from 'discord.js'
@@ -11,14 +12,24 @@ export default {
 
         const LogsChannel = options.getChannel('channel')
 
-        await DB.findOneAndUpdate(
-            { GuildID: guild!.id },
-            { LogsChannel: LogsChannel!.id },
-            {
-                new: true,
-                upsert: true
-            }
-        ).catch((err) => console.log(err))
+        try {
+            await DB.findOneAndUpdate(
+                { GuildID: guild!.id },
+                { LogsChannel: LogsChannel!.id },
+                { new: true, upsert: true }
+            )
+        } catch (error) {
+            console.error('[AntiAlt] Failed to configure log channel:', error)
+            return interaction.reply({
+                content: `${emojis.warning} | 設定失敗，請稍後再試。`,
+                flags: MessageFlags.Ephemeral
+            })
+        }
+
+        await sendModeratorLog(interaction, {
+            action: '設定反小號日誌',
+            details: [`反小號日誌頻道：<#${LogsChannel!.id}>`]
+        })
 
         const LogsSetup = new EmbedBuilder()
             .setDescription(`${emojis.correct} | 成功設定日誌`)
