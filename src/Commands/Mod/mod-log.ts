@@ -1,4 +1,5 @@
 import GuildConfig from '@/Structures/Schemas/GuildConfig.js'
+import { sendModeratorLog } from '@/Systems/ModeratorLog.js'
 import type { CommandType } from '@/typings/command.js'
 import {
     ChannelType,
@@ -72,6 +73,11 @@ export default {
                 { upsert: true, new: true, setDefaultsOnInsert: true }
             )
 
+            await sendModeratorLog(interaction, {
+                action: '設定管理日誌頻道',
+                details: [`日誌頻道：<#${channel.id}>`]
+            })
+
             await (channel as TextChannel).send({
                 embeds: [{
                     color: 0xA3A3A3,
@@ -87,16 +93,16 @@ export default {
             })
         }
 
-        const result = await GuildConfig.findOneAndUpdate(
+        await sendModeratorLog(interaction, { action: '停用管理日誌' })
+
+        await GuildConfig.findOneAndUpdate(
             { guildId: guild.id },
             { $set: { moderatorLogChannel: null }, $setOnInsert: { disabledCommands: [] } },
             { upsert: true, new: true, setDefaultsOnInsert: true }
         )
 
         return interaction.reply({
-            content: result.moderatorLogChannel
-                ? '管理日誌設定已重設。'
-                : '已停用管理日誌。',
+            content: '已停用管理日誌。',
             flags: MessageFlags.Ephemeral
         })
     }
