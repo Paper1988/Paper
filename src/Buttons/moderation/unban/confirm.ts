@@ -1,5 +1,6 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { deleteMessageAfter } from '@/Systems/Music.js'
+import { sendModeratorLog } from '@/Systems/ModeratorLog.js'
 import { ButtonInteraction, EmbedBuilder, MessageFlags } from 'discord.js'
 
 export default {
@@ -28,6 +29,11 @@ export default {
             try {
                 const user = await client.users.fetch(memberId)
                 await guild?.members.unban(memberId, `由 ${interaction.user.username} 操作`)
+                await sendModeratorLog(interaction, {
+                    action: '解除封禁',
+                    target: `${user.tag} (${user.id})`,
+                    reason: `由 ${interaction.user.tag} 操作`
+                })
 
                 const finishedEmbed = new EmbedBuilder()
                     .setColor('Blue')
