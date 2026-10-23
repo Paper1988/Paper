@@ -31,6 +31,6 @@ export default {
             | readonly MessageResolvable[] = fetch.filter((m: Message) => m.author.bot)
         const deletedMessages: Collection<string, Message<boolean> | PartialMessage | undefined> =
             await channel.bulkDelete(filtered, true)
-        results(deletedMessages, interaction)
+        results(deletedMessages, interaction, '清除機器人訊息')
     }
 }
