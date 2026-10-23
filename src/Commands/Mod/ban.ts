@@ -1,6 +1,5 @@
 import emojis from '@/libs/emoji/emoji.js'
 import { sendModeratorLog } from '@/Systems/ModeratorLog.js'
-import { deleteMessageAfter } from '@/Systems/Music.js'
 import type { CommandType } from '@/typings/command.js'
 import {
     ChatInputCommandInteraction,
