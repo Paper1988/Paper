@@ -1,4 +1,5 @@
 import emojis from '@/libs/emoji/emoji.js'
+import { sendModeratorLog } from '@/Systems/ModeratorLog.js'
 import type { CommandType } from '@/typings/command.js'
 import {
     ChatInputCommandInteraction,
@@ -114,6 +115,12 @@ export default {
             } else {
                 await target.roles.add(role)
             }
+
+            await sendModeratorLog(interaction, {
+                action: hasRole ? '移除身分組' : '指派身分組',
+                target: `${target.user.tag} (${target.id})`,
+                details: [`身分組：${role.name} (${role.id})`]
+            })
 
             return interaction.editReply({
                 components: [
