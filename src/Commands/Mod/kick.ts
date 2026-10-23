@@ -76,7 +76,7 @@ export default {
 
         if (!target.kickable) errorsArray.push('我的權限不夠大!')
 
-        if (member.roles.highest.position < target.roles.highest.position) {
+        if (interaction.guild?.ownerId !== interaction.user.id && member.roles.highest.position <= target.roles.highest.position) {
             errorsArray.push('所選成員的權限比你高!')
         }
 
@@ -88,20 +88,26 @@ export default {
                 .then(deleteMessageAfter)
         }
 
+        // A failed DM must not prevent the moderation action.
+        await target.send({ embeds: [dmEmbed] }).catch(() => null)
+
         try {
-            await target.send({ embeds: [dmEmbed] })
-        } catch {
-            return
-        }
-        await target.kick(reason).catch((err) => {
-            interaction
+            await target.kick(reason)
+        } catch (error) {
+            console.error('[Kick Command] Failed to kick member:', error)
+            return interaction
                 .editReply({
                     embeds: [
-                        errorsEmbed.setDescription(`${emojis.outage} | 發生未知錯誤，請協助回報!`)
+                        errorsEmbed.setDescription(`${emojis.outage} | 踢出失敗，請確認 Paper 的權限與身分組階級。`)
                     ]
                 })
                 .then(deleteMessageAfter)
-            return console.log('錯誤發生 - 在 kick.js\n', err)
+        }
+
+        await sendModeratorLog(interaction, {
+            action: '踢出成員',
+            target: `${target.user.tag} (${target.id})`,
+            reason
         })
 
         const successEmbed = new EmbedBuilder()
