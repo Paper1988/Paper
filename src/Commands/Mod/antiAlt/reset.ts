@@ -1,4 +1,5 @@
 import DB from '@/Structures/Schemas/AntiAlt.js'
+import { sendModeratorLog } from '@/Systems/ModeratorLog.js'
 import { deleteMessageAfter } from '@/Systems/Music.js'
 import { emojis } from '@/libs/utils/index.js'
 import type { SubCommandType } from '@/typings/command.js'
@@ -22,6 +23,7 @@ export default {
                     })
                     .then(deleteMessageAfter)
             }
+            await sendModeratorLog(interaction, { action: '重設反小號日誌' })
             await interaction.reply({ embeds: [LogsReset] })
         } catch (err) {
             throw err
