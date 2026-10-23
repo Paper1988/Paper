@@ -1,10 +1,11 @@
 import { deleteMessageAfter } from '@/Systems/Music.js'
+import { sendModeratorLog } from '@/Systems/ModeratorLog.js'
 import { ChatInputCommandInteraction } from 'discord.js'
 
-async function results(deletedMessages, interaction: ChatInputCommandInteraction) {
-    const messageCounts = {}
+async function results(\n    deletedMessages,\n    interaction: ChatInputCommandInteraction,\n    action = '清除訊息'\n) {
+    await sendModeratorLog(interaction, {\n        action,\n        details: [`頻道：<#${interaction.channelId}>`, `刪除數量：${deletedMessages.size}`]\n    })\n\n    const messageCounts = {}
     for (const [, deleted] of deletedMessages) {
-        const user = `${deleted.author.username}#${deleted.author.discriminator}`
+        if (!deleted?.author) continue\n        const user = deleted.author.tag || deleted.author.username
         if (!messageCounts[user]) messageCounts[user] = 0
         messageCounts[user]++
     }
