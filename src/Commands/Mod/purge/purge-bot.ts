@@ -29,6 +29,9 @@ export default {
             | number
             | Collection<string, Message<boolean>>
             | readonly MessageResolvable[] = fetch.filter((m: Message) => m.author.bot)
+        if (filtered instanceof Collection && filtered.size === 0) {
+            return interaction.reply({ content: `${emojis.warning} | 找不到可清除的機器人訊息。` })
+        }
         const deletedMessages: Collection<string, Message<boolean> | PartialMessage | undefined> =
             await channel.bulkDelete(filtered, true)
         results(deletedMessages, interaction, '清除機器人訊息')
