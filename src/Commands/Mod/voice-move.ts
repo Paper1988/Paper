@@ -3,7 +3,6 @@ import { sendModeratorLog } from '@/Systems/ModeratorLog.js'
 import {
     ChannelType,
     ChatInputCommandInteraction,
-    GuildMember,
     MessageFlags,
     PermissionFlagsBits,
     SlashCommandBuilder,
