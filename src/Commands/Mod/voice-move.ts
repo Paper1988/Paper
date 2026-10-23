@@ -1,4 +1,5 @@
 import type { CommandType } from '@/typings/command.js'
+import { sendModeratorLog } from '@/Systems/ModeratorLog.js'
 import {
     ChannelType,
     ChatInputCommandInteraction,
@@ -63,8 +64,13 @@ export default {
         }
 
         if (!target) {
-            voiceChannel.members.forEach((m) => {
+            const movedMembers = [...voiceChannel.members.values()]
+            await Promise.all(movedMembers.map((m) =>
                 m.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`)
+            ))
+            await sendModeratorLog(interaction, {
+                action: '批次移動語音成員',
+                details: [`來源：<#${voiceChannel.id}>`, `目的地：<#${newChannel.id}>`, `人數：${movedMembers.length}`]
             })
             return await interaction.reply({
                 content: `<:moveaudience:1265561080386555978> | 成功將所有成員移動到 ${newChannel}`,
@@ -74,6 +80,11 @@ export default {
             const members = voiceChannel.members.map((m) => m.id)
             if (members.includes(target.id)) {
                 await target.voice.setChannel(newChannel, `由 ${member.user.tag} 移動`)
+                await sendModeratorLog(interaction, {
+                    action: '移動語音成員',
+                    target: `${target.user.tag} (${target.id})`,
+                    details: [`來源：<#${voiceChannel.id}>`, `目的地：<#${newChannel.id}>`]
+                })
                 return await interaction.reply({
                     content: `<:moveaudience:1265561080386555978> | 成功將成員 ${target} 移動到 ${newChannel}`,
                     flags: MessageFlags.Ephemeral
