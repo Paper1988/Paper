@@ -1,6 +1,7 @@
 import { timingSafeEqual } from 'node:crypto'
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { aggregateWeeklyStats } from '@/jobs/weeklyAggregation.js'
+import GuildConfig from '@/Structures/Schemas/GuildConfig.js'
 import { Logger } from '@/libs/utils/logger.js'
 import fastifyCors from '@fastify/cors'
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify'
@@ -205,6 +206,55 @@ export class ApiServer {
                 reply.code(500).send({ ok: false, error: err })
             }
         })
+
+        this.fastify.get(
+            '/api/guilds/:guildId/config',
+            async (request: FastifyRequest<{ Params: { guildId: string } }>, reply) => {
+                const { guildId } = request.params
+                if (!(await this.authorizeGuildManager(request, reply, guildId))) return
+
+                const config = await GuildConfig.findOne({ guildId }).lean()
+                return reply.send({ guildId, disabledCommands: config?.disabledCommands ?? [] })
+            }
+        )
+
+        this.fastify.put(
+            '/api/guilds/:guildId/config',
+            async (
+                request: FastifyRequest<{
+                    Params: { guildId: string }
+                    Body: { disabledCommands?: unknown }
+                }>,
+                reply
+            ) => {
+                const { guildId } = request.params
+                if (!(await this.authorizeGuildManager(request, reply, guildId))) return
+
+                const disabledCommands = request.body?.disabledCommands
+                if (
+                    !Array.isArray(disabledCommands) ||
+                    !disabledCommands.every((command): command is string => typeof command === 'string') ||
+                    new Set(disabledCommands).size !== disabledCommands.length
+                ) {
+                    return reply.code(400).send({ message: 'disabledCommands 必須是無重複字串陣列' })
+                }
+
+                const availableCommands = new Set(
+                    this.client.getAvailableConfigCommands().map((command) => command.name)
+                )
+                if (disabledCommands.some((command) => !availableCommands.has(command))) {
+                    return reply.code(400).send({ message: '包含無法設定的指令' })
+                }
+
+                const config = await GuildConfig.findOneAndUpdate(
+                    { guildId },
+                    { $set: { disabledCommands } },
+                    { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true }
+                ).lean()
+
+                return reply.send({ guildId, disabledCommands: config?.disabledCommands ?? [] })
+            }
+        )
 
         this.setupGiveawayRoutes()
         this.setupMusicRoutes()
