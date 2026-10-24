@@ -10,6 +10,7 @@ import {
     StringSelectMenuInteraction,
     UserContextMenuCommandInteraction,
     UserSelectMenuInteraction,
+    MessageFlags,
     type Interaction
 } from 'discord.js'
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
@@ -22,6 +23,7 @@ import {
 import { Logger } from '@/libs/utils/logger.js'
 import type { EventType } from '@/typings/event.js'
 import CommandUsage from '@/Structures/Schemas/commandUsage.js'
+import GuildConfig from '@/Structures/Schemas/GuildConfig.js'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -74,6 +76,22 @@ async function handleSlashCommand(interaction: ChatInputCommandInteraction, clie
     const command = client.commands.get(interaction.commandName)
     if (!command) {
         return interactionUtils.sendErrorResponse(interaction, CONFIG.MESSAGES.COMMAND_NOT_FOUND)
+    }
+
+    if (interaction.guildId) {
+        try {
+            const guildConfig = await GuildConfig.findOne({ guildId: interaction.guildId }).lean()
+            if (guildConfig?.disabledCommands.includes(interaction.commandName)) {
+                await interaction.reply({
+                    content: '此伺服器已停用此指令。',
+                    flags: MessageFlags.Ephemeral
+                })
+                return
+            }
+        } catch (error) {
+            Logger.error('讀取伺服器指令設定失敗:', error)
+            return interactionUtils.sendErrorResponse(interaction, '讀取伺服器設定失敗，請稍後再試。')
+        }
     }
 
     // 開發者專屬指令驗證
