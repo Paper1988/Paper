@@ -82,10 +82,11 @@ async function handleSlashCommand(interaction: ChatInputCommandInteraction, clie
         try {
             const guildConfig = await GuildConfig.findOne({ guildId: interaction.guildId }).lean()
             if (guildConfig?.disabledCommands.includes(interaction.commandName)) {
-                return interaction.reply({
+                await interaction.reply({
                     content: '此伺服器已停用此指令。',
                     flags: MessageFlags.Ephemeral
                 })
+                return
             }
         } catch (error) {
             Logger.error('讀取伺服器指令設定失敗:', error)
