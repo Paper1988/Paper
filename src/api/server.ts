@@ -3,7 +3,7 @@ import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { aggregateWeeklyStats } from '@/jobs/weeklyAggregation.js'
 import { Logger } from '@/libs/utils/logger.js'
 import fastifyCors from '@fastify/cors'
-import Fastify, { type FastifyInstance, type FastifyRequest } from 'fastify'
+import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify'
 
 export class ApiServer {
     private fastify: FastifyInstance
@@ -62,6 +62,44 @@ export class ApiServer {
                 return reply.code(401).send({ message: 'Unauthorized' })
             }
         })
+    }
+
+    /** Authorize a Discord user against the guild for every guild-scoped endpoint. */
+    private async authorizeGuildManager(
+        request: FastifyRequest,
+        reply: FastifyReply,
+        guildId: string
+    ): Promise<boolean> {
+        const userId = request.headers['x-discord-id']
+        if (typeof userId !== 'string' || !/^\\d{17,20}$/.test(userId)) {
+            reply.code(401).send({ message: '使用者身分無效或缺失' })
+            return false
+        }
+
+        if (!this.client.isReady()) {
+            reply.code(503).send({ message: '機器人尚未上線' })
+            return false
+        }
+
+        const guild = this.client.guilds.cache.get(guildId)
+        if (!guild) {
+            reply.code(404).send({ message: '找不到伺服器' })
+            return false
+        }
+
+        if (guild.ownerId === userId) return true
+
+        try {
+            const member = await guild.members.fetch(userId)
+            if (member.permissions.has('Administrator') || member.permissions.has('ManageGuild')) {
+                return true
+            }
+        } catch {
+            // The user is not a member of this guild, or Discord could not resolve the member.
+        }
+
+        reply.code(403).send({ message: '沒有管理此伺服器的權限' })
+        return false
     }
 
     private setupRoutes() {
@@ -132,6 +170,7 @@ export class ApiServer {
                 }
 
                 const { guildId } = request.params
+                if (!(await this.authorizeGuildManager(request, reply, guildId))) return
                 const guild = this.client.guilds.cache.get(guildId)
 
                 if (!guild) {
@@ -178,6 +217,7 @@ export class ApiServer {
             '/api/guilds/:guildId/giveaways/:messageId/end',
             async (request, reply) => {
                 const { guildId, messageId } = request.params
+                if (!(await this.authorizeGuildManager(request, reply, guildId))) return
 
                 const guild = this.client.guilds.cache.get(guildId)
                 if (!guild) {
@@ -185,7 +225,7 @@ export class ApiServer {
                 }
 
                 try {
-                    const giveawayManager = (this.client as any).giveawayManager
+                    const giveawayManager = (this.client as any).giveawaysManager
                     if (!giveawayManager) {
                         return reply.code(501).send({ message: 'Giveaway manager 未初始化' })
                     }
@@ -213,6 +253,7 @@ export class ApiServer {
             '/api/guilds/:guildId/giveaways/:messageId/reroll',
             async (request, reply) => {
                 const { guildId, messageId } = request.params
+                if (!(await this.authorizeGuildManager(request, reply, guildId))) return
 
                 const guild = this.client.guilds.cache.get(guildId)
                 if (!guild) {
@@ -220,12 +261,17 @@ export class ApiServer {
                 }
 
                 try {
-                    const giveawayManager = (this.client as any).giveawayManager
+                    const giveawayManager = (this.client as any).giveawaysManager
                     if (!giveawayManager) {
                         return reply.code(501).send({ message: 'Giveaway manager 未初始化' })
                     }
 
+                    const giveaway = giveawayManager.giveaways.get(messageId)
+                    if (!giveaway || giveaway.guildId !== guildId) {
+                        return reply.code(404).send({ message: '找不到抽獎活動' })
+                    }
                     const winners = await giveawayManager.reroll(messageId)
+                    if (!winners) return reply.code(404).send({ message: '抽獎尚未結束或不存在' })
                     reply.send({ ok: true, winners })
                 } catch (error) {
                     this.fastify.log.error(error)
@@ -239,7 +285,7 @@ export class ApiServer {
         type MusicParams = { Params: { guildId: string } }
 
         const getPlayer = (guildId: string) => {
-            const player = this.client.moonlink!.players.get(guildId)
+            const player = this.client.moonlink?.players.get(guildId)
             if (!player) return null
             return player
         }
@@ -248,6 +294,7 @@ export class ApiServer {
             '/api/guilds/:guildId/music/queue',
             async (request, reply) => {
                 const { guildId } = request.params
+                if (!(await this.authorizeGuildManager(request, reply, guildId))) return
                 const player = getPlayer(guildId)
 
                 if (!player || !player.playing) {
@@ -283,6 +330,7 @@ export class ApiServer {
             '/api/guilds/:guildId/music/skip',
             async (request, reply) => {
                 const { guildId } = request.params
+                if (!(await this.authorizeGuildManager(request, reply, guildId))) return
                 const player = getPlayer(guildId)
 
                 if (!player || !player.playing) {
@@ -298,6 +346,7 @@ export class ApiServer {
             '/api/guilds/:guildId/music/pause',
             async (request, reply) => {
                 const { guildId } = request.params
+                if (!(await this.authorizeGuildManager(request, reply, guildId))) return
                 const player = getPlayer(guildId)
 
                 if (!player || !player.playing) {
@@ -317,6 +366,7 @@ export class ApiServer {
             '/api/guilds/:guildId/music/resume',
             async (request, reply) => {
                 const { guildId } = request.params
+                if (!(await this.authorizeGuildManager(request, reply, guildId))) return
                 const player = getPlayer(guildId)
 
                 if (!player || !player.playing) {
@@ -336,6 +386,7 @@ export class ApiServer {
             '/api/guilds/:guildId/music/queue',
             async (request, reply) => {
                 const { guildId } = request.params
+                if (!(await this.authorizeGuildManager(request, reply, guildId))) return
                 const player = getPlayer(guildId)
 
                 if (!player) {
