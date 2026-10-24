@@ -20,8 +20,13 @@ export class ApiServer {
     }
 
     private setupCors() {
+        const allowedOrigins = [
+            process.env.PAPER_DASHBOARD_URL,
+            process.env.GO_API_URL ?? 'http://localhost:8080'
+        ].filter((origin): origin is string => Boolean(origin))
+
         this.fastify.register(fastifyCors, {
-            origin: [process.env.GO_API_URL ?? 'http://localhost:8080'],
+            origin: allowedOrigins,
             methods: ['GET', 'POST', 'PUT', 'DELETE'],
             credentials: true
         })
