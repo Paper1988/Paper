@@ -72,7 +72,7 @@ export class ApiServer {
         guildId: string
     ): Promise<boolean> {
         const userId = request.headers['x-discord-id']
-        if (typeof userId !== 'string' || !/^\\d{17,20}$/.test(userId)) {
+        if (typeof userId !== 'string' || !/^\d{17,20}$/.test(userId)) {
             reply.code(401).send({ message: '使用者身分無效或缺失' })
             return false
         }
