@@ -91,7 +91,7 @@ export function registerCoreRoutes(fastify: FastifyInstance, client: PaperClient
                 }
 
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(request, reply, guildId))) return
+                if (!(await authorizeGuildManager(client, request, reply, guildId))) return
                 const guild = client.guilds.cache.get(guildId)
 
                 if (!guild) {
@@ -131,7 +131,7 @@ export function registerCoreRoutes(fastify: FastifyInstance, client: PaperClient
             '/api/guilds/:guildId/config',
             async (request: FastifyRequest<{ Params: { guildId: string } }>, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(request, reply, guildId))) return
+                if (!(await authorizeGuildManager(client, request, reply, guildId))) return
 
                 const config = await GuildConfig.findOne({ guildId }).lean()
                 return reply.send({
@@ -152,7 +152,7 @@ export function registerCoreRoutes(fastify: FastifyInstance, client: PaperClient
                 reply
             ) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(request, reply, guildId))) return
+                if (!(await authorizeGuildManager(client, request, reply, guildId))) return
 
                 const disabledCommands = request.body?.disabledCommands
                 if (
