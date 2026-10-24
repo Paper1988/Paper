@@ -214,7 +214,11 @@ export class ApiServer {
                 if (!(await this.authorizeGuildManager(request, reply, guildId))) return
 
                 const config = await GuildConfig.findOne({ guildId }).lean()
-                return reply.send({ guildId, disabledCommands: config?.disabledCommands ?? [] })
+                return reply.send({
+                    guildId,
+                    disabledCommands: config?.disabledCommands ?? [],
+                    availableCommands: this.client.getAvailableConfigCommands()
+                })
             }
         )
 
