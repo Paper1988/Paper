@@ -9,7 +9,7 @@ export function registerGiveawayRoutes(fastify: FastifyInstance, client: PaperCl
             '/api/guilds/:guildId/giveaways/:messageId/end',
             async (request, reply) => {
                 const { guildId, messageId } = request.params
-                if (!(await authorizeGuildManager(request, reply, guildId))) return
+                if (!(await authorizeGuildManager(client, request, reply, guildId))) return
 
                 const guild = client.guilds.cache.get(guildId)
                 if (!guild) {
@@ -45,7 +45,7 @@ export function registerGiveawayRoutes(fastify: FastifyInstance, client: PaperCl
             '/api/guilds/:guildId/giveaways/:messageId/reroll',
             async (request, reply) => {
                 const { guildId, messageId } = request.params
-                if (!(await authorizeGuildManager(request, reply, guildId))) return
+                if (!(await authorizeGuildManager(client, request, reply, guildId))) return
 
                 const guild = client.guilds.cache.get(guildId)
                 if (!guild) {
