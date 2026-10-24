@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 
 const botStatusHistorySchema = new Schema(
     {
-        timestamp: { type: Date, required: true, index: true },
+        timestamp: { type: Date, required: true },
         status: { type: Number, required: true, enum: [0, 1] }
     },
     {
