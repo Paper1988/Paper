@@ -10,6 +10,7 @@ import {
     StringSelectMenuInteraction,
     UserContextMenuCommandInteraction,
     UserSelectMenuInteraction,
+    MessageFlags,
     type Interaction
 } from 'discord.js'
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
@@ -23,7 +24,6 @@ import { Logger } from '@/libs/utils/logger.js'
 import type { EventType } from '@/typings/event.js'
 import CommandUsage from '@/Structures/Schemas/commandUsage.js'
 import GuildConfig from '@/Structures/Schemas/GuildConfig.js'
-import { MessageFlags } from 'discord.js'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
