@@ -2,6 +2,7 @@ import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import type { FastifyReply, FastifyRequest } from 'fastify'
 
 export async function authorizeGuildManager(
+        client: PaperClient,
         request: FastifyRequest,
         reply: FastifyReply,
         guildId: string
