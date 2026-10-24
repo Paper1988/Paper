@@ -15,7 +15,7 @@ export function registerMusicRoutes(fastify: FastifyInstance, client: PaperClien
             '/api/guilds/:guildId/music/queue',
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(request, reply, guildId))) return
+                if (!(await authorizeGuildManager(client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
 
                 if (!player || !player.playing) {
@@ -51,7 +51,7 @@ export function registerMusicRoutes(fastify: FastifyInstance, client: PaperClien
             '/api/guilds/:guildId/music/skip',
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(request, reply, guildId))) return
+                if (!(await authorizeGuildManager(client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
 
                 if (!player || !player.playing) {
@@ -67,7 +67,7 @@ export function registerMusicRoutes(fastify: FastifyInstance, client: PaperClien
             '/api/guilds/:guildId/music/pause',
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(request, reply, guildId))) return
+                if (!(await authorizeGuildManager(client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
 
                 if (!player || !player.playing) {
@@ -87,7 +87,7 @@ export function registerMusicRoutes(fastify: FastifyInstance, client: PaperClien
             '/api/guilds/:guildId/music/resume',
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(request, reply, guildId))) return
+                if (!(await authorizeGuildManager(client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
 
                 if (!player || !player.playing) {
@@ -107,7 +107,7 @@ export function registerMusicRoutes(fastify: FastifyInstance, client: PaperClien
             '/api/guilds/:guildId/music/queue',
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(request, reply, guildId))) return
+                if (!(await authorizeGuildManager(client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
 
                 if (!player) {
