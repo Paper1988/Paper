@@ -274,7 +274,11 @@ export class ApiServer {
                     { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true }
                 ).lean()
 
-                return reply.send({ guildId, disabledCommands: config?.disabledCommands ?? [] })
+                return reply.send({
+                    guildId,
+                    disabledCommands: config?.disabledCommands ?? [],
+                    availableCommands: this.client.getAvailableConfigCommands()
+                })
             }
         )
 
