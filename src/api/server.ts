@@ -135,25 +135,43 @@ export class ApiServer {
                 }
 
                 try {
-                    const userGuilds = this.client.guilds.cache
-                        .filter((guild) => {
-                            const member = guild.members.cache.get(userId)
-                            if (!member) return false
-                            return member.permissions.has([
-                                'ManageGuild',
-                                'ManageRoles',
-                                'ManageChannels',
-                                'ManageMessages',
-                                'Administrator'
-                            ])
-                        })
-                        .map((guild) => ({
-                            id: guild.id,
-                            name: guild.name,
-                            icon: guild.iconURL(),
-                            memberCount: guild.memberCount,
-                            ownerId: guild.ownerId
-                        }))
+                    const userGuilds = (
+                        await Promise.all(
+                            this.client.guilds.cache.map(async (guild) => {
+                                if (guild.ownerId === userId) {
+                                    return {
+                                        id: guild.id,
+                                        name: guild.name,
+                                        icon: guild.iconURL(),
+                                        memberCount: guild.memberCount,
+                                        ownerId: guild.ownerId
+                                    }
+                                }
+
+                                try {
+                                    const member =
+                                        guild.members.cache.get(userId) ??
+                                        (await guild.members.fetch(userId))
+                                    if (
+                                        !member.permissions.has('Administrator') &&
+                                        !member.permissions.has('ManageGuild')
+                                    ) {
+                                        return null
+                                    }
+
+                                    return {
+                                        id: guild.id,
+                                        name: guild.name,
+                                        icon: guild.iconURL(),
+                                        memberCount: guild.memberCount,
+                                        ownerId: guild.ownerId
+                                    }
+                                } catch {
+                                    return null
+                                }
+                            })
+                        )
+                    ).filter((guild) => guild !== null)
 
                     return userGuilds
                 } catch (error) {
