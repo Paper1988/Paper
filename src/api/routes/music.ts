@@ -5,15 +5,21 @@ import { authorizeGuildManager } from '../authorization.js'
 export function registerMusicRoutes(fastify: FastifyInstance, client: PaperClient) {
         type MusicParams = { Params: { guildId: string } }
 
+        const musicRouteRateLimit = {
+            max: 30,
+            timeWindow: '1 minute'
+        }
+
         const getPlayer = (guildId: string) => {
             const player = client.moonlink?.players.get(guildId)
             if (!player) return null
             return player
         }
 
-        fastify.get<MusicParams>(
-            '/api/guilds/:guildId/music/queue',
-            async (request, reply) => {
+        fastify.get<MusicParams>({
+            url: '/api/guilds/:guildId/music/queue',
+            config: { rateLimit: musicRouteRateLimit },
+            handler: async (request, reply) => {
                 const { guildId } = request.params
                 if (!(await authorizeGuildManager(client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
@@ -45,11 +51,12 @@ export function registerMusicRoutes(fastify: FastifyInstance, client: PaperClien
                     }))
                 })
             }
-        )
+        })
 
-        fastify.post<MusicParams>(
-            '/api/guilds/:guildId/music/skip',
-            async (request, reply) => {
+        fastify.post<MusicParams>({
+            url: '/api/guilds/:guildId/music/skip',
+            config: { rateLimit: musicRouteRateLimit },
+            handler: async (request, reply) => {
                 const { guildId } = request.params
                 if (!(await authorizeGuildManager(client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
@@ -61,11 +68,12 @@ export function registerMusicRoutes(fastify: FastifyInstance, client: PaperClien
                 await player.skip()
                 reply.send({ ok: true })
             }
-        )
+        })
 
-        fastify.post<MusicParams>(
-            '/api/guilds/:guildId/music/pause',
-            async (request, reply) => {
+        fastify.post<MusicParams>({
+            url: '/api/guilds/:guildId/music/pause',
+            config: { rateLimit: musicRouteRateLimit },
+            handler: async (request, reply) => {
                 const { guildId } = request.params
                 if (!(await authorizeGuildManager(client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
@@ -81,11 +89,12 @@ export function registerMusicRoutes(fastify: FastifyInstance, client: PaperClien
                 await player.pause()
                 reply.send({ ok: true })
             }
-        )
+        })
 
-        fastify.post<MusicParams>(
-            '/api/guilds/:guildId/music/resume',
-            async (request, reply) => {
+        fastify.post<MusicParams>({
+            url: '/api/guilds/:guildId/music/resume',
+            config: { rateLimit: musicRouteRateLimit },
+            handler: async (request, reply) => {
                 const { guildId } = request.params
                 if (!(await authorizeGuildManager(client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
@@ -101,11 +110,12 @@ export function registerMusicRoutes(fastify: FastifyInstance, client: PaperClien
                 await player.resume()
                 reply.send({ ok: true })
             }
-        )
+        })
 
-        fastify.delete<MusicParams>(
-            '/api/guilds/:guildId/music/queue',
-            async (request, reply) => {
+        fastify.delete<MusicParams>({
+            url: '/api/guilds/:guildId/music/queue',
+            config: { rateLimit: musicRouteRateLimit },
+            handler: async (request, reply) => {
                 const { guildId } = request.params
                 if (!(await authorizeGuildManager(client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
@@ -117,5 +127,5 @@ export function registerMusicRoutes(fastify: FastifyInstance, client: PaperClien
                 player.destroy()
                 reply.send({ ok: true })
             }
-        )
+        })
 }
