@@ -2,6 +2,7 @@ import client from '@/index.js'
 import cron from 'node-cron'
 import { checkMeetingTimers } from './meetingTimers.js'
 import { checkExpiringPolls } from './pollClosing.js'
+import { recordBotStatus } from './botStatusHistory.js'
 import { aggregateWeeklyStats } from './weeklyAggregation.js'
 
 class CronJob {
@@ -9,6 +10,7 @@ class CronJob {
         this.weeklyStats()
         this.meetingTimers()
         this.pollClosing()
+        this.botStatusHistory()
     }
 
     weeklyStats() {
@@ -60,6 +62,25 @@ class CronJob {
                     }
                 } catch (err) {
                     console.error('投票到期檢查失敗', err)
+                }
+            },
+            {
+                timezone: 'Asia/Taipei'
+            }
+        )
+    }
+
+    botStatusHistory() {
+        // Store a status sample every five minutes; MongoDB TTL removes old samples.
+        cron.schedule(
+            '*/5 * * * *',
+            async () => {
+                try {
+                    if (client) {
+                        await recordBotStatus(client)
+                    }
+                } catch (err) {
+                    console.error('機器人狀態歷史紀錄失敗', err)
                 }
             },
             {
