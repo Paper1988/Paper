@@ -318,7 +318,7 @@ export class ApiServer {
                 if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
 
                 try {
-                    const giveawayManager = (this.client as any).giveawayManager
+                    const giveawayManager = (this.client as any).giveawaysManager
                     if (!giveawayManager) {
                         return reply.code(501).send({ message: 'Giveaway manager 未初始化' })
                     }
@@ -346,7 +346,7 @@ export class ApiServer {
                 if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
 
                 try {
-                    const giveawayManager = (this.client as any).giveawayManager
+                    const giveawayManager = (this.client as any).giveawaysManager
                     if (!giveawayManager) {
                         return reply.code(501).send({ message: 'Giveaway manager 未初始化' })
                     }
