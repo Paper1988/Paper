@@ -5,7 +5,7 @@ import BotStatusHistory from '@/Structures/Schemas/BotStatusHistory.js'
 import GuildConfig from '@/Structures/Schemas/GuildConfig.js'
 import { Logger } from '@/libs/utils/logger.js'
 import fastifyCors from '@fastify/cors'
-import Fastify, { type FastifyInstance, type FastifyRequest } from 'fastify'
+import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify'
 import { authorizeGuildManager } from './authorization.js'
 
 type RateLimitBucket = { count: number; resetAt: number }
@@ -67,7 +67,7 @@ export class ApiServer {
 
     /** In-memory limits for this single bot process; no extra dependency required. */
     private rateLimit(max: number, windowMs: number) {
-        return async (request: FastifyRequest, reply: any) => {
+        return async (request: FastifyRequest, reply: FastifyReply) => {
             const now = Date.now()
             const userId = request.headers['x-discord-id']
             const identity = typeof userId === 'string' ? userId : request.ip
