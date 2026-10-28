@@ -6,7 +6,8 @@ import {
     EmbedBuilder,
     MessageFlags,
     PermissionFlagsBits,
-    SlashCommandBuilder
+    SlashCommandBuilder,
+    TextChannel
 } from 'discord.js'
 
 export default {
@@ -112,7 +113,7 @@ export default {
         const footer = options.getString('footer')
         const timestamp = options.getBoolean('timestamp') ?? false
         const ping = options.getString('ping')
-        const targetChannel = options.getChannel('channel') ?? interaction.channel
+        const targetChannel = options.getChannel('channel') as TextChannel ?? interaction.channel
 
         if (!title) {
             return interaction.reply({

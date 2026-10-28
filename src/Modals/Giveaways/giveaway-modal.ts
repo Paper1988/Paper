@@ -192,7 +192,7 @@ export default {
                     $inc: { totalGiveaways: 1, activeGiveaways: 1, totalPrizes: 1 },
                     $setOnInsert: { totalParticipants: 0, totalWinners: 0 }
                 },
-                { upsert: true, new: true, setDefaultsOnInsert: true }
+                { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
             )
 
             const hostedCount = await Giveaway.countDocuments({

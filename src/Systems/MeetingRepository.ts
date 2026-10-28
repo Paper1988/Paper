@@ -109,7 +109,7 @@ export class MeetingRepository {
             return await Meeting.findOneAndUpdate(
                 { meetingId },
                 { $set: { ...updates, lastUpdatedAt: new Date() } },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -123,7 +123,7 @@ export class MeetingRepository {
             return await Meeting.findOneAndUpdate(
                 { meetingId, status: MeetingStatus.SCHEDULED },
                 { $set: { status: MeetingStatus.IN_PROGRESS, lastUpdatedAt: new Date() } },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -144,7 +144,7 @@ export class MeetingRepository {
                         lastUpdatedAt: now
                     }
                 },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -192,7 +192,7 @@ export class MeetingRepository {
                     $push: { agenda: item },
                     $set: { lastUpdatedAt: new Date() }
                 },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -216,7 +216,7 @@ export class MeetingRepository {
             return await Meeting.findOneAndUpdate(
                 { meetingId, 'agenda.id': agendaItemId },
                 { $set: updateFields },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -236,7 +236,7 @@ export class MeetingRepository {
                     $pull: { agenda: { id: agendaItemId } },
                     $set: { lastUpdatedAt: new Date() }
                 },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -266,7 +266,7 @@ export class MeetingRepository {
                         lastUpdatedAt: new Date()
                     }
                 },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -294,7 +294,7 @@ export class MeetingRepository {
                     $push: { actions: item },
                     $set: { lastUpdatedAt: new Date() }
                 },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -321,7 +321,7 @@ export class MeetingRepository {
             return await Meeting.findOneAndUpdate(
                 { meetingId, 'actions.id': actionId },
                 { $set: updateFields },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -349,7 +349,7 @@ export class MeetingRepository {
                     $push: { notes: noteItem },
                     $set: { lastUpdatedAt: new Date() }
                 },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -379,7 +379,7 @@ export class MeetingRepository {
                         lastUpdatedAt: now
                     }
                 },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -401,7 +401,7 @@ export class MeetingRepository {
                     },
                     $set: { lastUpdatedAt: new Date() }
                 },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -437,7 +437,7 @@ export class MeetingRepository {
                         lastUpdatedAt: new Date()
                     }
                 },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null

@@ -85,7 +85,7 @@ export default {
                 return
             }
 
-            const meme = candidates[Math.floor(Math.random() * candidates.length)]
+            const meme = candidates[Math.floor(Math.random() * candidates.length)]!
             const title = (meme.title || '今日份梗圖').slice(0, 180)
             const details = [
                 meme.author?.name ? `**作者** · ${meme.author.name}` : null,

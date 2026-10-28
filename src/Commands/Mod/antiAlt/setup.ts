@@ -16,7 +16,7 @@ export default {
             await DB.findOneAndUpdate(
                 { GuildID: guild!.id },
                 { LogsChannel: LogsChannel!.id },
-                { new: true, upsert: true }
+                { returnDocument: 'after', upsert: true }
             )
         } catch (error) {
             console.error('[AntiAlt] Failed to configure log channel:', error)

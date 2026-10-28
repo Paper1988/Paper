@@ -64,4 +64,4 @@ export default {
             flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2
         })
     }
-} satisfies SubCommandType
+} as SubCommandType

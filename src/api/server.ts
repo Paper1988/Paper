@@ -17,7 +17,7 @@ export class ApiServer {
 
     private setupCors() {
         this.fastify.register(fastifyCors, {
-            origin: [process.env.GO_API_URL ?? 'http://localhost:8080'],
+            origin: [process.env.GO_API_URL ?? 'http://localhost:3000'],
             methods: ['GET', 'POST', 'PUT', 'DELETE'],
             credentials: true
         })
@@ -320,7 +320,7 @@ export class ApiServer {
             throw err
         }
     }
-    
+
     async close(): Promise<void> {
         await this.fastify.close()
     }

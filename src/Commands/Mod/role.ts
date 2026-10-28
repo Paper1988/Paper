@@ -146,4 +146,4 @@ export default {
             })
         }
     }
-} satisfies CommandType
+} as CommandType

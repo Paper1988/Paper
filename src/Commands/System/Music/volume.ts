@@ -54,7 +54,7 @@ export default {
         await MusicDB.findOneAndUpdate(
             { GuildID: guild!.id },
             { volume: Volume },
-            { new: true, upsert: true }
+            { returnDocument: 'after', upsert: true }
         )
         if (Volume < 50 && Volume > 0) {
             return await interaction

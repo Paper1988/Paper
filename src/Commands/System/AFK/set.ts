@@ -19,7 +19,7 @@ export default {
         await DB.findOneAndUpdate(
             { GuildID: guild.id, UserID: user.id },
             { Status: afkStatus, Time: createdTimestamp / 1000 },
-            { new: true, upsert: true }
+            { returnDocument: 'after', upsert: true }
         )
 
         Embed.setColor('Green').setDescription(

@@ -33,8 +33,7 @@ export default {
         if (filtered.size === 0) {
             return interaction.reply({
                 content: `${emojis.warning} | 找不到該使用者可清除的訊息。`,
-                flags: MessageFlags.Ephemeral
-            })
+            }).then(deleteMessageAfter)
         }
         const deletedMessages: Collection<string, Message<boolean> | PartialMessage | undefined> =
             await channel.bulkDelete(filtered, true)

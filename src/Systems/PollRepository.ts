@@ -109,7 +109,7 @@ export class PollRepository {
             return await Poll.findOneAndUpdate(
                 { pollId },
                 { $push: { votes: newVote } },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -123,7 +123,7 @@ export class PollRepository {
             return await Poll.findOneAndUpdate(
                 { pollId, isClosed: false },
                 { $pull: { votes: { userId } } },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -137,7 +137,7 @@ export class PollRepository {
             return await Poll.findOneAndUpdate(
                 { pollId },
                 { $set: { isClosed: true } },
-                { new: true }
+                { returnDocument: 'after' }
             )
         })
         return result ?? null
@@ -191,7 +191,7 @@ export class PollRepository {
      */
     static async updateMessageId(pollId: string, messageId: string): Promise<PollDoc | null> {
         const result = await safeDbOperation(async () => {
-            return await Poll.findOneAndUpdate({ pollId }, { $set: { messageId } }, { new: true })
+            return await Poll.findOneAndUpdate({ pollId }, { $set: { messageId } }, { returnDocument: 'after' })
         })
         return result ?? null
     }

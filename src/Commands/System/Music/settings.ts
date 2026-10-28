@@ -86,7 +86,7 @@ export default {
                 await MusicDB.findOneAndUpdate(
                     { GuildID: player.guildId },
                     { autoplayMode: Mode ? true : false },
-                    { new: true, upsert: true }
+                    { returnDocument: 'after', upsert: true }
                 )
                 return interaction.reply({
                     content: `<:update:1265562455828987968> | 成功切換自動播放模式: ${
@@ -117,7 +117,7 @@ export default {
                 await MusicDB.findOneAndUpdate(
                     { GuildID: player.guildId },
                     { repeatMode: normalizedMode },
-                    { new: true, upsert: true }
+                    { returnDocument: 'after', upsert: true }
                 )
                 return interaction.reply({
                     content: `<:loop1:1265560917345570918> | 成功切換重複播放模式: ${
