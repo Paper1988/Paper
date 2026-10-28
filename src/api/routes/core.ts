@@ -25,6 +25,14 @@ export function registerCoreRoutes(fastify: FastifyInstance, client: PaperClient
 
     fastify.get(
         '/api/bot-status/history',
+        {
+            config: {
+                rateLimit: {
+                    max: 60,
+                    timeWindow: '1 minute'
+                }
+            }
+        },
         async (
             request: FastifyRequest<{ Querystring: { hours?: string } }>,
             reply
