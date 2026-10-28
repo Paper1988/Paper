@@ -131,12 +131,17 @@ export class PaperClient extends Client {
         const configurableCommands: { name: string; description: string }[] = []
 
         this.commands.forEach((command) => {
-            if (!command.subCommand && !command.developer) {
-                configurableCommands.push({
-                    name: command.name,
-                    description: command.description
-                })
-            }
+            // Command metadata lives on the Discord.js builder at command.data,
+            // not on the exported command module itself.
+            if (command.subCommand || command.developer || !command.data) return
+
+            const name = command.data.name
+            if (!name) return
+
+            configurableCommands.push({
+                name,
+                description: command.data.description || '無描述'
+            })
         })
 
         return configurableCommands
