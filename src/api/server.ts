@@ -8,6 +8,7 @@ import fastifyCors from '@fastify/cors'
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify'
 import { authorizeGuildManager } from './authorization.js'
 import Genius from 'genius-lyrics-axios'
+import { cleanGeniusLyrics } from '@/libs/utils/cleanGeniusLyrics.js'
 
 type RateLimitBucket = { count: number; resetAt: number }
 
@@ -546,7 +547,7 @@ export class ApiServer {
                     const songs = await genius.songs.search(track.title)
                     const song = songs[0]
                     if (!song) return reply.code(404).send({ message: '找不到這首歌的歌詞' })
-                    const lyrics = await song.lyrics()
+                    const lyrics = cleanGeniusLyrics(await song.lyrics())
                     if (!lyrics?.trim()) return reply.code(404).send({ message: '找不到這首歌的歌詞' })
                     return reply.send({
                         title: track.title,
