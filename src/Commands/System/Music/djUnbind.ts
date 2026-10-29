@@ -2,7 +2,7 @@ import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import MusicDB from '@/Structures/Schemas/MusicDB.js'
 import { unbindDJRole, authorizeDJRoleManager } from '@/Systems/Music/DJRoleService.js'
 import type { SubCommandType } from '@/typings/command.js'
-import { ChatInputCommandInteraction, MessageFlags } from 'discord.js'
+import { MessageFlags, type ChatInputCommandInteraction } from 'discord.js'
 
 export default {
     subCommand: 'music.dj.unbind',
