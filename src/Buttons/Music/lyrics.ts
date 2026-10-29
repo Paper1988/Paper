@@ -13,6 +13,7 @@ import {
     TextChannel
 } from 'discord.js'
 import Genius from 'genius-lyrics-axios'
+import { cleanGeniusLyrics } from '@/libs/utils/cleanGeniusLyrics.js'
 import type { Player } from 'moonlink.js'
 
 export default {
@@ -53,7 +54,7 @@ export default {
                 })
             }
 
-            const lyrics = await song.lyrics()
+            const lyrics = cleanGeniusLyrics(await song.lyrics())
             if (!lyrics?.trim()) {
                 return interaction.editReply({
                     content: `${emojis.warning} | 找不到「${track.title}」的歌詞。`
