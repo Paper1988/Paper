@@ -116,6 +116,10 @@ export class MusicController {
         const settings = await MusicDB.findOne({ GuildID: guild.id }).catch(() => null)
         if (settings?.DJModeEnabled === false) return true
 
+        // The requester of the currently playing track may control their own song.
+        const player = client.moonlink?.players.get(guild.id)
+        if (player?.current?.requester === interaction.user.id) return true
+
         if (!settings?.DJRoleID) {
             await interaction.reply({
                 content: `${emojis.warning} | 此伺服器尚未設定 DJ 身份組，請管理員使用 \`/music dj create\` 或 \`/music dj bind\` 設定。`,
