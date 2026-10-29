@@ -1,5 +1,6 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import MusicRenderer from '@/Systems/Music/MusicRenderer.js'
+import MusicDB from '@/Structures/Schemas/MusicDB.js'
 import MusicUtils, { deleteMessageAfter, getInterval } from '@/Systems/Music/MusicUtils.js'
 import emojis from '@/libs/emoji/emoji.js'
 import {
@@ -104,19 +105,32 @@ export class MusicController {
 
     // ==================== Validation ====================
 
-    /** Only members with a Discord role named DJ can use music control interactions. */
+    /** Only members with the configured DJ role ID can use music control interactions. */
     static async validateDJRole(interaction: ButtonInteraction | ModalSubmitInteraction | AnySelectMenuInteraction, client: PaperClient): Promise<boolean> {
         const guild = interaction.guild
         if (!guild) {
             await interaction.reply({ content: `${emojis.warning} | 此控制面板只能在 Discord 伺服器內使用。`, flags: MessageFlags.Ephemeral }).catch(() => undefined)
             return false
         }
+
+        const settings = await MusicDB.findOne({ GuildID: guild.id }).catch(() => null)
+        if (!settings?.DJRoleID) {
+            await interaction.reply({
+                content: `${emojis.warning} | 此伺服器尚未設定 DJ 身份組，請管理員使用 \`/music dj create\` 或 \`/music dj bind\` 設定。`,
+                flags: MessageFlags.Ephemeral
+            }).catch(() => undefined)
+            return false
+        }
+
         const member = await guild.members.fetch(interaction.user.id).catch(() => null)
-        if (member?.roles.cache.some(role => role.name.trim().toLowerCase() === 'dj')) return true
-        await interaction.reply({ content: `${emojis.warning} | 只有具備 **DJ** 身份的成員可以操作音樂控制面板。`, flags: MessageFlags.Ephemeral }).catch(() => undefined)
+        if (member?.roles.cache.has(settings.DJRoleID)) return true
+
+        await interaction.reply({
+            content: `${emojis.warning} | 只有具備已設定 DJ 身份組的成員可以操作音樂控制面板。`,
+            flags: MessageFlags.Ephemeral
+        }).catch(() => undefined)
         return false
     }
-
 
     /**
      * 檢查語音頻道的相關條件，若未通過則自動回覆錯誤訊息
