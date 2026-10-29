@@ -26,3 +26,4 @@ export const startProgressUpdater = MusicController.startProgressUpdater.bind(Mu
 export const stopProgressUpdater = MusicController.stopProgressUpdater.bind(MusicController)
 export const updateMusicPlayerStatus = MusicController.updatePlayerStatus.bind(MusicController)
 export const validateVoiceChannel = MusicController.validateVoiceChannel.bind(MusicController)
+export const validateDJRole = MusicController.validateDJRole.bind(MusicController)
