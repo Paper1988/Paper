@@ -417,6 +417,48 @@ export class ApiServer {
             }
         )
 
+        this.fastify.post<MusicParams & { Body: { position?: number } }>(
+            '/api/guilds/:guildId/music/seek',
+            { preHandler: musicLimit() },
+            async (request, reply) => {
+                const { guildId } = request.params
+                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+
+                const player = getPlayer(guildId)
+                const position = request.body?.position
+                const track = player?.current
+
+                if (!player?.playing || !track) {
+                    return reply.code(409).send({ message: '目前沒有正在播放的音樂' })
+                }
+                if (
+                    track.isStream ||
+                    typeof track.duration !== 'number' ||
+                    !Number.isFinite(track.duration) ||
+                    track.duration <= 0
+                ) {
+                    return reply.code(400).send({ message: '直播或無法定位的曲目不能調整進度' })
+                }
+                if (
+                    typeof position !== 'number' ||
+                    !Number.isFinite(position) ||
+                    !Number.isInteger(position) ||
+                    position < 0 ||
+                    position > track.duration
+                ) {
+                    return reply.code(400).send({ message: 'position 必須是歌曲長度內的毫秒整數' })
+                }
+
+                try {
+                    await player.seek(position)
+                    return reply.send({ ok: true, position })
+                } catch (error) {
+                    this.fastify.log.error(error, '調整音樂進度失敗')
+                    return reply.code(500).send({ message: '調整音樂進度失敗' })
+                }
+            }
+        )
+
         this.fastify.post<MusicParams>(
             '/api/guilds/:guildId/music/skip',
             { preHandler: musicLimit() },
