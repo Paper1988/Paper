@@ -7,6 +7,7 @@ import { Logger } from '@/libs/utils/logger.js'
 import fastifyCors from '@fastify/cors'
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify'
 import { authorizeGuildManager } from './authorization.js'
+import Genius from 'genius-lyrics'
 
 type RateLimitBucket = { count: number; resetAt: number }
 
@@ -387,23 +388,28 @@ export class ApiServer {
                 return reply.send({
                     playing: true,
                     paused: player.paused,
+                    position: player.position,
                     repeatMode: player.loop,
                     volume: player.volume,
+                    autoPlay: player.autoPlay,
+                    queueLength: player.queue.tracks.length,
+                    previousAvailable: player.previous.length > 0,
                     currentTrack: {
                         title: player.current?.title,
                         url: player.current?.uri,
                         duration: player.current?.duration,
                         thumbnail: player.current?.thumbnail,
                         author: player.current?.author,
-                        requestedBy: player.current?.requester?.id
+                        requestedBy: player.current?.requester?.id,
+                        isStream: player.current?.isStream
                     },
-                    tracks: player.queue.tracks.map((track: any) => ({
+                    tracks: player.queue.tracks.slice(0, 10).map((track: any) => ({
                         title: track.title,
-                        url: track.url,
+                        url: track.uri ?? track.url,
                         duration: track.duration,
                         thumbnail: track.thumbnail,
                         author: track.author,
-                        requestedBy: track.requestedBy?.id
+                        requestedBy: track.requester?.id ?? track.requestedBy?.id
                     }))
                 })
             }
@@ -452,6 +458,188 @@ export class ApiServer {
 
                 await player.resume()
                 return reply.send({ ok: true })
+            }
+        )
+
+        this.fastify.post<MusicParams & { Body: { query?: string } }>(
+            '/api/guilds/:guildId/music/search',
+            { preHandler: musicLimit() },
+            async (request, reply) => {
+                const { guildId } = request.params
+                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                const query = request.body?.query?.trim()
+                if (!query || query.length > 500) {
+                    return reply.code(400).send({ message: 'query 必須是 1 到 500 字元的字串' })
+                }
+                if (!this.client.moonlink) {
+                    return reply.code(503).send({ message: '音樂服務尚未初始化' })
+                }
+                try {
+                    const result = await this.client.moonlink.search({ query })
+                    return reply.send({
+                        tracks: result.tracks.slice(0, 10).map((track: any) => ({
+                            title: track.title,
+                            url: track.uri,
+                            duration: track.duration,
+                            thumbnail: track.thumbnail,
+                            author: track.author,
+                            source: track.source
+                        }))
+                    })
+                } catch (error) {
+                    this.fastify.log.error(error, '搜尋歌曲失敗')
+                    return reply.code(502).send({ message: '搜尋歌曲失敗，請稍後再試' })
+                }
+            }
+        )
+
+        this.fastify.post<MusicParams & { Body: { url?: string } }>(
+            '/api/guilds/:guildId/music/add',
+            { preHandler: musicLimit() },
+            async (request, reply) => {
+                const { guildId } = request.params
+                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                const url = request.body?.url?.trim()
+                if (!url || url.length > 2000) {
+                    return reply.code(400).send({ message: 'url 必須是 1 到 2000 字元的字串' })
+                }
+                const player = getPlayer(guildId)
+                if (!player || !this.client.moonlink) {
+                    return reply.code(409).send({ message: '請先在 Discord 中啟動音樂播放器並加入語音頻道' })
+                }
+                try {
+                    const result = await this.client.moonlink.search({ query: url })
+                    const track = result.tracks[0]
+                    if (!track) return reply.code(404).send({ message: '找不到歌曲' })
+                    player.queue.add(track)
+                    if (!player.playing && !player.paused) await player.play()
+                    return reply.send({
+                        ok: true,
+                        track: {
+                            title: track.title,
+                            url: track.uri,
+                            duration: track.duration,
+                            thumbnail: track.thumbnail,
+                            author: track.author
+                        },
+                        queueLength: player.queue.tracks.length
+                    })
+                } catch (error) {
+                    this.fastify.log.error(error, '加入歌曲失敗')
+                    return reply.code(502).send({ message: '加入歌曲失敗，請稍後再試' })
+                }
+            }
+        )
+
+        this.fastify.get<MusicParams>(
+            '/api/guilds/:guildId/music/lyrics',
+            { preHandler: musicLimit() },
+            async (request, reply) => {
+                const { guildId } = request.params
+                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                const player = getPlayer(guildId)
+                const track = player?.current
+                if (!track) return reply.code(404).send({ message: '目前沒有正在播放的歌曲' })
+                try {
+                    const genius = new Genius.Client()
+                    const songs = await genius.songs.search(track.title)
+                    const song = songs[0]
+                    if (!song) return reply.code(404).send({ message: '找不到這首歌的歌詞' })
+                    const lyrics = await song.lyrics()
+                    if (!lyrics?.trim()) return reply.code(404).send({ message: '找不到這首歌的歌詞' })
+                    return reply.send({
+                        title: track.title,
+                        author: track.author,
+                        url: song.url,
+                        lyrics: lyrics.slice(0, 20000),
+                        truncated: lyrics.length > 20000,
+                        source: 'Genius'
+                    })
+                } catch (error) {
+                    this.fastify.log.error(error, '取得歌詞失敗')
+                    return reply.code(502).send({ message: '取得歌詞失敗，請稍後再試' })
+                }
+            }
+        )
+
+        this.fastify.post<MusicParams>(
+            '/api/guilds/:guildId/music/previous',
+            { preHandler: musicLimit() },
+            async (request, reply) => {
+                const { guildId } = request.params
+                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                const player = getPlayer(guildId)
+                if (!player?.current) return reply.code(400).send({ message: '目前沒有正在播放的音樂' })
+                if (player.previous.length === 0) return reply.code(409).send({ message: '沒有上一首歌曲' })
+                await player.back()
+                return reply.send({ ok: true })
+            }
+        )
+
+        this.fastify.put<MusicParams & { Body: { volume?: number } }>(
+            '/api/guilds/:guildId/music/volume',
+            { preHandler: musicLimit() },
+            async (request, reply) => {
+                const { guildId } = request.params
+                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                const player = getPlayer(guildId)
+                const volume = request.body?.volume
+                if (!player) return reply.code(400).send({ message: '目前沒有音樂播放器' })
+                if (typeof volume !== 'number' || !Number.isFinite(volume) || volume < 0 || volume > 100) {
+                    return reply.code(400).send({ message: 'volume 必須是 0 到 100 之間的數字' })
+                }
+                await player.setVolume(volume)
+                return reply.send({ ok: true, volume: player.volume })
+            }
+        )
+
+        this.fastify.put<MusicParams & { Body: { mode?: string } }>(
+            '/api/guilds/:guildId/music/loop',
+            { preHandler: musicLimit() },
+            async (request, reply) => {
+                const { guildId } = request.params
+                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                const player = getPlayer(guildId)
+                const mode = request.body?.mode
+                if (!player) return reply.code(400).send({ message: '目前沒有音樂播放器' })
+                if (mode !== 'off' && mode !== 'track' && mode !== 'queue') {
+                    return reply.code(400).send({ message: 'mode 必須是 off、track 或 queue' })
+                }
+                await player.setLoop(mode)
+                return reply.send({ ok: true, repeatMode: player.loop })
+            }
+        )
+
+        this.fastify.post<MusicParams>(
+            '/api/guilds/:guildId/music/shuffle',
+            { preHandler: musicLimit() },
+            async (request, reply) => {
+                const { guildId } = request.params
+                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                const player = getPlayer(guildId)
+                if (!player?.current) return reply.code(400).send({ message: '目前沒有正在播放的音樂' })
+                if (player.queue.tracks.length < 2) {
+                    return reply.code(409).send({ message: '佇列至少需要兩首歌曲才能隨機排序' })
+                }
+                player.shuffle()
+                return reply.send({ ok: true, queueLength: player.queue.tracks.length })
+            }
+        )
+
+        this.fastify.put<MusicParams & { Body: { enabled?: boolean } }>(
+            '/api/guilds/:guildId/music/autoplay',
+            { preHandler: musicLimit() },
+            async (request, reply) => {
+                const { guildId } = request.params
+                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                const player = getPlayer(guildId)
+                const enabled = request.body?.enabled
+                if (!player) return reply.code(400).send({ message: '目前沒有音樂播放器' })
+                if (typeof enabled !== 'boolean') {
+                    return reply.code(400).send({ message: 'enabled 必須是布林值' })
+                }
+                player.setAutoPlay(enabled)
+                return reply.send({ ok: true, autoPlay: player.autoPlay })
             }
         )
 
