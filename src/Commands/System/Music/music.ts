@@ -164,6 +164,63 @@ export default {
                 .setDescription('Quit the voice channel')
                 .setDescriptionLocalization('zh-TW', '退出語音頻道')
                 .setDescriptionLocalization('ja', 'ボイスチャンネルを離れる')
+        )
+        .addSubcommandGroup((group) =>
+            group
+                .setName('dj')
+                .setNameLocalization('zh-TW', 'DJ身份組')
+                .setNameLocalization('ja', 'DJロール')
+                .setDescription('Configure the DJ role for this server')
+                .setDescriptionLocalization('zh-TW', '設定此伺服器的 DJ 身份組')
+                .setDescriptionLocalization('ja', 'このサーバーのDJロールを設定します')
+                .addSubcommand((sub) =>
+                    sub
+                        .setName('create')
+                        .setNameLocalization('zh-TW', '建立並綁定')
+                        .setNameLocalization('ja', '作成して紐付け')
+                        .setDescription('Create a role and bind it as the DJ role')
+                        .setDescriptionLocalization('zh-TW', '建立身份組並直接綁定為 DJ 身份組')
+                        .setDescriptionLocalization('ja', 'ロールを作成しDJロールとして紐付けます')
+                        .addStringOption((option) =>
+                            option
+                                .setName('name')
+                                .setNameLocalization('zh-TW', '名稱')
+                                .setNameLocalization('ja', '名前')
+                                .setDescription('Role name (defaults to DJ)')
+                                .setDescriptionLocalization('zh-TW', '身份組名稱，預設為 DJ')
+                                .setDescriptionLocalization('ja', 'ロール名（デフォルトはDJ）')
+                                .setMaxLength(100)
+                                .setRequired(false)
+                        )
+                )
+                .addSubcommand((sub) =>
+                    sub
+                        .setName('bind')
+                        .setNameLocalization('zh-TW', '綁定')
+                        .setNameLocalization('ja', '紐付け')
+                        .setDescription('Bind an existing role as the DJ role')
+                        .setDescriptionLocalization('zh-TW', '將既有身份組綁定為 DJ 身份組')
+                        .setDescriptionLocalization('ja', '既存のロールをDJロールとして紐付けます')
+                        .addRoleOption((option) =>
+                            option
+                                .setName('role')
+                                .setNameLocalization('zh-TW', '身份組')
+                                .setNameLocalization('ja', 'ロール')
+                                .setDescription('The role to bind')
+                                .setDescriptionLocalization('zh-TW', '要綁定的身份組')
+                                .setDescriptionLocalization('ja', '紐付けるロール')
+                                .setRequired(true)
+                        )
+                )
+                .addSubcommand((sub) =>
+                    sub
+                        .setName('unbind')
+                        .setNameLocalization('zh-TW', '解除綁定')
+                        .setNameLocalization('ja', '紐付け解除')
+                        .setDescription('Unbind the current DJ role')
+                        .setDescriptionLocalization('zh-TW', '解除目前 DJ 身份組的綁定')
+                        .setDescriptionLocalization('ja', '現在のDJロールの紐付けを解除します')
+                )
         ),
     async autocomplete(interaction: AutocompleteInteraction, client: PaperClient) {
         const value = interaction.options.getFocused().toString().trim()
