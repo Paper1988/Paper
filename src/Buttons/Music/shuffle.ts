@@ -1,6 +1,6 @@
 import emojis from '@/libs/emoji/emoji.js'
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
-import { deleteMessageAfter, validateVoiceChannel } from '@/Systems/Music.js'
+import { deleteMessageAfter, validateDJRole, validateVoiceChannel } from '@/Systems/Music.js'
 import type { ButtonType } from '@/typings/component.js'
 import type { ButtonInteraction, GuildMember } from 'discord.js'
 import type { Player } from 'moonlink.js'
@@ -8,6 +8,8 @@ import type { Player } from 'moonlink.js'
 export default {
     id: 'shuffle',
     async execute(interaction: ButtonInteraction, client: PaperClient) {
+        if (!(await validateDJRole(interaction, client))) return
+
         await interaction.deferReply()
         const member = interaction.member! as GuildMember
         const VoiceChannel = member.voice.channel
