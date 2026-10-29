@@ -1,5 +1,5 @@
 import MusicDB from '@/Structures/Schemas/MusicDB.js'
-import { Guild, ChatInputCommandInteraction, MessageFlags, PermissionFlagsBits } from 'discord.js'
+import { MessageFlags, PermissionFlagsBits, type ChatInputCommandInteraction, type Guild } from 'discord.js'
 
 /** Only the server owner or a member with Manage Roles can configure DJ access. */
 export async function authorizeDJRoleManager(interaction: ChatInputCommandInteraction): Promise<Guild | null> {
