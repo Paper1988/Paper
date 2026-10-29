@@ -81,6 +81,7 @@ export async function hasGuildDJRole(client: PaperClient, guildId: string, userI
             guild.members.cache.get(userId) ?? guild.members.fetch(userId),
             MusicDB.findOne({ GuildID: guildId })
         ])
+        if (settings?.DJModeEnabled === false) return true
         return Boolean(settings?.DJRoleID && member.roles.cache.has(settings.DJRoleID))
     } catch {
         return false
@@ -93,6 +94,8 @@ export async function authorizeDJ(client: PaperClient, request: FastifyRequest, 
     if (!member) return false
 
     const settings = await MusicDB.findOne({ GuildID: guildId }).catch(() => null)
+    if (settings?.DJModeEnabled === false) return true
+
     const roleId = settings?.DJRoleID
 
     if (!roleId) {
