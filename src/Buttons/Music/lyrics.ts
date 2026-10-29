@@ -12,7 +12,7 @@ import {
     MessageFlags,
     TextChannel
 } from 'discord.js'
-import Genius from 'genius-lyrics'
+import Genius from 'genius-lyrics-axios'
 import type { Player } from 'moonlink.js'
 
 export default {
