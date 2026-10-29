@@ -168,8 +168,8 @@ export default {
         .addSubcommandGroup((group) =>
             group
                 .setName('dj')
-                .setNameLocalization('zh-TW', 'DJ身份組')
-                .setNameLocalization('ja', 'DJロール')
+                .setNameLocalization('zh-TW', 'dj')
+                .setNameLocalization('ja', 'dj')
                 .setDescription('Configure the DJ role for this server')
                 .setDescriptionLocalization('zh-TW', '設定此伺服器的 DJ 身份組')
                 .setDescriptionLocalization('ja', 'このサーバーのDJロールを設定します')
