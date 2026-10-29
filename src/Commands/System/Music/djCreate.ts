@@ -1,7 +1,7 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { bindDJRole, authorizeDJRoleManager } from '@/Systems/Music/DJRoleService.js'
 import type { SubCommandType } from '@/typings/command.js'
-import { ChatInputCommandInteraction, MessageFlags, PermissionFlagsBits, type Role } from 'discord.js'
+import { MessageFlags, PermissionFlagsBits, type ChatInputCommandInteraction, type Role } from 'discord.js'
 
 export default {
     subCommand: 'music.dj.create',
