@@ -1,4 +1,5 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
+import MusicDB from '@/Structures/Schemas/MusicDB.js'
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import type { GuildMember } from 'discord.js'
 
@@ -70,27 +71,37 @@ export async function authorizeGuildMember(client: PaperClient, request: Fastify
     return (await getGuildMember(client, request, reply, guildId)) !== null
 }
 
-/** DJ identity is a Discord role named "DJ" (case-insensitive). */
-export function isDJMember(member: GuildMember): boolean {
-    return member.roles.cache.some(role => role.name.trim().toLowerCase() === 'dj')
-}
-
+/** Check whether a guild member has the role ID configured in the music database. */
 export async function hasGuildDJRole(client: PaperClient, guildId: string, userId: string): Promise<boolean> {
     const guild = client.guilds.cache.get(guildId)
     if (!guild) return false
+
     try {
-        const member = guild.members.cache.get(userId) ?? await guild.members.fetch(userId)
-        return isDJMember(member)
+        const [member, settings] = await Promise.all([
+            guild.members.cache.get(userId) ?? guild.members.fetch(userId),
+            MusicDB.findOne({ GuildID: guildId })
+        ])
+        return Boolean(settings?.DJRoleID && member.roles.cache.has(settings.DJRoleID))
     } catch {
         return false
     }
 }
 
-/** Mutating music actions require the guild's DJ role, including for administrators. */
+/** Mutating music actions require the configured DJ role, including for administrators. */
 export async function authorizeDJ(client: PaperClient, request: FastifyRequest, reply: FastifyReply, guildId: string): Promise<boolean> {
     const member = await getGuildMember(client, request, reply, guildId)
     if (!member) return false
-    if (isDJMember(member)) return true
-    reply.code(403).send({ message: '需要此伺服器的 DJ 身份才能控制音樂' })
+
+    const settings = await MusicDB.findOne({ GuildID: guildId }).catch(() => null)
+    const roleId = settings?.DJRoleID
+
+    if (!roleId) {
+        reply.code(403).send({ message: '此伺服器尚未設定 DJ 身份組，請管理員使用 /music dj create 或 /music dj bind 設定' })
+        return false
+    }
+
+    if (member.roles.cache.has(roleId)) return true
+
+    reply.code(403).send({ message: '需要具備此伺服器設定的 DJ 身份組才能控制音樂' })
     return false
 }
