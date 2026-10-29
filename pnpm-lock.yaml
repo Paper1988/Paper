@@ -1,6 +1,9 @@
 ---
 lockfileVersion: '9.0'
 
+overrides:
+  'genius-lyrics>undici': 7.29.0
+
 importers:
 
   .:
@@ -6675,7 +6678,7 @@ snapshots:
   genius-lyrics@4.4.7:
     dependencies:
       node-html-parser: 6.1.13
-      undici: 6.28.0
+      undici: 7.29.0
 
   get-caller-file@2.0.5: {}
 
