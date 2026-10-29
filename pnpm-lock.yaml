@@ -1,9 +1,6 @@
 ---
 lockfileVersion: '9.0'
 
-overrides:
-  'genius-lyrics>undici': 7.29.0
-
 importers:
 
   .:
