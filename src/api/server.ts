@@ -7,7 +7,7 @@ import { Logger } from '@/libs/utils/logger.js'
 import fastifyCors from '@fastify/cors'
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify'
 import { authorizeGuildManager } from './authorization.js'
-import Genius from 'genius-lyrics'
+import Genius from 'genius-lyrics-axios'
 
 type RateLimitBucket = { count: number; resetAt: number }
 
