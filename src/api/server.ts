@@ -398,6 +398,7 @@ export class ApiServer {
                         title: player.current?.title,
                         url: player.current?.uri,
                         duration: player.current?.duration,
+                        position: player.current?.position,
                         thumbnail: player.current?.thumbnail,
                         author: player.current?.author,
                         requestedBy: player.current?.requester?.id,
