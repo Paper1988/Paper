@@ -1,5 +1,6 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import emojis from '@/libs/emoji/emoji.js'
+import { validateDJRole } from '@/Systems/Music.js'
 import { Logger } from '@/libs/utils/logger.js'
 import type { ModalType } from '@/typings/component.js'
 import {
@@ -14,6 +15,7 @@ import type { Track } from 'moonlink.js'
 export default {
     id: 'addSong',
     async execute(interaction: ModalSubmitInteraction, client: PaperClient) {
+        if (!(await validateDJRole(interaction, client))) return
         const songName = interaction.fields.getTextInputValue('songName')
 
         if (!client.moonlink) {
