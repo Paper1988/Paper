@@ -537,27 +537,83 @@ export class ApiServer {
             async (request, reply) => {
                 const { guildId } = request.params
                 if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
-                const player = getPlayer(guildId)
-                const track = player?.current
+                const track = getPlayer(guildId)?.current
                 if (!track) return reply.code(404).send({ message: '目前沒有正在播放的歌曲' })
+
+                const title = track.title?.trim()
+                const artist = track.author?.trim()
+                if (!title) return reply.code(404).send({ message: '無法辨識目前歌曲的標題' })
+
+                // LRCLIB is the primary source because it provides plain text lyrics
+                // through a public API. Genius remains a fallback for tracks missing there.
+                try {
+                    const searchParams = new URLSearchParams({ track_name: title })
+                    if (artist) searchParams.set('artist_name', artist)
+
+                    const response = await fetch(
+                        `https://lrclib.net/api/search?${searchParams.toString()}`,
+                        {
+                            headers: {
+                                'User-Agent': 'Paper Discord Bot (https://github.com/Paper1988/Paper)'
+                            },
+                            signal: AbortSignal.timeout(8000)
+                        }
+                    )
+
+                    if (response.ok) {
+                        const results = (await response.json()) as Array<{
+                            trackName?: string
+                            artistName?: string
+                            plainLyrics?: string | null
+                            syncedLyrics?: string | null
+                            instrumental?: boolean
+                        }>
+                        const result = results.find((item) => item.plainLyrics?.trim()) ??
+                            results.find((item) => item.syncedLyrics?.trim())
+
+                        if (result) {
+                            const lyrics = (result.plainLyrics || result.syncedLyrics || '').trim()
+                            if (lyrics) {
+                                return reply.send({
+                                    title: result.trackName || title,
+                                    author: result.artistName || artist,
+                                    url: 'https://lrclib.net',
+                                    lyrics: lyrics.slice(0, 20000),
+                                    truncated: lyrics.length > 20000,
+                                    source: 'LRCLIB'
+                                })
+                            }
+                        }
+                    }
+                } catch (error) {
+                    this.fastify.log.warn(error, 'LRCLIB 歌詞查詢失敗，改用 Genius')
+                }
+
                 try {
                     const genius = new Genius.Client()
-                    const songs = await genius.songs.search(track.title)
-                    const song = songs[0]
-                    if (!song) return reply.code(404).send({ message: '找不到這首歌的歌詞' })
-                    const lyrics = await song.lyrics()
-                    if (!lyrics?.trim()) return reply.code(404).send({ message: '找不到這首歌的歌詞' })
-                    return reply.send({
-                        title: track.title,
-                        author: track.author,
-                        url: song.url,
-                        lyrics: lyrics.slice(0, 20000),
-                        truncated: lyrics.length > 20000,
-                        source: 'Genius'
-                    })
+                    const queries = [artist ? `${title} ${artist}` : title, title]
+                    for (const query of [...new Set(queries)]) {
+                        const songs = await genius.songs.search(query)
+                        const song = songs[0]
+                        if (!song) continue
+
+                        const lyrics = await song.lyrics()
+                        if (!lyrics?.trim()) continue
+
+                        return reply.send({
+                            title,
+                            author: artist || song.artist?.name,
+                            url: song.url,
+                            lyrics: lyrics.slice(0, 20000),
+                            truncated: lyrics.length > 20000,
+                            source: 'Genius'
+                        })
+                    }
+
+                    return reply.code(404).send({ message: 'LRCLIB 與 Genius 都找不到這首歌的歌詞' })
                 } catch (error) {
-                    this.fastify.log.error(error, '取得歌詞失敗')
-                    return reply.code(502).send({ message: '取得歌詞失敗，請稍後再試' })
+                    this.fastify.log.error(error, 'LRCLIB 與 Genius 歌詞查詢皆失敗')
+                    return reply.code(502).send({ message: '歌詞來源暫時無法連線，請稍後再試' })
                 }
             }
         )
