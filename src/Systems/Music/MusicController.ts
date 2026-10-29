@@ -7,6 +7,9 @@ import {
     ChatInputCommandInteraction,
     EmbedBuilder,
     TextChannel,
+    MessageFlags,
+    type AnySelectMenuInteraction,
+    ModalSubmitInteraction,
     type VoiceBasedChannel
 } from 'discord.js'
 import { Player, Track } from 'moonlink.js'
@@ -100,6 +103,20 @@ export class MusicController {
     }
 
     // ==================== Validation ====================
+
+    /** Only members with a Discord role named DJ can use music control interactions. */
+    static async validateDJRole(interaction: ButtonInteraction | ModalSubmitInteraction | AnySelectMenuInteraction, client: PaperClient): Promise<boolean> {
+        const guild = interaction.guild
+        if (!guild) {
+            await interaction.reply({ content: `${emojis.warning} | 此控制面板只能在 Discord 伺服器內使用。`, flags: MessageFlags.Ephemeral }).catch(() => undefined)
+            return false
+        }
+        const member = await guild.members.fetch(interaction.user.id).catch(() => null)
+        if (member?.roles.cache.some(role => role.name.trim().toLowerCase() === 'dj')) return true
+        await interaction.reply({ content: `${emojis.warning} | 只有具備 **DJ** 身份的成員可以操作音樂控制面板。`, flags: MessageFlags.Ephemeral }).catch(() => undefined)
+        return false
+    }
+
 
     /**
      * 檢查語音頻道的相關條件，若未通過則自動回覆錯誤訊息
