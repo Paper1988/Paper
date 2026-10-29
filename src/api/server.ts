@@ -602,7 +602,7 @@ export class ApiServer {
 
                         return reply.send({
                             title,
-                            author: artist || song.artist?.name,
+                            author: artist || '未知歌手',
                             url: song.url,
                             lyrics: lyrics.slice(0, 20000),
                             truncated: lyrics.length > 20000,
