@@ -175,6 +175,25 @@ export default {
                 .setDescriptionLocalization('ja', 'このサーバーのDJロールを設定します')
                 .addSubcommand((sub) =>
                     sub
+                        .setName('mode')
+                        .setNameLocalization('zh-TW', '模式')
+                        .setNameLocalization('ja', 'モード')
+                        .setDescription('Enable or disable DJ-only music controls for this server')
+                        .setDescriptionLocalization('zh-TW', '設定此伺服器是否啟用 DJ 權限限制')
+                        .setDescriptionLocalization('ja', 'このサーバーでDJ限定の音楽操作を有効にするか設定します')
+                        .addBooleanOption((option) =>
+                            option
+                                .setName('enabled')
+                                .setNameLocalization('zh-TW', '啟用')
+                                .setNameLocalization('ja', '有効')
+                                .setDescription('Whether DJ-only controls are enabled')
+                                .setDescriptionLocalization('zh-TW', '開啟後只有 DJ 身分組成員能控制音樂')
+                                .setDescriptionLocalization('ja', '有効にするとDJロールを持つメンバーのみ音楽を操作できます')
+                                .setRequired(true)
+                        )
+                )
+                .addSubcommand((sub) =>
+                    sub
                         .setName('create')
                         .setNameLocalization('zh-TW', '建立並綁定')
                         .setNameLocalization('ja', '作成して紐付け')
