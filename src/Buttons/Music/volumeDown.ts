@@ -3,6 +3,7 @@ import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import {
     deleteMessageAfter,
     updateMusicPlayerStatus,
+    validateDJRole,
     validateVoiceChannel
 } from '@/Systems/Music.js'
 import emojis from '@/libs/emoji/emoji.js'
@@ -13,6 +14,8 @@ import type { Player } from 'moonlink.js'
 export default {
     id: 'volumeDown',
     async execute(interaction: ButtonInteraction, client: PaperClient) {
+        if (!(await validateDJRole(interaction, client))) return
+
         await interaction.deferReply()
         const member = interaction.member! as GuildMember
         const VoiceChannel = member.voice.channel
