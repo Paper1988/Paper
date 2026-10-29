@@ -1,5 +1,5 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
-import { deleteMessageAfter, validateVoiceChannel } from '@/Systems/Music.js'
+import { deleteMessageAfter, validateDJRole, validateVoiceChannel } from '@/Systems/Music.js'
 import MusicController from '@/Systems/Music/MusicController.js'
 import emojis from '@/libs/emoji/emoji.js'
 import type { ButtonType } from '@/typings/component.js'
@@ -11,6 +11,8 @@ const RECOMMENDATION_LIMIT = 5
 export default {
     id: 'related',
     async execute(interaction: ButtonInteraction, client: PaperClient) {
+        if (!(await validateDJRole(interaction, client))) return
+
         await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 
         const member = interaction.member! as GuildMember
