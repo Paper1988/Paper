@@ -6,7 +6,7 @@ import GuildConfig from '@/Structures/Schemas/GuildConfig.js'
 import { Logger } from '@/libs/utils/logger.js'
 import fastifyCors from '@fastify/cors'
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify'
-import { authorizeGuildManager } from './authorization.js'
+import { authorizeDJ, authorizeGuildManager, authorizeGuildMember, hasGuildDJRole } from './authorization.js'
 import Genius from 'genius-lyrics-axios'
 import { cleanGeniusLyrics } from '@/libs/utils/cleanGeniusLyrics.js'
 
@@ -172,13 +172,6 @@ export class ApiServer {
                                     const member =
                                         guild.members.cache.get(userId) ??
                                         (await guild.members.fetch(userId))
-                                    if (
-                                        !member.permissions.has('Administrator') &&
-                                        !member.permissions.has('ManageGuild')
-                                    ) {
-                                        return null
-                                    }
-
                                     return {
                                         id: guild.id,
                                         name: guild.name,
@@ -381,13 +374,16 @@ export class ApiServer {
             { preHandler: musicLimit() },
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                if (!(await authorizeGuildMember(this.client, request, reply, guildId))) return
+                const userId = request.headers['x-discord-id'] as string
+                const canControl = await hasGuildDJRole(this.client, guildId, userId)
                 const player = getPlayer(guildId)
 
-                if (!player || !player.playing) return reply.send({ playing: false, tracks: [] })
+                if (!player || !player.playing) return reply.send({ playing: false, tracks: [], canControl })
 
                 return reply.send({
                     playing: true,
+                    canControl,
                     paused: player.paused,
                     position: player.position,
                     repeatMode: player.loop,
@@ -422,7 +418,7 @@ export class ApiServer {
             { preHandler: musicLimit() },
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                if (!(await authorizeDJ(this.client, request, reply, guildId))) return
 
                 const player = getPlayer(guildId)
                 const position = request.body?.position
@@ -464,7 +460,7 @@ export class ApiServer {
             { preHandler: musicLimit() },
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                if (!(await authorizeDJ(this.client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
 
                 if (!player || !player.playing) return reply.code(400).send({ message: '目前沒有在播放音樂' })
@@ -478,7 +474,7 @@ export class ApiServer {
             { preHandler: musicLimit() },
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                if (!(await authorizeDJ(this.client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
 
                 if (!player || !player.playing) return reply.code(400).send({ message: '目前沒有在播放音樂' })
@@ -494,7 +490,7 @@ export class ApiServer {
             { preHandler: musicLimit() },
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                if (!(await authorizeDJ(this.client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
 
                 if (!player || !player.playing) return reply.code(400).send({ message: '目前沒有在播放音樂' })
@@ -510,7 +506,7 @@ export class ApiServer {
             { preHandler: musicLimit() },
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                if (!(await authorizeGuildMember(this.client, request, reply, guildId))) return
                 const query = request.body?.query?.trim()
                 if (!query || query.length > 500) {
                     return reply.code(400).send({ message: 'query 必須是 1 到 500 字元的字串' })
@@ -542,7 +538,7 @@ export class ApiServer {
             { preHandler: musicLimit() },
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                if (!(await authorizeDJ(this.client, request, reply, guildId))) return
                 const url = request.body?.url?.trim()
                 if (!url || url.length > 2000) {
                     return reply.code(400).send({ message: 'url 必須是 1 到 2000 字元的字串' })
@@ -580,7 +576,7 @@ export class ApiServer {
             { preHandler: musicLimit() },
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                if (!(await authorizeGuildMember(this.client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
                 const track = player?.current
                 if (!track) return reply.code(404).send({ message: '目前沒有正在播放的歌曲' })
@@ -611,7 +607,7 @@ export class ApiServer {
             { preHandler: musicLimit() },
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                if (!(await authorizeDJ(this.client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
                 if (!player?.current) return reply.code(400).send({ message: '目前沒有正在播放的音樂' })
                 if (player.previous.length === 0) return reply.code(409).send({ message: '沒有上一首歌曲' })
@@ -625,7 +621,7 @@ export class ApiServer {
             { preHandler: musicLimit() },
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                if (!(await authorizeDJ(this.client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
                 const volume = request.body?.volume
                 if (!player) return reply.code(400).send({ message: '目前沒有音樂播放器' })
@@ -642,7 +638,7 @@ export class ApiServer {
             { preHandler: musicLimit() },
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                if (!(await authorizeDJ(this.client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
                 const mode = request.body?.mode
                 if (!player) return reply.code(400).send({ message: '目前沒有音樂播放器' })
@@ -659,7 +655,7 @@ export class ApiServer {
             { preHandler: musicLimit() },
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                if (!(await authorizeDJ(this.client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
                 if (!player?.current) return reply.code(400).send({ message: '目前沒有正在播放的音樂' })
                 if (player.queue.tracks.length < 2) {
@@ -675,7 +671,7 @@ export class ApiServer {
             { preHandler: musicLimit() },
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                if (!(await authorizeDJ(this.client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
                 const enabled = request.body?.enabled
                 if (!player) return reply.code(400).send({ message: '目前沒有音樂播放器' })
@@ -692,7 +688,7 @@ export class ApiServer {
             { preHandler: musicLimit() },
             async (request, reply) => {
                 const { guildId } = request.params
-                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                if (!(await authorizeDJ(this.client, request, reply, guildId))) return
                 const player = getPlayer(guildId)
                 const { action, value } = request.body ?? {}
 
