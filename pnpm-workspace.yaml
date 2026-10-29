@@ -6,3 +6,5 @@ allowBuilds:
   ref: true
   sharp: true
   unrs-resolver: true
+overrides:
+  'genius-lyrics>undici': 7.29.0
