@@ -643,6 +643,88 @@ export class ApiServer {
             }
         )
 
+        this.fastify.post<MusicParams & { Body: { action?: string; value?: unknown } }>(
+            '/api/guilds/:guildId/music/control',
+            { preHandler: musicLimit() },
+            async (request, reply) => {
+                const { guildId } = request.params
+                if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
+                const player = getPlayer(guildId)
+                const { action, value } = request.body ?? {}
+
+                if (!player) return reply.code(400).send({ message: '目前沒有音樂播放器' })
+
+                try {
+                    switch (action) {
+                        case 'pause':
+                            if (!player.playing || player.paused) {
+                                return reply.code(409).send({ message: '目前無法暫停音樂' })
+                            }
+                            await player.pause()
+                            break
+                        case 'resume':
+                            if (!player.playing || !player.paused) {
+                                return reply.code(409).send({ message: '目前無法恢復播放' })
+                            }
+                            await player.resume()
+                            break
+                        case 'skip':
+                            if (!player.playing) return reply.code(409).send({ message: '目前沒有正在播放的音樂' })
+                            await player.skip()
+                            break
+                        case 'previous':
+                            if (!player.current || player.previous.length === 0) {
+                                return reply.code(409).send({ message: '沒有上一首歌曲' })
+                            }
+                            await player.back()
+                            break
+                        case 'stop':
+                            player.destroy()
+                            return reply.send({ ok: true, stopped: true })
+                        case 'volume':
+                            if (typeof value !== 'number' || !Number.isFinite(value) || value < 0 || value > 100) {
+                                return reply.code(400).send({ message: 'value 必須是 0 到 100 之間的音量' })
+                            }
+                            await player.setVolume(value)
+                            break
+                        case 'loop':
+                            if (value !== 'off' && value !== 'track' && value !== 'queue') {
+                                return reply.code(400).send({ message: 'value 必須是 off、track 或 queue' })
+                            }
+                            await player.setLoop(value)
+                            break
+                        case 'autoplay':
+                            if (typeof value !== 'boolean') {
+                                return reply.code(400).send({ message: 'value 必須是布林值' })
+                            }
+                            player.setAutoPlay(value)
+                            break
+                        case 'shuffle':
+                            if (player.queue.tracks.length < 2) {
+                                return reply.code(409).send({ message: '佇列至少需要兩首歌曲才能隨機排序' })
+                            }
+                            player.shuffle()
+                            break
+                        default:
+                            return reply.code(400).send({ message: '不支援的音樂控制操作' })
+                    }
+
+                    return reply.send({
+                        ok: true,
+                        playing: player.playing,
+                        paused: player.paused,
+                        position: player.position,
+                        volume: player.volume,
+                        repeatMode: player.loop,
+                        autoPlay: player.autoPlay
+                    })
+                } catch (error) {
+                    this.fastify.log.error(error, '音樂控制操作失敗')
+                    return reply.code(500).send({ message: '音樂控制操作失敗' })
+                }
+            }
+        )
+
         this.fastify.delete<MusicParams>(
             '/api/guilds/:guildId/music/queue',
             { preHandler: musicLimit() },
