@@ -1,6 +1,6 @@
 import MusicDB from '@/Structures/Schemas/MusicDB.js'
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
-import { deleteMessageAfter, validateVoiceChannel } from '@/Systems/Music.js'
+import { deleteMessageAfter, validateDJRole, validateVoiceChannel } from '@/Systems/Music.js'
 import emojis from '@/libs/emoji/emoji.js'
 import type { ButtonType } from '@/typings/component.js'
 import { MessageFlags, type ButtonInteraction, type GuildMember } from 'discord.js'
@@ -9,6 +9,8 @@ import type { Player } from 'moonlink.js'
 export default {
     id: 'autoplay',
     async execute(interaction: ButtonInteraction, client: PaperClient) {
+        if (!(await validateDJRole(interaction, client))) return
+
         await interaction.deferReply()
         const guild = interaction.guild!
         const member = interaction.member! as GuildMember
