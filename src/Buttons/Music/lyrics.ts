@@ -104,7 +104,7 @@ export default {
             await interaction.editReply({
                 content: `${emojis.correct} | 已將歌詞顯示在主播放器下方。`
             })
-        } catch (error) {
+        } catch {
             await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
