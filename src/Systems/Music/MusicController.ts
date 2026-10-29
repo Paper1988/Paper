@@ -114,6 +114,8 @@ export class MusicController {
         }
 
         const settings = await MusicDB.findOne({ GuildID: guild.id }).catch(() => null)
+        if (settings?.DJModeEnabled === false) return true
+
         if (!settings?.DJRoleID) {
             await interaction.reply({
                 content: `${emojis.warning} | 此伺服器尚未設定 DJ 身份組，請管理員使用 \`/music dj create\` 或 \`/music dj bind\` 設定。`,
