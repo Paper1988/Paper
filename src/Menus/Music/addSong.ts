@@ -1,5 +1,5 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
-import { MusicDbFetch, deleteMessageAfter } from '@/Systems/Music.js'
+import { MusicDbFetch, deleteMessageAfter, validateDJRole } from '@/Systems/Music.js'
 import emojis from '@/libs/emoji/emoji.js'
 import { Logger } from '@/libs/utils/logger.js'
 import type { MenuType } from '@/typings/component.js'
@@ -9,6 +9,7 @@ import type { Player, Track } from 'moonlink.js'
 export default {
     id: 'addSong',
     async execute(interaction: AnySelectMenuInteraction, client: PaperClient) {
+        if (!(await validateDJRole(interaction, client))) return
         const songUrl = interaction.values[0]
 
         if (!interaction.member || !(interaction.member instanceof GuildMember)) {
