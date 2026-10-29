@@ -148,6 +148,10 @@ export class MusicRenderer {
                     })
                     .addFields(
                         {
+                            name: '進度條',
+                            value: progressBar
+                        },
+                        {
                             name: `${emojis.speaker}音量`,
                             value: `\`${player.volume}%\``,
                             inline: true
@@ -177,10 +181,6 @@ export class MusicRenderer {
                             value: `\`${player.queue.tracks.length + 1} 首歌曲\``,
                             inline: true
                         },
-                        {
-                            name: '進度條',
-                            value: progressBar
-                        }
                     )
                     .setImage(track.sourceName === 'youtube' ? track.thumbnail : null)
                     .setThumbnail(track.sourceName === 'spotify' ? track.thumbnail : null)
