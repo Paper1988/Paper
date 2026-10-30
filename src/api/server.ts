@@ -450,7 +450,7 @@ export class ApiServer {
             }
         )
 
-        this.fastify.post<MusicParams & { Body: { order?: unknown; expectedTracks?: unknown } }>(
+        this.fastify.post<MusicParams & { Body: { from?: unknown; to?: unknown; expectedTracks?: unknown } }>(
             '/api/guilds/:guildId/music/reorder',
             { preHandler: musicLimit() },
             async (request, reply) => {
@@ -462,19 +462,22 @@ export class ApiServer {
                     return reply.code(409).send({ message: '目前沒有正在播放的音樂' })
                 }
 
-                const { order, expectedTracks } = request.body ?? {}
+                const { from, to, expectedTracks } = request.body ?? {}
                 const tracks = player.queue.tracks
                 const visibleCount = Math.min(tracks.length, 10)
 
                 if (
-                    !Array.isArray(order) ||
+                    typeof from !== 'number' ||
+                    !Number.isInteger(from) ||
+                    typeof to !== 'number' ||
+                    !Number.isInteger(to) ||
+                    from < 0 ||
+                    to < 0 ||
+                    from >= visibleCount ||
+                    to >= visibleCount ||
+                    from === to ||
                     !Array.isArray(expectedTracks) ||
-                    order.length !== visibleCount ||
                     expectedTracks.length !== visibleCount ||
-                    !order.every((index): index is number =>
-                        Number.isInteger(index) && index >= 0 && index < visibleCount
-                    ) ||
-                    new Set(order).size !== visibleCount ||
                     !expectedTracks.every((track): track is { url: string; title: string; duration: number } =>
                         typeof track === 'object' &&
                         track !== null &&
@@ -498,8 +501,9 @@ export class ApiServer {
                     return reply.code(409).send({ message: '播放佇列已更新，請重新整理後再試' })
                 }
 
-                const reorderedTracks = order.map((index) => currentSnapshot[index]!)
-                tracks.splice(0, visibleCount, ...reorderedTracks)
+                if (!player.queue.move(from, to)) {
+                    return reply.code(409).send({ message: '無法更新播放順序，請重新整理後再試' })
+                }
 
                 return reply.send({
                     ok: true,
