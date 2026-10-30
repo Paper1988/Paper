@@ -376,7 +376,7 @@ export class ApiServer {
             { preHandler: this.rateLimit(30, 60_000) },
             async (request, reply) => {
                 const userId = request.headers['x-discord-id']
-                if (typeof userId !== 'string' || !/^\\d{17,20}$/.test(userId)) {
+                if (typeof userId !== 'string' || !/^\d{17,20}$/.test(userId)) {
                     return reply.code(401).send({ message: '使用者身分無效或缺失' })
                 }
                 if (!this.client.isReady()) {
