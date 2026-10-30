@@ -489,9 +489,9 @@ export class ApiServer {
                 const currentSnapshot = tracks.slice(0, visibleCount)
                 const isCurrentQueue = currentSnapshot.every((track, index) => {
                     const expected = expectedTracks[index]
-                    return (track.uri ?? track.url) === expected.url &&
-                        track.title === expected.title &&
-                        track.duration === expected.duration
+                    return (track.uri ?? track.url ?? '') === expected.url &&
+                        (track.title ?? '') === expected.title &&
+                        (track.duration ?? 0) === expected.duration
                 })
 
                 if (!isCurrentQueue) {
