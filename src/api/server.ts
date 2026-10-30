@@ -589,7 +589,8 @@ export class ApiServer {
 
                 try {
                     const genius = new Genius.Client()
-                    const songs = (await genius.songs.search(track.title)).slice(0, 6)
+                    const searchQuery = [track.title, track.author].filter(Boolean).join(' ')
+                    const songs = (await genius.songs.search(searchQuery)).slice(0, 6)
                     const candidates = songs.map((song, index) => ({
                         index,
                         title: song.title,
