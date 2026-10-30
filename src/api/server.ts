@@ -450,6 +450,71 @@ export class ApiServer {
             }
         )
 
+        this.fastify.post<MusicParams & { Body: { order?: unknown; expectedTracks?: unknown } }>(
+            '/api/guilds/:guildId/music/reorder',
+            { preHandler: musicLimit() },
+            async (request, reply) => {
+                const { guildId } = request.params
+                if (!(await authorizeDJ(this.client, request, reply, guildId))) return
+
+                const player = getPlayer(guildId)
+                if (!player?.playing || !player.current) {
+                    return reply.code(409).send({ message: '目前沒有正在播放的音樂' })
+                }
+
+                const { order, expectedTracks } = request.body ?? {}
+                const tracks = player.queue.tracks
+                const visibleCount = Math.min(tracks.length, 10)
+
+                if (
+                    !Array.isArray(order) ||
+                    !Array.isArray(expectedTracks) ||
+                    order.length !== visibleCount ||
+                    expectedTracks.length !== visibleCount ||
+                    !order.every((index): index is number =>
+                        Number.isInteger(index) && index >= 0 && index < visibleCount
+                    ) ||
+                    new Set(order).size !== visibleCount ||
+                    !expectedTracks.every((track): track is { url: string; title: string; duration: number } =>
+                        typeof track === 'object' &&
+                        track !== null &&
+                        typeof track.url === 'string' &&
+                        typeof track.title === 'string' &&
+                        typeof track.duration === 'number'
+                    )
+                ) {
+                    return reply.code(400).send({ message: '播放佇列排序資料無效' })
+                }
+
+                const currentSnapshot = tracks.slice(0, visibleCount)
+                const isCurrentQueue = currentSnapshot.every((track, index) => {
+                    const expected = expectedTracks[index]
+                    return (track.uri ?? track.url) === expected.url &&
+                        track.title === expected.title &&
+                        track.duration === expected.duration
+                })
+
+                if (!isCurrentQueue) {
+                    return reply.code(409).send({ message: '播放佇列已更新，請重新整理後再試' })
+                }
+
+                const reorderedTracks = order.map((index) => currentSnapshot[index]!)
+                tracks.splice(0, visibleCount, ...reorderedTracks)
+
+                return reply.send({
+                    ok: true,
+                    queueLength: tracks.length,
+                    tracks: tracks.slice(0, visibleCount).map((track) => ({
+                        title: track.title,
+                        url: track.uri ?? track.url,
+                        duration: track.duration,
+                        thumbnail: track.thumbnail,
+                        author: track.author
+                    }))
+                })
+            }
+        )
+
         this.fastify.post<MusicParams & { Body: { position?: number } }>(
             '/api/guilds/:guildId/music/seek',
             { preHandler: musicLimit() },
