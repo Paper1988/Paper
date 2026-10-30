@@ -111,10 +111,10 @@ export class ApiServer {
             return reply.code(503).send({ status: 'offline', message: '機器人已離線' })
         })
 
-        this.fastify.get(
+        this.fastify.get<{ Querystring: { hours?: string } }>(
             '/api/bot-status/history',
             { preHandler: this.rateLimit(60, 60_000) },
-            async (request: FastifyRequest<{ Querystring: { hours?: string } }>, reply) => {
+            async (request, reply) => {
                 const hours = request.query.hours === undefined ? 24 : Number(request.query.hours)
                 if (!Number.isInteger(hours) || hours < 1 || hours > 168) {
                     return reply.code(400).send({ message: 'hours 必須是 1 到 168 之間的整數' })
@@ -422,7 +422,7 @@ export class ApiServer {
                     playing: true,
                     canControl,
                     paused: player.paused,
-                    position: player.position,
+                    position: player.current?.position ?? 0,
                     repeatMode: player.loop,
                     volume: player.volume,
                     autoPlay: player.autoPlay,
@@ -493,6 +493,7 @@ export class ApiServer {
                 const currentSnapshot = tracks.slice(0, visibleCount)
                 const isCurrentQueue = currentSnapshot.every((track, index) => {
                     const expected = expectedTracks[index]
+                    if (!expected) return false
                     return (track.uri ?? track.url ?? '') === expected.url &&
                         (track.title ?? '') === expected.title &&
                         (track.duration ?? 0) === expected.duration
@@ -902,7 +903,7 @@ export class ApiServer {
                         ok: true,
                         playing: player.playing,
                         paused: player.paused,
-                        position: player.position,
+                        position: player.current?.position ?? 0,
                         volume: player.volume,
                         repeatMode: player.loop,
                         autoPlay: player.autoPlay
