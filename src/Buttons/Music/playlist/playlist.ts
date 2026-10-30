@@ -81,6 +81,13 @@ export default {
                             .then(deleteMessageAfter)
                     }
 
+                    if (playlist.userId !== interaction.user.id) {
+                        return await interaction.reply({
+                            content: `${emojis.warning} | 你沒有權限修改這個播放清單`,
+                            flags: MessageFlags.Ephemeral
+                        }).then(deleteMessageAfter)
+                    }
+
                     if (playlist.songs.some((song) => song.url === currentSong.uri)) {
                         return await interaction
                             .reply({
