@@ -118,7 +118,7 @@ export class MusicController {
 
         // The requester of the currently playing track may control their own song.
         const player = client.moonlink?.players.get(guild.id)
-        if (player?.current?.requester === interaction.user.id) return true
+        if (player?.current?.requester?.id === interaction.user.id) return true
 
         if (!settings?.DJRoleID) {
             await interaction.reply({
