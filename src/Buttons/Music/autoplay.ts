@@ -1,6 +1,6 @@
 import MusicDB from '@/Structures/Schemas/MusicDB.js'
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
-import { deleteMessageAfter, validateDJRole, validateVoiceChannel } from '@/Systems/Music.js'
+import { deleteMessageAfter, updateMusicPlayerStatus, validateDJRole, validateVoiceChannel } from '@/Systems/Music.js'
 import emojis from '@/libs/emoji/emoji.js'
 import type { ButtonType } from '@/typings/component.js'
 import { MessageFlags, type ButtonInteraction, type GuildMember } from 'discord.js'
@@ -27,8 +27,8 @@ export default {
                 .then(deleteMessageAfter)
         }
 
-        if (player.autoPlay) player.setAutoPlay(true)
-        else player.setAutoPlay(false)
+        player.setAutoPlay(!player.autoPlay)
+        await updateMusicPlayerStatus(player, client)
 
         await MusicDB.findOneAndUpdate(
             { GuildID: guild.id },
