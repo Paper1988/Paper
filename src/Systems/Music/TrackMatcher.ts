@@ -36,7 +36,7 @@ const METADATA_NOISE =
 function normalize(value: string): string {
     return value
         .normalize('NFKC')
-        .toLocaleLowerCase()
+        .toLowerCase()
         .replace(METADATA_NOISE, ' ')
         .replace(/[\[\]{}()【】「」『』]/g, ' ')
         .replace(/[‐‑‒–—―]/g, '-')
