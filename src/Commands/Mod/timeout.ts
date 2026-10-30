@@ -84,7 +84,7 @@ export default {
             errorsArray.push('所選的目標成員無法由機器人管理(我的權限不夠大!)')
         }
 
-        if (member.roles.highest.position < user.roles.highest.position) {
+        if (member.roles.highest.position <= user.roles.highest.position) {
             errorsArray.push('所選的目標成員權限比你高!')
         }
 
