@@ -66,6 +66,10 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             const textChannel = client.channels.cache.get(player.textChannelId) as
                 | TextChannel
                 | undefined
+            const mirroredSourceName = (track.pluginInfo?.mirroredTrack as
+                | { sourceName?: string }
+                | undefined)?.sourceName
+            player.set('mirroredSourceName', mirroredSourceName)
             const status = MusicRenderer.buildPlayerStatus(player, client, track)
             if (textChannel && textChannel.isTextBased() && 'send' in textChannel) {
                 const controllerMessageId = MusicStateManager.getControllerMessageId(player)
