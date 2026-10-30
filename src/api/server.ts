@@ -630,7 +630,7 @@ export class ApiServer {
                     const candidates = songs.map((song, index) => ({
                         index,
                         title: song.title,
-                        artist: song.artist,
+                        artist: song.artist?.name ?? track.author,
                         url: song.url
                     }))
                     const song = songs[selectedIndex]
@@ -641,7 +641,7 @@ export class ApiServer {
 
                     return reply.send({
                         title: song.title,
-                        author: song.artist || track.author,
+                        author: song.artist?.name || track.author,
                         url: song.url,
                         lyrics: lyrics.slice(0, 20000),
                         truncated: lyrics.length > 20000,
