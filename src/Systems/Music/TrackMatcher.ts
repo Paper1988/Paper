@@ -27,11 +27,15 @@ const VERSION_MARKERS = [
     /\b8d\b/i,
     /\bpiano\s+version\b/i,
     /\borchestral\b/i,
-    /\btribute\b/i
+    /\btribute\b/i,
+    /\bradio\s+edit\b/i,
+    /\bextended\s+(mix|version)\b/i,
+    /\bdemo\b/i,
+    /\bacapella\b/i
 ]
 
 const METADATA_NOISE =
-    /\b(official|music\s+video|lyric\s+video|lyrics?|audio|video|hd|4k|mv|visualizer|字幕版|官方版)\b/gi
+    /\b(official|music\s+video|lyric\s+video|lyrics?|audio|video|hd|4k|mv|visualizer|remaster(ed)?|字幕版|官方版)\b/gi
 
 function normalize(value: string): string {
     return value
