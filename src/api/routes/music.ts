@@ -16,49 +16,6 @@ export function registerMusicRoutes(fastify: FastifyInstance, client: PaperClien
             return player
         }
 
-        // Return playback status in one request instead of polling every guild queue.
-        fastify.get(
-            '/api/music/servers',
-            { config: { rateLimit: musicRouteRateLimit } },
-            async (request, reply) => {
-                const userId = request.headers['x-discord-id']
-                if (typeof userId !== 'string' || !/^\\d{17,20}$/.test(userId)) {
-                    return reply.code(401).send({ message: '使用者身分無效或缺失' })
-                }
-
-                if (!client.isReady()) {
-                    return reply.code(503).send({ message: '機器人尚未上線' })
-                }
-
-                const playingGuildIds = (
-                    await Promise.all(
-                        client.guilds.cache.map(async (guild) => {
-                            let canManage = guild.ownerId === userId
-
-                            if (!canManage) {
-                                try {
-                                    const member =
-                                        guild.members.cache.get(userId) ??
-                                        (await guild.members.fetch(userId))
-                                    canManage =
-                                        member.permissions.has('Administrator') ||
-                                        member.permissions.has('ManageGuild')
-                                } catch {
-                                    canManage = false
-                                }
-                            }
-
-                            if (!canManage) return null
-                            const player = getPlayer(guild.id)
-                            return player?.playing ? guild.id : null
-                        })
-                    )
-                ).filter((guildId): guildId is string => guildId !== null)
-
-                return reply.send({ playingGuildIds })
-            }
-        )
-
         fastify.get<MusicParams>({
             url: '/api/guilds/:guildId/music/queue',
             config: { rateLimit: musicRouteRateLimit },
