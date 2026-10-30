@@ -4,6 +4,7 @@ import MusicRenderer from '@/Systems/Music/MusicRenderer.js'
 import MusicRepository from '@/Systems/Music/MusicRepository.js'
 import { MusicStateManager } from '@/Systems/Music/MusicStateManager.js'
 import MusicUtils, { deleteMessageAfter } from '@/Systems/Music/MusicUtils.js'
+import { assessTrackMatch } from '@/Systems/Music/TrackMatcher.js'
 import emojis from '@/libs/emoji/emoji.js'
 import { Logger } from '@/libs/utils/logger.js'
 import { EmbedBuilder, Message, TextChannel } from 'discord.js'
@@ -60,16 +61,70 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             if (player.data.queueEndTimeout) {
                 clearTimeout(player.data.queueEndTimeout as NodeJS.Timeout)
             }
+            const mirroredTrack = track.pluginInfo?.mirroredTrack as
+                | {
+                      title?: string
+                      author?: string
+                      length?: number
+                      duration?: number
+                      sourceName?: string
+                  }
+                | undefined
+            const mirroredSourceName = mirroredTrack?.sourceName
+            player.set('mirroredSourceName', mirroredSourceName)
+
+            if (mirroredTrack) {
+                const assessment = assessTrackMatch(
+                    {
+                        title: track.title,
+                        author: track.author,
+                        durationMs: track.duration
+                    },
+                    {
+                        title: mirroredTrack.title,
+                        author: mirroredTrack.author,
+                        durationMs: mirroredTrack.length ?? mirroredTrack.duration
+                    }
+                )
+
+                if (!assessment.trusted) {
+                    const details = {
+                        guildId: player.guildId,
+                        original: `${track.title} - ${track.author}`,
+                        mirrored: `${mirroredTrack.title ?? '未知歌曲'} - ${mirroredTrack.author ?? '未知歌手'}`,
+                        source: mirroredSourceName ?? 'unknown',
+                        score: Number(assessment.score.toFixed(3)),
+                        titleSimilarity: Number(assessment.titleSimilarity.toFixed(3)),
+                        artistSimilarity: Number(assessment.artistSimilarity.toFixed(3)),
+                        durationSimilarity: assessment.durationSimilarity,
+                        versionMismatch: assessment.versionMismatch
+                    }
+                    Logger.warn('拒絕播放低可信度的替代音源:', details)
+
+                    await MusicUtils.sendQueueMessage(
+                        player,
+                        client,
+                        `${emojis.warning} | 替代音源與原曲相似度不足，為避免播放錯誤歌曲，已自動跳過「${track.title}」。`,
+                        'Red'
+                    )
+                    await player.skip()
+                    return
+                }
+
+                Logger.info('Fallback track match accepted:', {
+                    guildId: player.guildId,
+                    title: track.title,
+                    source: mirroredSourceName,
+                    score: Number(assessment.score.toFixed(3))
+                })
+            }
+
             const db = await MusicRepository.fetchGuildSettings(player.guildId)
             player.setVolume(db.volume)
             player.setLoop(db.repeatMode)
             const textChannel = client.channels.cache.get(player.textChannelId) as
                 | TextChannel
                 | undefined
-            const mirroredSourceName = (track.pluginInfo?.mirroredTrack as
-                | { sourceName?: string }
-                | undefined)?.sourceName
-            player.set('mirroredSourceName', mirroredSourceName)
             const status = MusicRenderer.buildPlayerStatus(player, client, track)
             if (textChannel && textChannel.isTextBased() && 'send' in textChannel) {
                 const controllerMessageId = MusicStateManager.getControllerMessageId(player)
