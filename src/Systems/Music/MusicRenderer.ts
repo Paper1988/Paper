@@ -147,10 +147,12 @@ export class MusicRenderer {
             bluesky: 'Bluesky',
             nicovideo: 'Niconico'
         }
-        const mirroredSourceLabel = mirroredSourceName
-            ? sourceLabels[mirroredSourceName.toLowerCase()] ||
-              mirroredSourceName.charAt(0).toUpperCase() + mirroredSourceName.slice(1)
-            : null
+        const normalizedMirroredSource = mirroredSourceName?.toLowerCase()
+        const mirroredSourceLabel =
+            normalizedMirroredSource && normalizedMirroredSource !== 'youtube'
+                ? sourceLabels[normalizedMirroredSource] ||
+                  mirroredSourceName!.charAt(0).toUpperCase() + mirroredSourceName!.slice(1)
+                : null
         const barLength = track.sourceName === 'spotify' ? 21 : PROGRESS_BAR_LENGTH
         const progressBar = isLive
             ? `🔴 直播中`
