@@ -59,11 +59,17 @@ export default {
                     volume: db.volume ?? 50
                 })
             } else {
+                if (currentPlayer.voiceChannelId && currentPlayer.voiceChannelId !== VoiceChannel.id) {
+                    return interaction.reply({
+                        content: `${emojis.warning} | Paper 目前正在其他語音頻道播放，請先在該頻道使用或停止播放器`,
+                        flags: MessageFlags.Ephemeral
+                    })
+                }
                 player = currentPlayer
             }
 
             if (!player.connected) {
-                player.connect({ selfDeaf: true })
+                await player.connect({ selfDeaf: true })
             }
 
             const result = await client.moonlink.search({
