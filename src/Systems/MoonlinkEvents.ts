@@ -4,7 +4,6 @@ import MusicRenderer from '@/Systems/Music/MusicRenderer.js'
 import MusicRepository from '@/Systems/Music/MusicRepository.js'
 import { MusicStateManager } from '@/Systems/Music/MusicStateManager.js'
 import MusicUtils, { deleteMessageAfter } from '@/Systems/Music/MusicUtils.js'
-import { assessTrackMatch } from '@/Systems/Music/TrackMatcher.js'
 import emojis from '@/libs/emoji/emoji.js'
 import { Logger } from '@/libs/utils/logger.js'
 import { EmbedBuilder, Message, TextChannel } from 'discord.js'
@@ -72,56 +71,6 @@ export function registerMoonlinkEvents(client: PaperClient): void {
                 | undefined
             const mirroredSourceName = mirroredTrack?.sourceName
             player.set('mirroredSourceName', mirroredSourceName)
-
-            // YouTube 是主要播放來源；只有實際播放替代音源時才驗證鏡像歌曲。
-            // 避免 YouTube 主音源附帶 mirroredTrack metadata 時，被相似度檢查誤判並跳歌。
-            const isPrimaryYouTubeTrack = track.sourceName?.toLowerCase() === 'youtube'
-
-            if (mirroredTrack && !isPrimaryYouTubeTrack) {
-                const assessment = assessTrackMatch(
-                    {
-                        title: track.title,
-                        author: track.author,
-                        durationMs: track.duration
-                    },
-                    {
-                        title: mirroredTrack.title,
-                        author: mirroredTrack.author,
-                        durationMs: mirroredTrack.length ?? mirroredTrack.duration
-                    }
-                )
-
-                if (!assessment.trusted) {
-                    const details = {
-                        guildId: player.guildId,
-                        original: `${track.title} - ${track.author}`,
-                        mirrored: `${mirroredTrack.title ?? '未知歌曲'} - ${mirroredTrack.author ?? '未知歌手'}`,
-                        source: mirroredSourceName ?? 'unknown',
-                        score: Number(assessment.score.toFixed(3)),
-                        titleSimilarity: Number(assessment.titleSimilarity.toFixed(3)),
-                        artistSimilarity: Number(assessment.artistSimilarity.toFixed(3)),
-                        durationSimilarity: assessment.durationSimilarity,
-                        versionMismatch: assessment.versionMismatch
-                    }
-                    Logger.warn('拒絕播放低可信度的替代音源:', details)
-
-                    await MusicUtils.sendQueueMessage(
-                        player,
-                        client,
-                        `${emojis.warning} | 替代音源與原曲相似度不足，為避免播放錯誤歌曲，已自動跳過「${track.title}」。`,
-                        'Red'
-                    )
-                    await player.skip()
-                    return
-                }
-
-                Logger.info('Fallback track match accepted:', {
-                    guildId: player.guildId,
-                    title: track.title,
-                    source: mirroredSourceName,
-                    score: Number(assessment.score.toFixed(3))
-                })
-            }
 
             const db = await MusicRepository.fetchGuildSettings(player.guildId)
             player.setVolume(db.volume)
