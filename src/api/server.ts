@@ -6,7 +6,7 @@ import GuildConfig from '@/Structures/Schemas/GuildConfig.js'
 import { Logger } from '@/libs/utils/logger.js'
 import fastifyCors from '@fastify/cors'
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify'
-import { authorizeDJ, authorizeGuildManager, authorizeGuildMember, hasGuildDJRole } from './authorization.js'
+import { authorizeDJ, authorizeGuildManager, authorizeGuildMember, getGuildMember, hasGuildDJRole } from './authorization.js'
 import Genius from 'genius-lyrics-axios'
 import { cleanGeniusLyrics } from '@/libs/utils/cleanGeniusLyrics.js'
 
@@ -623,7 +623,8 @@ export class ApiServer {
                     return reply.code(503).send({ message: '音樂服務尚未初始化' })
                 }
                 try {
-                    const result = await this.client.moonlink.search({ query })
+                    const requester = request.headers['x-discord-id'] as string
+                    const result = await this.client.moonlink.search({ query, requester })
                     return reply.send({
                         tracks: result.tracks.slice(0, 10).map((track: any) => ({
                             title: track.title,
@@ -651,18 +652,49 @@ export class ApiServer {
                 if (!url || url.length > 2000) {
                     return reply.code(400).send({ message: 'url 必須是 1 到 2000 字元的字串' })
                 }
-                const player = getPlayer(guildId)
-                if (!player || !this.client.moonlink) {
-                    return reply.code(409).send({ message: '請先在 Discord 中啟動音樂播放器並加入語音頻道' })
+                if (!this.client.moonlink) {
+                    return reply.code(503).send({ message: '音樂服務尚未初始化' })
                 }
+
+                const member = await getGuildMember(this.client, request, reply, guildId)
+                if (!member) return
+                const voiceChannel = member.voice.channel
+                if (!voiceChannel || !voiceChannel.isVoiceBased()) {
+                    return reply.code(409).send({ message: '請先加入 Discord 語音頻道，再從 Dashboard 播放歌曲' })
+                }
+
+                const botMember = voiceChannel.guild.members.me
+                if (!botMember || !voiceChannel.joinable || !voiceChannel.speakable) {
+                    return reply.code(403).send({ message: 'Paper 沒有加入或在這個語音頻道發言的權限' })
+                }
+
+                let player = getPlayer(guildId)
+                if (player?.voiceChannelId && player.voiceChannelId !== voiceChannel.id) {
+                    return reply.code(409).send({ message: 'Paper 目前正在其他語音頻道播放，請先在該頻道使用或停止播放器' })
+                }
+
                 try {
-                    const result = await this.client.moonlink.search({ query: url })
+                    const result = await this.client.moonlink.search({ query: url, requester: member.id })
                     const track = result.tracks[0]
                     if (!track) return reply.code(404).send({ message: '找不到歌曲' })
+
+                    if (!player) {
+                        player = this.client.moonlink.players.create({
+                            guildId,
+                            voiceChannelId: voiceChannel.id,
+                            textChannelId: voiceChannel.guild.systemChannelId ?? ''
+                        })
+                    }
+
+                    if (!player.connected) {
+                        await player.connect({ selfDeaf: true })
+                    }
+
                     player.queue.add(track)
                     if (!player.playing && !player.paused) await player.play()
                     return reply.send({
                         ok: true,
+                        started: !player.playing || player.current?.uri === track.uri,
                         track: {
                             title: track.title,
                             url: track.uri,
