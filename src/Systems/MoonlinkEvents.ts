@@ -73,7 +73,11 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             const mirroredSourceName = mirroredTrack?.sourceName
             player.set('mirroredSourceName', mirroredSourceName)
 
-            if (mirroredTrack) {
+            // YouTube 是主要播放來源；只有實際播放替代音源時才驗證鏡像歌曲。
+            // 避免 YouTube 主音源附帶 mirroredTrack metadata 時，被相似度檢查誤判並跳歌。
+            const isPrimaryYouTubeTrack = track.sourceName?.toLowerCase() === 'youtube'
+
+            if (mirroredTrack && !isPrimaryYouTubeTrack) {
                 const assessment = assessTrackMatch(
                     {
                         title: track.title,
