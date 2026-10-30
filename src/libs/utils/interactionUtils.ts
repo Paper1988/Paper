@@ -37,7 +37,8 @@ export const interactionUtils = {
      * 檢查權限。缺少權限資訊時一律拒絕，避免 fail-open。
      */
     hasPermission(interaction: Interaction, permission?: PermissionResolvable): boolean {
-        if (!permission || !interaction.memberPermissions) return false
+        if (!permission) return true
+        if (!interaction.memberPermissions) return false
         return interaction.memberPermissions.has(permission)
     },
 
