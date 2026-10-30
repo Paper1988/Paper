@@ -16,6 +16,7 @@ export class ApiServer {
     private fastify: FastifyInstance
     private client: PaperClient
     private rateLimitBuckets = new Map<string, RateLimitBucket>()
+    private lyricsSearchCache = new Map<string, { expiresAt: number; songs: any[] }>()
     private rateLimitChecks = 0
 
     constructor(client: PaperClient) {
@@ -693,9 +694,27 @@ export class ApiServer {
                 }
 
                 try {
-                    const genius = new Genius.Client()
-                    const searchQuery = [track.title, track.author].filter(Boolean).join(' ')
-                    const songs = (await genius.songs.search(searchQuery)).slice(0, 6)
+                    // Keep one stable Genius result set per currently playing track.
+                    // Re-running search for every selection can reorder results and make
+                    // the same index point to a different song.
+                    const cacheKey = `${guildId}:${track.uri}`
+                    const now = Date.now()
+                    let cached = this.lyricsSearchCache.get(cacheKey)
+                    if (!cached || cached.expiresAt <= now) {
+                        const genius = new Genius.Client()
+                        const searchQuery = [track.title, track.author].filter(Boolean).join(' ')
+                        const songs = (await genius.songs.search(searchQuery)).slice(0, 6)
+                        cached = { expiresAt: now + 10 * 60 * 1000, songs }
+                        this.lyricsSearchCache.set(cacheKey, cached)
+
+                        // Bound memory usage for long-running bot processes.
+                        if (this.lyricsSearchCache.size > 100) {
+                            const oldestKey = this.lyricsSearchCache.keys().next().value
+                            if (oldestKey) this.lyricsSearchCache.delete(oldestKey)
+                        }
+                    }
+
+                    const songs = cached.songs
                     const candidates = songs.map((song, index) => ({
                         index,
                         title: song.title,
