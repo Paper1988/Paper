@@ -26,12 +26,12 @@ export default {
 
             const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
                 new ButtonBuilder()
-                    .setCustomId(`unbanConfirm/${member.id}`)
+                    .setCustomId(`unbanConfirm/${member.id}/${interaction.user.id}`)
                     .setLabel('確認')
                     .setEmoji('<:correct_859388130411282442:1201843648229294121>')
                     .setStyle(ButtonStyle.Danger),
                 new ButtonBuilder()
-                    .setCustomId('unbanCancel')
+                    .setCustomId(`unbanCancel/${interaction.user.id}`)
                     .setLabel('取消')
                     .setEmoji('<:xmark_988409378161954866:1201844342029815848>')
                     .setStyle(ButtonStyle.Secondary)
