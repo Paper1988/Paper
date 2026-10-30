@@ -131,10 +131,21 @@ export class MusicRenderer {
         const mirroredSourceName =
             mirroredTrack?.sourceName || player.get<string>('mirroredSourceName')
         const sourceLabels: Record<string, string> = {
+            soundcloud: 'SoundCloud',
             youtubemusic: 'YouTube Music',
+            deezer: 'Deezer',
             jiosaavn: 'JioSaavn',
+            qobuz: 'Qobuz',
+            gaana: 'Gaana',
             vkmusic: 'VK Music',
-            yandexmusic: 'Yandex Music'
+            yandexmusic: 'Yandex Music',
+            audiomack: 'Audiomack',
+            bandcamp: 'Bandcamp',
+            audius: 'Audius',
+            mixcloud: 'Mixcloud',
+            bilibili: 'Bilibili',
+            bluesky: 'Bluesky',
+            nicovideo: 'Niconico'
         }
         const mirroredSourceLabel = mirroredSourceName
             ? sourceLabels[mirroredSourceName.toLowerCase()] ||
