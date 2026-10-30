@@ -82,6 +82,8 @@ export async function hasGuildDJRole(client: PaperClient, guildId: string, userI
             MusicDB.findOne({ GuildID: guildId })
         ])
         if (settings?.DJModeEnabled === false) return true
+        const player = client.moonlink?.players.get(guildId)
+        if (player?.current?.requester?.id === userId) return true
         return Boolean(settings?.DJRoleID && member.roles.cache.has(settings.DJRoleID))
     } catch {
         return false
@@ -98,7 +100,7 @@ export async function authorizeDJ(client: PaperClient, request: FastifyRequest, 
 
     // The requester of the currently playing track may control their own song.
     const player = client.moonlink?.players.get(guildId)
-    if (player?.current?.requester === member.id) return true
+    if (player?.current?.requester?.id === member.id) return true
 
     const roleId = settings?.DJRoleID
 
