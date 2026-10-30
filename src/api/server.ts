@@ -367,7 +367,7 @@ export class ApiServer {
 
     private setupMusicRoutes() {
         type MusicParams = { Params: { guildId: string } }
-        type MusicLyricsParams = { Params: { guildId: string }; Querystring: { index?: string } }
+        type MusicLyricsParams = { Params: { guildId: string }; Querystring: { index?: string; url?: string } }
         const getPlayer = (guildId: string) => this.client.moonlink?.players.get(guildId) ?? null
         const musicLimit = () => this.rateLimit(30, 60_000)
 
@@ -688,8 +688,8 @@ export class ApiServer {
                 const track = player?.current
                 if (!track) return reply.code(404).send({ message: '目前沒有正在播放的歌曲' })
 
-                const selectedIndex = request.query.index === undefined ? 0 : Number(request.query.index)
-                if (!Number.isInteger(selectedIndex) || selectedIndex < 0 || selectedIndex >= 6) {
+                const requestedIndex = request.query.index === undefined ? 0 : Number(request.query.index)
+                if (!Number.isInteger(requestedIndex) || requestedIndex < 0 || requestedIndex >= 6) {
                     return reply.code(400).send({ message: '歌詞搜尋結果索引無效' })
                 }
 
@@ -721,7 +721,14 @@ export class ApiServer {
                         artist: song.artist?.name ?? track.author,
                         url: song.url
                     }))
-                    const song = songs[selectedIndex]
+                    // Prefer the Genius URL as the stable candidate identity.
+                    // Search result positions can change, but a candidate URL identifies
+                    // the exact song selected by the user.
+                    const requestedUrl = request.query.url
+                    const selectedIndex = requestedUrl
+                        ? songs.findIndex(candidate => candidate.url === requestedUrl)
+                        : requestedIndex
+                    const song = selectedIndex >= 0 ? songs[selectedIndex] : undefined
                     if (!song) return reply.code(404).send({ message: '找不到這首歌的歌詞' })
 
                     const lyrics = cleanGeniusLyrics(await song.lyrics())
