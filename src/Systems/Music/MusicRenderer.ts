@@ -125,6 +125,21 @@ export class MusicRenderer {
             return player.loop === 'queue' ? '整個佇列' : '單曲'
         }
 
+        const mirroredTrack = track.pluginInfo?.mirroredTrack as
+            | { sourceName?: string }
+            | undefined
+        const mirroredSourceName =
+            mirroredTrack?.sourceName || player.get<string>('mirroredSourceName')
+        const sourceLabels: Record<string, string> = {
+            youtubemusic: 'YouTube Music',
+            jiosaavn: 'JioSaavn',
+            vkmusic: 'VK Music',
+            yandexmusic: 'Yandex Music'
+        }
+        const mirroredSourceLabel = mirroredSourceName
+            ? sourceLabels[mirroredSourceName.toLowerCase()] ||
+              mirroredSourceName.charAt(0).toUpperCase() + mirroredSourceName.slice(1)
+            : null
         const barLength = track.sourceName === 'spotify' ? 21 : PROGRESS_BAR_LENGTH
         const progressBar = isLive
             ? `🔴 直播中`
@@ -176,6 +191,15 @@ export class MusicRenderer {
                             value: `\`${track.author || '無'}\``,
                             inline: true
                         },
+                        ...(mirroredSourceLabel
+                            ? [
+                                  {
+                                      name: '播放來源',
+                                      value: `\`${mirroredSourceLabel}\``,
+                                      inline: true
+                                  }
+                              ]
+                            : []),
                         {
                             name: `${emojis.playlist}播放清單`,
                             value: `\`${player.queue.tracks.length + 1} 首歌曲\``,
