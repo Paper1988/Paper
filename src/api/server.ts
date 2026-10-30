@@ -435,7 +435,8 @@ export class ApiServer {
                         thumbnail: player.current?.thumbnail,
                         author: player.current?.author,
                         requestedBy: player.current?.requester?.id,
-                        isStream: player.current?.isStream
+                        isStream: player.current?.isStream,
+                        playbackSource: player.get<string>('mirroredSourceName')
                     },
                     tracks: player.queue.tracks.slice(0, 10).map((track: any) => ({
                         title: track.title,
