@@ -441,7 +441,7 @@ export class ApiServer {
                     },
                     tracks: player.queue.tracks.slice(0, 10).map((track: any) => ({
                         title: track.title,
-                        url: track.uri ?? track.url,
+                        url: track.uri,
                         duration: track.duration,
                         thumbnail: track.thumbnail,
                         author: track.author,
@@ -494,7 +494,7 @@ export class ApiServer {
                 const isCurrentQueue = currentSnapshot.every((track, index) => {
                     const expected = expectedTracks[index]
                     if (!expected) return false
-                    return (track.uri ?? track.url ?? '') === expected.url &&
+                    return (track.uri ?? '') === expected.url &&
                         (track.title ?? '') === expected.title &&
                         (track.duration ?? 0) === expected.duration
                 })
@@ -512,7 +512,7 @@ export class ApiServer {
                     queueLength: tracks.length,
                     tracks: tracks.slice(0, visibleCount).map((track) => ({
                         title: track.title,
-                        url: track.uri ?? track.url,
+                        url: track.uri,
                         duration: track.duration,
                         thumbnail: track.thumbnail,
                         author: track.author
