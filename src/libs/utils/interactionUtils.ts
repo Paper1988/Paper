@@ -14,7 +14,7 @@ export const CONFIG = {
         UNKNOWN_ERROR: '<:outage:1265561329528471613> | 發生未知錯誤，請協助回報!',
         INTERACTION_EXPIRED: '<:outage:1265561329528471613> | 訊息被流量怪獸吃掉了，請稍後再試!'
     },
-    BUTTON_PREFIXES: ['mcstats', 'report', 'rps_', 'approve_', 'unban', 'TicTacToe_']
+    BUTTON_PREFIXES: ['mcstats', 'report', 'rps_', 'approve_', 'TicTacToe_']
 } as const
 
 // 工具函數
@@ -34,10 +34,10 @@ export const interactionUtils = {
     },
 
     /**
-     * 檢查權限
+     * 檢查權限。缺少權限資訊時一律拒絕，避免 fail-open。
      */
     hasPermission(interaction: Interaction, permission?: PermissionResolvable): boolean {
-        if (!permission || !interaction.memberPermissions) return true
+        if (!permission || !interaction.memberPermissions) return false
         return interaction.memberPermissions.has(permission)
     },
 
