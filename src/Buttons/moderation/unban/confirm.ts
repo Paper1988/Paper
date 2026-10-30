@@ -1,17 +1,42 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { deleteMessageAfter } from '@/Systems/Music.js'
 import { sendModeratorLog } from '@/Systems/ModeratorLog.js'
-import { ButtonInteraction, EmbedBuilder, MessageFlags } from 'discord.js'
+import { ButtonInteraction, EmbedBuilder, MessageFlags, PermissionFlagsBits } from 'discord.js'
 
 export default {
     id: 'unbanConfirm',
     async execute(interaction: ButtonInteraction, client: PaperClient) {
-        try {
-            const memberId = interaction.customId.split('/')[1]
-            if (!memberId) {
-                throw new Error('無法獲取用戶 ID')
-            }
+        const [, memberId, requesterId] = interaction.customId.split('/')
 
+        if (!interaction.inGuild() || !interaction.guild) {
+            return interaction.reply({
+                content: '此操作只能在伺服器內執行。',
+                flags: MessageFlags.Ephemeral
+            })
+        }
+
+        if (requesterId !== interaction.user.id) {
+            return interaction.reply({
+                content: '這個解除封鎖確認視窗不屬於你。',
+                flags: MessageFlags.Ephemeral
+            })
+        }
+
+        if (!interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers)) {
+            return interaction.reply({
+                content: '你目前沒有解除封鎖所需的權限。',
+                flags: MessageFlags.Ephemeral
+            })
+        }
+
+        if (!memberId) {
+            return interaction.reply({
+                content: '無法取得要解除封鎖的用戶 ID。',
+                flags: MessageFlags.Ephemeral
+            })
+        }
+
+        try {
             const { guild } = interaction
             const processEmbed = new EmbedBuilder()
                 .setColor('Blue')
@@ -28,7 +53,7 @@ export default {
 
             try {
                 const user = await client.users.fetch(memberId)
-                await guild?.members.unban(memberId, `由 ${interaction.user.username} 操作`)
+                await guild.members.unban(memberId, `由 ${interaction.user.username} 操作`)
                 await sendModeratorLog(interaction, {
                     action: '解除封禁',
                     target: `${user.tag} (${user.id})`,
@@ -64,12 +89,17 @@ export default {
                 .setColor('Red')
                 .setDescription(`<:xmark:1265562550947545089> | 發生錯誤: ${error.message}`)
 
-            await interaction
-                .reply({
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp({
                     embeds: [errorEmbed],
                     flags: MessageFlags.Ephemeral
                 })
-                .then(deleteMessageAfter)
+            } else {
+                await interaction.reply({
+                    embeds: [errorEmbed],
+                    flags: MessageFlags.Ephemeral
+                }).then(deleteMessageAfter)
+            }
         }
     }
 }
