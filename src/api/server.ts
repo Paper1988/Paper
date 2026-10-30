@@ -370,6 +370,41 @@ export class ApiServer {
         const getPlayer = (guildId: string) => this.client.moonlink?.players.get(guildId) ?? null
         const musicLimit = () => this.rateLimit(30, 60_000)
 
+        // Batch playback status so the dashboard does not poll every guild queue.
+        this.fastify.get(
+            '/api/music/servers',
+            { preHandler: this.rateLimit(30, 60_000) },
+            async (request, reply) => {
+                const userId = request.headers['x-discord-id']
+                if (typeof userId !== 'string' || !/^\\d{17,20}$/.test(userId)) {
+                    return reply.code(401).send({ message: '使用者身分無效或缺失' })
+                }
+                if (!this.client.isReady()) {
+                    return reply.code(503).send({ message: '機器人尚未上線' })
+                }
+
+                const playingGuildIds = (
+                    await Promise.all(
+                        this.client.guilds.cache.map(async (guild) => {
+                            try {
+                                const member =
+                                    guild.members.cache.get(userId) ??
+                                    (await guild.members.fetch(userId))
+                                if (!member) return null
+
+                                const player = getPlayer(guild.id)
+                                return player?.playing ? guild.id : null
+                            } catch {
+                                return null
+                            }
+                        })
+                    )
+                ).filter((guildId): guildId is string => guildId !== null)
+
+                return reply.send({ playingGuildIds })
+            }
+        )
+
         this.fastify.get<MusicParams>(
             '/api/guilds/:guildId/music/queue',
             { preHandler: musicLimit() },
