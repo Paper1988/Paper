@@ -690,11 +690,12 @@ export class ApiServer {
                         await player.connect({ selfDeaf: true })
                     }
 
+                    const wasPlaying = player.playing && !player.paused
                     player.queue.add(track)
-                    if (!player.playing && !player.paused) await player.play()
+                    if (!wasPlaying && !player.paused) await player.play()
                     return reply.send({
                         ok: true,
-                        started: !player.playing || player.current?.uri === track.uri,
+                        started: !wasPlaying && !player.paused && player.playing,
                         track: {
                             title: track.title,
                             url: track.uri,
