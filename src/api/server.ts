@@ -73,25 +73,34 @@ export class ApiServer {
         return async (request: FastifyRequest, reply: FastifyReply) => {
             const now = Date.now()
             const userId = request.headers['x-discord-id']
-            const identity = typeof userId === 'string' ? userId : request.ip
+            const identity =
+                typeof userId === 'string' && /^\\d{17,20}$/.test(userId) ? userId : request.ip
             const route = request.routeOptions.url ?? request.url.split('?')[0] ?? 'unknown'
             const key = `${route}:${identity}`
-            const current = this.rateLimitBuckets.get(key)
-
-            if (!current || current.resetAt <= now) {
-                this.rateLimitBuckets.set(key, { count: 1, resetAt: now + windowMs })
-            } else if (current.count >= max) {
-                return reply.code(429).send({ message: '請求過於頻繁，請稍後再試' })
-            } else {
-                current.count += 1
-            }
 
             this.rateLimitChecks += 1
-            if (this.rateLimitChecks % 256 === 0) {
+            if (this.rateLimitChecks % 128 === 0 || this.rateLimitBuckets.size >= 10_000) {
                 for (const [bucketKey, bucket] of this.rateLimitBuckets) {
                     if (bucket.resetAt <= now) this.rateLimitBuckets.delete(bucketKey)
                 }
             }
+
+            const current = this.rateLimitBuckets.get(key)
+            if (!current || current.resetAt <= now) {
+                if (this.rateLimitBuckets.size >= 10_000) {
+                    return reply.code(503).send({ message: 'API 暫時繁忙，請稍後再試' })
+                }
+                this.rateLimitBuckets.set(key, { count: 1, resetAt: now + windowMs })
+                return
+            }
+
+            if (current.count >= max) {
+                const retryAfter = Math.max(1, Math.ceil((current.resetAt - now) / 1000))
+                reply.header('Retry-After', String(retryAfter))
+                return reply.code(429).send({ message: '請求過於頻繁，請稍後再試' })
+            }
+
+            current.count += 1
         }
     }
 
@@ -144,13 +153,13 @@ export class ApiServer {
 
         this.fastify.get(
             '/api/guilds',
-            async (request: FastifyRequest<{ Querystring: { userId?: string } }>, reply) => {
+            { preHandler: this.rateLimit(20, 60_000) },
+            async (request: FastifyRequest, reply) => {
                 if (!this.client.isReady()) {
                     return reply.code(503).send({ message: 'Bot is not ready yet.' })
                 }
 
-                const userId =
-                    (request.headers['x-discord-id'] as string | undefined) ?? request.query.userId
+                const userId = request.headers['x-discord-id']
                 if (typeof userId !== 'string' || !/^\d{17,20}$/.test(userId)) {
                     return reply.code(400).send({ message: 'userId is required' })
                 }
@@ -197,6 +206,7 @@ export class ApiServer {
 
         this.fastify.get(
             '/api/guilds/:guildId',
+            { preHandler: this.rateLimit(30, 60_000) },
             async (request: FastifyRequest<{ Params: { guildId: string } }>, reply) => {
                 const { guildId } = request.params
                 if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
@@ -224,6 +234,7 @@ export class ApiServer {
 
         this.fastify.get(
             '/api/guilds/:guildId/config',
+            { preHandler: this.rateLimit(30, 60_000) },
             async (request: FastifyRequest<{ Params: { guildId: string } }>, reply) => {
                 const { guildId } = request.params
                 if (!(await authorizeGuildManager(this.client, request, reply, guildId))) return
@@ -244,6 +255,7 @@ export class ApiServer {
 
         this.fastify.put(
             '/api/guilds/:guildId/config',
+            { preHandler: this.rateLimit(10, 60_000) },
             async (
                 request: FastifyRequest<{
                     Params: { guildId: string }
@@ -289,7 +301,10 @@ export class ApiServer {
             }
         )
 
-        this.fastify.get('/aggregateWeeklyStats', async (_request, reply) => {
+        this.fastify.get(
+            '/aggregateWeeklyStats',
+            { preHandler: this.rateLimit(1, 60_000) },
+            async (_request, reply) => {
             try {
                 await aggregateWeeklyStats()
                 return reply.code(200).send({ ok: true })
