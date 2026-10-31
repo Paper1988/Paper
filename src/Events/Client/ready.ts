@@ -137,30 +137,56 @@ export default {
             }
         }, DAY_MS)
 
-        // 每天 09:00、21:00（台灣時間）重新載入音樂節點
+        // 每天 09:00、21:00（台灣時間）排程重新載入音樂節點
+        let nodeReloadPending = false
+
+        const attemptNodeReload = () => {
+            if (!nodeReloadPending) return
+
+            if (!client.moonlink) {
+                Logger.warn('定時重新載入音樂節點：Moonlink 尚未啟用，取消本次任務')
+                nodeReloadPending = false
+                return
+            }
+
+            const activePlayers = client.moonlink.players.all.filter(
+                (player) => player.playing || player.paused
+            )
+
+            if (activePlayers.length > 0) {
+                Logger.info(
+                    `定時重新載入音樂節點延後：目前有 ${activePlayers.length} 個伺服器正在播放或暫停歌曲，將於 5 分鐘後重試`
+                )
+                return
+            }
+
+            try {
+                const count = reloadMusicNodes(client)
+                nodeReloadPending = false
+                Logger.info(`定時重新載入音樂節點完成：已重新初始化 ${count} 個節點`)
+            } catch (error) {
+                Logger.error('定時重新載入音樂節點失敗:', error)
+            }
+        }
+
         const nodeReloadTask = cron.schedule(
             '0 9,21 * * *',
             () => {
-                if (!client.moonlink) {
-                    Logger.warn('定時重新載入音樂節點：Moonlink 尚未啟用，跳過本次任務')
-                    return
-                }
-
-                try {
-                    const count = reloadMusicNodes(client)
-                    Logger.info(`定時重新載入音樂節點完成：已重新初始化 ${count} 個節點`)
-                } catch (error) {
-                    Logger.error('定時重新載入音樂節點失敗:', error)
-                }
+                nodeReloadPending = true
+                attemptNodeReload()
             },
             { timezone: 'Asia/Taipei' }
         )
+
+        // 有歌曲播放或暫停時，每 5 分鐘重試，直到所有播放器都閒置
+        const nodeReloadRetryInterval = setInterval(attemptNodeReload, 5 * 60 * 1000)
 
         // 關閉時清除所有定時器
         client.once('shutdown', () => {
             clearInterval(dbHealthCheckInterval)
             clearInterval(giveawayInterval)
             nodeReloadTask.stop()
+            clearInterval(nodeReloadRetryInterval)
         })
 
         mongoose.connection.on('error', (error) => {
