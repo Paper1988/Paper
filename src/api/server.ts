@@ -74,7 +74,7 @@ export class ApiServer {
             const now = Date.now()
             const userId = request.headers['x-discord-id']
             const identity =
-                typeof userId === 'string' && /^\\d{17,20}$/.test(userId) ? userId : request.ip
+                typeof userId === 'string' && /^\d{17,20}$/.test(userId) ? userId : request.ip
             const route = request.routeOptions.url ?? request.url.split('?')[0] ?? 'unknown'
             const key = `${route}:${identity}`
 
@@ -305,14 +305,15 @@ export class ApiServer {
             '/aggregateWeeklyStats',
             { preHandler: this.rateLimit(1, 60_000) },
             async (_request, reply) => {
-            try {
-                await aggregateWeeklyStats()
-                return reply.code(200).send({ ok: true })
-            } catch (error) {
-                Logger.error(error as Error)
-                return reply.code(500).send({ ok: false, message: '週統計彙整失敗' })
+                try {
+                    await aggregateWeeklyStats()
+                    return reply.code(200).send({ ok: true })
+                } catch (error) {
+                    Logger.error(error as Error)
+                    return reply.code(500).send({ ok: false, message: '週統計彙整失敗' })
+                }
             }
-        })
+        )
 
         this.setupGiveawayRoutes()
         this.setupMusicRoutes()
