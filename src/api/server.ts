@@ -11,6 +11,7 @@ import Genius from 'genius-lyrics-axios'
 import { cleanGeniusLyrics } from '@/libs/utils/cleanGeniusLyrics.js'
 
 type RateLimitBucket = { count: number; resetAt: number }
+type GuildListItem = { id: string; name: string; icon: string | null; memberCount: number; ownerId: string }
 
 export class ApiServer {
     private fastify: FastifyInstance
@@ -18,6 +19,8 @@ export class ApiServer {
     private rateLimitBuckets = new Map<string, RateLimitBucket>()
     private lyricsSearchCache = new Map<string, { expiresAt: number; songs: any[] }>()
     private rateLimitChecks = 0
+    private guildListCache = new Map<string, { expiresAt: number; guilds: GuildListItem[] }>()
+    private guildListRequests = new Map<string, Promise<GuildListItem[]>>()
 
     constructor(client: PaperClient) {
         this.client = client
@@ -165,38 +168,94 @@ export class ApiServer {
                 }
 
                 try {
-                    const userGuilds = (
-                        await Promise.all(
-                            this.client.guilds.cache.map(async (guild) => {
-                                if (guild.ownerId === userId) {
-                                    return {
-                                        id: guild.id,
-                                        name: guild.name,
-                                        icon: guild.iconURL(),
-                                        memberCount: guild.memberCount,
-                                        ownerId: guild.ownerId
+                    const now = Date.now()
+                    const cached = this.guildListCache.get(userId)
+                    if (cached && cached.expiresAt > now) {
+                        return reply.send(cached.guilds)
+                    }
+                    if (cached) this.guildListCache.delete(userId)
+
+                    let guildRequest = this.guildListRequests.get(userId)
+                    if (!guildRequest) {
+                        guildRequest = (async () => {
+                            const guilds = [...this.client.guilds.cache.values()]
+                            const results: Array<GuildListItem | null> = new Array(guilds.length).fill(null)
+                            let nextIndex = 0
+                            let cacheable = true
+
+                            const worker = async () => {
+                                while (true) {
+                                    const index = nextIndex++
+                                    if (index >= guilds.length) return
+
+                                    const guild = guilds[index]!
+                                    if (guild.ownerId === userId) {
+                                        results[index] = {
+                                            id: guild.id,
+                                            name: guild.name,
+                                            icon: guild.iconURL(),
+                                            memberCount: guild.memberCount,
+                                            ownerId: guild.ownerId
+                                        }
+                                        continue
+                                    }
+
+                                    try {
+                                        if (!guild.members.cache.has(userId)) {
+                                            await guild.members.fetch(userId)
+                                        }
+                                        results[index] = {
+                                            id: guild.id,
+                                            name: guild.name,
+                                            icon: guild.iconURL(),
+                                            memberCount: guild.memberCount,
+                                            ownerId: guild.ownerId
+                                        }
+                                    } catch (error) {
+                                        // Unknown Member is expected; other errors may be transient.
+                                        if ((error as { code?: number }).code !== 10007) cacheable = false
                                     }
                                 }
+                            }
 
-                                try {
-                                    const member =
-                                        guild.members.cache.get(userId) ??
-                                        (await guild.members.fetch(userId))
-                                    return {
-                                        id: guild.id,
-                                        name: guild.name,
-                                        icon: guild.iconURL(),
-                                        memberCount: guild.memberCount,
-                                        ownerId: guild.ownerId
+                            await Promise.all(
+                                Array.from({ length: Math.min(5, guilds.length) }, () => worker())
+                            )
+
+                            const userGuilds = results.filter(
+                                (guild): guild is GuildListItem => guild !== null
+                            )
+
+                            if (cacheable) {
+                                if (this.guildListCache.size >= 5_000) {
+                                    for (const [cachedUserId, entry] of this.guildListCache) {
+                                        if (entry.expiresAt <= Date.now()) {
+                                            this.guildListCache.delete(cachedUserId)
+                                        }
                                     }
-                                } catch {
-                                    return null
                                 }
-                            })
-                        )
-                    ).filter((guild) => guild !== null)
+                                if (this.guildListCache.size >= 5_000) {
+                                    const oldestKey = this.guildListCache.keys().next().value
+                                    if (oldestKey) this.guildListCache.delete(oldestKey)
+                                }
+                                this.guildListCache.set(userId, {
+                                    expiresAt: Date.now() + 30_000,
+                                    guilds: userGuilds
+                                })
+                            }
 
-                    return reply.send(userGuilds)
+                            return userGuilds
+                        })()
+                        this.guildListRequests.set(userId, guildRequest)
+                    }
+
+                    try {
+                        return reply.send(await guildRequest)
+                    } finally {
+                        if (this.guildListRequests.get(userId) === guildRequest) {
+                            this.guildListRequests.delete(userId)
+                        }
+                    }
                 } catch (error) {
                     this.fastify.log.error(error, '抓取伺服器資料失敗')
                     return reply.code(500).send({ message: '抓取伺服器資料失敗' })
