@@ -8,6 +8,7 @@ import {
     TextChannel
 } from 'discord.js'
 import dns from 'dns'
+import cron from 'node-cron'
 import mongoose from 'mongoose'
 
 import { loadButtons } from '@/Structures/Handlers/buttonHandler.js'
@@ -21,6 +22,7 @@ import GiveawayHistory from '@/Structures/Schemas/GiveawayHistory.js'
 import GiveawayStats from '@/Structures/Schemas/GiveawayStats.js'
 
 import { registerMoonlinkEvents } from '@/Systems/MoonlinkEvents.js'
+import { reloadMusicNodes } from '@/Systems/Music/reloadMusicNodes.js'
 import { checkMongoDBHealth, safeDbOperation } from '@/libs/utils/dbHealthCheck.js'
 import { Logger } from '@/libs/utils/logger.js'
 import type { EventType } from '@/typings/event.js'
@@ -135,10 +137,30 @@ export default {
             }
         }, DAY_MS)
 
+        // 每天 09:00、21:00（台灣時間）重新載入音樂節點
+        const nodeReloadTask = cron.schedule(
+            '0 9,21 * * *',
+            () => {
+                if (!client.moonlink) {
+                    Logger.warn('定時重新載入音樂節點：Moonlink 尚未啟用，跳過本次任務')
+                    return
+                }
+
+                try {
+                    const count = reloadMusicNodes(client)
+                    Logger.info(`定時重新載入音樂節點完成：已重新初始化 ${count} 個節點`)
+                } catch (error) {
+                    Logger.error('定時重新載入音樂節點失敗:', error)
+                }
+            },
+            { timezone: 'Asia/Taipei' }
+        )
+
         // 關閉時清除所有定時器
         client.once('shutdown', () => {
             clearInterval(dbHealthCheckInterval)
             clearInterval(giveawayInterval)
+            nodeReloadTask.stop()
         })
 
         mongoose.connection.on('error', (error) => {
