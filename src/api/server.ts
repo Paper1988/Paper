@@ -49,7 +49,7 @@ export class ApiServer {
             if (request.method === 'OPTIONS') return
 
             const path = request.url.split('?')[0] ?? ''
-            if (path === '/health' || path === '/api/bot-status') return
+            if (path === '/health') return
 
             const expectedSecret = process.env.PAPER_API_SECRET
             if (!expectedSecret) {
