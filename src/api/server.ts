@@ -508,7 +508,7 @@ export class ApiServer {
                             if (oldestKey) this.playingGuildCache.delete(oldestKey)
                         }
                         this.playingGuildCache.set(userId, {
-                            expiresAt: Date.now() + 8_000,
+                            expiresAt: Date.now() + 12_000,
                             guildIds
                         })
                         return guildIds
