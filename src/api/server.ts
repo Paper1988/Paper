@@ -801,7 +801,7 @@ export class ApiServer {
 
                 const rawIndex = request.query.index
                 const requestedIndex = rawIndex === undefined ? 0 :
-                    typeof rawIndex === 'string' && /^\\d+$/.test(rawIndex) ? Number(rawIndex) : Number.NaN
+                    typeof rawIndex === 'string' && /^\d+$/.test(rawIndex) ? Number(rawIndex) : Number.NaN
                 if (!Number.isInteger(requestedIndex) || requestedIndex < 0 || requestedIndex >= 6) {
                     return reply.code(400).send({ message: '歌詞搜尋結果索引無效' })
                 }
