@@ -690,7 +690,8 @@ export class ApiServer {
             async (request, reply) => {
                 const { guildId } = request.params
                 if (!(await authorizeGuildMember(this.client, request, reply, guildId))) return
-                const query = request.body?.query?.trim()
+                const rawQuery = request.body?.query
+                const query = typeof rawQuery === 'string' ? rawQuery.trim() : ''
                 if (!query || query.length > 500) {
                     return reply.code(400).send({ message: 'query 必須是 1 到 500 字元的字串' })
                 }
@@ -723,7 +724,8 @@ export class ApiServer {
             async (request, reply) => {
                 const { guildId } = request.params
                 if (!(await authorizeDJ(this.client, request, reply, guildId))) return
-                const url = request.body?.url?.trim()
+                const rawUrl = request.body?.url
+                const url = typeof rawUrl === 'string' ? rawUrl.trim() : ''
                 if (!url || url.length > 2000) {
                     return reply.code(400).send({ message: 'url 必須是 1 到 2000 字元的字串' })
                 }
