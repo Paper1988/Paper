@@ -9,7 +9,7 @@ export async function authorizeGuildManager(
     reply: FastifyReply,
     guildId: string
 ): Promise<boolean> {
-    if (!/^\\d{17,20}$/.test(guildId)) {
+    if (!/^\d{17,20}$/.test(guildId)) {
         reply.code(400).send({ message: '伺服器 ID 格式無效' })
         return false
     }
@@ -49,7 +49,7 @@ export async function authorizeGuildManager(
 
 /** Resolve a Discord member who belongs to the requested guild. */
 export async function getGuildMember(client: PaperClient, request: FastifyRequest, reply: FastifyReply, guildId: string): Promise<GuildMember | null> {
-    if (!/^\\d{17,20}$/.test(guildId)) {
+    if (!/^\d{17,20}$/.test(guildId)) {
         reply.code(400).send({ message: '伺服器 ID 格式無效' })
         return null
     }
