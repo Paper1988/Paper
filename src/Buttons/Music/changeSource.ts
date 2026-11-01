@@ -2,7 +2,15 @@ import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { validateDJRole, validateVoiceChannel } from '@/Systems/Music.js'
 import emojis from '@/libs/emoji/emoji.js'
 import type { ButtonType } from '@/typings/component.js'
-import { ActionRowBuilder, ButtonInteraction, GuildMember, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js'
+import {
+    ActionRowBuilder,
+    ButtonInteraction,
+    GuildMember,
+    MessageFlags,
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle
+} from 'discord.js'
 import type { Player } from 'moonlink.js'
 
 export default {
@@ -17,7 +25,7 @@ export default {
         if (!player || !currentTrack) {
             return interaction.reply({
                 content: `${emojis.warning} | 目前沒有正在播放的音樂!`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
 
