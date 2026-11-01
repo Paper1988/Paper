@@ -9,6 +9,11 @@ export async function authorizeGuildManager(
     reply: FastifyReply,
     guildId: string
 ): Promise<boolean> {
+    if (!/^\\d{17,20}$/.test(guildId)) {
+        reply.code(400).send({ message: '伺服器 ID 格式無效' })
+        return false
+    }
+
     const userId = request.headers['x-discord-id']
     if (typeof userId !== 'string' || !/^\d{17,20}$/.test(userId)) {
         reply.code(401).send({ message: '使用者身分無效或缺失' })
@@ -44,6 +49,11 @@ export async function authorizeGuildManager(
 
 /** Resolve a Discord member who belongs to the requested guild. */
 export async function getGuildMember(client: PaperClient, request: FastifyRequest, reply: FastifyReply, guildId: string): Promise<GuildMember | null> {
+    if (!/^\\d{17,20}$/.test(guildId)) {
+        reply.code(400).send({ message: '伺服器 ID 格式無效' })
+        return null
+    }
+
     const userId = request.headers['x-discord-id']
     if (typeof userId !== 'string' || !/^\d{17,20}$/.test(userId)) {
         reply.code(401).send({ message: '使用者身分無效或缺失' })
