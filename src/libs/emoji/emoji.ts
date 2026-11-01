@@ -1,5 +1,6 @@
 const emojis = {
     correct: '<:correct:1265560254708711467>',
+    swap: '<:swap:1566358374029721642>',
     musicstop: '<:musicstop:1265561125655805993>',
     outage: '<:outage:1265561329528471613>',
     plus: '<:plus:1265561528866967667>',
