@@ -87,7 +87,7 @@ export class MusicRenderer {
             createButton('queue', emojis.queue, ButtonStyle.Secondary),
             createButton('addSong', emojis.friend, ButtonStyle.Secondary),
             createButton('lyrics', emojis.list, ButtonStyle.Secondary),
-            createButton('changeSource', '🔄', ButtonStyle.Secondary),
+            createButton('changeSource', emojis.swap, ButtonStyle.Secondary),
             createButton('playlist:save', emojis.download, ButtonStyle.Secondary)
         ])
 
