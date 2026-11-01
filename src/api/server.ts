@@ -24,7 +24,7 @@ export class ApiServer {
 
     constructor(client: PaperClient) {
         this.client = client
-        this.fastify = Fastify({ logger: true })
+        this.fastify = Fastify({ logger: true, bodyLimit: 64 * 1024 })
         this.setupCors()
         this.setupAuthentication()
         this.setupRoutes()
@@ -799,9 +799,15 @@ export class ApiServer {
                 const track = player?.current
                 if (!track) return reply.code(404).send({ message: '目前沒有正在播放的歌曲' })
 
-                const requestedIndex = request.query.index === undefined ? 0 : Number(request.query.index)
+                const rawIndex = request.query.index
+                const requestedIndex = rawIndex === undefined ? 0 :
+                    typeof rawIndex === 'string' && /^\\d+$/.test(rawIndex) ? Number(rawIndex) : Number.NaN
                 if (!Number.isInteger(requestedIndex) || requestedIndex < 0 || requestedIndex >= 6) {
                     return reply.code(400).send({ message: '歌詞搜尋結果索引無效' })
+                }
+                const requestedUrl = request.query.url
+                if (requestedUrl !== undefined && (typeof requestedUrl !== 'string' || requestedUrl.length > 2048)) {
+                    return reply.code(400).send({ message: '歌詞候選 URL 無效' })
                 }
 
                 try {
@@ -835,7 +841,6 @@ export class ApiServer {
                     // Prefer the Genius URL as the stable candidate identity.
                     // Search result positions can change, but a candidate URL identifies
                     // the exact song selected by the user.
-                    const requestedUrl = request.query.url
                     const selectedIndex = requestedUrl
                         ? songs.findIndex(candidate => candidate.url === requestedUrl)
                         : requestedIndex
