@@ -34,9 +34,10 @@ export function assessTrackMatch(
     const candidateAuthor = normalizeText(candidate.author.replace(/\s*-\s*topic$/i, ''))
 
     const longestDuration = Math.max(reference.durationMs, candidate.durationMs)
+    const durationDifference = Math.abs(reference.durationMs - candidate.durationMs)
     const durationSimilarity =
-        longestDuration > 0
-            ? Math.max(0, 1 - Math.abs(reference.durationMs - candidate.durationMs) / longestDuration)
+        longestDuration > 0 && durationDifference / longestDuration <= 0.05
+            ? 1 - durationDifference / longestDuration
             : 0
 
     const sameTitle = referenceTitle.length > 0 && referenceTitle === candidateTitle
