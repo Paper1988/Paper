@@ -77,9 +77,7 @@ export default {
 
         await interaction.deferUpdate()
         try {
-            const track = client.moonlink.decodeTrack(selected.encoded)
-            track.setRequester(interaction.user.id)
-            await player.play({ track, noReplace: false })
+            await player.play({ encoded: selected.encoded, noReplace: false })
             await interaction.editReply({
                 content: `${emojis.correct} | 已切換版本：**${selected.title}** · ${selected.author}`,
                 embeds: [],
