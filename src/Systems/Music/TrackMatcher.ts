@@ -24,9 +24,9 @@ export function assessTrackMatch(
     reference: TrackMatchInput,
     candidate: TrackMatchInput
 ): TrackMatchAssessment {
-    const versionMismatch =
-        VERSION_MARKERS.test(reference.title) !== VERSION_MARKERS.test(candidate.title) ||
-        VERSION_MARKERS.test(candidate.title)
+    const referenceVersion = reference.title.match(VERSION_MARKERS)?.[0]?.toLowerCase() ?? ''
+    const candidateVersion = candidate.title.match(VERSION_MARKERS)?.[0]?.toLowerCase() ?? ''
+    const versionMismatch = referenceVersion !== candidateVersion
 
     const referenceTitle = normalizeText(reference.title)
     const candidateTitle = normalizeText(candidate.title)
