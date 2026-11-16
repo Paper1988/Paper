@@ -140,7 +140,7 @@ export class PaperClient extends Client {
 
             configurableCommands.push({
                 name,
-                description: command.data.description || '無描述'
+                description: 'description' in command.data ? command.data.description : '無描述'
             })
         })
 
