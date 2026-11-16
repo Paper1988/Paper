@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/node'
 import { GatewayIntentBits, Partials } from 'discord.js'
 import dotenv from 'dotenv'
 import fs from 'fs'
+import mongoose from 'mongoose'
 
 if (fs.existsSync('.env.local')) {
     dotenv.config({ path: '.env.local' })
@@ -58,5 +59,29 @@ try {
 } catch (error) {
     Logger.error('無法啟動排程', error)
 }
+
+let isShuttingDown = false
+
+const shutdown = async (signal: NodeJS.Signals): Promise<void> => {
+    if (isShuttingDown) return
+    isShuttingDown = true
+    Logger.info(`收到 ${signal}，正在安全關閉 Paper...`)
+
+    client.emit('shutdown')
+
+    try {
+        await client.stopApiServer()
+        await client.destroy()
+        await mongoose.disconnect()
+        Logger.info('Paper 已安全關閉')
+        process.exit(0)
+    } catch (error) {
+        Logger.error('安全關閉 Paper 時發生錯誤:', error)
+        process.exit(1)
+    }
+}
+
+process.once('SIGINT', () => void shutdown('SIGINT'))
+process.once('SIGTERM', () => void shutdown('SIGTERM'))
 
 export default client!
