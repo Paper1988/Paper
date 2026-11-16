@@ -55,10 +55,10 @@ export default {
         })
 
         await Promise.all([
-            await loadCommands(client),
-            await loadButtons(client),
-            await loadModals(client),
-            await loadMenus(client)
+            loadCommands(client),
+            loadButtons(client),
+            loadModals(client),
+            loadMenus(client)
         ])
 
         if (client.moonlink && client.user?.id) {
@@ -182,11 +182,14 @@ export default {
         const nodeReloadRetryInterval = setInterval(attemptNodeReload, 5 * 60 * 1000)
 
         // 關閉時清除所有定時器
+        const presenceInterval = setInterval(() => updatePresence(client), PRESENCE_INTERVAL_MS)
+
         client.once('shutdown', () => {
             clearInterval(dbHealthCheckInterval)
             clearInterval(giveawayInterval)
-            nodeReloadTask.stop()
             clearInterval(nodeReloadRetryInterval)
+            clearInterval(presenceInterval)
+            nodeReloadTask.stop()
         })
 
         mongoose.connection.on('error', (error) => {
@@ -212,7 +215,6 @@ export default {
             await webhook.send({ embeds: [embed] })
         }
 
-        setInterval(() => updatePresence(client), PRESENCE_INTERVAL_MS)
     }
 } satisfies EventType
 
