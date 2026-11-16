@@ -4,7 +4,7 @@ import { validateDJRole } from '@/Systems/Music.js'
 import emojis from '@/libs/emoji/emoji.js'
 import type { MenuType } from '@/typings/component.js'
 import { MessageFlags, type StringSelectMenuInteraction } from 'discord.js'
-import type { Player } from 'moonlink.js'
+import { Track, type Player } from 'moonlink.js'
 
 interface CachedSourceChoices {
     guildId: string
@@ -77,7 +77,9 @@ export default {
 
         await interaction.deferUpdate()
         try {
-            await player.play({ encoded: selected.encoded, noReplace: false })
+            const decodedTrack = client.moonlink.decodeTrack(selected.encoded)
+            const track = new Track(decodedTrack, interaction.user.id)
+            await player.play({ track, noReplace: false })
             await interaction.editReply({
                 content: `${emojis.correct} | 已切換版本：**${selected.title}** · ${selected.author}`,
                 embeds: [],
