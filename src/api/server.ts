@@ -8,6 +8,7 @@ import fastifyCors from '@fastify/cors'
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify'
 import { authorizeDJ, authorizeGuildManager, authorizeGuildMember, getGuildMember, hasGuildDJRole } from './authorization.js'
 import Genius from 'genius-lyrics-axios'
+import { ChannelType } from 'discord.js'
 import { cleanGeniusLyrics } from '@/libs/utils/cleanGeniusLyrics.js'
 
 type RateLimitBucket = { count: number; resetAt: number }
@@ -786,7 +787,12 @@ export class ApiServer {
                 }
 
                 const botMember = voiceChannel.guild.members.me
-                if (!botMember || !voiceChannel.joinable || !voiceChannel.speakable) {
+                if (
+                    !botMember ||
+                    voiceChannel.type !== ChannelType.GuildVoice ||
+                    !voiceChannel.joinable ||
+                    !voiceChannel.speakable
+                ) {
                     return reply.code(403).send({ message: 'Paper 沒有加入或在這個語音頻道發言的權限' })
                 }
 
