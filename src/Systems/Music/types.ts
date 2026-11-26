@@ -6,6 +6,7 @@ export type MusicLoopMode = 'off' | 'track' | 'queue'
  */
 export interface MusicTrack {
     identifier: string
+    encoded: string
     title: string
     author: string
     duration: number
