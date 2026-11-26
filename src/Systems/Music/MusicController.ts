@@ -107,7 +107,7 @@ export class MusicController {
             return false
         }
 
-        const currentPlayer = client.moonlink?.players.get(interaction.guildId!) as Player
+        const currentPlayer = await client.musicManager?.getPlayer(interaction.guildId!)
         if (currentPlayer?.voiceChannelId && voiceChannel.id !== currentPlayer.voiceChannelId) {
             await interaction
                 .editReply({
