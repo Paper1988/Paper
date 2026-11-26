@@ -13,16 +13,16 @@ const DEBUG_WEBHOOK_ID = process.env.DEBUG_WEBHOOK_ID!
 const DEBUG_WEBHOOK_TOKEN = process.env.DEBUG_WEBHOOK_TOKEN!
 
 export function registerMoonlinkEvents(client: PaperClient): void {
-    if (!client.moonlink || !client.musicAdapter) return
+    if (!client.moonlink || !client.musicManager) return
 
     /** ----- Node Events ----- */
-    client.musicAdapter.on('nodeConnect', ({ identifier }) =>
+    client.musicManager.on('nodeConnect', ({ identifier }) =>
         Logger.info(`Node ${identifier} connected!`)
     )
-    client.musicAdapter.on('nodeDisconnect', ({ identifier, reason }) => {
+    client.musicManager.on('nodeDisconnect', ({ identifier, reason }) => {
         console.info(`Node ${identifier} disconnected`, { identifier, reason })
     })
-    client.musicAdapter.on('nodeError', ({ identifier, error }) =>
+    client.musicManager.on('nodeError', ({ identifier, error }) =>
         Logger.error(error, `Node ${identifier} error:`, {
             identifier,
             error: {
