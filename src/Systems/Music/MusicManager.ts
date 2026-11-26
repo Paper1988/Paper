@@ -42,8 +42,8 @@ export class MusicManager {
     }
 
     destroyPlayer(guildId: string, reason?: string): Promise<void> {
+        await this.adapter.destroyPlayer(guildId, reason)
         this.sessions.cleanup(guildId)
-        return this.adapter.destroyPlayer(guildId, reason)
     }
 
     connect(guildId: string, selfDeaf?: boolean): Promise<void> {
