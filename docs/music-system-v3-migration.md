@@ -60,7 +60,8 @@ must remain inside their adapter.
 
 - [x] Provider-neutral domain types and adapter contract
 - [x] Initial Moonlink compatibility adapter
-- [ ] Move all Moonlink event consumers behind the adapter
+- [x] Route core node connect/disconnect/error events through the adapter
+- [ ] Move remaining Moonlink event consumers behind the adapter
 - [ ] Move Paper-only player metadata into MusicSession
 - [ ] Migrate command and component consumers to MusicManager
 - [ ] Add the lavalink-client / NodeLink adapter
