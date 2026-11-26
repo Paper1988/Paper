@@ -20,18 +20,15 @@ export class MusicController {
      * 清除播放器狀態並停止進度條 interval
      */
     static clearPlayer(player: Player): void {
-        MusicController.resetPlayer(player)
-        const intervalId = player.data.playerIntervalId as NodeJS.Timeout
-        if (intervalId) {
-            clearInterval(intervalId)
-        }
+        MusicController.resetPlayer(player, client)
+        client.musicSessions.clearProgressUpdater(player.guildId)
     }
 
     /**
      * 重置播放器的訊息 ID 記錄
      */
-    static resetPlayer(player: Player): void {
-        player.set('musicControllerMsgId', undefined)
+    static resetPlayer(player: Player, client: PaperClient): void {
+        client.musicSessions.setControllerMessageId(player.guildId, undefined)
     }
 
     /**
@@ -39,32 +36,24 @@ export class MusicController {
      */
     static startProgressUpdater(player: Player, client: PaperClient): void {
         // 清除舊的 interval（如果存在）
-        if (player.data.playerIntervalId) {
-            clearInterval(player.data.playerIntervalId as NodeJS.Timeout)
-        }
-
+        client.musicSessions.clearProgressUpdater(player.guildId)
         if (!player.current) return
 
-        player.set(
-            'playerIntervalId',
-            setInterval(
-                () => {
-                    if (!player.playing || player.paused) return
-                    MusicController.updatePlayerStatus(player, client).catch(console.error)
-                },
-                getInterval(player.current ?? ({ isStream: false } as Track))
-            )
+        const interval = setInterval(
+            () => {
+                if (!player.playing || player.paused) return
+                MusicController.updatePlayerStatus(player, client).catch(console.error)
+            },
+            getInterval(player.current ?? ({ isStream: false } as Track))
         )
+        client.musicSessions.setProgressUpdater(player.guildId, interval)
     }
 
     /**
      * 停止進度條更新 interval
      */
-    static stopProgressUpdater(player: Player): void {
-        if (player.data.playerIntervalId) {
-            clearInterval(player.data.playerIntervalId as NodeJS.Timeout)
-            player.set('playerIntervalId', undefined)
-        }
+    static stopProgressUpdater(player: Player, client: PaperClient): void {
+        client.musicSessions.clearProgressUpdater(player.guildId)
     }
 
     /**
@@ -77,7 +66,7 @@ export class MusicController {
     ): Promise<void> {
         if (!player.textChannelId) return
 
-        const musicControllerMsgId = player.data.musicControllerMsgId as string
+        const musicControllerMsgId = client.musicSessions.getControllerMessageId(player.guildId)
         if (!musicControllerMsgId) return
 
         const msg = (
@@ -85,17 +74,17 @@ export class MusicController {
         ).messages.cache.get(musicControllerMsgId)
 
         if (!msg) {
-            player.set('musicControllerMsgId', undefined)
+            client.musicSessions.setControllerMessageId(player.guildId, undefined)
             return
         }
 
         const track = player.current
         if (!track) {
-            MusicController.clearPlayer(player)
+            MusicController.clearPlayer(player, client)
             return
         }
 
-        if (completed) MusicController.resetPlayer(player)
+        if (completed) MusicController.resetPlayer(player, client)
         await msg.edit(MusicRenderer.buildPlayerStatus(player, client, track, completed))
     }
 
@@ -158,9 +147,7 @@ export class MusicController {
             'Red'
         )?.catch(console.error)
 
-        player.set(
-            'queueEndTimeout',
-            setTimeout(async () => {
+        const timeout = setTimeout(async () => {
                 try {
                     if (!player.playing && player.queue.size === 0) {
                         player.destroy('queueEndTimeout')
@@ -183,7 +170,7 @@ export class MusicController {
                     MusicUtils.handleMusicError(error, client, player, '自動離開語音頻道時發生錯誤')
                 }
             }, 30000)
-        )
+        client.musicSessions.setQueueEndTimeout(player.guildId, timeout)
     }
 }
 
