@@ -8,17 +8,29 @@ import emojis from '@/libs/emoji/emoji.js'
 import { Logger } from '@/libs/utils/logger.js'
 import { EmbedBuilder, Message, TextChannel } from 'discord.js'
 import { Track } from 'moonlink.js'
-import type { INode } from 'moonlink.js/dist/src/typings/Interfaces'
 
 const DEBUG_WEBHOOK_ID = process.env.DEBUG_WEBHOOK_ID!
 const DEBUG_WEBHOOK_TOKEN = process.env.DEBUG_WEBHOOK_TOKEN!
 
 export function registerMoonlinkEvents(client: PaperClient): void {
-    if (!client.moonlink) return
+    if (!client.moonlink || !client.musicAdapter) return
 
     /** ----- Node Events ----- */
-    client.moonlink.on('nodeConnected', (node: INode) =>
-        Logger.info(`Node ${node.identifier} connected!`)
+    client.musicAdapter.on('nodeConnect', ({ identifier }) =>
+        Logger.info(`Node ${identifier} connected!`)
+    )
+    client.musicAdapter.on('nodeDisconnect', ({ identifier, reason }) => {
+        console.info(`Node ${identifier} disconnected`, { identifier, reason })
+    })
+    client.musicAdapter.on('nodeError', ({ identifier, error }) =>
+        Logger.error(error, `Node ${identifier} error:`, {
+            identifier,
+            error: {
+                name: error.name,
+                message: error.message,
+                stack: error.stack
+            }
+        })
     )
     client.moonlink.on('nodeReady', (node, stats) => {
         console.info(`Node ${node.identifier} is ready`, stats)
@@ -30,23 +42,6 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             delay: node.retryDelay
         })
     })
-    client.moonlink.on('nodeDisconnect', (node: INode, code, reason) => {
-        console.info(`Node ${node.identifier} disconnected`, {
-            identifier: node.identifier,
-            code: code,
-            reason: reason
-        })
-    })
-    client.moonlink.on('nodeError', (node: INode, error: Error) =>
-        Logger.error(error, `Node ${node.identifier} error:`, {
-            identifier: node.identifier,
-            error: {
-                name: error.name,
-                message: error.message,
-                stack: error.stack
-            }
-        })
-    )
     client.moonlink.on('nodeDestroy', (identifier) => {
         console.info(`[NODE] Destroyed:`, {
             identifier: identifier,
