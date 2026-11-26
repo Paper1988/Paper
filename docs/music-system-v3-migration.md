@@ -62,15 +62,16 @@ must remain inside their adapter.
 - [x] Initial Moonlink compatibility adapter
 - [x] Route core node connect/disconnect/error events through the adapter
 - [ ] Move remaining Moonlink event consumers behind the adapter
-- [ ] Move Paper-only player metadata into MusicSession
+- [x] Move controller message ID and player timers into Paper-owned MusicSessionManager
 - [ ] Migrate command and component consumers to MusicManager
 - [ ] Add the lavalink-client / NodeLink adapter
 
 ## State ownership
 
-The future Paper MusicSession should own Paper-specific state such as the
-control-message ID, progress-update timer, and queue-end timeout. These values
-must not be written into a provider's custom player data store.
+PaperClient now owns a MusicSessionManager keyed by guild ID. It stores the
+control-message ID, progress-update timer, and queue-end timeout independently
+from Moonlink player data. Session timers are cleared when replaced, and the
+session is removed when the player is destroyed or auto-leaves.
 
 ## Non-goals for the first stage
 
