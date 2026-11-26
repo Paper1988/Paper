@@ -199,8 +199,11 @@ export class MoonlinkAdapter implements MusicAdapter {
 
     private fromMusicTrack(track: MusicTrack): Track {
         const decoded = this.manager.decodeTrack(track.encoded)
-        if (track.requesterId) decoded.requester = track.requesterId
-        return decoded
+        const moonlinkTrack = new Track(decoded)
+
+        if (track.requesterId) moonlinkTrack.setRequester(track.requesterId)
+
+        return moonlinkTrack
     }
 
     private toMoonlinkEvent(event: keyof MusicAdapterEvents): string {
