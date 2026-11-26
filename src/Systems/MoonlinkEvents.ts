@@ -117,7 +117,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
                             await MusicController.updatePlayerStatus(player, client, false)
                         }
                     }
-                    MusicController.stopProgressUpdater(player)
+                    MusicController.stopProgressUpdater(player, client)
                     if (shouldClearPlayer) MusicController.clearPlayer(player, client)
                 } catch (error) {
                     MusicUtils.handleMusicError(error, client, player, '發生未知錯誤')
@@ -126,10 +126,10 @@ export function registerMoonlinkEvents(client: PaperClient): void {
 
             case 'stopped':
                 try {
-                    MusicController.stopProgressUpdater(player)
+                    MusicController.stopProgressUpdater(player, client)
                     if (player.queue.tracks.length === 0 && !player.autoPlay) {
                         await MusicController.updatePlayerStatus(player, client, true)
-                        MusicController.clearPlayer(player)
+                        MusicController.clearPlayer(player, client)
                         MusicController.scheduleAutoLeave(player, client)
                     } else {
                         await MusicController.updatePlayerStatus(player, client, false)
@@ -141,9 +141,9 @@ export function registerMoonlinkEvents(client: PaperClient): void {
 
             case 'loadFailed':
                 try {
-                    MusicController.clearPlayer(player)
+                    MusicController.clearPlayer(player, client)
 
-                    MusicController.stopProgressUpdater(player)
+                    MusicController.stopProgressUpdater(player, client)
                 } catch (error) {
                     MusicUtils.handleMusicError(error, client, player, '發生未知錯誤')
                 }
@@ -182,8 +182,8 @@ export function registerMoonlinkEvents(client: PaperClient): void {
 
     client.moonlink.on('queueEnd', async (player) => {
         try {
-            MusicController.stopProgressUpdater(player)
-            MusicController.clearPlayer(player)
+            MusicController.stopProgressUpdater(player, client)
+            MusicController.clearPlayer(player, client)
 
             MusicUtils.sendQueueMessage(
                 player,
@@ -244,8 +244,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
     client.moonlink.on('playerDestroy', async (player) => {
         try {
             Logger.info(`播放器被銷毀: ${player.guildId}`)
-            MusicController.stopProgressUpdater(player)
-            MusicController.clearPlayer(player)
+            client.musicSessions.cleanup(player.guildId)
         } catch (error) {
             Logger.error('處理 playerDestroy 事件時發生錯誤:', error)
         }
@@ -270,8 +269,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
         try {
             Logger.info(`[AutoLeave] Player in guild ${player.guildId} has auto-left.`)
 
-            MusicController.stopProgressUpdater(player)
-            MusicController.clearPlayer(player)
+            client.musicSessions.cleanup(player.guildId)
         } catch (error) {
             Logger.error('處理 autoLeaved 事件時發生錯誤:', error)
         }
