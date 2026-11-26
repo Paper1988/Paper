@@ -8,6 +8,8 @@ import type { EventExecute } from '@/typings/event.js'
 import type { ClientOptions } from 'discord.js'
 import { Client, Collection, WebhookClient } from 'discord.js'
 import { Connectors, Manager } from 'moonlink.js'
+import { MoonlinkAdapter } from '@/Systems/Music/adapters/MoonlinkAdapter.js'
+import type { MusicAdapter } from '@/Systems/Music/MusicAdapter.js'
 
 export class PaperClient extends Client {
     commands: Collection<string, CommandType> = new Collection<string, CommandType>()
@@ -20,6 +22,7 @@ export class PaperClient extends Client {
     private errorWebhook: WebhookClient | null = null
     private apiServer: ApiServer | null = null
     moonlink?: Manager
+    musicAdapter?: MusicAdapter
 
     constructor(options: ClientOptions) {
         super(options)
@@ -75,6 +78,7 @@ export class PaperClient extends Client {
             })
 
             this.moonlink.use(new Connectors.DiscordJs(), this)
+            this.musicAdapter = new MoonlinkAdapter(this.moonlink)
 
             Logger.info('Moonlink Manager 已初始化')
         } catch (error) {
