@@ -148,28 +148,28 @@ export class MusicController {
         )?.catch(console.error)
 
         const timeout = setTimeout(async () => {
-                try {
-                    if (!player.playing && player.queue.size === 0) {
-                        player.destroy('queueEndTimeout')
-                        const channel = client.channels.cache.get(textChannelId)
-                        if (channel && channel.isTextBased() && 'send' in channel) {
-                            await channel
-                                .send({
-                                    embeds: [
-                                        new EmbedBuilder()
-                                            .setColor('Red' as `#${string}`)
-                                            .setDescription(
-                                                `${emojis.disconnect} | 已自動離開語音頻道。`
-                                            )
-                                    ]
-                                })
-                                .then(deleteMessageAfter)
-                        }
+            try {
+                if (!player.playing && player.queue.size === 0) {
+                    player.destroy('queueEndTimeout')
+                    const channel = client.channels.cache.get(textChannelId)
+                    if (channel && channel.isTextBased() && 'send' in channel) {
+                        await channel
+                            .send({
+                                embeds: [
+                                    new EmbedBuilder()
+                                        .setColor('Red' as `#${string}`)
+                                        .setDescription(
+                                            `${emojis.disconnect} | 已自動離開語音頻道。`
+                                        )
+                                ]
+                            })
+                            .then(deleteMessageAfter)
                     }
-                } catch (error) {
-                    MusicUtils.handleMusicError(error, client, player, '自動離開語音頻道時發生錯誤')
                 }
-            }, 30000)
+            } catch (error) {
+                MusicUtils.handleMusicError(error, client, player, '自動離開語音頻道時發生錯誤')
+            }
+        }, 30000)
         client.musicSessions.setQueueEndTimeout(player.guildId, timeout)
     }
 }
