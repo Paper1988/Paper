@@ -65,6 +65,7 @@ must remain inside their adapter.
 - [x] Move controller message ID and player timers into Paper-owned MusicSessionManager
 - [x] Add PaperClient-owned MusicManager facade
 - [x] Route node lifecycle subscriptions and controller player lookup through MusicManager
+- [x] Migrate the `/music play` command to MusicManager
 - [ ] Migrate remaining command and component consumers to MusicManager
 - [ ] Add the lavalink-client / NodeLink adapter
 
