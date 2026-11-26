@@ -24,7 +24,7 @@ export class PaperClient extends Client {
     private errorWebhook: WebhookClient | null = null
     private apiServer: ApiServer | null = null
     moonlink?: Manager
-    musicAdapter?: MusicAdapter
+    private musicAdapter?: MusicAdapter
     musicManager?: MusicManager
     readonly musicSessions = new MusicSessionManager()
 
