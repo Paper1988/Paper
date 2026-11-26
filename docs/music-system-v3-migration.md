@@ -38,8 +38,8 @@ must remain inside their adapter.
 2. **Compatibility adapter:** implement the contract over the existing
    Moonlink manager. Move provider event translation and player metadata
    handling into that adapter.
-3. **Paper facade:** add a MusicManager owned by PaperClient and migrate
-   commands, buttons, menus, renderer, controller, and API consumers to it.
+3. **Paper facade:** add a MusicManager owned by PaperClient, then migrate
+   commands, buttons, menus, renderer, controller, and API consumers incrementally.
 4. **New provider:** implement the same contract with `lavalink-client`,
    configure its NodeLink integration, and validate feature parity.
 5. **Cutover:** remove Moonlink dependencies and legacy event wiring after
@@ -63,7 +63,9 @@ must remain inside their adapter.
 - [x] Route core node connect/disconnect/error events through the adapter
 - [ ] Move remaining Moonlink event consumers behind the adapter
 - [x] Move controller message ID and player timers into Paper-owned MusicSessionManager
-- [ ] Migrate command and component consumers to MusicManager
+- [x] Add PaperClient-owned MusicManager facade
+- [x] Route node lifecycle subscriptions and controller player lookup through MusicManager
+- [ ] Migrate remaining command and component consumers to MusicManager
 - [ ] Add the lavalink-client / NodeLink adapter
 
 ## State ownership
