@@ -52,9 +52,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
     /** ----- Player Events ----- */
     client.moonlink.on('trackStart', async (player, track) => {
         try {
-            if (player.data.queueEndTimeout) {
-                clearTimeout(player.data.queueEndTimeout as NodeJS.Timeout)
-            }
+            client.musicSessions.clearQueueEndTimeout(player.guildId)
             const db = await MusicRepository.fetchGuildSettings(player.guildId)
             player.setVolume(db.volume)
             player.setLoop(db.repeatMode)
@@ -63,7 +61,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
                 | undefined
             const status = MusicRenderer.buildPlayerStatus(player, client, track)
             if (textChannel && textChannel.isTextBased() && 'send' in textChannel) {
-                const controllerMessageId = MusicStateManager.getControllerMessageId(player)
+                const controllerMessageId = MusicStateManager.getControllerMessageId(client, player)
                 let controllerMessage: Message | undefined
 
                 if (controllerMessageId) {
@@ -71,7 +69,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
                         controllerMessage = await textChannel.messages.fetch(controllerMessageId)
                         await controllerMessage.edit(status)
                     } catch {
-                        MusicStateManager.resetControllerMessageId(player)
+                        MusicStateManager.resetControllerMessageId(client, player)
                     }
                 }
 
@@ -79,7 +77,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
                     await textChannel
                         .send(status)
                         .then((msg: Message) =>
-                            MusicStateManager.setControllerMessageId(player, msg.id)
+                            MusicStateManager.setControllerMessageId(client, player, msg.id)
                         )
                 }
 
@@ -87,7 +85,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             }
         } catch (error: any) {
             MusicUtils.handleMusicError(error, client, player, '播放歌曲時發生錯誤')
-            MusicController.stopProgressUpdater(player)
+            MusicController.stopProgressUpdater(player, client)
             Logger.error('發送 trackStart 訊息失敗:', error.stack)
         }
     })
@@ -120,7 +118,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
                         }
                     }
                     MusicController.stopProgressUpdater(player)
-                    if (shouldClearPlayer) MusicController.clearPlayer(player)
+                    if (shouldClearPlayer) MusicController.clearPlayer(player, client)
                 } catch (error) {
                     MusicUtils.handleMusicError(error, client, player, '發生未知錯誤')
                 }
@@ -154,7 +152,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
     })
 
     client.moonlink.on('queueAdd', async (player, tracks) => {
-        const oldMessage = player.data.musicControllerMsgId as Message['id']
+        const oldMessage = client.musicSessions.getControllerMessageId(player.guildId) as Message['id']
 
         try {
             const track = (tracks[0] as Track) || (tracks as Track)
@@ -197,9 +195,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             // 先存好 textChannelId，destroy 後 player 狀態可能失效
             const textChannelId = player.textChannelId
 
-            player.set(
-                'queueEndTimeout',
-                setTimeout(async () => {
+            const timeout = setTimeout(async () => {
                     try {
                         if (!player.playing && player.queue.size === 0) {
                             player.destroy('queueEndTimeout')
@@ -227,7 +223,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
                         )
                     }
                 }, 30000)
-            )
+            client.musicSessions.setQueueEndTimeout(player.guildId, timeout)
         } catch (error) {
             MusicUtils.handleMusicError(error, client, player, '處理 queueEnd 事件時發生錯誤')
         }
