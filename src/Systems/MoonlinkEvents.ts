@@ -185,45 +185,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             MusicController.stopProgressUpdater(player, client)
             MusicController.clearPlayer(player, client)
 
-            MusicUtils.sendQueueMessage(
-                player,
-                client,
-                `${emojis.musicstop} | 佇列已播放完畢`,
-                'Red'
-            )?.catch(console.error)
-
-            // 先存好 textChannelId，destroy 後 player 狀態可能失效
-            const textChannelId = player.textChannelId
-
-            const timeout = setTimeout(async () => {
-                    try {
-                        if (!player.playing && player.queue.size === 0) {
-                            player.destroy('queueEndTimeout')
-                            const channel = client.channels.cache.get(textChannelId)
-                            if (channel && channel.isTextBased() && 'send' in channel) {
-                                await channel
-                                    .send({
-                                        embeds: [
-                                            new EmbedBuilder()
-                                                .setColor('Red' as `#${string}`)
-                                                .setDescription(
-                                                    `${emojis.disconnect} | 已自動離開語音頻道。`
-                                                )
-                                        ]
-                                    })
-                                    .then(deleteMessageAfter)
-                            }
-                        }
-                    } catch (error) {
-                        MusicUtils.handleMusicError(
-                            error,
-                            client,
-                            player,
-                            '自動離開語音頻道時發生錯誤'
-                        )
-                    }
-                }, 30000)
-            client.musicSessions.setQueueEndTimeout(player.guildId, timeout)
+            MusicController.scheduleAutoLeave(player, client)
         } catch (error) {
             MusicUtils.handleMusicError(error, client, player, '處理 queueEnd 事件時發生錯誤')
         }
