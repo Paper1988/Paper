@@ -19,7 +19,7 @@ export class MusicController {
     /**
      * 清除播放器狀態並停止進度條 interval
      */
-    static clearPlayer(player: Player): void {
+    static clearPlayer(player: Player, client: PaperClient): void {
         MusicController.resetPlayer(player, client)
         client.musicSessions.clearProgressUpdater(player.guildId)
     }
