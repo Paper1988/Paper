@@ -56,6 +56,15 @@ must remain inside their adapter.
 - Queue-end auto-leave and player cleanup
 - Node connection, reconnect, and error reporting
 
+## Current implementation status
+
+- [x] Provider-neutral domain types and adapter contract
+- [x] Initial Moonlink compatibility adapter
+- [ ] Move all Moonlink event consumers behind the adapter
+- [ ] Move Paper-only player metadata into MusicSession
+- [ ] Migrate command and component consumers to MusicManager
+- [ ] Add the lavalink-client / NodeLink adapter
+
 ## State ownership
 
 The future Paper MusicSession should own Paper-specific state such as the
