@@ -10,6 +10,7 @@ import { Client, Collection, WebhookClient } from 'discord.js'
 import { Connectors, Manager } from 'moonlink.js'
 import { MoonlinkAdapter } from '@/Systems/Music/adapters/MoonlinkAdapter.js'
 import type { MusicAdapter } from '@/Systems/Music/MusicAdapter.js'
+import { MusicSessionManager } from '@/Systems/Music/MusicSessionManager.js'
 
 export class PaperClient extends Client {
     commands: Collection<string, CommandType> = new Collection<string, CommandType>()
@@ -23,6 +24,7 @@ export class PaperClient extends Client {
     private apiServer: ApiServer | null = null
     moonlink?: Manager
     musicAdapter?: MusicAdapter
+    readonly musicSessions = new MusicSessionManager()
 
     constructor(options: ClientOptions) {
         super(options)
