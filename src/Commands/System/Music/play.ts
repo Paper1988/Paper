@@ -1,11 +1,12 @@
 import type { PaperClient } from '@/Structures/classes/PaperClient.js'
 import { deleteMessageAfter, validateVoiceChannel } from '@/Systems/Music.js'
+import type { MusicManager } from '@/Systems/Music/MusicManager.js'
+import type { MusicPlayerSnapshot } from '@/Systems/Music/types.js'
 import emojis from '@/libs/emoji/emoji.js'
 import { Logger } from '@/libs/utils/logger.js'
 import { cacheDel, cacheGetJson } from '@/libs/utils/redis.js'
 import type { SubCommandType } from '@/typings/command.js'
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember } from 'discord.js'
-import { Player, SearchResult } from 'moonlink.js'
 
 interface CachedTrack {
     title: string
@@ -22,7 +23,7 @@ export default {
     async execute(interaction: ChatInputCommandInteraction, client: PaperClient) {
         const { options, channel, guild } = interaction
         const member = interaction.member! as GuildMember
-        const VoiceChannel = member.voice.channel
+        const voiceChannel = member.voice.channel
 
         const skip = options.getBoolean('skip', false)
         const search = options.getString('search')!
@@ -31,23 +32,31 @@ export default {
             content: `${emojis.discord_loading} | 處理請求中...`
         })
 
-        if (!(await validateVoiceChannel(interaction, client, VoiceChannel))) return
+        if (!(await validateVoiceChannel(interaction, client, voiceChannel))) return
 
         try {
-            const player = await getOrCreatePlayer(client, guild!.id, VoiceChannel!.id, channel!.id)
+            const music = client.musicManager
+            if (!music) throw new Error('Music manager is not initialized')
+
+            const player = await getOrCreatePlayer(
+                music,
+                guild!.id,
+                voiceChannel!.id,
+                channel!.id
+            )
 
             const actualSearchValue = await resolveSearchQuery(interaction, search)
             if (!actualSearchValue) return
 
-            const result = (await client.moonlink!.search({
+            const result = await music.search({
                 query: actualSearchValue,
-                requester: interaction.user.id
-            })) as SearchResult
+                requesterId: interaction.user.id
+            })
 
             if (!(await validateSearchResult(interaction, result))) return
 
-            addTracksToQueue(player, result)
-            await handlePlayback(player, skip)
+            await addTracksToQueue(music, guild!.id, result)
+            await handlePlayback(music, player, skip)
 
             await interaction.deleteReply().catch(() => {})
 
@@ -64,22 +73,30 @@ export default {
  * 取得或建立音樂播放器
  */
 async function getOrCreatePlayer(
-    client: PaperClient,
+    music: MusicManager,
     guildId: string,
     voiceChannelId: string,
     textChannelId: string
-): Promise<Player> {
-    let player = client.moonlink!.players.get(guildId) as Player
+): Promise<MusicPlayerSnapshot> {
+    let player = await music.getPlayer(guildId)
+
     if (!player) {
-        player = client.moonlink!.players.create({
+        await music.createPlayer({
             guildId,
             voiceChannelId,
             textChannelId
         })
+        player = await music.getPlayer(guildId)
     }
+
+    if (!player) throw new Error(`Failed to create music player for guild ${guildId}`)
+
     if (!player.connected) {
-        await player.connect({ selfDeaf: true })
+        await music.connect(guildId, true)
+        player = await music.getPlayer(guildId)
     }
+
+    if (!player) throw new Error(`Music player disappeared for guild ${guildId}`)
     return player
 }
 
@@ -144,17 +161,17 @@ async function resolveSearchQuery(
  */
 async function validateSearchResult(
     interaction: ChatInputCommandInteraction,
-    result: SearchResult
+    result: Awaited<ReturnType<MusicManager['search']>>
 ): Promise<boolean> {
-    if (result.isEmpty || result.loadType === 'empty') {
+    if (result.loadType === 'empty' || result.tracks.length === 0) {
         await interaction
             .editReply({ content: `${emojis.warning} | 找不到相關的歌曲` })
             .then(deleteMessageAfter)
         return false
     }
 
-    if (result.isError || result.loadType === 'error') {
-        Logger.error('搜尋發生錯誤:', result.exception?.message ?? 'Unknown error')
+    if (result.loadType === 'error' || result.error) {
+        Logger.error('搜尋發生錯誤:', result.error?.message ?? 'Unknown error')
         await interaction
             .editReply({ content: `${emojis.outage} | 發生未知錯誤，請稍後再試!` })
             .then(deleteMessageAfter)
@@ -167,23 +184,29 @@ async function validateSearchResult(
 /**
  * 將歌曲加入播放清單
  */
-function addTracksToQueue(player: Player, result: SearchResult): void {
-    if (result.isPlaylist || result.loadType === 'playlist') {
-        player.queue.add(result.tracks)
-    } else {
-        const track = result.tracks[0]
-        if (track) player.queue.add(track)
-    }
+async function addTracksToQueue(
+    music: MusicManager,
+    guildId: string,
+    result: Awaited<ReturnType<MusicManager['search']>>
+): Promise<void> {
+    const tracks =
+        result.loadType === 'playlist' ? result.tracks : result.tracks.slice(0, 1)
+
+    if (tracks.length > 0) await music.enqueue(guildId, tracks)
 }
 
 /**
  * 處理播放與跳過邏輯
  */
-async function handlePlayback(player: Player, skip: boolean | null): Promise<void> {
-    if (skip && player.current) {
-        await player.skip()
+async function handlePlayback(
+    music: MusicManager,
+    player: MusicPlayerSnapshot,
+    skip: boolean | null
+): Promise<void> {
+    if (skip && player.currentTrack) {
+        await music.skip(player.guildId)
     } else if (!player.playing && !player.paused) {
-        await player.play()
+        await music.play(player.guildId)
     }
 }
 

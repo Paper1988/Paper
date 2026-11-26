@@ -8,17 +8,29 @@ import emojis from '@/libs/emoji/emoji.js'
 import { Logger } from '@/libs/utils/logger.js'
 import { EmbedBuilder, Message, TextChannel } from 'discord.js'
 import { Track } from 'moonlink.js'
-import type { INode } from 'moonlink.js/dist/src/typings/Interfaces'
 
 const DEBUG_WEBHOOK_ID = process.env.DEBUG_WEBHOOK_ID!
 const DEBUG_WEBHOOK_TOKEN = process.env.DEBUG_WEBHOOK_TOKEN!
 
 export function registerMoonlinkEvents(client: PaperClient): void {
-    if (!client.moonlink) return
+    if (!client.moonlink || !client.musicManager) return
 
     /** ----- Node Events ----- */
-    client.moonlink.on('nodeConnected', (node: INode) =>
-        Logger.info(`Node ${node.identifier} connected!`)
+    client.musicManager.on('nodeConnect', ({ identifier }) =>
+        Logger.info(`Node ${identifier} connected!`)
+    )
+    client.musicManager.on('nodeDisconnect', ({ identifier, reason }) => {
+        console.info(`Node ${identifier} disconnected`, { identifier, reason })
+    })
+    client.musicManager.on('nodeError', ({ identifier, error }) =>
+        Logger.error(error, `Node ${identifier} error:`, {
+            identifier,
+            error: {
+                name: error.name,
+                message: error.message,
+                stack: error.stack
+            }
+        })
     )
     client.moonlink.on('nodeReady', (node, stats) => {
         console.info(`Node ${node.identifier} is ready`, stats)
@@ -30,23 +42,6 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             delay: node.retryDelay
         })
     })
-    client.moonlink.on('nodeDisconnect', (node: INode, code, reason) => {
-        console.info(`Node ${node.identifier} disconnected`, {
-            identifier: node.identifier,
-            code: code,
-            reason: reason
-        })
-    })
-    client.moonlink.on('nodeError', (node: INode, error: Error) =>
-        Logger.error(error, `Node ${node.identifier} error:`, {
-            identifier: node.identifier,
-            error: {
-                name: error.name,
-                message: error.message,
-                stack: error.stack
-            }
-        })
-    )
     client.moonlink.on('nodeDestroy', (identifier) => {
         console.info(`[NODE] Destroyed:`, {
             identifier: identifier,
@@ -57,9 +52,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
     /** ----- Player Events ----- */
     client.moonlink.on('trackStart', async (player, track) => {
         try {
-            if (player.data.queueEndTimeout) {
-                clearTimeout(player.data.queueEndTimeout as NodeJS.Timeout)
-            }
+            client.musicSessions.clearQueueEndTimeout(player.guildId)
             const db = await MusicRepository.fetchGuildSettings(player.guildId)
             player.setVolume(db.volume)
             player.setLoop(db.repeatMode)
@@ -68,7 +61,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
                 | undefined
             const status = MusicRenderer.buildPlayerStatus(player, client, track)
             if (textChannel && textChannel.isTextBased() && 'send' in textChannel) {
-                const controllerMessageId = MusicStateManager.getControllerMessageId(player)
+                const controllerMessageId = MusicStateManager.getControllerMessageId(client, player)
                 let controllerMessage: Message | undefined
 
                 if (controllerMessageId) {
@@ -76,7 +69,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
                         controllerMessage = await textChannel.messages.fetch(controllerMessageId)
                         await controllerMessage.edit(status)
                     } catch {
-                        MusicStateManager.resetControllerMessageId(player)
+                        MusicStateManager.resetControllerMessageId(client, player)
                     }
                 }
 
@@ -84,7 +77,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
                     await textChannel
                         .send(status)
                         .then((msg: Message) =>
-                            MusicStateManager.setControllerMessageId(player, msg.id)
+                            MusicStateManager.setControllerMessageId(client, player, msg.id)
                         )
                 }
 
@@ -92,7 +85,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
             }
         } catch (error: any) {
             MusicUtils.handleMusicError(error, client, player, '播放歌曲時發生錯誤')
-            MusicController.stopProgressUpdater(player)
+            MusicController.stopProgressUpdater(player, client)
             Logger.error('發送 trackStart 訊息失敗:', error.stack)
         }
     })
@@ -124,8 +117,8 @@ export function registerMoonlinkEvents(client: PaperClient): void {
                             await MusicController.updatePlayerStatus(player, client, false)
                         }
                     }
-                    MusicController.stopProgressUpdater(player)
-                    if (shouldClearPlayer) MusicController.clearPlayer(player)
+                    MusicController.stopProgressUpdater(player, client)
+                    if (shouldClearPlayer) MusicController.clearPlayer(player, client)
                 } catch (error) {
                     MusicUtils.handleMusicError(error, client, player, '發生未知錯誤')
                 }
@@ -133,10 +126,10 @@ export function registerMoonlinkEvents(client: PaperClient): void {
 
             case 'stopped':
                 try {
-                    MusicController.stopProgressUpdater(player)
+                    MusicController.stopProgressUpdater(player, client)
                     if (player.queue.tracks.length === 0 && !player.autoPlay) {
                         await MusicController.updatePlayerStatus(player, client, true)
-                        MusicController.clearPlayer(player)
+                        MusicController.clearPlayer(player, client)
                         MusicController.scheduleAutoLeave(player, client)
                     } else {
                         await MusicController.updatePlayerStatus(player, client, false)
@@ -148,9 +141,9 @@ export function registerMoonlinkEvents(client: PaperClient): void {
 
             case 'loadFailed':
                 try {
-                    MusicController.clearPlayer(player)
+                    MusicController.clearPlayer(player, client)
 
-                    MusicController.stopProgressUpdater(player)
+                    MusicController.stopProgressUpdater(player, client)
                 } catch (error) {
                     MusicUtils.handleMusicError(error, client, player, '發生未知錯誤')
                 }
@@ -159,7 +152,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
     })
 
     client.moonlink.on('queueAdd', async (player, tracks) => {
-        const oldMessage = player.data.musicControllerMsgId as Message['id']
+        const oldMessage = client.musicSessions.getControllerMessageId(player.guildId) as Message['id']
 
         try {
             const track = (tracks[0] as Track) || (tracks as Track)
@@ -189,50 +182,10 @@ export function registerMoonlinkEvents(client: PaperClient): void {
 
     client.moonlink.on('queueEnd', async (player) => {
         try {
-            MusicController.stopProgressUpdater(player)
-            MusicController.clearPlayer(player)
+            MusicController.stopProgressUpdater(player, client)
+            MusicController.clearPlayer(player, client)
 
-            MusicUtils.sendQueueMessage(
-                player,
-                client,
-                `${emojis.musicstop} | 佇列已播放完畢`,
-                'Red'
-            )?.catch(console.error)
-
-            // 先存好 textChannelId，destroy 後 player 狀態可能失效
-            const textChannelId = player.textChannelId
-
-            player.set(
-                'queueEndTimeout',
-                setTimeout(async () => {
-                    try {
-                        if (!player.playing && player.queue.size === 0) {
-                            player.destroy('queueEndTimeout')
-                            const channel = client.channels.cache.get(textChannelId)
-                            if (channel && channel.isTextBased() && 'send' in channel) {
-                                await channel
-                                    .send({
-                                        embeds: [
-                                            new EmbedBuilder()
-                                                .setColor('Red' as `#${string}`)
-                                                .setDescription(
-                                                    `${emojis.disconnect} | 已自動離開語音頻道。`
-                                                )
-                                        ]
-                                    })
-                                    .then(deleteMessageAfter)
-                            }
-                        }
-                    } catch (error) {
-                        MusicUtils.handleMusicError(
-                            error,
-                            client,
-                            player,
-                            '自動離開語音頻道時發生錯誤'
-                        )
-                    }
-                }, 30000)
-            )
+            MusicController.scheduleAutoLeave(player, client)
         } catch (error) {
             MusicUtils.handleMusicError(error, client, player, '處理 queueEnd 事件時發生錯誤')
         }
@@ -253,8 +206,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
     client.moonlink.on('playerDestroy', async (player) => {
         try {
             Logger.info(`播放器被銷毀: ${player.guildId}`)
-            MusicController.stopProgressUpdater(player)
-            MusicController.clearPlayer(player)
+            client.musicSessions.cleanup(player.guildId)
         } catch (error) {
             Logger.error('處理 playerDestroy 事件時發生錯誤:', error)
         }
@@ -279,8 +231,7 @@ export function registerMoonlinkEvents(client: PaperClient): void {
         try {
             Logger.info(`[AutoLeave] Player in guild ${player.guildId} has auto-left.`)
 
-            MusicController.stopProgressUpdater(player)
-            MusicController.clearPlayer(player)
+            client.musicSessions.cleanup(player.guildId)
         } catch (error) {
             Logger.error('處理 autoLeaved 事件時發生錯誤:', error)
         }
